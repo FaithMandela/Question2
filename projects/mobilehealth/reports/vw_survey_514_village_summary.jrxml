@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_survey_514_village_summary" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d06842e4-7758-486e-973b-a02a8458184f">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="22"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -240,7 +240,7 @@ ORDER BY m_order ASC, mother_info_def_id ASC]]>
 			<componentElement>
 				<reportElement key="table" style="table" x="229" y="203" width="180" height="15" uuid="80334182-1b24-4e62-bb8b-255bc124aa94"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="household_count" uuid="e0de8740-a7e9-4b2a-b5ec-395f2b1be104">
+					<datasetRun subDataset="household_count" uuid="c8a989bd-d52a-4b6a-bf3f-b79e0e27c810">
 						<datasetParameter name="start_date">
 							<datasetParameterExpression><![CDATA[$P{start_date}]]></datasetParameterExpression>
 						</datasetParameter>

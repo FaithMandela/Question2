@@ -474,20 +474,20 @@
 				<USERFIELD>entity_id</USERFIELD>
 			</GRID>
 			<GRID name="Skills" keyfield="skill_id" table="skills" user="entity_id">
-				<COMBOBOX w="240" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" orderby="skill_category_name" lpfield="skill_type_name">skill_type_id</COMBOBOX>
-				<COMBOBOX w="120" title="Skill Level" lptable="skill_levels" lpfield="skill_level_name">skill_level_id</COMBOBOX>
+				<COMBOBOX w="150" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" orderby="skill_category_name" lpfield="skill_type_name">skill_type_id</COMBOBOX>
+				<COMBOBOX w="100" title="Skill Level" lptable="skill_levels" lpfield="skill_level_name">skill_level_id</COMBOBOX>
 				<TEXTFIELD w="100" title="Skill">state_skill</TEXTFIELD>
-				<TEXTAREA w="250" title="Details">details</TEXTAREA>
+				<TEXTAREA w="150" title="Details">details</TEXTAREA>
 				<USERFIELD>entity_id</USERFIELD>
 			</GRID>
 			<GRID name="Referees" keyfield="address_id" table="address" where="table_name = 'referees'" user="table_id">
-				<TEXTFIELD w="100" title="Name">address_name</TEXTFIELD>
-				<TEXTFIELD w="100" title="Company">company_name</TEXTFIELD>
-				<TEXTFIELD w="100" title="Position">position_held</TEXTFIELD>
-				<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
-				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
-				<COMBOBOX w="150" title="Country" default="KE" lptable="sys_countrys" noorg="true" lpfield="sys_country_name">sys_country_id</COMBOBOX>
-				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
+				<TEXTFIELD w="75" title="Name">address_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Company">company_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Position">position_held</TEXTFIELD>
+				<TEXTFIELD w="75" title="Phone Number">phone_number</TEXTFIELD>
+				<TEXTFIELD w="100" title="Email">email</TEXTFIELD>
+				<COMBOBOX w="100" title="Country" default="KE" lptable="sys_countrys" noorg="true" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+				<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
 				<DEFAULT default="referees">table_name</DEFAULT>
 				<USERFIELD>table_id</USERFIELD>
 			</GRID>
@@ -1446,7 +1446,10 @@
 					<TEXTDATE w="150" title="Date To" y="10" h="20" x="290">date_to</TEXTDATE>
 					<TEXTFIELD w="430" title="Employers Name" y="30" h="20" x="10">employers_name</TEXTFIELD>
 					<TEXTFIELD w="430" title="Position Held" y="50" h="20" x="10">position_held</TEXTFIELD>
-					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+					<CHECKBOX w="150" title="Principal Employment" y="70" h="20" x="10">principal_employment</CHECKBOX>
+					<TEXTDECIMAL w="150" title="Salary" y="70" h="20" x="290">alternative_salary</TEXTDECIMAL>
+					<TEXTFIELD w="430" title="Address" y="90" h="20" x="10">alternative_address</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
 			<GRID name="Kins" keyfield="kin_id" orderby="kin_type_id" linkfield="entity_id" table="vw_kins">
@@ -1594,7 +1597,8 @@
 			<TEXTFIELD w="75" title="Kin Type Name">kin_type_name</TEXTFIELD>
 			<FORM name="Kin Types" keyfield="kin_type_id" table="kin_types">
 				<TEXTFIELD w="150" title="Kin Type Name" y="10" h="20" x="10">kin_type_name</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+				<CHECKBOX w="150" title="Spouse" default="false" y="30" h="20" x="10">spouse</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Skill Category" keyfield="skill_category_id" table="skill_category">
@@ -1624,7 +1628,8 @@
 			<TEXTFIELD w="75" title="Identification Type Name">identification_type_name</TEXTFIELD>
 			<FORM name="Identification Types" keyfield="identification_type_id" table="identification_types">
 				<TEXTFIELD w="150" title="Identification Type Name" y="10" h="20" x="10">identification_type_name</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+				<CHECKBOX w="150" title="Passport" default="false" y="30" h="20" x="10">passport</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="40" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>
@@ -2200,9 +2205,11 @@
 		<GRID name="Contract Types" keyfield="contract_type_id" table="contract_types">
 			<TEXTFIELD w="75" title="Contract Type ID">contract_type_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Contract Type Name">contract_type_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Part Time">part_time</CHECKBOX>
 			<FORM name="Contract Types" keyfield="contract_type_id" table="contract_types">
 				<TEXTFIELD w="150" title="Contract Type Name" y="10" h="20" x="10">contract_type_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Notice Period" y="30" h="20" x="10">notice_period</TEXTFIELD>
+				<CHECKBOX w="150" title="Part Time" y="30" h="20" x="290">part_time</CHECKBOX>
 				<EDITOR w="430" tab="Contract" y="30" h="70" x="10">contract_text</EDITOR>
 				<TEXTAREA w="430" tab="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>

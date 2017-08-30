@@ -125,6 +125,7 @@ CREATE TABLE employee_month (
 	exchange_rate			real default 1 not null,
 	bank_account			varchar(32),
 	basic_pay				float default 0 not null,
+	part_time				boolean default false not null,
 	details					text,
 	unique (entity_id, period_id)
 );
@@ -598,7 +599,7 @@ CREATE VIEW vw_employee_month AS
 	SELECT vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.overtime_rate, 
 		vw_periods.activated, vw_periods.closed, vw_periods.month_id, vw_periods.period_year, vw_periods.period_month,
 		vw_periods.quarter, vw_periods.semister, vw_periods.gl_payroll_account, vw_periods.is_posted,
-		vw_periods.fiscal_year_id, vw_periods.fiscal_year,
+		vw_periods.fiscal_year_id, vw_periods.fiscal_year, vw_periods.fiscal_year_start, vw_periods.fiscal_year_end, vw_periods.submission_date,
 		
 		vw_bank_branch.bank_id, vw_bank_branch.bank_name, vw_bank_branch.bank_branch_id, 
 		vw_bank_branch.bank_branch_name, vw_bank_branch.bank_branch_code,
@@ -614,7 +615,8 @@ CREATE VIEW vw_employee_month AS
 		employees.employee_full_name,
 		currency.currency_id, currency.currency_name, currency.currency_symbol, employee_month.exchange_rate,
 		
-		employee_month.org_id, employee_month.employee_month_id, employee_month.bank_account, employee_month.basic_pay, employee_month.details,
+		employee_month.org_id, employee_month.employee_month_id, employee_month.bank_account, employee_month.basic_pay, 
+		employee_month.part_time, employee_month.details,
 		getAdjustment(employee_month.employee_month_id, 4, 31) as overtime,
 		getAdjustment(employee_month.employee_month_id, 1, 1) as full_allowance,
 		getAdjustment(employee_month.employee_month_id, 1, 2) as payroll_allowance,
@@ -632,8 +634,12 @@ CREATE VIEW vw_employee_month AS
 		getAdjustment(employee_month.employee_month_id, 4, 34) as advance,
 		getAdjustment(employee_month.employee_month_id, 4, 35) as advance_deduction,
 		getAdjustment(employee_month.employee_month_id, 4, 41) as other_banks,
+		(employee_month.Basic_Pay + getAdjustment(employee_month.employee_month_id, 4, 31)) as basic_salary,
+		(employee_month.Basic_Pay + getAdjustment(employee_month.employee_month_id, 4, 31)
+		+ getAdjustment(employee_month.employee_month_id, 1, 2)) as gross_salary,
 		(employee_month.Basic_Pay + getAdjustment(employee_month.employee_month_id, 4, 31) + getAdjustment(employee_month.employee_month_id, 4, 22) 
 		+ getAdjustment(employee_month.employee_month_id, 4, 33) - getAdjustment(employee_month.employee_month_id, 4, 11)) as net_pay,
+		
 		(employee_month.Basic_Pay + getAdjustment(employee_month.employee_month_id, 4, 31) + getAdjustment(employee_month.employee_month_id, 4, 22) 
 		+ getAdjustment(employee_month.employee_month_id, 4, 33) + getAdjustment(employee_month.employee_month_id, 4, 34)
 		- getAdjustment(employee_month.employee_month_id, 4, 11) - getAdjustment(employee_month.employee_month_id, 4, 35)
@@ -1230,6 +1236,17 @@ BEGIN
 			AND (exchange_date < CURRENT_DATE)));
 		
 	IF(NEW.exchange_rate is null)THEN NEW.exchange_rate := 1; END IF;	
+	
+	SELECT contract_types.part_time INTO NEW.part_time
+	FROM contract_types INNER JOIN applications ON contract_types.contract_type_id = applications.contract_type_id
+	WHERE (applications.application_id IN
+	(SELECT max(applications.application_id)
+	FROM applications
+	WHERE (applications.employee_id = NEW.entity_id)
+		AND (applications.contract_start <= current_date) AND (applications.contract_close >= current_date)
+		AND (approve_status = 'Approved')));
+		
+	IF(NEW.part_time is null)THEN NEW.part_time := false; END IF;
 
 	RETURN NEW;
 END;

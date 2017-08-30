@@ -66,6 +66,7 @@ $P!{organd};]]>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" mode="Opaque" x="131" y="0" width="165" height="20" forecolor="#000000" backcolor="#E7E7E7" uuid="ba176637-5564-4823-8806-55889d4ca6e8"/>
+				<box leftPadding="2"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 				</textElement>
@@ -73,6 +74,7 @@ $P!{organd};]]>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" mode="Opaque" x="296" y="0" width="147" height="20" forecolor="#000000" backcolor="#E7E7E7" uuid="8fa6217c-740a-4f4a-8afc-e71f49b56cc1"/>
+				<box leftPadding="2"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 				</textElement>
@@ -111,14 +113,16 @@ $P!{organd};]]>
 				<textFieldExpression><![CDATA[$F{objective_detail_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="136" y="0" width="160" height="15" uuid="b4c1157b-944d-48ad-a7cd-cbc2460ab2ed"/>
+				<reportElement style="Detail" x="131" y="0" width="165" height="15" uuid="b4c1157b-944d-48ad-a7cd-cbc2460ab2ed"/>
+				<box leftPadding="2"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="9" pdfFontName="Times-Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{success_indicator}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="301" y="0" width="142" height="15" uuid="de8a9d98-9436-4289-b396-14f653a2e4e6"/>
+				<reportElement style="Detail" x="296" y="0" width="147" height="15" uuid="de8a9d98-9436-4289-b396-14f653a2e4e6"/>
+				<box leftPadding="2"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="9" pdfFontName="Times-Roman"/>
 				</textElement>
@@ -132,7 +136,9 @@ $P!{organd};]]>
 				<textFieldExpression><![CDATA[$F{completed} == true ? "Yes":"No"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="497" y="0" width="27" height="15" uuid="b086b839-0353-4785-b515-730081db1c29"/>
+				<reportElement style="Detail" x="497" y="0" width="27" height="15" uuid="b086b839-0353-4785-b515-730081db1c29">
+					<printWhenExpression><![CDATA[$F{ods_points} > 0]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="9" pdfFontName="Times-Roman"/>
 				</textElement>

@@ -27,6 +27,7 @@
 			<MENU name="Submit Registration">39</MENU>
 			<MENU name="Registration Status">30</MENU>
 			<MENU name="Financial Clearance">40</MENU>
+			<MENU name="Registration Clearance">50</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Student Details" key="1" h="500">
@@ -578,6 +579,7 @@
 			<CHECKBOX w="40" title="Major Advisor" format="boolean" ischar="true">majorapproval</CHECKBOX>
 			<CHECKBOX w="40" title="Student Affairs" format="boolean" ischar="true">studentdeanapproval</CHECKBOX>
 			<CHECKBOX w="40" title="Registar" format="boolean" ischar="true">approved</CHECKBOX>
+			<CHECKBOX w="40" title="Faculty" format="boolean" ischar="true">so_approval</CHECKBOX>
 			<CHECKBOX w="40" title="Registration Printed" format="boolean" ischar="true">printed</CHECKBOX>
 			<TEXTFIELD w="200" title="Reason For No Approved">noapproval</TEXTFIELD>
 		</GRID>
@@ -729,6 +731,19 @@
 			<CHECKBOX w="40" title="Registar" format="boolean" ischar="true">approved</CHECKBOX>
 			<CHECKBOX w="40" title="Registration Printed" format="boolean" ischar="true">printed</CHECKBOX>
 			<JASPER filtered="true" name="Exam PASS" printcopies="1" reportfile="studentpass.jasper"></JASPER>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Registration Clearance" key="50" h="500">
+		<GRID name="Registration Status" display="form" table="qcurrstudentdegreeview" where="(so_approval = true) AND (studentdeanapproval = true)" user="studentid">
+			<TEXTFIELD w="40" title="Semester">quarterid</TEXTFIELD>
+			<CHECKBOX w="40" title="Submited Registration" format="boolean" ischar="true">finalised</CHECKBOX>
+			<CHECKBOX w="40" title="Finance" format="boolean" ischar="true">finaceapproval</CHECKBOX>
+			<CHECKBOX w="40" title="Overload" format="boolean" ischar="true">overloadapproval</CHECKBOX>
+			<CHECKBOX w="40" title="Major Advisor" format="boolean" ischar="true">majorapproval</CHECKBOX>
+			<CHECKBOX w="40" title="Student Affairs" format="boolean" ischar="true">studentdeanapproval</CHECKBOX>
+			<CHECKBOX w="40" title="Registar" format="boolean" ischar="true">approved</CHECKBOX>
+			<CHECKBOX w="40" title="Faculty" format="boolean" ischar="true">so_approval</CHECKBOX>
+			<JASPER name="Student Details" reportfile="studentdetailsa.jasper"></JASPER>
 		</GRID>
 	</DESK>
 </APP>

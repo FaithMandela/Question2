@@ -467,20 +467,20 @@
 				<USERFIELD>entity_id</USERFIELD>
 			</GRID>
 			<GRID name="Skills" keyfield="skill_id" table="skills" user="entity_id">
-				<COMBOBOX w="240" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" orderby="skill_category_name" lpfield="skill_type_name">skill_type_id</COMBOBOX>
-				<COMBOBOX w="120" title="Skill Level" lptable="skill_levels" lpfield="skill_level_name">skill_level_id</COMBOBOX>
+				<COMBOBOX w="150" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" orderby="skill_category_name" lpfield="skill_type_name">skill_type_id</COMBOBOX>
+				<COMBOBOX w="100" title="Skill Level" lptable="skill_levels" lpfield="skill_level_name">skill_level_id</COMBOBOX>
 				<TEXTFIELD w="100" title="Skill">state_skill</TEXTFIELD>
-				<TEXTAREA w="250" title="Details">details</TEXTAREA>
+				<TEXTAREA w="150" title="Details">details</TEXTAREA>
 				<USERFIELD>entity_id</USERFIELD>
 			</GRID>
 			<GRID name="Referees" keyfield="address_id" table="address" where="table_name = 'referees'" user="table_id">
-				<TEXTFIELD w="100" title="Name">address_name</TEXTFIELD>
-				<TEXTFIELD w="100" title="Company">company_name</TEXTFIELD>
-				<TEXTFIELD w="100" title="Position">position_held</TEXTFIELD>
-				<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
-				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
-				<COMBOBOX w="150" title="Country" default="KE" lptable="sys_countrys" noorg="true" lpfield="sys_country_name">sys_country_id</COMBOBOX>
-				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
+				<TEXTFIELD w="75" title="Name">address_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Company">company_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Position">position_held</TEXTFIELD>
+				<TEXTFIELD w="75" title="Phone Number">phone_number</TEXTFIELD>
+				<TEXTFIELD w="100" title="Email">email</TEXTFIELD>
+				<COMBOBOX w="100" title="Country" default="KE" lptable="sys_countrys" noorg="true" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+				<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
 				<DEFAULT default="referees">table_name</DEFAULT>
 				<USERFIELD>table_id</USERFIELD>
 			</GRID>
@@ -2338,7 +2338,7 @@
 				<FORM name="Evaluation Points" keyfield="evaluation_point_id" linkfield="job_review_id" table="evaluation_points">
 					<COMBOBOX w="430" title="Review Point" lptable="review_points" select.detail="details" linkfnct="get_review_category" y="10" h="20" x="10" lpfield="review_point_name">review_point_id</COMBOBOX>
 					<COMBOLIST w="50" title="Grade" y="10" h="20" x="10">grade
-						<DATA key="S">S - Satisfactory</DATA>
+						<DATA key="S">S - Strength</DATA>
 						<DATA key="A">A - Average</DATA>
 						<DATA key="W">W - Area of Weakness</DATA>
 						<DATA key="NA">NA - Not Applicable</DATA>
@@ -3751,11 +3751,11 @@
 	</DESK>
 	<DESK w="700" name="Perfomance Review" key="112" h="550">
 		<FILTER w="700" name="Individual Reports" split="150" type="vert" h="550">
-			<FILTERFORM name="Date Range">
+			<FILTERFORM name="Select Employee">
 				<COMBOBOX w="430" title="Employee" lptable="entitys" lpkey="entity_id" where="(entity_type_id = 1)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 			</FILTERFORM>
-			<JASPER name="Perfomance Review" reportfile="vw_evaluation_points.jasper"></JASPER>
 			<JASPER name="Appraisal Ratings" org.table="vw_evaluation_points" reportfile="vw_appraisal_ratings.jasper"></JASPER>
+			<JASPER name="Perfomance Review" reportfile="vw_evaluation_points.jasper"></JASPER>
 		</FILTER>
 		<FILTER w="700" name="Annual Reports" split="150" type="horl" key="6" h="550">
 			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year"></DRILLDOWN>

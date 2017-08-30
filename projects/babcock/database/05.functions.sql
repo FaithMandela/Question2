@@ -1095,6 +1095,13 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION updatemajorapproval(varchar(12), int) RETURNS varchar AS $$
 	UPDATE qstudents SET majorapproval = true WHERE qstudentid = $2;
 	INSERT INTO approvallist(qstudentid, approvedby, approvaltype, approvedate) VALUES ($2, $1, 'Major', now());
+	SELECT varchar 'Major adviser Approval Done' as reply;
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION updatemajorapproval(varchar(12), varchar(12), varchar(12)) RETURNS varchar AS $$
+	UPDATE qstudents SET majorapproval = true WHERE qstudentid = $1::int;
+	INSERT INTO approvallist(qstudentid, approvedby, approvaltype, approvedate) 
+	VALUES ($1::int, $2, 'Major Adviser', now());
 	SELECT varchar 'Major Approval Done' as reply;
 $$ LANGUAGE SQL;
 
@@ -1521,12 +1528,18 @@ BEGIN
 		END IF;
 	END IF;
 
-	IF (reca.schoolid = 'COEN')THEN
-		NEW.terminalid = '7000000089';
-	ELSIF(reca.org_id = 1)THEN
-		NEW.terminalid = '7007139046';
-	ELSE
-		NEW.terminalid = '0690000082';
+	IF(NEW.approved = false)THEN
+		IF(reca.schoolid = 'COEN')THEN
+			NEW.terminalid = '7000000089';
+		ELSIF(reca.org_id = 1)THEN
+			NEW.terminalid = '7007139046';
+		ELSIF(reca.schoolid = 'MBBS')THEN
+			NEW.terminalid = '7007139046';
+		ELSIF(reca.schoolid = 'BCSM')THEN
+			NEW.terminalid = '7007139046';
+		ELSE
+			NEW.terminalid = '0690000082';
+		END IF;
 	END IF;
 	
 	IF(NEW.narrative is null) THEN
@@ -2076,15 +2089,27 @@ CREATE OR REPLACE FUNCTION open_registration(varchar(12), varchar(12), varchar(1
 DECLARE
 	mystr VARCHAR(120);
 BEGIN
-
-
-	UPDATE qstudents SET finalised = false, printed = false WHERE (qstudentid = CAST($1 as integer));
+	UPDATE qstudents SET finalised = false, printed = false WHERE (qstudentid = $1::integer);
 	mystr := 'Registration opened';
-
 	RETURN mystr;
 END;
-$$ LANGUAGE plpgsql;	
+$$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION approve_so(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(240) AS $$
+DECLARE
+	mystr VARCHAR(120);
+BEGIN
+	IF($3 = '3')THEN
+		UPDATE qstudents SET so_approval = true WHERE (qstudentid = $1::integer);
+		mystr := 'School officers approval';
+	ELSIF($3 = '4')THEN
+		UPDATE qstudents SET majorapproval = false WHERE (qstudentid = $1::integer);
+		mystr := 'Returned to major advisor';
+	END IF;
+	
+	RETURN mystr;
+END;
+$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION ins_courses() RETURNS trigger AS $$
 BEGIN

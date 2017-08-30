@@ -313,6 +313,17 @@ CREATE VIEW vw_account_fees AS
 		INNER JOIN products ON account_fees.product_id = products.product_id
 		INNER JOIN activity_frequency ON account_fees.activity_frequency_id = activity_frequency.activity_frequency_id
 		INNER JOIN use_keys ON account_fees.use_key_id = use_keys.use_key_id;
+		
+CREATE VIEW vw_deposit_balance AS
+	SELECT fl.deposit_account_id, fl.current_balance, al.available_balance
+	FROM 
+		(SELECT deposit_account_id, sum((account_credit - account_debit) * exchange_rate) as current_balance
+			FROM account_activity GROUP BY deposit_account_id) fl
+	LEFT JOIN
+		(SELECT deposit_account_id, sum((account_credit - account_debit) * exchange_rate) as available_balance
+			FROM account_activity WHERE activity_status_id < 3
+			GROUP BY deposit_account_id) al 
+		ON fl.deposit_account_id = al.deposit_account_id;
 
 CREATE VIEW vw_deposit_accounts AS
 	SELECT customers.customer_id, customers.customer_name, 
@@ -324,10 +335,13 @@ CREATE VIEW vw_deposit_accounts AS
 		deposit_accounts.credit_limit, deposit_accounts.minimum_balance, deposit_accounts.maximum_balance, 
 		deposit_accounts.interest_rate, deposit_accounts.lockin_period_frequency, 
 		deposit_accounts.lockedin_until_date, deposit_accounts.application_date, deposit_accounts.approve_status, 
-		deposit_accounts.workflow_table_id, deposit_accounts.action_date, deposit_accounts.details
+		deposit_accounts.workflow_table_id, deposit_accounts.action_date, deposit_accounts.details,
+		
+		vw_deposit_balance.current_balance, vw_deposit_balance.available_balance
 	FROM deposit_accounts INNER JOIN customers ON deposit_accounts.customer_id = customers.customer_id
 		INNER JOIN vw_products ON deposit_accounts.product_id = vw_products.product_id
-		INNER JOIN activity_frequency ON deposit_accounts.activity_frequency_id = activity_frequency.activity_frequency_id;
+		INNER JOIN activity_frequency ON deposit_accounts.activity_frequency_id = activity_frequency.activity_frequency_id
+		INNER JOIN vw_deposit_balance ON deposit_accounts.deposit_account_id = vw_deposit_balance.deposit_account_id;
 
 CREATE VIEW vw_account_notes AS
 	SELECT vw_deposit_accounts.customer_id, vw_deposit_accounts.customer_name, 
