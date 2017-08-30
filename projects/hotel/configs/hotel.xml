@@ -1,9 +1,10 @@
 <APP password="change_password" material="true" org="org_id" name="Hotel">
 	<MENU name="Hotel">
-		<MENU name="Bookings">40</MENU>
-		<MENU name="Transaction Ledger">50</MENU>
-		<MENU name="Journals">30</MENU>
-		<MENU name="Administration">
+		<MENU icon="icon-drawer" name="Bookings" page="reservation">bookings</MENU>
+		<MENU icon="icon-doc" name="Transaction Ledger">50</MENU>
+		<MENU icon="icon-notebook" name="Journals">30</MENU>
+		<MENU icon="icon-settings" name="Administration">
+			<MENU name="Clients">3</MENU>
 			<MENU name="Organisation">5</MENU>
 			<MENU name="Hotel Setup">35</MENU>
 			<MENU name="Departments">10</MENU>
@@ -15,7 +16,7 @@
 			<MENU name="Workflows">60</MENU>
 			<MENU name="Approvals">83</MENU>
 		</MENU>
-		<MENU name="Reports">
+		<MENU icon="icon-layers" name="Reports">
 			<MENU name="Bank Accounts">105</MENU>
 			<MENU name="Chart of Accounts">135</MENU>
 			<MENU name="Items">140</MENU>

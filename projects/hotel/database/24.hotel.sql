@@ -231,7 +231,7 @@ CREATE OR REPLACE VIEW vw_bookings AS
 		bookings.org_id, bookings.booking_id, bookings.booking_date, bookings.arrival_date, bookings.arrival_time,
 		bookings.departure_date, bookings.departure_time, bookings.units, bookings.confirmed, bookings.closed,
 		bookings.book_rate, bookings.commision, bookings.discount, bookings.tax1, bookings.tax2, bookings.tax3,
-		bookings.exchange_rate, bookings.payment_method, bookings.details
+		bookings.exchange_rate, bookings.payment_method, bookings.details, bookings.check_in, bookings.check_out
 	FROM bookings INNER JOIN vw_room_rates ON bookings.room_rate_id = vw_room_rates.room_rate_id
 		INNER JOIN entitys ON bookings.entity_id = entitys.entity_id
 		INNER JOIN currency ON bookings.currency_id = currency.currency_id

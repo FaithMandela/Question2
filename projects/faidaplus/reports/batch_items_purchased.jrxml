@@ -21,7 +21,7 @@ sum(vw_order_details.total_amount) as total_amount, vw_orders.order_id, vw_order
  FROM vw_order_details
    JOIN vw_orders ON vw_order_details.order_id = vw_orders.order_id
    JOIN vw_products ON vw_products.product_id = vw_order_details.product_id
-WHERE vw_products.product_id = '$P!{product_id}'
+WHERE vw_products.product_id = '$P!{product_id}'  AND vw_orders.order_status !='Canceled'
 AND vw_orders.order_date::date >= '$P!{minDate}' AND vw_orders.order_date::date <= '$P!{maxDate}'
 GROUP BY  vw_order_details.product_uprice,vw_orders.order_status,
          vw_products.product_name, vw_orders.batch_no, vw_orders.order_id, vw_orders.entity_name;]]>

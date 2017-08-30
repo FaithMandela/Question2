@@ -8,6 +8,9 @@ ALTER TABLE orgs ADD longitude character varying(20);
 ALTER TABLE room_rates ADD COLUMN max_occupancy integer;
 ALTER TABLE residents ADD COLUMN phone_number character varying(20);
 
+ALTER TABLE bookings ADD COLUMN check_in boolean;
+ALTER TABLE bookings ADD COLUMN check_out boolean;
+
 ALTER TABLE orgs ADD COLUMN facebook_link  varchar(50);
 ALTER TABLE orgs ADD COLUMN twitter_link  varchar(50);
 ALTER TABLE orgs ADD COLUMN google_link  varchar(50);
@@ -70,10 +73,10 @@ CREATE OR REPLACE VIEW vw_room_images AS
 	INNER JOIN orgs ON room_images.org_id = orgs.org_id;
 
 	CREATE OR REPLACE VIEW vw_sys_users AS
-    SELECT entitys.entity_id, entitys.entity_name, entitys.primary_email,entitys.user_name,
-	entitys.entity_password, entitys.is_active,entitys.org_id
-    FROM entitys
-    WHERE entitys.is_active = true;
+    SELECT vw_entitys.entity_id, vw_entitys.entity_name, vw_entitys.primary_email,vw_entitys.user_name,
+	vw_entitys.entity_password, vw_entitys.is_active,vw_entitys.org_id,vw_entitys.use_key_id, vw_entitys.entity_role,vw_entitys.function_role
+    FROM vw_entitys
+    WHERE vw_entitys.is_active = true;
 
 
 	CREATE TABLE subscriptions (
