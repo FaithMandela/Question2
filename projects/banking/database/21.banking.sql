@@ -321,7 +321,7 @@ CREATE VIEW vw_deposit_balance AS
 			FROM account_activity GROUP BY deposit_account_id) fl
 	LEFT JOIN
 		(SELECT deposit_account_id, sum((account_credit - account_debit) * exchange_rate) as available_balance
-			FROM account_activity WHERE activity_status_id < 3
+			FROM account_activity WHERE activity_status_id < 2
 			GROUP BY deposit_account_id) al 
 		ON fl.deposit_account_id = al.deposit_account_id;
 
@@ -341,7 +341,7 @@ CREATE VIEW vw_deposit_accounts AS
 	FROM deposit_accounts INNER JOIN customers ON deposit_accounts.customer_id = customers.customer_id
 		INNER JOIN vw_products ON deposit_accounts.product_id = vw_products.product_id
 		INNER JOIN activity_frequency ON deposit_accounts.activity_frequency_id = activity_frequency.activity_frequency_id
-		INNER JOIN vw_deposit_balance ON deposit_accounts.deposit_account_id = vw_deposit_balance.deposit_account_id;
+		LEFT JOIN vw_deposit_balance ON deposit_accounts.deposit_account_id = vw_deposit_balance.deposit_account_id;
 
 CREATE VIEW vw_account_notes AS
 	SELECT vw_deposit_accounts.customer_id, vw_deposit_accounts.customer_name, 

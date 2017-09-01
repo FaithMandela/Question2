@@ -112,6 +112,12 @@ DELETE FROM default_adjustments;
 DELETE FROM adjustments;
 DELETE FROM adjustment_effects WHERE adjustment_effect_id = 1;
 
+INSERT INTO tax_types (org_id, currency_id, tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account) 
+VALUES (0, 1, 1, 11, 'MPF', 'Get_Employee_Tax(employee_tax_type_id, 2)', 0, 1, false, true, true, 0, 100, true, '40045', '40045');
+
+INSERT INTO tax_rates (org_id, tax_type_id, tax_range, tax_rate) VALUES (0, 1, 30000, 5);
+INSERT INTO tax_rates (org_id, tax_type_id, tax_range, tax_rate) VALUES (0, 1, 10000000, 0);
+
 INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name, adjustment_effect_code, adjustment_effect_type) 
 VALUES 
 (11, 'Leave Pay', 'LeavePay', 1),

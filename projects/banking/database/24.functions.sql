@@ -199,6 +199,7 @@ CREATE TRIGGER aft_account_activity AFTER INSERT OR UPDATE ON account_activity
 CREATE OR REPLACE FUNCTION apply_approval(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	msg							varchar(120);
+	v_deposit_account_id		integer;
 BEGIN
 
 	IF($3 = '1')THEN
@@ -212,10 +213,20 @@ BEGIN
 		
 		msg := 'Applied for account approval';
 	ELSIF($3 = '3')THEN
-		UPDATE loans SET approve_status = 'Completed' 
-		WHERE (loan_id = $1::integer) AND (approve_status = 'Draft');
+		SELECT deposit_accounts.deposit_account_id INTO v_deposit_account_id
+		FROM deposit_accounts INNER JOIN loans ON (deposit_accounts.account_number = loans.disburse_account)
+			AND (deposit_accounts.customer_id = loans.customer_id) AND (loans.loan_id = $1::integer)
+			AND (deposit_accounts.approve_status = 'Approved');
 		
-		msg := 'Applied for loan approval';
+		IF(v_deposit_account_id is null)THEN
+			msg := 'The disburse account needs to be active and owned by the clients';
+			RAISE EXCEPTION '%', msg;
+		ELSE
+			UPDATE loans SET approve_status = 'Completed' 
+			WHERE (loan_id = $1::integer) AND (approve_status = 'Draft');
+			
+			msg := 'Applied for loan approval';
+		END IF;
 	ELSIF($3 = '4')THEN
 		UPDATE guarantees SET approve_status = 'Completed' 
 		WHERE (guarantee_id = $1::integer) AND (approve_status = 'Draft');
@@ -247,6 +258,9 @@ BEGIN
 			
 		NEW.interest_rate = myrec.interest_rate;
 		NEW.activity_frequency_id = myrec.activity_frequency_id;
+	ELSIF((NEW.approve_status != 'Approved') AND (OLD.approve_status <> 'Approved'))THEN
+		
+		
 	END IF;
 	
 	RETURN NEW;

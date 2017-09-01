@@ -26,8 +26,8 @@ INSERT INTO activity_frequency (activity_frequency_id, activity_frequency_name) 
 INSERT INTO activity_frequency (activity_frequency_id, activity_frequency_name) VALUES (7, 'Yearly');
 
 INSERT INTO activity_status (activity_status_id, activity_status_name) VALUES (1, 'Completed');
-INSERT INTO activity_status (activity_status_id, activity_status_name) VALUES (2, 'Processing');
-INSERT INTO activity_status (activity_status_id, activity_status_name) VALUES (3, 'UnCleared');
+INSERT INTO activity_status (activity_status_id, activity_status_name) VALUES (2, 'UnCleared');
+INSERT INTO activity_status (activity_status_id, activity_status_name) VALUES (3, 'Processing');
 INSERT INTO activity_status (activity_status_id, activity_status_name) VALUES (4, 'Commited');
 
 

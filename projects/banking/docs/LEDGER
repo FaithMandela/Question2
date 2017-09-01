@@ -1,10 +1,10 @@
 TODO
 
 Activity status - 
-	Completed - fully done
-	Processing - pending to be processed
-	UnCleared - Not gone though
-	Commited - allocated for future
+	1. Completed - fully done
+	2. UnCleared - Not gone though
+	3. Processing - pending to be processed
+	4. Commited - allocated for future
 
 Types of transactions
 - Receive cash or cheque or mpesa or ecash

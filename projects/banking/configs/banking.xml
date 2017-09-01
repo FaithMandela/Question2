@@ -858,7 +858,7 @@
 					<TEXTDECIMAL w="150" title="Interest Rate" y="50" h="20" x="10">interest_rate</TEXTDECIMAL>
 					<TEXTFIELD w="150" title="Repayment Amount" required="true" y="50" h="20" x="290">repayment_amount</TEXTFIELD>
 					<TEXTDATE w="150" title="Disbursed Date" y="70" h="20" x="10">disbursed_date</TEXTDATE>
-					<TEXTFIELD w="150" title="Disburse Account" y="70" h="20" x="290">disburse_account</TEXTFIELD>
+					<TEXTFIELD w="150" title="Disburse Account" required="true" y="70" h="20" x="290">disburse_account</TEXTFIELD>
 					<TEXTDATE w="150" title="Expected Matured Date" y="90" h="20" x="10">expected_matured_date</TEXTDATE>
 					<TEXTDATE w="150" title="Matured Date" y="90" h="20" x="290">matured_date</TEXTDATE>
 					<TEXTAREA w="430" tag="Details" y="2" h="70" x="10">details</TEXTAREA>
@@ -1043,7 +1043,7 @@
 					<TEXTDECIMAL w="150" title="Interest Rate" y="50" h="20" x="10">interest_rate</TEXTDECIMAL>
 					<TEXTFIELD w="150" title="Repayment Amount" required="true" y="50" h="20" x="290">repayment_amount</TEXTFIELD>
 					<TEXTDATE w="150" title="Disbursed Date" y="70" h="20" x="10">disbursed_date</TEXTDATE>
-					<TEXTFIELD w="150" title="Disburse Account" y="70" h="20" x="290">disburse_account</TEXTFIELD>
+					<TEXTFIELD w="150" title="Disburse Account" required="true" y="70" h="20" x="290">disburse_account</TEXTFIELD>
 					<TEXTDATE w="150" title="Expected Matured Date" y="90" h="20" x="10">expected_matured_date</TEXTDATE>
 					<TEXTDATE w="150" title="Matured Date" y="90" h="20" x="290">matured_date</TEXTDATE>
 					<TEXTAREA w="430" tag="Details" y="2" h="70" x="10">details</TEXTAREA>
@@ -1260,9 +1260,9 @@
 			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
 			<TEXTDATE w="75" title="Last Closing Date">last_closing_date</TEXTDATE>
 			<TEXTDECIMAL w="75" title="Credit Limit">credit_limit</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Minimum Balance">minimum_balance</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Maximum Balance">maximum_balance</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Current Balance">current_balance</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Available Balance">available_balance</TEXTDECIMAL>
 			<GRID name="Account Activity" keyfield="account_activity_id" linkfield="deposit_account_id" table="vw_account_activity">
 				<TEXTFIELD w="75" title="Activity ID">account_activity_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Activity">activity_type_name</TEXTFIELD>
@@ -1312,7 +1312,8 @@
 			<TEXTDECIMAL w="75" title="Repayment Amount">repayment_amount</TEXTDECIMAL>
 			<TEXTDATE w="75" title="Disbursed Date">disbursed_date</TEXTDATE>
 			<TEXTDATE w="75" title="Expected Matured Date">expected_matured_date</TEXTDATE>
-			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+			<TEXTDECIMAL w="75" title="Committed Balance">committed_balance</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Actual Balance">actual_balance</TEXTDECIMAL>
 			<GRID name="Account Activity" keyfield="account_activity_id" linkfield="loan_id" table="vw_loan_activity">
 				<TEXTFIELD w="75" title="Activity ID">account_activity_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Activity">activity_type_name</TEXTFIELD>

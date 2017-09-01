@@ -1,0 +1,15 @@
+<VERSIONS version="1.0">
+	<VERSION name="payroll" source="../payroll.xml" destination="payroll.xml">
+		<REMOVE>
+			<MENU name="P9A">111</MENU>
+			<MENU name="P10">112</MENU>
+			<MENU name="Loans" role="admin,payroll"></MENU>
+		</REMOVE>
+	</VERSION>
+
+	<VERSION name="projects" source="../projects.xml" destination="projects.xml">
+		<REMOVE>
+			<MENU name="Farming">30</MENU>
+		</REMOVE>
+	</VERSION>
+</VERSIONS>
