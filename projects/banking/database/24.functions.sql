@@ -200,6 +200,8 @@ CREATE OR REPLACE FUNCTION apply_approval(varchar(12), varchar(12), varchar(12),
 DECLARE
 	msg							varchar(120);
 	v_deposit_account_id		integer;
+	v_principal_amount			real;
+	v_repayment_amount			real;
 BEGIN
 
 	IF($3 = '1')THEN
@@ -213,13 +215,20 @@ BEGIN
 		
 		msg := 'Applied for account approval';
 	ELSIF($3 = '3')THEN
-		SELECT deposit_accounts.deposit_account_id INTO v_deposit_account_id
+		SELECT deposit_accounts.deposit_account_id, loans.principal_amount, loans.repayment_amount
+			INTO v_deposit_account_id, v_principal_amount, v_repayment_amount
 		FROM deposit_accounts INNER JOIN loans ON (deposit_accounts.account_number = loans.disburse_account)
 			AND (deposit_accounts.customer_id = loans.customer_id) AND (loans.loan_id = $1::integer)
 			AND (deposit_accounts.approve_status = 'Approved');
 		
 		IF(v_deposit_account_id is null)THEN
 			msg := 'The disburse account needs to be active and owned by the clients';
+			RAISE EXCEPTION '%', msg;
+		ELSIF(v_repayment_amount < 1)THEN
+			msg := 'The repayment amount has to be greater than 1';
+			RAISE EXCEPTION '%', msg;
+		ELSIF(v_principal_amount < v_repayment_amount)THEN
+			msg := 'The principal amount has to be greater than the repayment amount';
 			RAISE EXCEPTION '%', msg;
 		ELSE
 			UPDATE loans SET approve_status = 'Completed' 
@@ -243,10 +252,12 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
 CREATE OR REPLACE FUNCTION ins_loans() RETURNS trigger AS $$
 DECLARE
-	myrec			RECORD;
+	myrec					RECORD;
+	v_activity_type_id		integer;
+	v_repayments			integer;
+	v_currency_id			integer;
 BEGIN
 
 	IF(TG_OP = 'INSERT')THEN
@@ -259,8 +270,22 @@ BEGIN
 		NEW.interest_rate = myrec.interest_rate;
 		NEW.activity_frequency_id = myrec.activity_frequency_id;
 	ELSIF((NEW.approve_status != 'Approved') AND (OLD.approve_status <> 'Approved'))THEN
+		SELECT max(activity_type_id) INTO v_activity_type_id
+		FROM activity_types 
+		WHERE (use_key_id = 108) AND (is_active = true);
 		
+		SELECT currency_id INTO v_currency_id
+		FROM products
+		WHERE (product_id = NEW.product_id);
 		
+		INSERT INTO account_activity (loan_id, transfer_account_no, org_id, activity_type_id, currency_id, 
+			activity_frequency_id, activity_date, value_date, activity_status_id, account_credit, account_debit)
+		VALUES (NEW.loan_id, NEW.disburse_account, NEW.org_id, v_activity_type_id, v_currency_id, 
+			1, current_date, current_date, 1, 0, NEW.principal_amount);
+		
+		v_repayments := NEW.principal_amount / NEW.repayment_amount;
+		NEW.disbursed_date := current_date;
+		NEW.expected_matured_date := current_date + (v_repayments || ' months')::interval;
 	END IF;
 	
 	RETURN NEW;
