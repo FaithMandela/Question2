@@ -295,3 +295,26 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER ins_loans BEFORE INSERT OR UPDATE ON loans
 	FOR EACH ROW EXECUTE PROCEDURE ins_loans();
 	
+	
+CREATE OR REPLACE FUNCTION compute_loans(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg					varchar(120);
+BEGIN
+
+	SELECT period_id, org_id, start_date, end_date
+		INTO v_period_id, v_org_id, v_start_date, v_end_date
+	FROM periods
+	WHERE (period_id = $1) AND (opened = true) AND (activated = true) AND (closed = false);
+
+	FOR reca IN SELECT transaction_detail_id, account_id, amount
+	FROM transaction_details WHERE (transaction_id = $1) LOOP
+
+
+	LOOP;
+
+
+	msg := 'Applied for account approval';
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;
