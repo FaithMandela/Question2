@@ -17,13 +17,9 @@ INSERT INTO entity_types (org_id, use_key_id, entity_type_name, entity_role) VAL
 INSERT INTO collateral_types (org_id, collateral_type_name) VALUES (0, 'Land Title');
 INSERT INTO collateral_types (org_id, collateral_type_name) VALUES (0, 'Car Log book');
 
-INSERT INTO activity_frequency (activity_frequency_id, activity_frequency_name) VALUES (1, 'Once');
-INSERT INTO activity_frequency (activity_frequency_id, activity_frequency_name) VALUES (2, 'Daily');
-INSERT INTO activity_frequency (activity_frequency_id, activity_frequency_name) VALUES (3, 'Weekly');
-INSERT INTO activity_frequency (activity_frequency_id, activity_frequency_name) VALUES (4, 'Monthly');
-INSERT INTO activity_frequency (activity_frequency_id, activity_frequency_name) VALUES (5, 'Quartely');
-INSERT INTO activity_frequency (activity_frequency_id, activity_frequency_name) VALUES (6, 'Half Yearly');
-INSERT INTO activity_frequency (activity_frequency_id, activity_frequency_name) VALUES (7, 'Yearly');
+INSERT INTO activity_frequency (activity_frequency_id, activity_frequency_name) 
+VALUES (1, 'Once'), (4, 'Monthly');
+--- (1, 'Once'), (2, 'Daily'), (3, 'Weekly'), (4, 'Monthly'), (5, 'Quartely'), (6, 'Half Yearly'), (7, 'Yearly');
 
 INSERT INTO activity_status (activity_status_id, activity_status_name) VALUES (1, 'Completed');
 INSERT INTO activity_status (activity_status_id, activity_status_name) VALUES (2, 'UnCleared');

@@ -298,7 +298,12 @@ CREATE TRIGGER ins_loans BEFORE INSERT OR UPDATE ON loans
 	
 CREATE OR REPLACE FUNCTION compute_loans(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
-	msg					varchar(120);
+	reca 					RECORD;
+	v_period_id				integer;
+	v_org_id				integer;
+	v_start_date			date;
+	v_end_date				date;
+	msg						varchar(120);
 BEGIN
 
 	SELECT period_id, org_id, start_date, end_date
@@ -310,7 +315,7 @@ BEGIN
 	FROM transaction_details WHERE (transaction_id = $1) LOOP
 
 
-	LOOP;
+	END LOOP;
 
 
 	msg := 'Applied for account approval';

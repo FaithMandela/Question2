@@ -120,6 +120,7 @@ CREATE TABLE products (
 	maximum_day				real,
 	minimum_trx				real,
 	maximum_trx				real,
+	maximum_repayments		integer default 100 not null,
 	
 	application_date		timestamp default now() not null,
 	approve_status			varchar(16) default 'Draft' not null,
