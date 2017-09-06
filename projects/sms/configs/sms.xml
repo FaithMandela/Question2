@@ -862,5 +862,11 @@
 			<DRILLDOWN name="Year" keyfield="unit_year" table="vw_unit_year" noorg="true" listfield="unit_year" pos="top"></DRILLDOWN>
 			<JASPER name="Units" reportfile="vw_load_units.jasper"></JASPER>
 		</FILTER>
+		<FILTER w="700" name="Year" split="150" type="horl" key="6" h="550">
+			<DRILLDOWN name="Year" keyfield="unit_year" table="vw_unit_year" noorg="true" listfield="unit_year" pos="top">
+				<DRILLDOWN name="Month" keyfield="unit_month" wherefield="unit_year" table="vw_unit_months" noorg="true" listfield="unit_month_name" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER name="Units" reportfile="vw_load_units.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 </APP>

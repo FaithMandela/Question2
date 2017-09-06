@@ -202,6 +202,7 @@ DECLARE
 	v_deposit_account_id		integer;
 	v_principal_amount			real;
 	v_repayment_amount			real;
+	v_maximum_repayments		integer;
 BEGIN
 
 	IF($3 = '1')THEN
@@ -215,9 +216,11 @@ BEGIN
 		
 		msg := 'Applied for account approval';
 	ELSIF($3 = '3')THEN
-		SELECT deposit_accounts.deposit_account_id, loans.principal_amount, loans.repayment_amount
-			INTO v_deposit_account_id, v_principal_amount, v_repayment_amount
+		SELECT deposit_accounts.deposit_account_id, loans.principal_amount, loans.repayment_amount,
+				products.maximum_repayments
+			INTO v_deposit_account_id, v_principal_amount, v_repayment_amount, v_maximum_repayments
 		FROM deposit_accounts INNER JOIN loans ON (deposit_accounts.account_number = loans.disburse_account)
+			INNER JOIN products ON loans.product_id = products.product_id
 			AND (deposit_accounts.customer_id = loans.customer_id) AND (loans.loan_id = $1::integer)
 			AND (deposit_accounts.approve_status = 'Approved');
 		
@@ -229,6 +232,9 @@ BEGIN
 			RAISE EXCEPTION '%', msg;
 		ELSIF(v_principal_amount < v_repayment_amount)THEN
 			msg := 'The principal amount has to be greater than the repayment amount';
+			RAISE EXCEPTION '%', msg;
+		ELSIF((v_principal_amount / v_repayment_amount) > v_maximum_repayments)THEN
+			msg := 'The repayment periods are more than what is prescribed by the product';
 			RAISE EXCEPTION '%', msg;
 		ELSE
 			UPDATE loans SET approve_status = 'Completed' 
@@ -269,7 +275,7 @@ BEGIN
 			
 		NEW.interest_rate = myrec.interest_rate;
 		NEW.activity_frequency_id = myrec.activity_frequency_id;
-	ELSIF((NEW.approve_status != 'Approved') AND (OLD.approve_status <> 'Approved'))THEN
+	ELSIF((NEW.approve_status = 'Approved') AND (OLD.approve_status <> 'Approved'))THEN
 		SELECT max(activity_type_id) INTO v_activity_type_id
 		FROM activity_types 
 		WHERE (use_key_id = 108) AND (is_active = true);
@@ -303,6 +309,12 @@ DECLARE
 	v_org_id				integer;
 	v_start_date			date;
 	v_end_date				date;
+	v_interest_methods		varchar(320);
+	v_interest_account		varchar(32),
+	v_interest_amount		real;
+	v_penalty_methods		varchar(320);
+	v_penalty_account		varchar(32),
+	v_penalty_amount		real;
 	msg						varchar(120);
 BEGIN
 
@@ -311,9 +323,20 @@ BEGIN
 	FROM periods
 	WHERE (period_id = $1) AND (opened = true) AND (activated = true) AND (closed = false);
 
-	FOR reca IN SELECT transaction_detail_id, account_id, amount
-	FROM transaction_details WHERE (transaction_id = $1) LOOP
-
+	FOR reca IN SELECT loan_id, customer_id, product_id, activity_frequency_id, entity_id,
+			account_number, disburse_account, principal_amount, interest_rate,
+			repayment_amount, disbursed_date
+		FROM loans WHERE (org_id = v_org_id) AND (approve_status = 'Approved')
+	LOOP
+	
+		SELECT interest_methods.formural, account_number INTO v_interest_methods
+		FROM interest_methods INNER JOIN products ON interest_methods.interest_method_id = products.interest_method_id
+		WHERE (products.product_id = reca.product_id);
+		
+		SELECT penalty_methods.formural, account_number INTO v_penalty_methods
+		FROM penalty_methods INNER JOIN products ON penalty_methods.penalty_method_id = products.penalty_method_id
+		WHERE (penalty_methods.product_id = reca.product_id);
+	
 
 	END LOOP;
 
@@ -323,3 +346,27 @@ BEGIN
 	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION get_intrest(integer, integer) RETURN real AS $$
+DECLARE
+	ans						real;
+BEGIN
+
+	RETURN ans;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION get_penalty(integer, integer) RETURN real AS $$
+DECLARE
+	ans						real;
+BEGIN
+
+	RETURN ans;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+

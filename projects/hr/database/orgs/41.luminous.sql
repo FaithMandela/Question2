@@ -137,12 +137,14 @@ VALUES
 (25, 'Rent2', '2', 2),
 (26, 'Overseas', 'Oversea', 2);
 
-INSERT INTO adjustments (org_id, adjustment_effect_id, adjustment_type, adjustment_Name, Visible, In_Tax, account_number) 
+INSERT INTO adjustments (org_id, currency_id, adjustment_effect_id, adjustment_type, adjustment_Name, Visible, In_Tax, account_number) 
 VALUES 
-(0, 11, 1, 'Leave Pay', true, true, '90005'),
-(0, 12, 1, 'Director Fee', true, true, '90005'),
-(0, 12, 1, 'Commission Fee', true, true, '90005'),
-(0, 13, 1, 'Bonus', true, true, '90005');
+(0, 1, 11, 1, 'Leave Pay', true, true, '90005'),
+(0, 1, 12, 1, 'Director Fee', true, true, '90005'),
+(0, 1, 12, 1, 'Commission Fee', true, true, '90005'),
+(0, 1, 13, 1, 'Bonus', true, true, '90005');
+
+DELETE FROM currency WHERE currency_id > 1;
 
 
 ----------------- Work
