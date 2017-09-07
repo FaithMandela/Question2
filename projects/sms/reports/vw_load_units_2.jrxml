@@ -64,10 +64,9 @@ sum(sms_units) as s_sms_units
 
 FROM vw_load_usage
 
-WHERE (to_char(sms_day, 'YYYY') = '$P!{filterid}')
+WHERE (to_char(sms_day, 'YYYYMM') = '$P!{filterid}')
 
 GROUP BY org_id, org_name
-
 ORDER BY org_name]]>
 		</queryString>
 		<field name="org_id" class="java.lang.Integer"/>
@@ -90,11 +89,9 @@ sum(sms_sold) as s_sms_sold
 
 FROM vw_load_usage
 
-WHERE (to_char(sms_day, 'YYYY') = '$P!{filterid}')
+WHERE (to_char(sms_day, 'YYYYMM') = '$P!{filterid}')
 
-GROUP BY to_char(sms_day, 'Month'), to_char(sms_day, 'MM')
-
-ORDER BY to_char(sms_day, 'MM')]]>
+GROUP BY to_char(sms_day, 'Month')]]>
 		</queryString>
 		<field name="sms_month" class="java.lang.String"/>
 		<field name="s_sms_count" class="java.math.BigDecimal"/>
@@ -122,7 +119,7 @@ ORDER BY to_char(sms_day, 'MM')]]>
 
 FROM vw_load_usage
 
-WHERE (to_char(sms_day, 'YYYY') = '$P!{filterid}')
+WHERE (to_char(sms_day, 'YYYYMM') = '$P!{filterid}')
 
 GROUP BY org_id, org_name, to_char(sms_day, 'YYYY'), to_char(sms_day, 'Month'), to_char(sms_day, 'MM')
 ORDER BY org_name, to_char(sms_day, 'YYYY'), to_char(sms_day, 'MM')]]>
@@ -133,54 +130,6 @@ ORDER BY org_name, to_char(sms_day, 'YYYY'), to_char(sms_day, 'MM')]]>
 	<field name="sms_month" class="java.lang.String"/>
 	<field name="s_sms_count" class="java.math.BigDecimal"/>
 	<field name="s_sms_units" class="java.math.BigDecimal"/>
-	<variable name="s_sms_count_1" class="java.math.BigDecimal" resetType="Group" resetGroup="org_name" calculation="Sum">
-		<variableExpression><![CDATA[$F{s_sms_count}]]></variableExpression>
-	</variable>
-	<group name="org_name">
-		<groupExpression><![CDATA[$F{org_name}]]></groupExpression>
-		<groupHeader>
-			<band height="16">
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="1" y="0" width="191" height="15" uuid="4f49266e-2536-45e9-97e9-3507926991a9"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{org_name}]]></textFieldExpression>
-				</textField>
-				<line>
-					<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="555" height="1" uuid="e6a17493-6d1d-49e2-880f-778b390faa9c"/>
-					<graphicElement>
-						<pen lineWidth="0.5" lineColor="#999999"/>
-					</graphicElement>
-				</line>
-				<staticText>
-					<reportElement style="Column header" x="192" y="0" width="110" height="15" forecolor="#000000" uuid="eee6ba32-ec54-4acc-829d-0d66ee2fab3d"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<text><![CDATA[Month]]></text>
-				</staticText>
-				<staticText>
-					<reportElement style="Column header" x="302" y="0" width="84" height="15" forecolor="#000000" uuid="fdcc5624-3989-41af-9c8d-66c156a55a0a"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<text><![CDATA[Sms Count]]></text>
-				</staticText>
-			</band>
-		</groupHeader>
-		<groupFooter>
-			<band height="15">
-				<textField pattern="#,##0">
-					<reportElement x="302" y="0" width="84" height="15" uuid="ca89bb37-3b81-45ae-85fc-b3f2d4fe4456"/>
-					<textElement textAlignment="Right">
-						<font fontName="Times New Roman" size="12"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$V{s_sms_count_1}]]></textFieldExpression>
-				</textField>
-			</band>
-		</groupFooter>
-	</group>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -370,21 +319,56 @@ ORDER BY org_name, to_char(sms_day, 'YYYY'), to_char(sms_day, 'MM')]]>
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band splitType="Stretch"/>
+		<band height="16" splitType="Stretch">
+			<staticText>
+				<reportElement style="Column header" x="191" y="1" width="110" height="15" forecolor="#000000" uuid="eee6ba32-ec54-4acc-829d-0d66ee2fab3d"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Month]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="555" height="1" uuid="e6a17493-6d1d-49e2-880f-778b390faa9c"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement style="Column header" x="301" y="1" width="84" height="15" forecolor="#000000" uuid="fdcc5624-3989-41af-9c8d-66c156a55a0a"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Sms Count]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="0" y="1" width="191" height="15" forecolor="#000000" uuid="e029260f-62f9-4c7f-a831-8af27458165c"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Organiszation]]></text>
+			</staticText>
+		</band>
 	</columnHeader>
 	<detail>
-		<band height="12" splitType="Stretch">
+		<band height="13" splitType="Stretch">
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="12" uuid="ef832147-f157-4383-bdd6-3a0e25fcc612"/>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="192" y="0" width="110" height="12" uuid="185d8f2e-e433-47e1-a1af-cc43925f00d5"/>
+					<reportElement style="Detail" x="0" y="0" width="191" height="12" uuid="4f49266e-2536-45e9-97e9-3507926991a9"/>
+					<textElement>
+						<font fontName="Times New Roman" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{org_name}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="191" y="0" width="110" height="12" uuid="185d8f2e-e433-47e1-a1af-cc43925f00d5"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{sms_month}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="302" y="0" width="84" height="12" uuid="c29774f0-2b5e-4e57-b79c-d1dfed62351f"/>
+					<reportElement style="Detail" x="301" y="0" width="84" height="12" uuid="c29774f0-2b5e-4e57-b79c-d1dfed62351f"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>

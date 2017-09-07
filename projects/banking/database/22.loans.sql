@@ -12,6 +12,7 @@ CREATE TABLE loans (
 	principal_amount		real not null,
 	interest_rate			real not null,
 	repayment_amount		real not null,
+	repayment_period		integer not null,
 
 	disbursed_date			date,
 	expected_matured_date	date,
@@ -120,6 +121,7 @@ CREATE VIEW vw_loans AS
 		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
 		loans.org_id, loans.loan_id, loans.account_number, loans.principal_amount, loans.interest_rate, 
 		loans.repayment_amount, loans.disbursed_date, loans.expected_matured_date, loans.matured_date, 
+		loans.repayment_period,
 		loans.application_date, loans.approve_status, loans.workflow_table_id, loans.action_date, loans.details,
 		
 		vw_loan_balance.committed_balance, vw_loan_balance.actual_balance

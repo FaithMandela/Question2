@@ -51,13 +51,13 @@ SELECT pg_catalog.setval('interest_methods_interest_method_id_seq', 3, true);
 INSERT INTO penalty_methods (penalty_method_id, org_id, penalty_method_name)
 VALUES (0, 0, 'No penalty');
 INSERT INTO penalty_methods (penalty_method_id, org_id, penalty_method_name, formural, account_number)
-VALUES (1, 0, 'Loan Penalty', 'get_penalty(1, loan_id)', '400000003');
+VALUES (1, 0, 'Loan Penalty 15', 'get_penalty(1, loan_id, 15)', '400000003');
 SELECT pg_catalog.setval('penalty_methods_penalty_method_id_seq', 1, true);
 
-INSERT INTO products (product_id, activity_frequency_id, account_id, interest_method_id, penalty_method_id, currency_id, org_id, product_name, description, loan_account, is_active, interest_rate, min_opening_balance, lockin_period_frequency, minimum_balance, maximum_balance, minimum_day, maximum_day, minimum_trx, maximum_trx, details) 
-VALUES (1, 4, 34005, 0, 0, 1, 0, 'Transaction account', 'Account to handle transactions', false, true, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL);
-INSERT INTO products (product_id, activity_frequency_id, account_id, interest_method_id, penalty_method_id, currency_id, org_id, product_name, description, loan_account, is_active, interest_rate, min_opening_balance, lockin_period_frequency, minimum_balance, maximum_balance, minimum_day, maximum_day, minimum_trx, maximum_trx, details) 
-VALUES (2, 4, 34005, 2, 1, 1, 0, 'Basic loans', 'Basic loans', true, true, 12, 0, 0, 0, 0, 0, 0, 0, 0, NULL);
+INSERT INTO products (product_id, activity_frequency_id, account_id, interest_method_id, penalty_method_id, currency_id, org_id, product_name, description, loan_account, is_active, interest_rate, min_opening_balance, lockin_period_frequency, minimum_balance, maximum_balance, minimum_day, maximum_day, minimum_trx, maximum_trx, penalty_rate) 
+VALUES (1, 4, 34005, 0, 0, 1, 0, 'Transaction account', 'Account to handle transactions', false, true, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12);
+INSERT INTO products (product_id, activity_frequency_id, account_id, interest_method_id, penalty_method_id, currency_id, org_id, product_name, description, loan_account, is_active, interest_rate, min_opening_balance, lockin_period_frequency, minimum_balance, maximum_balance, minimum_day, maximum_day, minimum_trx, maximum_trx, penalty_rate) 
+VALUES (2, 4, 34005, 2, 1, 1, 0, 'Basic loans', 'Basic loans', true, true, 12, 0, 0, 0, 0, 0, 0, 0, 0, 12);
 SELECT pg_catalog.setval('products_product_id_seq', 2, true);
 
 

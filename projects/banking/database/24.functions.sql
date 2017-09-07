@@ -40,12 +40,12 @@ BEGIN
 	
 		NEW.account_number := '4' || lpad(NEW.org_id::varchar, 2, '0')  || lpad(NEW.customer_id::varchar, 4, '0') || lpad(NEW.deposit_account_id::varchar, 2, '0');
 		
-		NEW.minimum_balance = myrec.minimum_balance;
-		NEW.maximum_balance = myrec.maximum_balance;
+		NEW.minimum_balance := myrec.minimum_balance;
+		NEW.maximum_balance := myrec.maximum_balance;
 	
-		NEW.interest_rate = myrec.interest_rate;
-		NEW.activity_frequency_id = myrec.activity_frequency_id;
-		NEW.lockin_period_frequency = myrec.lockin_period_frequency;
+		NEW.interest_rate := myrec.interest_rate;
+		NEW.activity_frequency_id := myrec.activity_frequency_id;
+		NEW.lockin_period_frequency := myrec.lockin_period_frequency;
 	ELSE
 		IF(NEW.approve_status = 'Approved')THEN
 			INSERT INTO account_activity (deposit_account_id, activity_type_id, activity_frequency_id,
@@ -227,12 +227,6 @@ BEGIN
 		IF(v_deposit_account_id is null)THEN
 			msg := 'The disburse account needs to be active and owned by the clients';
 			RAISE EXCEPTION '%', msg;
-		ELSIF(v_repayment_amount < 1)THEN
-			msg := 'The repayment amount has to be greater than 1';
-			RAISE EXCEPTION '%', msg;
-		ELSIF(v_principal_amount < v_repayment_amount)THEN
-			msg := 'The principal amount has to be greater than the repayment amount';
-			RAISE EXCEPTION '%', msg;
 		ELSIF((v_principal_amount / v_repayment_amount) > v_maximum_repayments)THEN
 			msg := 'The repayment periods are more than what is prescribed by the product';
 			RAISE EXCEPTION '%', msg;
@@ -266,6 +260,13 @@ DECLARE
 	v_currency_id			integer;
 BEGIN
 
+	IF(NEW.repayment_amount < 1)THEN
+		RAISE EXCEPTION 'The repayment amount has to be greater than 1';
+	ELSIF(NEW.principal_amount < NEW.repayment_amount)THEN
+		RAISE EXCEPTION 'The principal amount has to be greater than the repayment amount';
+	END IF;
+	NEW.repayment_period = NEW.principal_amount / NEW.repayment_amount;
+
 	IF(TG_OP = 'INSERT')THEN
 		SELECT interest_rate, activity_frequency_id, min_opening_balance, lockin_period_frequency,
 			minimum_balance, maximum_balance INTO myrec
@@ -273,8 +274,8 @@ BEGIN
 	
 		NEW.account_number := '5' || lpad(NEW.org_id::varchar, 2, '0')  || lpad(NEW.customer_id::varchar, 4, '0') || lpad(NEW.loan_id::varchar, 2, '0');
 			
-		NEW.interest_rate = myrec.interest_rate;
-		NEW.activity_frequency_id = myrec.activity_frequency_id;
+		NEW.interest_rate := myrec.interest_rate;
+		NEW.activity_frequency_id := myrec.activity_frequency_id;
 	ELSIF((NEW.approve_status = 'Approved') AND (OLD.approve_status <> 'Approved'))THEN
 		SELECT max(activity_type_id) INTO v_activity_type_id
 		FROM activity_types 
@@ -325,18 +326,30 @@ BEGIN
 
 	FOR reca IN SELECT loan_id, customer_id, product_id, activity_frequency_id, entity_id,
 			account_number, disburse_account, principal_amount, interest_rate,
-			repayment_amount, disbursed_date
-		FROM loans WHERE (org_id = v_org_id) AND (approve_status = 'Approved')
+			repayment_period, repayment_amount, disbursed_date, actual_balance
+		FROM vw_loans 
+		WHERE (org_id = v_org_id) AND (approve_status = 'Approved') AND (actual_balance < 0)
 	LOOP
 	
 		SELECT interest_methods.formural, account_number INTO v_interest_methods
 		FROM interest_methods INNER JOIN products ON interest_methods.interest_method_id = products.interest_method_id
 		WHERE (products.product_id = reca.product_id);
 		
+		v_interest_amount := 0;
+		IF(v_interest_methods is not null)THEN
+			EXECUTE 'SELECT ' || v_interest_methods || ' FROM loans WHERE loan_id = ' || reca.loan_id 
+			INTO v_interest_amount;
+		END IF;
+		
 		SELECT penalty_methods.formural, account_number INTO v_penalty_methods
 		FROM penalty_methods INNER JOIN products ON penalty_methods.penalty_method_id = products.penalty_method_id
 		WHERE (penalty_methods.product_id = reca.product_id);
-	
+		
+		v_penalty_amount := 0;
+		IF(v_penalty_methods is not null)THEN
+			EXECUTE 'SELECT ' || v_penalty_methods || ' FROM loans WHERE loan_id = ' || reca.loan_id 
+			INTO v_penalty_amount;
+		END IF;
 
 	END LOOP;
 
@@ -350,18 +363,40 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION get_intrest(integer, integer) RETURN real AS $$
 DECLARE
+	v_principal_amount 		real;
+	v_interest_rate			real;
+	v_actual_balance		real;
 	ans						real;
 BEGIN
+
+	IF($1 = 1)THEN
+		SELECT principal_amount, interest_rate INTO v_principal_amount, v_interest_rate
+		FROM vw_loans 
+		WHERE (loan_id = $1);
+		ans := reca.principal_amount * reca.interest_rate / 1200;
+	ELSIF($1 = 2)THEN
+		SELECT actual_balance, interest_rate INTO v_actual_balance, v_interest_rate
+		FROM vw_loans 
+		WHERE (loan_id = $1);
+		ans := -1 * reca.actual_balance * reca.interest_rate / 1200;
+	END IF;
 
 	RETURN ans;
 END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION get_penalty(integer, integer) RETURN real AS $$
+CREATE OR REPLACE FUNCTION get_penalty(integer, integer, real) RETURN real AS $$
 DECLARE
 	ans						real;
 BEGIN
+
+	IF($1 = 1)THEN
+		SELECT actual_balance INTO v_actual_balance, v_interest_rate
+		FROM vw_loans 
+		WHERE (loan_id = $1);
+		ans := -1 * reca.actual_balance * $3 / 1200;
+	END IF;
 
 	RETURN ans;
 END;
