@@ -1266,28 +1266,30 @@
 				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID name="Interest Methods" keyfield="interest_method_id" table="interest_methods">
-			<TEXTFIELD w="45" title="Interest Method ID">interest_method_id</TEXTFIELD>
+		<GRID name="Interest Methods" keyfield="interest_method_id" table="vw_interest_methods">
+			<TEXTFIELD w="75" title="Activity Type">activity_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Interest Method">interest_method_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Formural">formural</TEXTFIELD>
 			<TEXTFIELD w="75" title="Account Number">account_number</TEXTFIELD>
 			<FORM name="Interest Methods" keyfield="interest_method_id" table="interest_methods">
-				<TEXTFIELD w="430" title="Interest Method" y="10" h="20" x="10">interest_method_name</TEXTFIELD>
-				<TEXTFIELD w="430" title="Formural" y="30" h="20" x="10">formural</TEXTFIELD>
-				<TEXTFIELD w="150" title="Account Number" y="50" h="20" x="10">account_number</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+				<COMBOBOX w="430" title="Activity Type" lptable="activity_types" y="10" h="20" x="10" lpfield="activity_type_name">activity_type_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Interest Method" y="30" h="20" x="10">interest_method_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Formural" y="50" h="20" x="10">formural</TEXTFIELD>
+				<TEXTFIELD w="150" title="Account Number" y="70" h="20" x="10">account_number</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID name="Penalty Methods" keyfield="penalty_method_id" table="penalty_methods">
-			<TEXTFIELD w="75" title="Penalty Method ID">penalty_method_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Penalty Method Name">penalty_method_name</TEXTFIELD>
+		<GRID name="Penalty Methods" keyfield="penalty_method_id" table="vw_penalty_methods">
+			<TEXTFIELD w="75" title="Activity Type">activity_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Penalty Method">penalty_method_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Formural">formural</TEXTFIELD>
 			<TEXTFIELD w="75" title="Account Number">account_number</TEXTFIELD>
 			<FORM name="Penalty Methods" keyfield="penalty_method_id" table="penalty_methods">
-				<TEXTFIELD w="430" title="Penalty Method Name" y="10" h="20" x="10">penalty_method_name</TEXTFIELD>
-				<TEXTFIELD w="430" title="Formural" y="30" h="20" x="10">formural</TEXTFIELD>
-				<TEXTFIELD w="150" title="Account Number" y="50" h="20" x="10">account_number</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+				<COMBOBOX w="430" title="Activity Type" lptable="activity_types" y="10" h="20" x="10" lpfield="activity_type_name">activity_type_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Penalty Method" y="30" h="20" x="10">penalty_method_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Formural" y="50" h="20" x="10">formural</TEXTFIELD>
+				<TEXTFIELD w="150" title="Account Number" y="70" h="20" x="10">account_number</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Collateral Types" keyfield="collateral_type_id" table="collateral_types">

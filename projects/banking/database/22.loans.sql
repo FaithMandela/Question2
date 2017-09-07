@@ -106,10 +106,10 @@ CREATE INDEX account_activity_transfer_loan_id ON account_activity(transfer_loan
 CREATE VIEW vw_loan_balance AS
 	SELECT fl.loan_id, fl.committed_balance, al.actual_balance
 	FROM 
-		(SELECT loan_id, sum((account_credit - account_debit) * exchange_rate) as committed_balance
+		(SELECT loan_id, sum((account_debit - account_credit) * exchange_rate) as committed_balance
 			FROM account_activity GROUP BY loan_id) fl
 	LEFT JOIN
-		(SELECT loan_id, sum((account_credit - account_debit) * exchange_rate) as actual_balance
+		(SELECT loan_id, sum((account_debit - account_credit) * exchange_rate) as actual_balance
 			FROM account_activity WHERE activity_status_id < 2
 			GROUP BY loan_id) al 
 		ON fl.loan_id = al.loan_id;
@@ -121,7 +121,7 @@ CREATE VIEW vw_loans AS
 		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
 		loans.org_id, loans.loan_id, loans.account_number, loans.principal_amount, loans.interest_rate, 
 		loans.repayment_amount, loans.disbursed_date, loans.expected_matured_date, loans.matured_date, 
-		loans.repayment_period,
+		loans.repayment_period, loans.disburse_account,
 		loans.application_date, loans.approve_status, loans.workflow_table_id, loans.action_date, loans.details,
 		
 		vw_loan_balance.committed_balance, vw_loan_balance.actual_balance

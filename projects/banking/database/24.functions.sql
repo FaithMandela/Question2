@@ -310,11 +310,13 @@ DECLARE
 	v_org_id				integer;
 	v_start_date			date;
 	v_end_date				date;
-	v_interest_methods		varchar(320);
-	v_interest_account		varchar(32),
+	v_account_activity_id	integer;
+	v_activity_type_id		integer;
+	v_interest_formural		varchar(320);
+	v_interest_account		varchar(32);
 	v_interest_amount		real;
-	v_penalty_methods		varchar(320);
-	v_penalty_account		varchar(32),
+	v_penalty_formural		varchar(320);
+	v_penalty_account		varchar(32);
 	v_penalty_amount		real;
 	msg						varchar(120);
 BEGIN
@@ -322,37 +324,64 @@ BEGIN
 	SELECT period_id, org_id, start_date, end_date
 		INTO v_period_id, v_org_id, v_start_date, v_end_date
 	FROM periods
-	WHERE (period_id = $1) AND (opened = true) AND (activated = true) AND (closed = false);
+	WHERE (period_id = $1::integer) AND (opened = true) AND (activated = true) AND (closed = false);
 
-	FOR reca IN SELECT loan_id, customer_id, product_id, activity_frequency_id, entity_id,
+	FOR reca IN SELECT currency_id, loan_id, customer_id, product_id, activity_frequency_id,
 			account_number, disburse_account, principal_amount, interest_rate,
 			repayment_period, repayment_amount, disbursed_date, actual_balance
 		FROM vw_loans 
-		WHERE (org_id = v_org_id) AND (approve_status = 'Approved') AND (actual_balance < 0)
+		WHERE (org_id = v_org_id) AND (approve_status = 'Approved') AND (actual_balance > 0)
 	LOOP
 	
-		SELECT interest_methods.formural, account_number INTO v_interest_methods
+		SELECT interest_methods.activity_type_id, interest_methods.formural, interest_methods.account_number 
+			INTO v_activity_type_id, v_interest_formural, v_interest_account
 		FROM interest_methods INNER JOIN products ON interest_methods.interest_method_id = products.interest_method_id
 		WHERE (products.product_id = reca.product_id);
 		
+		v_account_activity_id := null;
 		v_interest_amount := 0;
-		IF(v_interest_methods is not null)THEN
-			EXECUTE 'SELECT ' || v_interest_methods || ' FROM loans WHERE loan_id = ' || reca.loan_id 
+		IF(v_interest_formural is not null)THEN
+			EXECUTE 'SELECT ' || v_interest_formural || ' FROM loans WHERE loan_id = ' || reca.loan_id 
 			INTO v_interest_amount;
+			
+			SELECT account_activity_id INTO v_account_activity_id
+			FROM account_activity
+			WHERE (period_id = v_period_id) AND (activity_type_id = v_activity_type_id) AND (loan_id = reca.loan_id);
+		END IF;
+		IF((v_interest_amount > 0) AND (v_account_activity_id is null))THEN
+			INSERT INTO account_activity (loan_id, transfer_account_no, activity_type_id,
+				currency_id, org_id, activity_date, value_date,
+				activity_frequency_id, activity_status_id, account_credit, account_debit)
+			VALUES (reca.loan_id, v_interest_account, v_activity_type_id,
+				reca.currency_id, v_org_id, current_date, current_date,
+				1, 1, 0, v_interest_amount);
 		END IF;
 		
-		SELECT penalty_methods.formural, account_number INTO v_penalty_methods
+		SELECT penalty_methods.activity_type_id, penalty_methods.formural, penalty_methods.account_number 
+			INTO v_activity_type_id, v_penalty_formural, v_penalty_account
 		FROM penalty_methods INNER JOIN products ON penalty_methods.penalty_method_id = products.penalty_method_id
-		WHERE (penalty_methods.product_id = reca.product_id);
+		WHERE (products.product_id = reca.product_id);
 		
+		v_account_activity_id := null;
 		v_penalty_amount := 0;
-		IF(v_penalty_methods is not null)THEN
-			EXECUTE 'SELECT ' || v_penalty_methods || ' FROM loans WHERE loan_id = ' || reca.loan_id 
+		IF(v_penalty_formural is not null)THEN
+			EXECUTE 'SELECT ' || v_penalty_formural || ' FROM loans WHERE loan_id = ' || reca.loan_id 
 			INTO v_penalty_amount;
+			
+			SELECT account_activity_id INTO v_account_activity_id
+			FROM account_activity
+			WHERE (period_id = v_period_id) AND (activity_type_id = v_activity_type_id) AND (loan_id = reca.loan_id);
+		END IF;
+		IF((v_penalty_amount > 0) AND (v_account_activity_id is null))THEN
+			INSERT INTO account_activity (loan_id, transfer_account_no, activity_type_id,
+				currency_id, org_id, activity_date, value_date,
+				activity_frequency_id, activity_status_id, account_credit, account_debit)
+			VALUES (reca.loan_id, v_interest_account, v_activity_type_id,
+				reca.currency_id, v_org_id, current_date, current_date,
+				1, 1, 0, v_penalty_amount);
 		END IF;
 
 	END LOOP;
-
 
 	msg := 'Applied for account approval';
 
@@ -361,7 +390,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION get_intrest(integer, integer) RETURN real AS $$
+CREATE OR REPLACE FUNCTION get_intrest(integer, integer) RETURNS real AS $$
 DECLARE
 	v_principal_amount 		real;
 	v_interest_rate			real;
@@ -370,15 +399,15 @@ DECLARE
 BEGIN
 
 	IF($1 = 1)THEN
-		SELECT principal_amount, interest_rate INTO v_principal_amount, v_interest_rate
-		FROM vw_loans 
-		WHERE (loan_id = $1);
-		ans := reca.principal_amount * reca.interest_rate / 1200;
-	ELSIF($1 = 2)THEN
 		SELECT actual_balance, interest_rate INTO v_actual_balance, v_interest_rate
 		FROM vw_loans 
 		WHERE (loan_id = $1);
-		ans := -1 * reca.actual_balance * reca.interest_rate / 1200;
+		ans := v_actual_balance * v_interest_rate / 1200;
+	ELSIF($1 = 2)THEN
+		SELECT principal_amount, interest_rate INTO v_principal_amount, v_interest_rate
+		FROM vw_loans 
+		WHERE (loan_id = $1);
+		ans := v_principal_amount * v_interest_rate / 1200;
 	END IF;
 
 	RETURN ans;
@@ -386,16 +415,17 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION get_penalty(integer, integer, real) RETURN real AS $$
+CREATE OR REPLACE FUNCTION get_penalty(integer, integer, real) RETURNS real AS $$
 DECLARE
+	v_actual_default		real;
 	ans						real;
 BEGIN
 
 	IF($1 = 1)THEN
-		SELECT actual_balance INTO v_actual_balance, v_interest_rate
+		SELECT (actual_balance - committed_balance) INTO v_actual_default
 		FROM vw_loans 
 		WHERE (loan_id = $1);
-		ans := -1 * reca.actual_balance * $3 / 1200;
+		ans := v_actual_default * $3 / 1200;
 	END IF;
 
 	RETURN ans;

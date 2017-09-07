@@ -9,6 +9,8 @@ INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (105, 'Loan
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (106, 'Loan Penalty', 4);
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (107, 'Loan Payment', 4);
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (108, 'Loan Disbursement', 4);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (109, 'Account Intrests', 4);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (110, 'Account Penalty', 4);
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (201, 'Initial Charges', 4);
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (202, 'Transaction Charges', 4);
 
@@ -38,26 +40,30 @@ INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, ac
 INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (10, 34005, 107, 0, 'Loan Payment', true, NULL);
 INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (11, 34005, 108, 0, 'Loan Disbursement', true, NULL);
 INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (12, 34005, 104, 0, 'Account Transfer', true, NULL);
+INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (14, 34005, 109, 0, 'Account Intrests', true, NULL);
+INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (15, 34005, 110, 0, 'Account Penalty', true, NULL);
 INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (21, 34005, 201, 0, 'Account opening charges', true, NULL);
 INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (22, 34005, 202, 0, 'Transfer fees', true, NULL);
 SELECT pg_catalog.setval('activity_types_activity_type_id_seq', 22, true);
 
-INSERT INTO interest_methods (interest_method_id, org_id, interest_method_name) VALUES (0, 0, 'No Intrest');
-INSERT INTO interest_methods (interest_method_id, org_id, interest_method_name, formural, account_number) VALUES (1, 0, 'Loan Fixed Intrest', 'get_intrest(1, loan_id)', '400000002');
-INSERT INTO interest_methods (interest_method_id, org_id, interest_method_name, formural, account_number) VALUES (2, 0, 'Loan reducing balance', 'get_intrest(2, loan_id)', '400000002');
-INSERT INTO interest_methods (interest_method_id, org_id, interest_method_name, formural, account_number) VALUES (3, 0, 'Savings intrest', 'get_intrest(1, loan_id)', '400000002');
+INSERT INTO interest_methods (interest_method_id, activity_type_id, org_id, interest_method_name) VALUES (0, 8, 0, 'No Intrest');
+INSERT INTO interest_methods (interest_method_id, activity_type_id, org_id, interest_method_name, formural, account_number) VALUES (1, 8, 0, 'Loan reducing balance', 'get_intrest(1, loan_id)', '400000002');
+INSERT INTO interest_methods (interest_method_id, activity_type_id, org_id, interest_method_name, formural, account_number) VALUES (2, 8, 0, 'Loan Fixed Intrest', 'get_intrest(2, loan_id)', '400000002');
+INSERT INTO interest_methods (interest_method_id, activity_type_id, org_id, interest_method_name, formural, account_number) VALUES (3, 14, 0, 'Savings intrest', 'get_intrest(1, deposit_account_id)', '400000002');
 SELECT pg_catalog.setval('interest_methods_interest_method_id_seq', 3, true);
 
-INSERT INTO penalty_methods (penalty_method_id, org_id, penalty_method_name)
-VALUES (0, 0, 'No penalty');
-INSERT INTO penalty_methods (penalty_method_id, org_id, penalty_method_name, formural, account_number)
-VALUES (1, 0, 'Loan Penalty 15', 'get_penalty(1, loan_id, 15)', '400000003');
-SELECT pg_catalog.setval('penalty_methods_penalty_method_id_seq', 1, true);
+INSERT INTO penalty_methods (penalty_method_id, activity_type_id, org_id, penalty_method_name)
+VALUES (0, 9, 0, 'No penalty');
+INSERT INTO penalty_methods (penalty_method_id, activity_type_id, org_id, penalty_method_name, formural, account_number)
+VALUES (1, 9, 0, 'Loan Penalty 15', 'get_penalty(1, loan_id, 15)', '400000003');
+INSERT INTO penalty_methods (penalty_method_id, activity_type_id, org_id, penalty_method_name, formural, account_number)
+VALUES (2, 15, 0, 'Account Penalty 15', 'get_penalty(1, deposit_account_id, 15)', '400000003');
+SELECT pg_catalog.setval('penalty_methods_penalty_method_id_seq', 2, true);
 
-INSERT INTO products (product_id, activity_frequency_id, account_id, interest_method_id, penalty_method_id, currency_id, org_id, product_name, description, loan_account, is_active, interest_rate, min_opening_balance, lockin_period_frequency, minimum_balance, maximum_balance, minimum_day, maximum_day, minimum_trx, maximum_trx, penalty_rate) 
-VALUES (1, 4, 34005, 0, 0, 1, 0, 'Transaction account', 'Account to handle transactions', false, true, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12);
-INSERT INTO products (product_id, activity_frequency_id, account_id, interest_method_id, penalty_method_id, currency_id, org_id, product_name, description, loan_account, is_active, interest_rate, min_opening_balance, lockin_period_frequency, minimum_balance, maximum_balance, minimum_day, maximum_day, minimum_trx, maximum_trx, penalty_rate) 
-VALUES (2, 4, 34005, 2, 1, 1, 0, 'Basic loans', 'Basic loans', true, true, 12, 0, 0, 0, 0, 0, 0, 0, 0, 12);
+INSERT INTO products (product_id, activity_frequency_id, account_id, interest_method_id, penalty_method_id, currency_id, org_id, product_name, description, loan_account, is_active, interest_rate, min_opening_balance, lockin_period_frequency, minimum_balance, maximum_balance, minimum_day, maximum_day, minimum_trx, maximum_trx) 
+VALUES (1, 4, 34005, 0, 0, 1, 0, 'Transaction account', 'Account to handle transactions', false, true, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO products (product_id, activity_frequency_id, account_id, interest_method_id, penalty_method_id, currency_id, org_id, product_name, description, loan_account, is_active, interest_rate, min_opening_balance, lockin_period_frequency, minimum_balance, maximum_balance, minimum_day, maximum_day, minimum_trx, maximum_trx) 
+VALUES (2, 4, 34005, 2, 1, 1, 0, 'Basic loans', 'Basic loans', true, true, 12, 0, 0, 0, 0, 0, 0, 0, 0);
 SELECT pg_catalog.setval('products_product_id_seq', 2, true);
 
 
@@ -77,6 +83,8 @@ INSERT INTO deposit_accounts (customer_id, product_id, org_id, is_active, approv
 VALUES (0, 1, 0, true, 'Approved', 'Interest');
 INSERT INTO deposit_accounts (customer_id, product_id, org_id, is_active, approve_status, narrative)
 VALUES (0, 1, 0, true, 'Approved', 'Penalty');
+INSERT INTO deposit_accounts (customer_id, product_id, org_id, is_active, approve_status, narrative)
+VALUES (0, 1, 0, true, 'Approved', 'Loan');
 
 
 ---- Workflow setup
