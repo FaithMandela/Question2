@@ -21,7 +21,7 @@ sum(vw_order_details.total_amount) as total_amount
 FROM vw_order_details
 JOIN vw_orders ON vw_order_details.order_id = vw_orders.order_id
 JOIN vw_products ON vw_products.product_id = vw_order_details.product_id
-WHERE vw_orders.batch_no = '$P!{batch}'
+WHERE vw_orders.batch_no = '$P!{batch}' AND vw_orders.order_status !='Canceled'
 GROUP BY vw_products.supplier_name,vw_products.supplier_id,vw_products.product_id, vw_order_details.product_uprice,
 vw_products.product_name, vw_orders.batch_no
 ORDER BY vw_products.supplier_id ASC;]]>

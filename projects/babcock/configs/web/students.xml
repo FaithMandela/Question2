@@ -27,7 +27,7 @@
 			<MENU name="Submit Registration">39</MENU>
 			<MENU name="Registration Status">30</MENU>
 			<MENU name="Financial Clearance">40</MENU>
-			<MENU name="Registration Clearance">50</MENU>
+			<MENU name="Print Course Form">50</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Student Details" key="1" h="500">
@@ -733,17 +733,17 @@
 			<JASPER filtered="true" name="Exam PASS" printcopies="1" reportfile="studentpass.jasper"></JASPER>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Registration Clearance" key="50" h="500">
-		<GRID name="Registration Status" display="form" table="qcurrstudentdegreeview" where="(so_approval = true) AND (studentdeanapproval = true)" user="studentid">
+	<DESK w="700" name="Print Course Form" key="50" h="500">
+		<GRID name="Print Course Form" keyfield="qstudentid" table="qcurrstudentdegreeview" where="(so_approval = true) AND (majorapproval = true)" user="studentid">
 			<TEXTFIELD w="40" title="Semester">quarterid</TEXTFIELD>
 			<CHECKBOX w="40" title="Submited Registration" format="boolean" ischar="true">finalised</CHECKBOX>
 			<CHECKBOX w="40" title="Finance" format="boolean" ischar="true">finaceapproval</CHECKBOX>
 			<CHECKBOX w="40" title="Overload" format="boolean" ischar="true">overloadapproval</CHECKBOX>
 			<CHECKBOX w="40" title="Major Advisor" format="boolean" ischar="true">majorapproval</CHECKBOX>
-			<CHECKBOX w="40" title="Student Affairs" format="boolean" ischar="true">studentdeanapproval</CHECKBOX>
-			<CHECKBOX w="40" title="Registar" format="boolean" ischar="true">approved</CHECKBOX>
-			<CHECKBOX w="40" title="Faculty" format="boolean" ischar="true">so_approval</CHECKBOX>
-			<JASPER name="Student Details" reportfile="studentdetailsa.jasper"></JASPER>
+			<CHECKBOX w="40" title="Student Affairs" format="boolean">studentdeanapproval</CHECKBOX>
+			<CHECKBOX w="40" title="Registar" format="boolean">approved</CHECKBOX>
+			<CHECKBOX w="40" title="Faculty" format="boolean">so_approval</CHECKBOX>
+			<JASPER filtered="true" name="Student Details" reportfile="studentdetailsa.jasper"></JASPER>
 		</GRID>
 	</DESK>
 </APP>

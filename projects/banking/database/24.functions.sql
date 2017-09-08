@@ -40,12 +40,12 @@ BEGIN
 	
 		NEW.account_number := '4' || lpad(NEW.org_id::varchar, 2, '0')  || lpad(NEW.customer_id::varchar, 4, '0') || lpad(NEW.deposit_account_id::varchar, 2, '0');
 		
-		NEW.minimum_balance = myrec.minimum_balance;
-		NEW.maximum_balance = myrec.maximum_balance;
+		NEW.minimum_balance := myrec.minimum_balance;
+		NEW.maximum_balance := myrec.maximum_balance;
 	
-		NEW.interest_rate = myrec.interest_rate;
-		NEW.activity_frequency_id = myrec.activity_frequency_id;
-		NEW.lockin_period_frequency = myrec.lockin_period_frequency;
+		NEW.interest_rate := myrec.interest_rate;
+		NEW.activity_frequency_id := myrec.activity_frequency_id;
+		NEW.lockin_period_frequency := myrec.lockin_period_frequency;
 	ELSE
 		IF(NEW.approve_status = 'Approved')THEN
 			INSERT INTO account_activity (deposit_account_id, activity_type_id, activity_frequency_id,
@@ -199,6 +199,10 @@ CREATE TRIGGER aft_account_activity AFTER INSERT OR UPDATE ON account_activity
 CREATE OR REPLACE FUNCTION apply_approval(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	msg							varchar(120);
+	v_deposit_account_id		integer;
+	v_principal_amount			real;
+	v_repayment_amount			real;
+	v_maximum_repayments		integer;
 BEGIN
 
 	IF($3 = '1')THEN
@@ -212,10 +216,26 @@ BEGIN
 		
 		msg := 'Applied for account approval';
 	ELSIF($3 = '3')THEN
-		UPDATE loans SET approve_status = 'Completed' 
-		WHERE (loan_id = $1::integer) AND (approve_status = 'Draft');
+		SELECT deposit_accounts.deposit_account_id, loans.principal_amount, loans.repayment_amount,
+				products.maximum_repayments
+			INTO v_deposit_account_id, v_principal_amount, v_repayment_amount, v_maximum_repayments
+		FROM deposit_accounts INNER JOIN loans ON (deposit_accounts.account_number = loans.disburse_account)
+			INNER JOIN products ON loans.product_id = products.product_id
+			AND (deposit_accounts.customer_id = loans.customer_id) AND (loans.loan_id = $1::integer)
+			AND (deposit_accounts.approve_status = 'Approved');
 		
-		msg := 'Applied for loan approval';
+		IF(v_deposit_account_id is null)THEN
+			msg := 'The disburse account needs to be active and owned by the clients';
+			RAISE EXCEPTION '%', msg;
+		ELSIF((v_principal_amount / v_repayment_amount) > v_maximum_repayments)THEN
+			msg := 'The repayment periods are more than what is prescribed by the product';
+			RAISE EXCEPTION '%', msg;
+		ELSE
+			UPDATE loans SET approve_status = 'Completed' 
+			WHERE (loan_id = $1::integer) AND (approve_status = 'Draft');
+			
+			msg := 'Applied for loan approval';
+		END IF;
 	ELSIF($3 = '4')THEN
 		UPDATE guarantees SET approve_status = 'Completed' 
 		WHERE (guarantee_id = $1::integer) AND (approve_status = 'Draft');
@@ -232,11 +252,20 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
 CREATE OR REPLACE FUNCTION ins_loans() RETURNS trigger AS $$
 DECLARE
-	myrec			RECORD;
+	myrec					RECORD;
+	v_activity_type_id		integer;
+	v_repayments			integer;
+	v_currency_id			integer;
 BEGIN
+
+	IF(NEW.repayment_amount < 1)THEN
+		RAISE EXCEPTION 'The repayment amount has to be greater than 1';
+	ELSIF(NEW.principal_amount < NEW.repayment_amount)THEN
+		RAISE EXCEPTION 'The principal amount has to be greater than the repayment amount';
+	END IF;
+	NEW.repayment_period = NEW.principal_amount / NEW.repayment_amount;
 
 	IF(TG_OP = 'INSERT')THEN
 		SELECT interest_rate, activity_frequency_id, min_opening_balance, lockin_period_frequency,
@@ -245,8 +274,25 @@ BEGIN
 	
 		NEW.account_number := '5' || lpad(NEW.org_id::varchar, 2, '0')  || lpad(NEW.customer_id::varchar, 4, '0') || lpad(NEW.loan_id::varchar, 2, '0');
 			
-		NEW.interest_rate = myrec.interest_rate;
-		NEW.activity_frequency_id = myrec.activity_frequency_id;
+		NEW.interest_rate := myrec.interest_rate;
+		NEW.activity_frequency_id := myrec.activity_frequency_id;
+	ELSIF((NEW.approve_status = 'Approved') AND (OLD.approve_status <> 'Approved'))THEN
+		SELECT max(activity_type_id) INTO v_activity_type_id
+		FROM activity_types 
+		WHERE (use_key_id = 108) AND (is_active = true);
+		
+		SELECT currency_id INTO v_currency_id
+		FROM products
+		WHERE (product_id = NEW.product_id);
+		
+		INSERT INTO account_activity (loan_id, transfer_account_no, org_id, activity_type_id, currency_id, 
+			activity_frequency_id, activity_date, value_date, activity_status_id, account_credit, account_debit)
+		VALUES (NEW.loan_id, NEW.disburse_account, NEW.org_id, v_activity_type_id, v_currency_id, 
+			1, current_date, current_date, 1, 0, NEW.principal_amount);
+		
+		v_repayments := NEW.principal_amount / NEW.repayment_amount;
+		NEW.disbursed_date := current_date;
+		NEW.expected_matured_date := current_date + (v_repayments || ' months')::interval;
 	END IF;
 	
 	RETURN NEW;
@@ -256,3 +302,142 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER ins_loans BEFORE INSERT OR UPDATE ON loans
 	FOR EACH ROW EXECUTE PROCEDURE ins_loans();
 	
+	
+CREATE OR REPLACE FUNCTION compute_loans(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	reca 					RECORD;
+	v_period_id				integer;
+	v_org_id				integer;
+	v_start_date			date;
+	v_end_date				date;
+	v_account_activity_id	integer;
+	v_activity_type_id		integer;
+	v_interest_formural		varchar(320);
+	v_interest_account		varchar(32);
+	v_interest_amount		real;
+	v_penalty_formural		varchar(320);
+	v_penalty_account		varchar(32);
+	v_penalty_amount		real;
+	msg						varchar(120);
+BEGIN
+
+	SELECT period_id, org_id, start_date, end_date
+		INTO v_period_id, v_org_id, v_start_date, v_end_date
+	FROM periods
+	WHERE (period_id = $1::integer) AND (opened = true) AND (activated = true) AND (closed = false);
+
+	FOR reca IN SELECT currency_id, loan_id, customer_id, product_id, activity_frequency_id,
+			account_number, disburse_account, principal_amount, interest_rate,
+			repayment_period, repayment_amount, disbursed_date, actual_balance
+		FROM vw_loans 
+		WHERE (org_id = v_org_id) AND (approve_status = 'Approved') AND (actual_balance > 0)
+	LOOP
+	
+		---- Compute for penalty
+		v_account_activity_id := null;
+		v_penalty_amount := 0;
+		SELECT penalty_methods.activity_type_id, penalty_methods.formural, penalty_methods.account_number 
+			INTO v_activity_type_id, v_penalty_formural, v_penalty_account
+		FROM penalty_methods INNER JOIN products ON penalty_methods.penalty_method_id = products.penalty_method_id
+		WHERE (products.product_id = reca.product_id);
+		IF(v_penalty_formural is not null)THEN
+			EXECUTE 'SELECT ' || v_penalty_formural || ' FROM loans WHERE loan_id = ' || reca.loan_id 
+			INTO v_penalty_amount;
+			
+			SELECT account_activity_id INTO v_account_activity_id
+			FROM account_activity
+			WHERE (period_id = v_period_id) AND (activity_type_id = v_activity_type_id) AND (loan_id = reca.loan_id);
+		END IF;
+		IF((v_penalty_amount > 0) AND (v_account_activity_id is null))THEN
+			INSERT INTO account_activity (loan_id, transfer_account_no, activity_type_id,
+				currency_id, org_id, activity_date, value_date,
+				activity_frequency_id, activity_status_id, account_credit, account_debit)
+			VALUES (reca.loan_id, v_interest_account, v_activity_type_id,
+				reca.currency_id, v_org_id, current_date, current_date,
+				1, 1, 0, v_penalty_amount);
+		END IF;
+	
+		---- Compute for penalty
+		v_account_activity_id := null;
+		v_interest_amount := 0;
+		SELECT interest_methods.activity_type_id, interest_methods.formural, interest_methods.account_number 
+			INTO v_activity_type_id, v_interest_formural, v_interest_account
+		FROM interest_methods INNER JOIN products ON interest_methods.interest_method_id = products.interest_method_id
+		WHERE (products.product_id = reca.product_id);
+		IF(v_interest_formural is not null)THEN
+			EXECUTE 'SELECT ' || v_interest_formural || ' FROM loans WHERE loan_id = ' || reca.loan_id 
+			INTO v_interest_amount;
+			
+			SELECT account_activity_id INTO v_account_activity_id
+			FROM account_activity
+			WHERE (period_id = v_period_id) AND (activity_type_id = v_activity_type_id) AND (loan_id = reca.loan_id);
+		END IF;
+		IF((v_interest_amount > 0) AND (v_account_activity_id is null))THEN
+			INSERT INTO account_activity (loan_id, transfer_account_no, activity_type_id,
+				currency_id, org_id, activity_date, value_date,
+				activity_frequency_id, activity_status_id, account_credit, account_debit)
+			VALUES (reca.loan_id, v_interest_account, v_activity_type_id,
+				reca.currency_id, v_org_id, current_date, current_date,
+				1, 1, 0, v_interest_amount);
+		END IF;
+		
+		--- Computer for repayment
+		v_account_activity_id := null;
+		SELECT account_activity_id INTO v_account_activity_id
+		FROM account_activity
+		WHERE (period_id = v_period_id) AND (activity_type_id = v_activity_type_id) AND (loan_id = reca.loan_id);
+
+	END LOOP;
+
+	msg := 'Applied for account approval';
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION get_intrest(integer, integer) RETURNS real AS $$
+DECLARE
+	v_principal_amount 		real;
+	v_interest_rate			real;
+	v_actual_balance		real;
+	ans						real;
+BEGIN
+
+	IF($1 = 1)THEN
+		SELECT actual_balance, interest_rate INTO v_actual_balance, v_interest_rate
+		FROM vw_loans 
+		WHERE (loan_id = $2);
+		ans := v_actual_balance * v_interest_rate / 1200;
+	ELSIF($1 = 2)THEN
+		SELECT principal_amount, interest_rate INTO v_principal_amount, v_interest_rate
+		FROM vw_loans 
+		WHERE (loan_id = $2);
+		ans := v_principal_amount * v_interest_rate / 1200;
+	END IF;
+
+	RETURN ans;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION get_penalty(integer, integer, real) RETURNS real AS $$
+DECLARE
+	v_actual_default		real;
+	ans						real;
+BEGIN
+
+	IF($1 = 1)THEN
+		SELECT (actual_balance - committed_balance) INTO v_actual_default
+		FROM vw_loans 
+		WHERE (loan_id = $2);
+		ans := v_actual_default * $3 / 1200;
+	END IF;
+
+	RETURN ans;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+

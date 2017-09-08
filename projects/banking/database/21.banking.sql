@@ -77,6 +77,7 @@ CREATE INDEX activity_types_org_id ON activity_types(org_id);
 
 CREATE TABLE interest_methods (
 	interest_method_id		serial primary key,
+	activity_type_id		integer not null references activity_types,
 	org_id					integer references orgs,
 	interest_method_name	varchar(120) not null,
 	formural				varchar(320),
@@ -84,10 +85,12 @@ CREATE TABLE interest_methods (
 	details					text,
 	UNIQUE(org_id, interest_method_name)
 );
+CREATE INDEX interest_methods_activity_type_id ON interest_methods(activity_type_id);
 CREATE INDEX interest_methods_org_id ON interest_methods(org_id);
 
 CREATE TABLE penalty_methods (
 	penalty_method_id		serial primary key,
+	activity_type_id		integer not null references activity_types,
 	org_id					integer references orgs,
 	penalty_method_name		varchar(120) not null,
 	formural				varchar(320),
@@ -95,6 +98,7 @@ CREATE TABLE penalty_methods (
 	details					text,
 	UNIQUE(org_id, penalty_method_name)
 );
+CREATE INDEX penalty_methods_activity_type_id ON penalty_methods(activity_type_id);
 CREATE INDEX penalty_methods_org_id ON penalty_methods(org_id);
 
 CREATE TABLE products (
@@ -120,6 +124,7 @@ CREATE TABLE products (
 	maximum_day				real,
 	minimum_trx				real,
 	maximum_trx				real,
+	maximum_repayments		integer default 100 not null,
 	
 	application_date		timestamp default now() not null,
 	approve_status			varchar(16) default 'Draft' not null,
@@ -278,6 +283,18 @@ CREATE TABLE account_activity_log (
 );
 CREATE INDEX account_activity_log_org_id ON account_activity_log(org_id);
 
+CREATE VIEW vw_interest_methods AS
+	SELECT activity_types.activity_type_id, activity_types.activity_type_name, 
+		interest_methods.org_id, interest_methods.interest_method_id, interest_methods.interest_method_name, 
+		interest_methods.formural, interest_methods.account_number, interest_methods.details
+	FROM interest_methods INNER JOIN activity_types ON interest_methods.activity_type_id = activity_types.activity_type_id;
+	
+CREATE VIEW vw_penalty_methods AS
+	SELECT activity_types.activity_type_id, activity_types.activity_type_name, 
+		penalty_methods.org_id, penalty_methods.penalty_method_id, penalty_methods.penalty_method_name, 
+		penalty_methods.formural, penalty_methods.account_number, penalty_methods.details
+	FROM penalty_methods INNER JOIN activity_types ON penalty_methods.activity_type_id = activity_types.activity_type_id;
+
 CREATE VIEW vw_activity_types AS
 	SELECT vw_accounts.account_type_name, vw_accounts.account_id, vw_accounts.account_no, vw_accounts.account_name,
 		activity_types.org_id, activity_types.activity_type_id, activity_types.activity_type_name, 
@@ -321,7 +338,7 @@ CREATE VIEW vw_deposit_balance AS
 			FROM account_activity GROUP BY deposit_account_id) fl
 	LEFT JOIN
 		(SELECT deposit_account_id, sum((account_credit - account_debit) * exchange_rate) as available_balance
-			FROM account_activity WHERE activity_status_id < 3
+			FROM account_activity WHERE activity_status_id < 2
 			GROUP BY deposit_account_id) al 
 		ON fl.deposit_account_id = al.deposit_account_id;
 
@@ -341,7 +358,7 @@ CREATE VIEW vw_deposit_accounts AS
 	FROM deposit_accounts INNER JOIN customers ON deposit_accounts.customer_id = customers.customer_id
 		INNER JOIN vw_products ON deposit_accounts.product_id = vw_products.product_id
 		INNER JOIN activity_frequency ON deposit_accounts.activity_frequency_id = activity_frequency.activity_frequency_id
-		INNER JOIN vw_deposit_balance ON deposit_accounts.deposit_account_id = vw_deposit_balance.deposit_account_id;
+		LEFT JOIN vw_deposit_balance ON deposit_accounts.deposit_account_id = vw_deposit_balance.deposit_account_id;
 
 CREATE VIEW vw_account_notes AS
 	SELECT vw_deposit_accounts.customer_id, vw_deposit_accounts.customer_name, 

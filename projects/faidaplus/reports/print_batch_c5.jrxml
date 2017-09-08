@@ -139,7 +139,7 @@
       vw_entitys.org_id
      FROM vw_orders
        JOIN vw_entitys ON vw_orders.entity_id = vw_entitys.entity_id
-	WHERE batch_no = '$P!{batch_no}';]]>
+	WHERE batch_no = '$P!{batch_no}'  AND vw_orders.order_status !='Canceled';]]>
 	</queryString>
 	<field name="order_id" class="java.lang.Integer"/>
 	<field name="order_no" class="java.lang.String"/>

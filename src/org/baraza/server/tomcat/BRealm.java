@@ -33,6 +33,8 @@ public class BRealm extends RealmBase {
 		this.username = username;
 		this.password = credentials;
 
+System.out.println("BASE 4010 : authenticating " + username);
+
 		BCipher cp =  new BCipher();
 
 		/* dummy authentication */

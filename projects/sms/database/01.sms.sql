@@ -407,6 +407,13 @@ CREATE VIEW vw_unit_year AS
 	GROUP BY to_char(sms_day, 'YYYY')
 	ORDER BY to_char(sms_day, 'YYYY');
 	
+CREATE VIEW vw_unit_months AS
+	SELECT to_char(sms_day, 'YYYY') as unit_year, to_char(sms_day, 'YYYYMM') as unit_month,
+		to_char(sms_day, 'Month') as unit_month_name
+	FROM vw_load_usage
+	GROUP BY to_char(sms_day, 'YYYY'), to_char(sms_day, 'YYYYMM'), to_char(sms_day, 'Month')
+	ORDER BY to_char(sms_day, 'YYYY'), to_char(sms_day, 'YYYYMM'), to_char(sms_day, 'Month');
+	
 	
 CREATE OR REPLACE FUNCTION ins_sms_trans() RETURNS trigger AS $$
 DECLARE

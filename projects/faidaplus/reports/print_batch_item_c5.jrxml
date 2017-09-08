@@ -71,7 +71,7 @@
    FROM vw_order_details
      JOIN vw_orders ON vw_order_details.order_id = vw_orders.order_id
      JOIN vw_products ON vw_products.product_id = vw_order_details.product_id
-WHERE vw_orders.order_id = '$P!{order_id}';]]>
+WHERE vw_orders.order_id = '$P!{order_id}'  AND vw_orders.order_status !='Canceled';]]>
 	</queryString>
 	<field name="order_details_id" class="java.lang.Integer"/>
 	<field name="order_id" class="java.lang.Integer"/>

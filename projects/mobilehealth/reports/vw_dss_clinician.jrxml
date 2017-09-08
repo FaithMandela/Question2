@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_survey_100" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="dd1516cf-ed5b-4546-bd31-d29492bc1c50">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="245"/>
+	<property name="ireport.y" value="101"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -232,7 +232,7 @@ FROM vw_survey_100 WHERE vw_survey_100.survey_100_id = '$P!{filterid}']]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{actions_taken_clinician}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="dd MMMMM yyyy" isBlankWhenNull="true">
 				<reportElement style="Detail" x="38" y="311" width="249" height="15" uuid="c1e4603e-92d6-48ee-a585-08a204c1fb06"/>
 				<box leftPadding="5"/>
 				<textElement>
@@ -240,7 +240,7 @@ FROM vw_survey_100 WHERE vw_survey_100.survey_100_id = '$P!{filterid}']]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{receiving_officer_date}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="h.mm.ss a" isBlankWhenNull="true">
 				<reportElement style="Detail" x="324" y="311" width="220" height="15" uuid="9e996260-2a9e-4ebf-a8e4-83250747d44f"/>
 				<box leftPadding="5"/>
 				<textElement>
@@ -470,7 +470,7 @@ FROM vw_survey_100 WHERE vw_survey_100.survey_100_id = '$P!{filterid}']]>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{patient_age} + " " + ($F{patient_age_type}.equals("M") ? "Months":"Years")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{patient_age} + " " + ($F{patient_age_type}.equals("D") ?"Days": ($F{patient_age_type}.equals("M") ?"Months":"Years"))]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement style="Column header" mode="Opaque" x="1" y="528" width="555" height="20" forecolor="#000000" backcolor="#CCCCCC" uuid="81d1e042-750e-490e-ac0d-16b14011d21b"/>

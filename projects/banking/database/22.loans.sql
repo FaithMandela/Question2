@@ -8,10 +8,11 @@ CREATE TABLE loans (
 	org_id					integer references orgs,
 
 	account_number			varchar(32) not null,
-	disburse_account		varchar(32),
+	disburse_account		varchar(32) not null,
 	principal_amount		real not null,
 	interest_rate			real not null,
 	repayment_amount		real not null,
+	repayment_period		integer not null,
 
 	disbursed_date			date,
 	expected_matured_date	date,
@@ -102,6 +103,17 @@ CREATE INDEX account_activity_loan_id ON account_activity(loan_id);
 CREATE INDEX account_activity_transfer_loan_id ON account_activity(transfer_loan_id);
 
 
+CREATE VIEW vw_loan_balance AS
+	SELECT fl.loan_id, fl.committed_balance, al.actual_balance
+	FROM 
+		(SELECT loan_id, sum((account_debit - account_credit) * exchange_rate) as committed_balance
+			FROM account_activity GROUP BY loan_id) fl
+	LEFT JOIN
+		(SELECT loan_id, sum((account_debit - account_credit) * exchange_rate) as actual_balance
+			FROM account_activity WHERE activity_status_id < 2
+			GROUP BY loan_id) al 
+		ON fl.loan_id = al.loan_id;
+
 CREATE VIEW vw_loans AS
 	SELECT customers.customer_id, customers.customer_name, 
 		vw_products.product_id, vw_products.product_name, 
@@ -109,10 +121,14 @@ CREATE VIEW vw_loans AS
 		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
 		loans.org_id, loans.loan_id, loans.account_number, loans.principal_amount, loans.interest_rate, 
 		loans.repayment_amount, loans.disbursed_date, loans.expected_matured_date, loans.matured_date, 
-		loans.application_date, loans.approve_status, loans.workflow_table_id, loans.action_date, loans.details
+		loans.repayment_period, loans.disburse_account,
+		loans.application_date, loans.approve_status, loans.workflow_table_id, loans.action_date, loans.details,
+		
+		vw_loan_balance.committed_balance, vw_loan_balance.actual_balance
 	FROM loans INNER JOIN customers ON loans.customer_id = customers.customer_id
 		INNER JOIN vw_products ON loans.product_id = vw_products.product_id
-		INNER JOIN activity_frequency ON loans.activity_frequency_id = activity_frequency.activity_frequency_id;
+		INNER JOIN activity_frequency ON loans.activity_frequency_id = activity_frequency.activity_frequency_id
+		LEFT JOIN vw_loan_balance ON loans.loan_id = vw_loan_balance.loan_id;
 		
 CREATE VIEW vw_guarantees AS
 	SELECT vw_loans.customer_id, vw_loans.customer_name, vw_loans.product_id, vw_loans.product_name, 
