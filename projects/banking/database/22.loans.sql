@@ -7,7 +7,7 @@ CREATE TABLE loans (
 	entity_id 				integer references entitys,
 	org_id					integer references orgs,
 
-	account_number			varchar(32) not null,
+	account_number			varchar(32) not null unique,
 	disburse_account		varchar(32) not null,
 	principal_amount		real not null,
 	interest_rate			real not null,

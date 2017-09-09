@@ -1196,21 +1196,18 @@
 	<DESK w="700" name="Products" key="110" h="550">
 		<GRID name="Products" keyfield="product_id" table="vw_products">
 			<TEXTFIELD w="45" title="Product ID">product_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Account No">account_no</TEXTFIELD>
-			<TEXTFIELD w="75" title="Account Name">account_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>
 			<TEXTFIELD w="45" title="Currency">currency_symbol</TEXTFIELD>
 			<TEXTFIELD w="75" title="Interest Method">interest_method_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Product Name">product_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Description">description</TEXTFIELD>
 			<CHECKBOX w="45" title="For Loan">loan_account</CHECKBOX>
 			<CHECKBOX w="45" title="Active">is_active</CHECKBOX>
 			<FORM name="Products" keyfield="product_id" table="products">
-				<COMBOBOX w="430" title="Account" lptable="vw_accounts" y="10" h="20" x="10" lpfield="account_description">account_id</COMBOBOX>
 				<COMBOBOX w="150" title="Interest Method" lptable="interest_methods" y="30" h="20" x="10" lpfield="interest_method_name">interest_method_id</COMBOBOX>
 				<COMBOBOX w="1500" title="Penalty Method" lptable="penalty_methods" y="30" h="20" x="290" lpfield="penalty_method_name">penalty_method_id</COMBOBOX>
 				<COMBOBOX w="150" title="Interest Frequency" lptable="activity_frequency" orderby="activity_frequency_id" noorg="true" y="50" h="20" x="10" lpfield="activity_frequency_name">activity_frequency_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="50" h="20" x="290" lpfield="currency_name">currency_id</COMBOBOX>
-				<TEXTFIELD w="430" title="Product Name" y="70" h="20" x="10">product_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Product" y="70" h="20" x="10">product_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="Description" y="90" h="20" x="10">description</TEXTFIELD>
 				<CHECKBOX w="150" title="Loan Account" y="110" h="20" x="10">loan_account</CHECKBOX>
 				<CHECKBOX w="150" title="Active" y="110" h="20" x="290">is_active</CHECKBOX>
@@ -1226,29 +1223,32 @@
 				<TEXTFIELD w="150" title="Maximum Repayments" y="250" h="20" x="10">maximum_repayments</TEXTFIELD>
 				<TEXTAREA w="430" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
 			</FORM>
-			<GRID name="Account Fees" keyfield="account_fee_id" linkfield="product_id" table="vw_account_fees">
-				<TEXTFIELD w="75" title="Activity Type Name">activity_type_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Account Fee ID">account_fee_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="Account Fee Name">account_fee_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Frequency">activity_frequency_name</TEXTFIELD>
+			<GRID name="Account Definations" keyfield="account_defination_id" linkfield="product_id" table="vw_account_definations">
+				<TEXTFIELD w="75" title="Account Defination ID">account_defination_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Account Defination">account_defination_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Activity Type">activity_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Activity Frequency">activity_frequency_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Use Key">use_key_name</TEXTFIELD>
 				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+				<CHECKBOX w="50" title="Active">is_active</CHECKBOX>
+				<CHECKBOX w="50" title="Has Charge">has_charge</CHECKBOX>
+				<TEXTFIELD w="75" title="Account Number">account_number</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Fee Amount">fee_amount</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Fee %">fee_ps</TEXTDECIMAL>
-				<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
-				<TEXTFIELD w="75" title="Account Number">account_number</TEXTFIELD>
-				<FORM name="Account Fees" keyfield="account_fee_id" linkfield="product_id" table="account_fees">
+				<FORM name="Account Definations" keyfield="account_defination_id" linkfield="product_id" table="account_definations">
 					<COMBOBOX w="430" title="Activity Type" lptable="activity_types" y="10" h="20" x="10" lpfield="activity_type_name">activity_type_id</COMBOBOX>
 					<COMBOBOX w="430" title="Frequency" lptable="activity_frequency" orderby="activity_frequency_id" noorg="true" y="30" h="20" x="10" lpfield="activity_frequency_name">activity_frequency_id</COMBOBOX>
 					<COMBOBOX w="430" title="Use" lptable="use_keys" noorg="true" where="(use_function = 4)" y="50" h="20" x="10" lpfield="use_key_name">use_key_id</COMBOBOX>
-					<TEXTFIELD w="150" title="Account Fee Name" y="70" h="20" x="10">account_fee_name</TEXTFIELD>
-					<TEXTFIELD w="150" title="Account Number" y="70" h="20" x="290">account_number</TEXTFIELD>
+					<TEXTFIELD w="150" title="Account Defination" y="70" h="20" x="10">account_defination_name</TEXTFIELD>
 					<TEXTDATE w="150" title="Start Date" y="90" h="20" x="10">start_date</TEXTDATE>
 					<TEXTDATE w="150" title="End Date" y="90" h="20" x="290">end_date</TEXTDATE>
-					<CHECKBOX w="150" title="Active" y="110" h="20" x="10">is_active</CHECKBOX>
-					<TEXTDECIMAL w="150" title="Fee Amount" y="130" h="20" x="10">fee_amount</TEXTDECIMAL>
-					<TEXTDECIMAL w="150" title="Fee %" y="130" h="20" x="290">fee_ps</TEXTDECIMAL>
-					<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
+					<TEXTDECIMAL w="150" title="Fee Amount" y="110" h="20" x="10">fee_amount</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Fee %" y="110" h="20" x="290">fee_ps</TEXTDECIMAL>
+					<CHECKBOX w="150" title="Has Charge" y="130" h="20" x="10">has_charge</CHECKBOX>
+					<CHECKBOX w="150" title="Active" y="130" h="20" x="290">is_active</CHECKBOX>
+					<TEXTFIELD w="150" title="Account Number" y="150" h="20" x="10">account_number</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
 		</GRID>
@@ -1267,16 +1267,19 @@
 			</FORM>
 		</GRID>
 		<GRID name="Interest Methods" keyfield="interest_method_id" table="vw_interest_methods">
-			<TEXTFIELD w="75" title="Activity Type">activity_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Interest Method ID">interest_method_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Interest Method">interest_method_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Activity Type">activity_type_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Reducing Balance">reducing_balance</CHECKBOX>
 			<TEXTFIELD w="75" title="Formural">formural</TEXTFIELD>
 			<TEXTFIELD w="75" title="Account Number">account_number</TEXTFIELD>
 			<FORM name="Interest Methods" keyfield="interest_method_id" table="interest_methods">
 				<COMBOBOX w="430" title="Activity Type" lptable="activity_types" y="10" h="20" x="10" lpfield="activity_type_name">activity_type_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Interest Method" y="30" h="20" x="10">interest_method_name</TEXTFIELD>
-				<TEXTFIELD w="430" title="Formural" y="50" h="20" x="10">formural</TEXTFIELD>
-				<TEXTFIELD w="150" title="Account Number" y="70" h="20" x="10">account_number</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+				<CHECKBOX w="150" title="Reducing Balance" y="50" h="20" x="10">reducing_balance</CHECKBOX>
+				<TEXTFIELD w="430" title="Formural" y="70" h="20" x="10">formural</TEXTFIELD>
+				<TEXTFIELD w="150" title="Account Number" y="90" h="20" x="10">account_number</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Penalty Methods" keyfield="penalty_method_id" table="vw_penalty_methods">

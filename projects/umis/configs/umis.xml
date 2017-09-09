@@ -1,4 +1,4 @@
-<APP name="UMIS" org="org_id" password="change_password">
+﻿<APP name="UMIS" org="org_id" password="change_password">
 	<MENU name="UMIS IMIS" role="records">
 		<MENU name="Control Panel" role="records,bulleting,cpanel">
 			<MENU name="Grades" role="records,cpanel">1</MENU>
@@ -596,9 +596,8 @@
 				<TEXTFIELD w="150" title="Town" y="70" h="20" x="290">town</TEXTFIELD>
 				<COMBOBOX w="150" title="Country" lptable="countrys" noorg="true" lpkey="countryid" y="90" h="20" x="10" lpfield="countryname">countrycodeid</COMBOBOX>
 				<TEXTFIELD w="150" title="Tel No" y="90" h="20" x="290">telno</TEXTFIELD>
-				<CHECKBOX w="50" title="National ID" lw="70" y="110" h="20" x="290">national_id</CHECKBOX>
-				<CHECKBOX w="50" title="Passport" lw="70" y="110" h="20" x="440">passport</CHECKBOX>
-				<TEXTFIELD w="150" title="Identification No" y="130" h="20" x="10">identification_no</TEXTFIELD>
+				<TEXTFIELD w="150" title="National ID" lw="70" y="110" h="20" x="290">national_id</TEXTFIELD>
+				<TEXTFIELD w="150" title="Passport" lw="70" y="110" h="20" x="440">passport</TEXTFIELD>
 				<TEXTFIELD w="150" title="Email" y="130" h="20" x="290">email</TEXTFIELD>
 				<TEXTDATE w="150" title="Birth Date" y="150" h="20" x="290">birthdate</TEXTDATE>
 				<TEXTFIELD w="150" title="Guardian Name" y="170" h="20" x="10">guardianname</TEXTFIELD>
@@ -873,9 +872,7 @@
 					<TEXTDATE w="150" title="Last Registration Date" y="150" h="20" x="10">last_reg_date</TEXTDATE>
 					<TEXTFIELD w="430" title="Narrative" y="170" h="20" x="10">narrative</TEXTFIELD>
 				</FORM>
-				<ACTIONS>
-					<ACTION fnct="SunPosted" auditid="sys_audit_trail_id">Sun Posted</ACTION>
-				</ACTIONS>
+				
 			</GRID>
 			<GRID name="Trimester Residences" keyfield="qresidenceid" linkfield="quarterid" table="qresidenceview">
 				<TEXTFIELD w="40" title="Residence ID">Residenceid</TEXTFIELD>

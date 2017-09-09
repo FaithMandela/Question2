@@ -1,6 +1,5 @@
 ---Project Database Functions File
 
-	
 CREATE OR REPLACE FUNCTION aft_customers() RETURNS trigger AS $$
 DECLARE
 	v_entity_type_id		integer;
@@ -51,14 +50,15 @@ BEGIN
 			INSERT INTO account_activity (deposit_account_id, activity_type_id, activity_frequency_id,
 				activity_status_id, currency_id, entity_id, org_id, transfer_account_no,
 				activity_date, value_date, account_debit)
-			SELECT NEW.deposit_account_id, account_fees.activity_type_id, account_fees.activity_frequency_id,
-				1, products.currency_id, NEW.entity_id, NEW.org_id, account_fees.account_number,
-				current_date, current_date, account_fees.fee_amount
-			FROM account_fees INNER JOIN activity_types ON account_fees.activity_type_id = activity_types.activity_type_id
-				INNER JOIN products ON account_fees.product_id = products.product_id
-			WHERE (account_fees.product_id = NEW.product_id) AND (account_fees.org_id = NEW.org_id)
-				AND (account_fees.activity_frequency_id = 1) AND (activity_types.use_key_id = 201) 
-				AND (account_fees.is_active = true) AND (account_fees.start_date < current_date);
+			SELECT NEW.deposit_account_id, account_definations.activity_type_id, account_definations.activity_frequency_id,
+				1, products.currency_id, NEW.entity_id, NEW.org_id, account_definations.account_number,
+				current_date, current_date, account_definations.fee_amount
+			FROM account_definations INNER JOIN activity_types ON account_definations.activity_type_id = activity_types.activity_type_id
+				INNER JOIN products ON account_definations.product_id = products.product_id
+			WHERE (account_definations.product_id = NEW.product_id) AND (account_definations.org_id = NEW.org_id)
+				AND (account_definations.activity_frequency_id = 1) AND (activity_types.use_key_id = 201) 
+				AND (account_definations.is_active = true)
+				AND (account_definations.start_date < current_date);
 		END IF;
 	END IF;
 	
@@ -74,9 +74,19 @@ CREATE OR REPLACE FUNCTION ins_account_activity() RETURNS trigger AS $$
 DECLARE
 	v_deposit_account_id		integer;
 	v_loan_id					integer;
+	v_activity_type_id			integer;
+	v_account_transfer			varchar(32);
 BEGIN
 	IF(NEW.link_activity_id is null)THEN
 		NEW.link_activity_id := nextval('link_activity_id_seq');
+	END IF;
+	
+	IF(NEW.transfer_account_no is null)THEN
+		SELECT vw_account_definations.account_number INTO NEW.transfer_account_no
+		FROM vw_account_definations INNER JOIN deposit_accounts ON vw_account_definations.product_id = deposit_accounts.product_id
+		WHERE (deposit_accounts.deposit_account_id = NEW.deposit_account_id) 
+			AND (vw_account_definations.activity_type_id = NEW.activity_type_id) 
+			AND (vw_account_definations.use_key_id IN (101, 102));
 	END IF;
 	
 	IF(NEW.transfer_account_no is not null)THEN
@@ -128,12 +138,17 @@ DECLARE
 	v_account_activity_id		integer;
 	v_product_id				integer;
 	v_use_key_id				integer;
-	v_account_id				integer;
 BEGIN
 
-	IF(NEW.deposit_account_id is not null) THEN v_account_id := NEW.deposit_account_id; END IF;
-	IF(NEW.loan_id is not null) THEN v_account_id := NEW.loan_id; END IF;
-
+	IF(NEW.deposit_account_id is not null) THEN
+		SELECT product_id INTO v_product_id
+		FROM deposit_accounts WHERE deposit_account_id = NEW.deposit_account_id;
+	END IF;
+	IF(NEW.loan_id is not null) THEN 
+		SELECT product_id INTO v_product_id
+		FROM loans WHERE loan_id = NEW.loan_id;
+	END IF;
+	
 	IF(NEW.transfer_account_id is not null)THEN
 		SELECT account_activity_id INTO v_account_activity_id
 		FROM account_activity
@@ -141,10 +156,10 @@ BEGIN
 			AND (link_activity_id = NEW.link_activity_id);
 			
 		IF(v_account_activity_id is null)THEN
-			INSERT INTO account_activity (deposit_account_id, transfer_account_id, activity_type_id,
+			INSERT INTO account_activity (deposit_account_id, transfer_account_id, transfer_loan_id, activity_type_id,
 				currency_id, org_id, link_activity_id, activity_date, value_date,
 				activity_status_id, account_credit, account_debit, activity_frequency_id)
-			VALUES (NEW.transfer_account_id, v_account_id, NEW.activity_type_id,
+			VALUES (NEW.transfer_account_id, NEW.deposit_account_id, NEW.loan_id, NEW.activity_type_id,
 				NEW.currency_id, NEW.org_id, NEW.link_activity_id, NEW.activity_date, NEW.value_date,
 				NEW.activity_status_id, NEW.account_debit, NEW.account_credit, 1);
 		END IF;
@@ -157,36 +172,33 @@ BEGIN
 			AND (link_activity_id = NEW.link_activity_id);
 			
 		IF(v_account_activity_id is null)THEN
-			INSERT INTO account_activity (loan_id, transfer_account_id, activity_type_id,
+			INSERT INTO account_activity (loan_id, transfer_account_id, transfer_loan_id, activity_type_id,
 				currency_id, org_id, link_activity_id, activity_date, value_date,
 				activity_status_id, account_credit, account_debit, activity_frequency_id)
-			VALUES (NEW.transfer_loan_id, v_account_id, NEW.activity_type_id,
+			VALUES (NEW.transfer_loan_id, NEW.deposit_account_id, NEW.loan_id, NEW.activity_type_id,
 				NEW.currency_id, NEW.org_id, NEW.link_activity_id, NEW.activity_date, NEW.value_date,
 				NEW.activity_status_id, NEW.account_debit, NEW.account_credit, 1);
 		END IF;
 	END IF;
-	
+
+	--- Posting the charge on the transfer tranzaction
 	SELECT use_key_id INTO v_use_key_id
 	FROM activity_types
 	WHERE (activity_type_id = NEW.activity_type_id);
-
 	IF(v_use_key_id < 200) AND (NEW.account_debit > 0)THEN
-		--- Posting the charge on the transfer tranzaction
-		SELECT product_id INTO v_product_id
-		FROM deposit_accounts WHERE deposit_account_id = NEW.deposit_account_id;
-		
 		INSERT INTO account_activity (deposit_account_id, activity_type_id, activity_frequency_id,
 			activity_status_id, currency_id, entity_id, org_id, transfer_account_no,
 			link_activity_id, activity_date, value_date, account_debit)
-		SELECT NEW.deposit_account_id, account_fees.activity_type_id, account_fees.activity_frequency_id,
-			1, products.currency_id, NEW.entity_id, NEW.org_id, account_fees.account_number,
+		SELECT NEW.deposit_account_id, account_definations.activity_type_id, account_definations.activity_frequency_id,
+			1, products.currency_id, NEW.entity_id, NEW.org_id, account_definations.account_number,
 			NEW.link_activity_id, current_date, current_date, 
-			(account_fees.fee_amount + account_fees.fee_ps * NEW.account_debit / 100)
-		FROM account_fees INNER JOIN activity_types ON account_fees.activity_type_id = activity_types.activity_type_id
-			INNER JOIN products ON account_fees.product_id = products.product_id
-		WHERE (account_fees.product_id = v_product_id) AND (account_fees.org_id = NEW.org_id)
-			AND (account_fees.activity_frequency_id = 1) AND (account_fees.use_key_id = v_use_key_id) 
-			AND (account_fees.is_active = true) AND (account_fees.start_date < current_date);
+			(account_definations.fee_amount + account_definations.fee_ps * NEW.account_debit / 100)
+		FROM account_definations INNER JOIN activity_types ON account_definations.activity_type_id = activity_types.activity_type_id
+			INNER JOIN products ON account_definations.product_id = products.product_id
+		WHERE (account_definations.product_id = v_product_id)
+			AND (account_definations.activity_frequency_id = 1) AND (activity_types.use_key_id = v_use_key_id) 
+			AND (account_definations.is_active = true) AND (account_definations.has_charge = true)
+			AND (account_definations.start_date < current_date);
 	END IF;
 	
 	RETURN NULL;
@@ -277,22 +289,24 @@ BEGIN
 		NEW.interest_rate := myrec.interest_rate;
 		NEW.activity_frequency_id := myrec.activity_frequency_id;
 	ELSIF((NEW.approve_status = 'Approved') AND (OLD.approve_status <> 'Approved'))THEN
-		SELECT max(activity_type_id) INTO v_activity_type_id
-		FROM activity_types 
-		WHERE (use_key_id = 108) AND (is_active = true);
+		SELECT activity_type_id INTO v_activity_type_id
+		FROM vw_account_definations 
+		WHERE (use_key_id = 108) AND (is_active = true) AND (product_id = NEW.product_id);
 		
 		SELECT currency_id INTO v_currency_id
 		FROM products
 		WHERE (product_id = NEW.product_id);
 		
-		INSERT INTO account_activity (loan_id, transfer_account_no, org_id, activity_type_id, currency_id, 
-			activity_frequency_id, activity_date, value_date, activity_status_id, account_credit, account_debit)
-		VALUES (NEW.loan_id, NEW.disburse_account, NEW.org_id, v_activity_type_id, v_currency_id, 
-			1, current_date, current_date, 1, 0, NEW.principal_amount);
+		IF(v_activity_type_id is not null)THEN
+			INSERT INTO account_activity (loan_id, transfer_account_no, org_id, activity_type_id, currency_id, 
+				activity_frequency_id, activity_date, value_date, activity_status_id, account_credit, account_debit)
+			VALUES (NEW.loan_id, NEW.disburse_account, NEW.org_id, v_activity_type_id, v_currency_id, 
+				1, current_date, current_date, 1, 0, NEW.principal_amount);
 		
-		v_repayments := NEW.principal_amount / NEW.repayment_amount;
-		NEW.disbursed_date := current_date;
-		NEW.expected_matured_date := current_date + (v_repayments || ' months')::interval;
+			v_repayments := NEW.principal_amount / NEW.repayment_amount;
+			NEW.disbursed_date := current_date;
+			NEW.expected_matured_date := current_date + (v_repayments || ' months')::interval;
+		END IF;
 	END IF;
 	
 	RETURN NEW;
@@ -382,10 +396,23 @@ BEGIN
 		END IF;
 		
 		--- Computer for repayment
+		SELECT activity_type_id INTO v_activity_type_id
+		FROM vw_account_definations 
+		WHERE (product_id = reca.product_id) AND (use_key_id = 107);
+		
 		v_account_activity_id := null;
 		SELECT account_activity_id INTO v_account_activity_id
 		FROM account_activity
 		WHERE (period_id = v_period_id) AND (activity_type_id = v_activity_type_id) AND (loan_id = reca.loan_id);
+		
+		IF((v_account_activity_id is null) AND (v_activity_type_id is not null))THEN
+			INSERT INTO account_activity (loan_id, transfer_account_no, activity_type_id,
+				currency_id, org_id, activity_date, value_date,
+				activity_frequency_id, activity_status_id, account_credit, account_debit)
+			VALUES (reca.loan_id, reca.disburse_account, v_activity_type_id,
+				reca.currency_id, v_org_id, current_date, current_date,
+				1, 1, reca.repayment_amount, 0);
+		END IF;
 
 	END LOOP;
 

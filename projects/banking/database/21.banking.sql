@@ -80,6 +80,7 @@ CREATE TABLE interest_methods (
 	activity_type_id		integer not null references activity_types,
 	org_id					integer references orgs,
 	interest_method_name	varchar(120) not null,
+	reducing_balance		boolean not null default false,
 	formural				varchar(320),
 	account_number			varchar(32),
 	details					text,
@@ -103,7 +104,6 @@ CREATE INDEX penalty_methods_org_id ON penalty_methods(org_id);
 
 CREATE TABLE products (
 	product_id				serial primary key,
-	account_id				integer references accounts,
 	interest_method_id 		integer references interest_methods,
 	penalty_method_id		integer references penalty_methods,
 	activity_frequency_id	integer references activity_frequency,
@@ -134,34 +134,34 @@ CREATE TABLE products (
 	details					text,
 	UNIQUE(org_id, product_name)
 );
-CREATE INDEX products_account_id ON products(account_id);
 CREATE INDEX products_interest_method_id ON products(interest_method_id);
 CREATE INDEX products_activity_frequency_id ON products(activity_frequency_id);
 CREATE INDEX products_currency_id ON products(currency_id);
 CREATE INDEX products_entity_id ON products(entity_id);
 CREATE INDEX products_org_id ON products(org_id);
 
-CREATE TABLE account_fees (
-	account_fee_id			serial primary key,
+CREATE TABLE account_definations (
+	account_defination_id	serial primary key,
 	product_id 				integer not null references products,
 	activity_type_id		integer not null references activity_types,
 	activity_frequency_id	integer not null references activity_frequency,
-	use_key_id				integer not null references use_keys,
 	org_id					integer references orgs,
-	account_fee_name		varchar(50) not null,
+	account_defination_name		varchar(50) not null,
 	start_date				date not null,
 	end_date				date,
 	fee_amount				real default 0 not null,
 	fee_ps					real default 0 not null,
+	has_charge				boolean default false not null,
 	is_active				boolean default false not null,
 	account_number			varchar(32) not null,
-	details					text
+	details					text,
+	
+	UNIQUE(product_id, activity_type_id)
 );
-CREATE INDEX account_fees_product_id ON account_fees(product_id);
-CREATE INDEX account_fees_activity_type_id ON account_fees(activity_type_id);
-CREATE INDEX account_fees_activity_frequency_id ON account_fees(activity_frequency_id);
-CREATE INDEX account_fees_activity_use_key_id ON account_fees(use_key_id);
-CREATE INDEX account_fees_org_id ON account_fees(org_id);
+CREATE INDEX account_definations_product_id ON account_definations(product_id);
+CREATE INDEX account_definations_activity_type_id ON account_definations(activity_type_id);
+CREATE INDEX account_definations_activity_frequency_id ON account_definations(activity_frequency_id);
+CREATE INDEX account_definations_org_id ON account_definations(org_id);
 
 CREATE TABLE deposit_accounts (
 	deposit_account_id		serial primary key,
@@ -172,7 +172,7 @@ CREATE TABLE deposit_accounts (
 	org_id					integer references orgs,
 
 	is_active				boolean default false not null,
-	account_number			varchar(32) not null,
+	account_number			varchar(32) not null unique,
 	narrative				varchar(120),
 	last_closing_date		date,
 	
@@ -284,52 +284,53 @@ CREATE TABLE account_activity_log (
 CREATE INDEX account_activity_log_org_id ON account_activity_log(org_id);
 
 CREATE VIEW vw_interest_methods AS
-	SELECT activity_types.activity_type_id, activity_types.activity_type_name, 
+	SELECT activity_types.activity_type_id, activity_types.activity_type_name, activity_types.use_key_id,
 		interest_methods.org_id, interest_methods.interest_method_id, interest_methods.interest_method_name, 
-		interest_methods.formural, interest_methods.account_number, interest_methods.details
+		interest_methods.reducing_balance, interest_methods.formural, interest_methods.account_number, 
+		interest_methods.details
 	FROM interest_methods INNER JOIN activity_types ON interest_methods.activity_type_id = activity_types.activity_type_id;
 	
 CREATE VIEW vw_penalty_methods AS
-	SELECT activity_types.activity_type_id, activity_types.activity_type_name, 
+	SELECT activity_types.activity_type_id, activity_types.activity_type_name, activity_types.use_key_id,
 		penalty_methods.org_id, penalty_methods.penalty_method_id, penalty_methods.penalty_method_name, 
 		penalty_methods.formural, penalty_methods.account_number, penalty_methods.details
 	FROM penalty_methods INNER JOIN activity_types ON penalty_methods.activity_type_id = activity_types.activity_type_id;
 
 CREATE VIEW vw_activity_types AS
 	SELECT vw_accounts.account_type_name, vw_accounts.account_id, vw_accounts.account_no, vw_accounts.account_name,
+		use_keys.use_key_id, use_keys.use_key_name, 
 		activity_types.org_id, activity_types.activity_type_id, activity_types.activity_type_name, 
 		activity_types.is_active, activity_types.details
-	FROM activity_types INNER JOIN vw_accounts ON activity_types.account_id = vw_accounts.account_id;
+	FROM activity_types INNER JOIN vw_accounts ON activity_types.account_id = vw_accounts.account_id
+		INNER JOIN use_keys ON activity_types.use_key_id = use_keys.use_key_id;
 
 CREATE VIEW vw_products AS
-	SELECT vw_accounts.account_type_name, vw_accounts.account_id, vw_accounts.account_no, vw_accounts.account_name,
-		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
+	SELECT activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
-		interest_methods.interest_method_id, interest_methods.interest_method_name, 
+		vw_interest_methods.interest_method_id, vw_interest_methods.interest_method_name, vw_interest_methods.reducing_balance, 
 		penalty_methods.penalty_method_id, penalty_methods.penalty_method_name,
 		products.org_id, products.product_id, products.product_name, products.description, 
 		products.loan_account, products.is_active, products.interest_rate, 
 		products.min_opening_balance, products.lockin_period_frequency, 
 		products.minimum_balance, products.maximum_balance, products.minimum_day, products.maximum_day,
 		products.minimum_trx, products.maximum_trx, products.details
-	FROM products INNER JOIN vw_accounts ON products.account_id = vw_accounts.account_id
-		INNER JOIN activity_frequency ON products.activity_frequency_id = activity_frequency.activity_frequency_id
+	FROM products INNER JOIN activity_frequency ON products.activity_frequency_id = activity_frequency.activity_frequency_id
 		INNER JOIN currency ON products.currency_id = currency.currency_id
-		INNER JOIN interest_methods ON products.interest_method_id = interest_methods.interest_method_id
+		INNER JOIN vw_interest_methods ON products.interest_method_id = vw_interest_methods.interest_method_id
 		INNER JOIN penalty_methods ON products.penalty_method_id = penalty_methods.penalty_method_id;
 
-CREATE VIEW vw_account_fees AS
-	SELECT activity_types.activity_type_id, activity_types.activity_type_name, 
-		products.product_id, products.product_name,
+CREATE VIEW vw_account_definations AS
+	SELECT products.product_id, products.product_name,
+		vw_activity_types.activity_type_id, vw_activity_types.activity_type_name, 
+		vw_activity_types.use_key_id, vw_activity_types.use_key_name,
 		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
-		use_keys.use_key_id, use_keys.use_key_name,
-		account_fees.org_id, account_fees.account_fee_id, account_fees.account_fee_name, 
-		account_fees.start_date, account_fees.end_date, account_fees.is_active, account_fees.account_number,
-		account_fees.fee_amount, account_fees.fee_ps, account_fees.details
-	FROM account_fees INNER JOIN activity_types ON account_fees.activity_type_id = activity_types.activity_type_id
-		INNER JOIN products ON account_fees.product_id = products.product_id
-		INNER JOIN activity_frequency ON account_fees.activity_frequency_id = activity_frequency.activity_frequency_id
-		INNER JOIN use_keys ON account_fees.use_key_id = use_keys.use_key_id;
+		account_definations.org_id, account_definations.account_defination_id, account_definations.account_defination_name, 
+		account_definations.start_date, account_definations.end_date, account_definations.is_active, 
+		account_definations.account_number, account_definations.fee_amount, account_definations.fee_ps, 
+		account_definations.has_charge, account_definations.details
+	FROM account_definations INNER JOIN vw_activity_types ON account_definations.activity_type_id = vw_activity_types.activity_type_id
+		INNER JOIN products ON account_definations.product_id = products.product_id
+		INNER JOIN activity_frequency ON account_definations.activity_frequency_id = activity_frequency.activity_frequency_id;
 		
 CREATE VIEW vw_deposit_balance AS
 	SELECT fl.deposit_account_id, fl.current_balance, al.available_balance
