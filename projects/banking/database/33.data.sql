@@ -47,17 +47,17 @@ INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, ac
 SELECT pg_catalog.setval('activity_types_activity_type_id_seq', 22, true);
 
 INSERT INTO interest_methods (interest_method_id, activity_type_id, org_id, interest_method_name) VALUES (0, 8, 0, 'No Intrest');
-INSERT INTO interest_methods (interest_method_id, activity_type_id, org_id, interest_method_name, formural, account_number, reducing_balance) VALUES (1, 8, 0, 'Loan reducing balance', 'get_intrest(1, loan_id)', '400000003', true);
-INSERT INTO interest_methods (interest_method_id, activity_type_id, org_id, interest_method_name, formural, account_number) VALUES (2, 8, 0, 'Loan Fixed Intrest', 'get_intrest(2, loan_id)', '400000003');
-INSERT INTO interest_methods (interest_method_id, activity_type_id, org_id, interest_method_name, formural, account_number) VALUES (3, 14, 0, 'Savings intrest', 'get_intrest(1, deposit_account_id)', '400000003');
+INSERT INTO interest_methods (interest_method_id, activity_type_id, org_id, interest_method_name, formural, account_number, reducing_balance) VALUES (1, 8, 0, 'Loan reducing balance', 'get_intrest(1, loan_id, period_id)', '400000003', true);
+INSERT INTO interest_methods (interest_method_id, activity_type_id, org_id, interest_method_name, formural, account_number) VALUES (2, 8, 0, 'Loan Fixed Intrest', 'get_intrest(2, loan_id, period_id)', '400000003');
+INSERT INTO interest_methods (interest_method_id, activity_type_id, org_id, interest_method_name, formural, account_number) VALUES (3, 14, 0, 'Savings intrest', 'get_intrest(1, deposit_account_id, period_id)', '400000003');
 SELECT pg_catalog.setval('interest_methods_interest_method_id_seq', 3, true);
 
 INSERT INTO penalty_methods (penalty_method_id, activity_type_id, org_id, penalty_method_name)
 VALUES (0, 9, 0, 'No penalty');
 INSERT INTO penalty_methods (penalty_method_id, activity_type_id, org_id, penalty_method_name, formural, account_number)
-VALUES (1, 9, 0, 'Loan Penalty 15', 'get_penalty(1, loan_id, 15)', '400000004');
+VALUES (1, 9, 0, 'Loan Penalty 15', 'get_penalty(1, loan_id, period_id, 15)', '400000004');
 INSERT INTO penalty_methods (penalty_method_id, activity_type_id, org_id, penalty_method_name, formural, account_number)
-VALUES (2, 15, 0, 'Account Penalty 15', 'get_penalty(1, deposit_account_id, 15)', '400000004');
+VALUES (2, 15, 0, 'Account Penalty 15', 'get_penalty(1, deposit_account_id, period_id, 15)', '400000004');
 SELECT pg_catalog.setval('penalty_methods_penalty_method_id_seq', 2, true);
 
 INSERT INTO products (product_id, activity_frequency_id, interest_method_id, penalty_method_id, currency_id, org_id, product_name, description, loan_account, is_active, interest_rate, min_opening_balance, lockin_period_frequency, minimum_balance, maximum_balance, minimum_day, maximum_day, minimum_trx, maximum_trx) 

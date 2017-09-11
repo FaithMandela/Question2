@@ -355,6 +355,7 @@ BEGIN
 		FROM penalty_methods INNER JOIN products ON penalty_methods.penalty_method_id = products.penalty_method_id
 		WHERE (products.product_id = reca.product_id);
 		IF(v_penalty_formural is not null)THEN
+			v_penalty_formural := replace(v_penalty_formural, 'period_id', v_period_id);
 			EXECUTE 'SELECT ' || v_penalty_formural || ' FROM loans WHERE loan_id = ' || reca.loan_id 
 			INTO v_penalty_amount;
 			
@@ -379,6 +380,7 @@ BEGIN
 		FROM interest_methods INNER JOIN products ON interest_methods.interest_method_id = products.interest_method_id
 		WHERE (products.product_id = reca.product_id);
 		IF(v_interest_formural is not null)THEN
+			v_interest_formural := replace(v_interest_formural, 'period_id', v_period_id);
 			EXECUTE 'SELECT ' || v_interest_formural || ' FROM loans WHERE loan_id = ' || reca.loan_id 
 			INTO v_interest_amount;
 			
@@ -423,7 +425,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION get_intrest(integer, integer) RETURNS real AS $$
+CREATE OR REPLACE FUNCTION get_intrest(integer, integer, integer) RETURNS real AS $$
 DECLARE
 	v_principal_amount 		real;
 	v_interest_rate			real;
@@ -448,7 +450,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION get_penalty(integer, integer, real) RETURNS real AS $$
+CREATE OR REPLACE FUNCTION get_penalty(integer, integer, integer, real) RETURNS real AS $$
 DECLARE
 	v_actual_default		real;
 	ans						real;
