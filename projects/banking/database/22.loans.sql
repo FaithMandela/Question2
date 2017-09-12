@@ -110,7 +110,7 @@ CREATE VIEW vw_loan_balance AS
 			FROM account_activity GROUP BY loan_id) fl
 	LEFT JOIN
 		(SELECT loan_id, sum((account_debit - account_credit) * exchange_rate) as actual_balance
-			FROM account_activity WHERE activity_status_id < 2
+			FROM account_activity WHERE activity_status_id < 3
 			GROUP BY loan_id) al 
 		ON fl.loan_id = al.loan_id;
 

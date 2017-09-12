@@ -160,6 +160,7 @@ ALTER TABLE studentdegrees ALTER COLUMN studentid SET NOT NULL;
 
 
 --------------- Adding a new student
+CREATE TABLE adm_import1 (app_id int, bussary_code varchar(50), card_number varchar(50));
 DELETE FROM adm_import1;
 INSERT INTO adm_import1 (app_id, bussary_code, card_number) VALUES ('');
 

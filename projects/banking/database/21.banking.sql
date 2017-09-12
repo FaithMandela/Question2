@@ -144,6 +144,7 @@ CREATE TABLE account_definations (
 	account_defination_id	serial primary key,
 	product_id 				integer not null references products,
 	activity_type_id		integer not null references activity_types,
+	charge_activity_id		integer not null references activity_types,
 	activity_frequency_id	integer not null references activity_frequency,
 	org_id					integer references orgs,
 	account_defination_name		varchar(50) not null,
@@ -160,6 +161,7 @@ CREATE TABLE account_definations (
 );
 CREATE INDEX account_definations_product_id ON account_definations(product_id);
 CREATE INDEX account_definations_activity_type_id ON account_definations(activity_type_id);
+CREATE INDEX account_definations_charge_activity_id ON account_definations(charge_activity_id);
 CREATE INDEX account_definations_activity_frequency_id ON account_definations(activity_frequency_id);
 CREATE INDEX account_definations_org_id ON account_definations(org_id);
 
@@ -323,6 +325,7 @@ CREATE VIEW vw_account_definations AS
 	SELECT products.product_id, products.product_name,
 		vw_activity_types.activity_type_id, vw_activity_types.activity_type_name, 
 		vw_activity_types.use_key_id, vw_activity_types.use_key_name,
+		account_definations.charge_activity_id, charge_activitys.activity_type_name as charge_activity_name,
 		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
 		account_definations.org_id, account_definations.account_defination_id, account_definations.account_defination_name, 
 		account_definations.start_date, account_definations.end_date, account_definations.is_active, 
@@ -330,7 +333,8 @@ CREATE VIEW vw_account_definations AS
 		account_definations.has_charge, account_definations.details
 	FROM account_definations INNER JOIN vw_activity_types ON account_definations.activity_type_id = vw_activity_types.activity_type_id
 		INNER JOIN products ON account_definations.product_id = products.product_id
-		INNER JOIN activity_frequency ON account_definations.activity_frequency_id = activity_frequency.activity_frequency_id;
+		INNER JOIN activity_frequency ON account_definations.activity_frequency_id = activity_frequency.activity_frequency_id
+		LEFT JOIN activity_types charge_activitys ON account_definations.charge_activity_id = charge_activitys.activity_type_id;
 		
 CREATE VIEW vw_deposit_balance AS
 	SELECT fl.deposit_account_id, fl.current_balance, al.available_balance
@@ -339,7 +343,7 @@ CREATE VIEW vw_deposit_balance AS
 			FROM account_activity GROUP BY deposit_account_id) fl
 	LEFT JOIN
 		(SELECT deposit_account_id, sum((account_credit - account_debit) * exchange_rate) as available_balance
-			FROM account_activity WHERE activity_status_id < 2
+			FROM account_activity WHERE activity_status_id < 3
 			GROUP BY deposit_account_id) al 
 		ON fl.deposit_account_id = al.deposit_account_id;
 

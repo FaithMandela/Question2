@@ -185,7 +185,7 @@ BEGIN
 	SELECT use_key_id INTO v_use_key_id
 	FROM activity_types
 	WHERE (activity_type_id = NEW.activity_type_id);
-	IF(v_use_key_id < 200) AND (NEW.account_debit > 0)THEN
+	IF((v_use_key_id < 200) AND (NEW.account_debit > 0))THEN
 		INSERT INTO account_activity (deposit_account_id, activity_type_id, activity_frequency_id,
 			activity_status_id, currency_id, entity_id, org_id, transfer_account_no,
 			link_activity_id, activity_date, value_date, account_debit)
@@ -193,10 +193,11 @@ BEGIN
 			1, products.currency_id, NEW.entity_id, NEW.org_id, account_definations.account_number,
 			NEW.link_activity_id, current_date, current_date, 
 			(account_definations.fee_amount + account_definations.fee_ps * NEW.account_debit / 100)
-		FROM account_definations INNER JOIN activity_types ON account_definations.activity_type_id = activity_types.activity_type_id
-			INNER JOIN products ON account_definations.product_id = products.product_id
+			
+		FROM account_definations INNER JOIN products ON account_definations.product_id = products.product_id
 		WHERE (account_definations.product_id = v_product_id)
-			AND (account_definations.activity_frequency_id = 1) AND (activity_types.use_key_id = v_use_key_id) 
+			AND (account_definations.activity_frequency_id = 1) 
+			AND (account_definations.activity_type_id = NEW.activity_type_id) 
 			AND (account_definations.is_active = true) AND (account_definations.has_charge = true)
 			AND (account_definations.start_date < current_date);
 	END IF;
@@ -344,7 +345,7 @@ BEGIN
 			account_number, disburse_account, principal_amount, interest_rate,
 			repayment_period, repayment_amount, disbursed_date, actual_balance
 		FROM vw_loans 
-		WHERE (org_id = v_org_id) AND (approve_status = 'Approved') AND (actual_balance > 0)
+		WHERE (org_id = v_org_id) AND (approve_status = 'Approved') AND (actual_balance > 0) AND (disbursed_date < v_start_date)
 	LOOP
 	
 		---- Compute for penalty
@@ -355,7 +356,7 @@ BEGIN
 		FROM penalty_methods INNER JOIN products ON penalty_methods.penalty_method_id = products.penalty_method_id
 		WHERE (products.product_id = reca.product_id);
 		IF(v_penalty_formural is not null)THEN
-			v_penalty_formural := replace(v_penalty_formural, 'period_id', v_period_id);
+			v_penalty_formural := replace(v_penalty_formural, 'period_id', v_period_id::text);
 			EXECUTE 'SELECT ' || v_penalty_formural || ' FROM loans WHERE loan_id = ' || reca.loan_id 
 			INTO v_penalty_amount;
 			
@@ -368,7 +369,7 @@ BEGIN
 				currency_id, org_id, activity_date, value_date,
 				activity_frequency_id, activity_status_id, account_credit, account_debit)
 			VALUES (reca.loan_id, v_interest_account, v_activity_type_id,
-				reca.currency_id, v_org_id, current_date, current_date,
+				reca.currency_id, v_org_id, v_end_date, v_end_date,
 				1, 1, 0, v_penalty_amount);
 		END IF;
 	
@@ -380,7 +381,7 @@ BEGIN
 		FROM interest_methods INNER JOIN products ON interest_methods.interest_method_id = products.interest_method_id
 		WHERE (products.product_id = reca.product_id);
 		IF(v_interest_formural is not null)THEN
-			v_interest_formural := replace(v_interest_formural, 'period_id', v_period_id);
+			v_interest_formural := replace(v_interest_formural, 'period_id', v_period_id::text);
 			EXECUTE 'SELECT ' || v_interest_formural || ' FROM loans WHERE loan_id = ' || reca.loan_id 
 			INTO v_interest_amount;
 			
@@ -393,7 +394,7 @@ BEGIN
 				currency_id, org_id, activity_date, value_date,
 				activity_frequency_id, activity_status_id, account_credit, account_debit)
 			VALUES (reca.loan_id, v_interest_account, v_activity_type_id,
-				reca.currency_id, v_org_id, current_date, current_date,
+				reca.currency_id, v_org_id, v_end_date, v_end_date,
 				1, 1, 0, v_interest_amount);
 		END IF;
 		
@@ -430,13 +431,21 @@ DECLARE
 	v_principal_amount 		real;
 	v_interest_rate			real;
 	v_actual_balance		real;
+	v_end_date				date;
 	ans						real;
 BEGIN
 
+	SELECT end_date INTO v_end_date
+	FROM periods WHERE (period_id = $3::integer);
+
 	IF($1 = 1)THEN
-		SELECT actual_balance, interest_rate INTO v_actual_balance, v_interest_rate
-		FROM vw_loans 
-		WHERE (loan_id = $2);
+		SELECT ((account_debit - account_credit) * exchange_rate) INTO v_actual_balance
+		FROM account_activity 
+		WHERE (loan_id = $2) AND (activity_status_id < 2) AND (value_date <= v_end_date);
+		
+		SELECT interest_rate INTO v_interest_rate
+		FROM loans  WHERE (loan_id = $2);
+		
 		ans := v_actual_balance * v_interest_rate / 1200;
 	ELSIF($1 = 2)THEN
 		SELECT principal_amount, interest_rate INTO v_principal_amount, v_interest_rate
@@ -453,13 +462,19 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION get_penalty(integer, integer, integer, real) RETURNS real AS $$
 DECLARE
 	v_actual_default		real;
+	v_start_date			date;
+	v_end_date				date;
 	ans						real;
 BEGIN
 
+	SELECT start_date, end_date INTO v_start_date, v_end_date
+	FROM periods WHERE (period_id = $3::integer);
+
 	IF($1 = 1)THEN
-		SELECT (actual_balance - committed_balance) INTO v_actual_default
-		FROM vw_loans 
-		WHERE (loan_id = $2);
+		SELECT ((account_debit - account_credit) * exchange_rate) INTO v_actual_default
+		FROM account_activity 
+		WHERE (loan_id = $2) AND (activity_status_id = 4) AND (value_date < v_start_date);
+		
 		ans := v_actual_default * $3 / 1200;
 	END IF;
 

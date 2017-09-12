@@ -291,6 +291,13 @@ BEGIN
 	SELECT year_closed INTO year_close
 	FROM fiscal_years
 	WHERE (fiscal_year_id = NEW.fiscal_year_id);
+
+	IF(year_close = true)THEN
+		RAISE EXCEPTION 'The year is closed not transactions are allowed.';
+	END IF;
+	IF(NEW.start_date > NEW.end_date)THEN
+		RAISE EXCEPTION 'The starting date has to be before the ending date.';
+	END IF;
 	
 	IF(TG_OP = 'UPDATE')THEN    
 		IF (OLD.closed = true) AND (NEW.closed = false) THEN
@@ -307,17 +314,13 @@ BEGIN
 		NEW.closed = true;
 	END IF;
 
-	IF(year_close = true)THEN
-		RAISE EXCEPTION 'The year is closed not transactions are allowed.';
-	END IF;
 
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_periods BEFORE INSERT OR UPDATE ON periods
-    FOR EACH ROW EXECUTE PROCEDURE ins_periods();
-    
+	FOR EACH ROW EXECUTE PROCEDURE ins_periods();
     
 CREATE OR REPLACE FUNCTION open_periods(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE

@@ -554,7 +554,7 @@ WHERE vw_transfer_assignments.passanger_id = '$P!{filterid}']]>
 				<textElement>
 					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{tab} == 1 ? "Departure Time" : "Arrival Time"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tab} == 1 ? "ETD" : "ETA"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="HH.mm" isBlankWhenNull="true">
 				<reportElement style="Detail" x="253" y="113" width="35" height="15" uuid="6698e80a-4b46-43a2-a21e-7b8e8d134e9d"/>

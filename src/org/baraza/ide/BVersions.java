@@ -82,9 +82,16 @@ public class BVersions {
 	}
 	
 	public void replaceNode(BElement nodes, BElement newNode) {
-		BElement node = nodes.getElementByKey(newNode.getAttribute("key", "x"));
-		node = newNode;
-		
+		String key = newNode.getAttribute("key", "x");
+		int pos = 0;
+		for(BElement node : nodes.getElements()) {
+			if(node.getAttribute("key", "y").equals(key)) {
+				nodes.delNode(pos);
+				nodes.addNode(newNode, pos);
+				break;
+			}
+			pos++;
+		}
 	}
 
 }

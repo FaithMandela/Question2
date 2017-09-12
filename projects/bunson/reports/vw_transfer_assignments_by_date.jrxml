@@ -533,7 +533,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<textElement>
 					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{tab} == 1 ? "Departure Time" : "Arrival Time"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tab} == 1 ? "ETD" : "ETA"]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement style="Column header" x="292" y="93" width="25" height="15" forecolor="#000000" uuid="68d11b34-69f0-4069-a66d-117e5b677414"/>
