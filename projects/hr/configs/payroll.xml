@@ -31,7 +31,7 @@
 			<MENU name="Banking">106</MENU>
 			<MENU name="Summary Allow, Deduct">107</MENU>
 			<MENU name="Allowance and Deductions">108</MENU>
-			<MENU name="Employee Statutories">118</MENU>
+			<MENU name="Employee Statutory">118</MENU>
 			<MENU name="Pensions">125</MENU>
 			<MENU name="Loans">135</MENU>
 			<MENU name="Advance">109</MENU>
@@ -857,13 +857,13 @@
 					<CHECKBOX w="150" title="Part Time" y="150" h="20" x="10">part_time</CHECKBOX>
 					<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
 				</FORM>
-				<GRID name="Statutories" keyfield="employee_tax_type_id" linkfield="employee_month_id" table="vw_employee_tax_types">
+				<GRID name="Statutory" keyfield="employee_tax_type_id" linkfield="employee_month_id" table="vw_employee_tax_types">
 					<TEXTFIELD w="75" title="Tax Type ID">tax_type_id</TEXTFIELD>
 					<TEXTFIELD w="75" title="Tax Type Name">tax_type_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Tax Identification">tax_identification</TEXTFIELD>
 					<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 					<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
-					<FORM name="Statutories" keyfield="employee_tax_type_id" linkfield="employee_month_id" table="employee_tax_types">
+					<FORM name="Statutory" keyfield="employee_tax_type_id" linkfield="employee_month_id" table="employee_tax_types">
 						<COMBOBOX w="430" title="Type Name Type" lptable="vw_tax_types" where="(use_function = 1)" y="10" h="20" x="10" lpfield="tax_type_name">tax_type_id</COMBOBOX>
 						<TEXTFIELD w="150" title="Tax Identification" y="30" h="20" x="10">tax_identification</TEXTFIELD>
 						<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="10">amount</TEXTDECIMAL>
@@ -1722,7 +1722,7 @@
 				<TEXTFIELD w="75" title="DepartmentRoleName">department_role_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="DepartmentRoleName">department_role_name</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="BasicPay">basic_pay</TEXTDECIMAL>
-				<GRID name="Statutories" keyfield="employee_tax_type_id" linkfield="employee_month_id" table="vw_employee_tax_types">
+				<GRID name="Statutory" keyfield="employee_tax_type_id" linkfield="employee_month_id" table="vw_employee_tax_types">
 					<TEXTFIELD w="75" title="TaxTypeID">tax_type_id</TEXTFIELD>
 					<TEXTFIELD w="75" title="TaxTypeName">tax_type_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="TaxIdentification">tax_identification</TEXTFIELD>
@@ -1817,15 +1817,15 @@
 			<DRILLDOWN name="Statutory  Deductions" keyfield="tax_type_id" table="vw_tax_types" where="(use_function = 1)" listfield="tax_type_name" filter="tax_type_id"></DRILLDOWN>
 			<JASPER name="Statutory  Deductions" reportfile="vw_employee_tax_types_2.jasper"></JASPER>
 		</FILTER>
-		<FILTER w="770" name="Expense" split="150" type="horl" key="6" h="550">
+		<FILTER w="770" name="Expenses" split="150" type="horl" key="6" h="550">
 			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" pos="top">
 				<DRILLDOWN name="Month" keyfield="Period_ID" orderby="month_id" wherefield="Period_Year" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
-			<DRILLDOWN name="Expense" keyfield="adjustment_ID" table="adjustments" where="(adjustment_type = 3)" listfield="adjustment_Name" filter="adjustmentid" pos="top"></DRILLDOWN>
+			<DRILLDOWN name="Expenses" keyfield="adjustment_ID" table="adjustments" where="(adjustment_type = 3)" listfield="adjustment_Name" filter="adjustmentid" pos="top"></DRILLDOWN>
 			<JASPER name="Expense" reportfile="vw_employee_expense.jasper"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="770" name="Employee Statutories" key="118" h="750">
+	<DESK w="770" name="Employee Statutory" key="118" h="750">
 		<FILTER w="770" name="Statutory Deductions" split="150" type="horl" key="6" h="550">
 			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" pos="top">
 				<DRILLDOWN name="Month" keyfield="Period_ID" orderby="month_id" wherefield="Period_Year" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
@@ -1934,10 +1934,8 @@
 				<COMBOBOX w="430" orgerby="employee_name" title="Employee" lptable="vw_employees" cmb_fnct="employee_id || '- ' || employee_name" lpkey="entity_id" y="10" h="20" x="10" lpfield="employee">employee_id</COMBOBOX>
 				<COMBOBOX w="430" title="Year" lptable="vw_fiscal_years" orderby="fiscal_year desc" y="30" h="20" x="10" lpfield="fiscal_year">fiscal_year_id</COMBOBOX>
 			</FILTERFORM>
+			<JASPER name="IR56A" reportfile="vw_employee_year.jasper"></JASPER>
 			<JASPER name="IR56B" reportfile="IR56B.jasper"></JASPER>
-			<JASPER name="IR56E" reportfile="IR56E.jasper"></JASPER>
-			<JASPER name="IR56G" reportfile="IR56G.jasper"></JASPER>
-			<JASPER name="IR56M" reportfile="IR56M.jasper"></JASPER>
 		</FILTER>
 		<GRID export="xml" name="IR56B" keyfield="fiscal_year_id" table="vw_fiscal_years">
 			<TEXTFIELD w="75" title="Section">section</TEXTFIELD>

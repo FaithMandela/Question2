@@ -144,7 +144,9 @@ VALUES
 (0, 1, 12, 1, 'Commission Fee', true, true, '90005'),
 (0, 1, 13, 1, 'Bonus', true, true, '90005');
 
-DELETE FROM currency WHERE currency_id > 1;
+
+DELETE FROM currency WHERE currency_id NOT IN (1, 5);
+UPDATE currency SET currency_name = 'Hong Kong Dollar', currency_symbol = 'HKD';
 
 
 ----------------- Work

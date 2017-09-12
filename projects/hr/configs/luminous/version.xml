@@ -5,6 +5,17 @@
 			<MENU name="P10">112</MENU>
 			<MENU name="Loans" role="admin,payroll"></MENU>
 		</REMOVE>
+		<REPLACE>
+			<DESK w="770" name="Employee Statutory" key="118" h="750">
+				<FILTER w="770" name="Statutory Deductions" split="150" type="horl" key="6" h="550">
+					<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" pos="top">
+						<DRILLDOWN name="Month" keyfield="Period_ID" orderby="month_id" wherefield="Period_Year" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
+					</DRILLDOWN>
+					<DRILLDOWN name="Statutory  Deductions" keyfield="tax_type_id" table="vw_tax_types" where="(use_function = 1)" listfield="tax_type_name" filter="tax_type_id"></DRILLDOWN>
+					<JASPER name="Statutory  Deductions" reportfile="vw_employee_tax_types_2.jasper"></JASPER>
+				</FILTER>
+			</DESK>
+		</REPLACE>
 	</VERSION>
 
 	<VERSION name="projects" source="../projects.xml" destination="projects.xml">

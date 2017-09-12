@@ -44,10 +44,16 @@ public class BVersions {
 			for(BElement action : el.getElements()) {
 				System.out.println(action.getName());
 				
-				for(BElement node : action.getElements()) {
-					System.out.println("\t" + node.getName() + " : " + node.getAttribute("name"));
-					
-					removeNode(source.getRoot().getElementByName("MENU"), node);
+				if(action.getName().equals("REMOVE")) {
+					for(BElement node : action.getElements()) {
+						System.out.println("\t" + node.getName() + " : " + node.getAttribute("name"));
+						removeNode(source.getRoot().getElementByName("MENU"), node);
+					}
+				} else if(action.getName().equals("REPLACE")) {
+					for(BElement node : action.getElements()) {
+						System.out.println("\t" + node.getName() + " : " + node.getAttribute("name"));
+						replaceNode(source.getRoot(), node);
+					}
 				}
 			}
 			
@@ -75,6 +81,11 @@ public class BVersions {
 		}
 	}
 	
+	public void replaceNode(BElement nodes, BElement newNode) {
+		BElement node = nodes.getElementByKey(newNode.getAttribute("key", "x"));
+		node = newNode;
+		
+	}
 
 }
 
