@@ -337,17 +337,18 @@ CREATE VIEW vw_account_definations AS
 		LEFT JOIN activity_types charge_activitys ON account_definations.charge_activity_id = charge_activitys.activity_type_id;
 		
 CREATE VIEW vw_deposit_balance AS
-	SELECT cb.deposit_account_id, cb.current_balance, ab.cleared_balance, uc.unprocessed_credit
+	SELECT cb.deposit_account_id, cb.current_balance, COALESCE(ab.c_balance, 0) as cleared_balance,
+		COALESCE(uc.u_credit, 0) as unprocessed_credit
 	FROM 
 		(SELECT deposit_account_id, sum((account_credit - account_debit) * exchange_rate) as current_balance
 			FROM account_activity GROUP BY deposit_account_id) cb
 	LEFT JOIN
-		(SELECT deposit_account_id, sum((account_credit - account_debit) * exchange_rate) as cleared_balance
+		(SELECT deposit_account_id, sum((account_credit - account_debit) * exchange_rate) as c_balance
 			FROM account_activity WHERE activity_status_id < 3
 			GROUP BY deposit_account_id) ab
 		ON cb.deposit_account_id = ab.deposit_account_id
 	LEFT JOIN
-		(SELECT deposit_account_id, sum(account_credit * exchange_rate) as unprocessed_credit
+		(SELECT deposit_account_id, sum(account_credit * exchange_rate) as u_credit
 			FROM account_activity WHERE activity_status_id > 2
 			GROUP BY deposit_account_id) uc
 		ON cb.deposit_account_id = uc.deposit_account_id;

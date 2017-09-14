@@ -109,23 +109,25 @@ BEGIN
 		END IF;
 	END IF;
 	
-	IF(NEW.deposit_account_id is not null)THEN
-		SELECT sum(account_credit - account_debit) INTO NEW.balance
-		FROM account_activity
-		WHERE (account_activity_id < NEW.account_activity_id)
-			AND (deposit_account_id = NEW.deposit_account_id);
+	IF(TG_OP = 'INSERT')THEN
+		IF(NEW.deposit_account_id is not null)THEN
+			SELECT sum(account_credit - account_debit) INTO NEW.balance
+			FROM account_activity
+			WHERE (account_activity_id < NEW.account_activity_id)
+				AND (deposit_account_id = NEW.deposit_account_id);
+		END IF;
+		IF(NEW.loan_id is not null)THEN
+			SELECT sum(account_credit - account_debit) INTO NEW.balance
+			FROM account_activity
+			WHERE (account_activity_id < NEW.account_activity_id)
+				AND (loan_id = NEW.loan_id);
+		END IF;
+		IF(NEW.balance is null)THEN
+			NEW.balance := 0;
+		END IF;
+		NEW.balance := NEW.balance + (NEW.account_credit - NEW.account_debit);
 	END IF;
-	IF(NEW.loan_id is not null)THEN
-		SELECT sum(account_credit - account_debit) INTO NEW.balance
-		FROM account_activity
-		WHERE (account_activity_id < NEW.account_activity_id)
-			AND (loan_id = NEW.loan_id);
-	END IF;
-	IF(NEW.balance is null)THEN
-		NEW.balance := 0;
-	END IF;
-	NEW.balance := NEW.balance + (NEW.account_credit - NEW.account_debit);
-	
+			
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -135,9 +137,12 @@ CREATE TRIGGER ins_account_activity BEFORE INSERT OR UPDATE ON account_activity
 
 CREATE OR REPLACE FUNCTION aft_account_activity() RETURNS trigger AS $$
 DECLARE
+	reca 						RECORD;
 	v_account_activity_id		integer;
 	v_product_id				integer;
 	v_use_key_id				integer;
+	v_actual_balance			real;
+	v_total_debits				real;
 BEGIN
 
 	IF(NEW.deposit_account_id is not null) THEN
@@ -205,7 +210,29 @@ BEGIN
 	END IF;
 	
 	--- compute for Commited amounts taking the date into consideration
-	
+	IF((NEW.account_credit > 0) AND (NEW.activity_status_id = 1))THEN
+		SELECT sum((account_credit - account_debit) * exchange_rate) INTO v_actual_balance
+		FROM account_activity 
+		WHERE (deposit_account_id = $2) AND (activity_status_id < 2) AND (value_date <= NEW.value_date);
+		IF(v_actual_balance is null)THEN v_actual_balance := 0; END IF;
+		SELECT sum(account_debit * exchange_rate) INTO v_total_debits
+		FROM account_activity 
+		WHERE (deposit_account_id = $2) AND (activity_status_id < 2) AND (value_date <= NEW.value_date);
+		IF(v_total_debits is null)THEN v_total_debits := 0; END IF;
+		v_actual_balance := v_actual_balance - v_total_debits;
+			
+		FOR reca IN SELECT account_activity_id, deposit_account_id, transfer_account_id,
+				activity_type_id, activity_frequency_id, activity_status_id,
+				currency_id, period_id, entity_id, org_id, link_activity_id, 
+				deposit_account_no, transfer_account_no, activity_date, value_date, 
+				account_credit, account_debit, balance, exchange_rate
+			FROM account_activity 
+			WHERE (deposit_account_id = NEW.deposit_account_id ) AND (activity_status_id = 4) AND (activity_date <= NEW.value_date)
+			ORDER BY account_activity_id
+		LOOP
+			
+		END LOOP;
+	END IF;
 	RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
@@ -536,13 +563,13 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION get_intrest(integer, integer, integer) RETURNS real AS $$
 DECLARE
-	v_principal_amount 		real;
-	v_interest_rate			real;
-	v_actual_balance		real;
-	v_total_debits			real;
-	v_start_date			date;
-	v_end_date				date;
-	ans						real;
+	v_principal_amount 			real;
+	v_interest_rate				real;
+	v_actual_balance			real;
+	v_total_debits				real;
+	v_start_date				date;
+	v_end_date					date;
+	ans							real;
 BEGIN
 
 	SELECT start_date, end_date INTO v_start_date, v_end_date
@@ -571,7 +598,6 @@ BEGIN
 		FROM account_activity 
 		WHERE (deposit_account_id = $2) AND (activity_status_id < 2) AND (value_date < v_start_date);
 		IF(v_actual_balance is null)THEN v_actual_balance := 0; END IF;
-		
 		SELECT sum(account_debit * exchange_rate) INTO v_total_debits
 		FROM account_activity 
 		WHERE (deposit_account_id = $2) AND (activity_status_id < 2) AND (value_date BETWEEN v_start_date AND v_end_date);
@@ -587,10 +613,10 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION get_penalty(integer, integer, integer, real) RETURNS real AS $$
 DECLARE
-	v_actual_default		real;
-	v_start_date			date;
-	v_end_date				date;
-	ans						real;
+	v_actual_default			real;
+	v_start_date				date;
+	v_end_date					date;
+	ans							real;
 BEGIN
 
 	SELECT start_date, end_date INTO v_start_date, v_end_date

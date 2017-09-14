@@ -23,4 +23,5 @@ cp -f ../hr/reports/statement_a.jasper ./reports/
 cp -f ../hr/reports/statement.jasper ./reports/
 cp -f ../hr/reports/vw_helpdesk.jasper ./reports/
 cp -f ../hr/reports/vw_helpdesk_c.jasper ./reports/
+cp -f ../hr/reports/vws_tx_ledger.jasper ./reports/
 

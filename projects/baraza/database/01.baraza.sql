@@ -1229,13 +1229,16 @@ CREATE OR REPLACE FUNCTION get_default_currency(int) RETURNS int AS $$
 	WHERE (org_id = $1);
 $$ LANGUAGE SQL;
 
-
 CREATE OR REPLACE FUNCTION get_start_year(varchar(12)) RETURNS varchar(12) AS $$
 	SELECT '01/01/' || to_char(current_date, 'YYYY'); 
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION get_end_year(varchar(12)) RETURNS varchar(12) AS $$
 	SELECT '31/12/' || to_char(current_date, 'YYYY'); 
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_current_year(varchar(12)) RETURNS varchar(12) AS $$
+	SELECT to_char(current_date, 'YYYY'); 
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION get_currency_rate(integer, integer) RETURNS real AS $$
