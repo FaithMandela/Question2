@@ -2,37 +2,17 @@ TODO
 
 Make org have first customer account
 
-Types of transactions
-- Receive cash or cheque or mpesa or ecash
-Cr customer account for cheque wait value date and clearance
+- desposit account, loan and activity change logs
 
-- Withdraw money cheque or cash
-Dr customer account for cheque wait for clearance
+- Loan payments without availability of funds
 
-- Service charge
-Dr customer account
-Cr service account
+- Separate how I make transactions on web
 
-- Transfer amount
-Dr customer
-Cr recepient
+- Compute annual compound intrest
+
+- Making standing orders
 
 - Online purchase would need API
 Dr customer acocunt
 Cr the vendor
 
-- loan
-Dr customer account on picking loan
-
-- loan intrest
-Cr Intrest account
-Dr Customer account
-
-- Loan penalty
-Cr loan penalty account
-Dr Customer account
-
-- Loan payment
-Make Payment to normal account first
-Cr Loan account
-Dr Customer account

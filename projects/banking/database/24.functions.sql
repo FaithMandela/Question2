@@ -149,6 +149,7 @@ BEGIN
 		FROM loans WHERE loan_id = NEW.loan_id;
 	END IF;
 	
+	--- Generate the countra entry for a transfer
 	IF(NEW.transfer_account_id is not null)THEN
 		SELECT account_activity_id INTO v_account_activity_id
 		FROM account_activity
@@ -165,6 +166,7 @@ BEGIN
 		END IF;
 	END IF;
 	
+	--- Generate the countra entry for a loan
 	IF(NEW.transfer_loan_id is not null)THEN
 		SELECT account_activity_id INTO v_account_activity_id
 		FROM account_activity
@@ -181,7 +183,7 @@ BEGIN
 		END IF;
 	END IF;
 
-	--- Posting the charge on the transfer tranzaction
+	--- Posting the charge on the transfer transaction
 	SELECT use_key_id INTO v_use_key_id
 	FROM activity_types
 	WHERE (activity_type_id = NEW.activity_type_id);
@@ -201,6 +203,8 @@ BEGIN
 			AND (account_definations.is_active = true) AND (account_definations.has_charge = true)
 			AND (account_definations.start_date < current_date);
 	END IF;
+	
+	--- compute for Commited amounts taking the date into consideration
 	
 	RETURN NULL;
 END;
@@ -335,6 +339,8 @@ DECLARE
 	v_interest_account			varchar(32);
 	v_interest_amount			real;
 	v_repayment_amount			real;
+	v_available_balance			real;
+	v_activity_status_id		integer;
 	msg							varchar(120);
 BEGIN
 
@@ -416,12 +422,20 @@ BEGIN
 		WHERE (period_id = v_period_id) AND (activity_type_id = v_activity_type_id) AND (loan_id = reca.loan_id);
 		
 		IF((v_account_activity_id is null) AND (v_activity_type_id is not null))THEN
+			v_repayment_amount := v_repayment_amount + reca.repayment_amount;
+			v_activity_status_id := 1;
+			
+			SELECT available_balance INTO v_available_balance
+			FROM vw_deposit_accounts
+			WHERE (account_number = reca.disburse_account);
+			IF(v_available_balance < v_repayment_amount)THEN v_activity_status_id := 4; END IF;
+			
 			INSERT INTO account_activity (loan_id, transfer_account_no, activity_type_id,
 				currency_id, org_id, activity_date, value_date,
 				activity_frequency_id, activity_status_id, account_credit, account_debit)
 			VALUES (reca.loan_id, reca.disburse_account, v_activity_type_id,
 				reca.currency_id, v_org_id, v_end_date, v_end_date,
-				1, 1, reca.repayment_amount + v_repayment_amount, 0);
+				1, v_activity_status_id, v_repayment_amount, 0);
 		END IF;
 	END LOOP;
 

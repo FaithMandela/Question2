@@ -104,15 +104,24 @@ CREATE INDEX account_activity_transfer_loan_id ON account_activity(transfer_loan
 
 
 CREATE VIEW vw_loan_balance AS
-	SELECT fl.loan_id, fl.committed_balance, al.actual_balance
+	SELECT cb.loan_id, cb.committed_balance, ab.actual_balance, li.loan_intrest, lp.loan_penalty
 	FROM 
 		(SELECT loan_id, sum((account_debit - account_credit) * exchange_rate) as committed_balance
-			FROM account_activity GROUP BY loan_id) fl
+			FROM account_activity GROUP BY loan_id) cb
 	LEFT JOIN
 		(SELECT loan_id, sum((account_debit - account_credit) * exchange_rate) as actual_balance
-			FROM account_activity WHERE activity_status_id < 3
-			GROUP BY loan_id) al 
-		ON fl.loan_id = al.loan_id;
+			FROM account_activity WHERE activity_status_id < 3 GROUP BY loan_id) ab
+		ON cb.loan_id = ab.loan_id
+	LEFT JOIN
+		(SELECT loan_id, sum((account_debit - account_credit) * exchange_rate) as loan_intrest
+			FROM account_activity INNER JOIN activity_types ON account_activity.activity_type_id = activity_types.activity_type_id
+			WHERE (activity_types.use_key_id = 105) GROUP BY loan_id) li
+		ON cb.loan_id = li.loan_id
+	LEFT JOIN
+		(SELECT loan_id, sum((account_debit - account_credit) * exchange_rate) as loan_penalty
+			FROM account_activity INNER JOIN activity_types ON account_activity.activity_type_id = activity_types.activity_type_id
+			WHERE (activity_types.use_key_id = 106) GROUP BY loan_id) lp
+		ON cb.loan_id = lp.loan_id;
 
 CREATE VIEW vw_loans AS
 	SELECT customers.customer_id, customers.customer_name, 

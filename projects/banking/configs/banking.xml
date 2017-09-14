@@ -1360,7 +1360,7 @@
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Current Balance">current_balance</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Available Balance">available_balance</TEXTDECIMAL>
-			<GRID name="Account Activity" keyfield="account_activity_id" linkfield="deposit_account_id" table="vw_account_activity">
+			<GRID name="Account Activity" keyfield="account_activity_id" edit="false" linkfield="deposit_account_id" table="vw_account_activity">
 				<TEXTFIELD w="75" title="Activity ID">account_activity_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Activity">activity_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Frequency">activity_frequency_name</TEXTFIELD>
@@ -1373,16 +1373,52 @@
 				<TEXTDECIMAL w="75" title="Debit">account_debit</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Balance">balance</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
-				<FORM name="Account Activity" keyfield="account_activity_id" linkfield="deposit_account_id" table="account_activity">
+				<FORM name="Deposits" keyfield="account_activity_id" edit="false" delete="false" linkfield="deposit_account_id" table="account_activity">
 					<USERFIELD>entity_id</USERFIELD>
-					<COMBOBOX w="430" title="Type" lptable="activity_types" y="50" h="20" x="10" lpfield="activity_type_name">activity_type_id</COMBOBOX>
-					<COMBOBOX w="430" title="Frequency" lptable="activity_frequency" orderby="activity_frequency_id" noorg="true" y="70" h="20" x="10" lpfield="activity_frequency_name">activity_frequency_id</COMBOBOX>
+					<DEFAULT default="1">activity_frequency_id</DEFAULT>
+					<COMBOBOX w="430" title="Type" lptable="activity_types" where="(use_key_id = 101)" y="50" h="20" x="10" lpfield="activity_type_name">activity_type_id</COMBOBOX>
+					<COMBOBOX w="430" title="Status" lptable="activity_status" orderby="activity_status_id" noorg="true" y="90" h="20" x="10" lpfield="activity_status_name">activity_status_id</COMBOBOX>
+					<COMBOBOX w="430" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="110" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+					<TEXTDATE w="150" title="Activity Date" default="now" y="190" h="20" x="290">activity_date</TEXTDATE>
+					<TEXTDATE w="150" title="Value Date" default="now" y="210" h="20" x="10">value_date</TEXTDATE>
+					<TEXTDECIMAL w="150" title="Credit" y="210" h="20" x="290">account_credit</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Exchange Rate" y="250" h="20" x="10">exchange_rate</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="310" h="70" x="10">details</TEXTAREA>
+				</FORM>
+				<FORM name="Withdrawal" keyfield="account_activity_id" edit="false" delete="false" linkfield="deposit_account_id" table="account_activity">
+					<USERFIELD>entity_id</USERFIELD>
+					<DEFAULT default="1">activity_frequency_id</DEFAULT>
+					<COMBOBOX w="430" title="Type" lptable="activity_types" where="(use_key_id = 102)" y="50" h="20" x="10" lpfield="activity_type_name">activity_type_id</COMBOBOX>
+					<COMBOBOX w="430" title="Status" lptable="activity_status" orderby="activity_status_id" noorg="true" y="90" h="20" x="10" lpfield="activity_status_name">activity_status_id</COMBOBOX>
+					<COMBOBOX w="430" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="110" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+					<TEXTDATE w="150" title="Activity Date" default="now" y="190" h="20" x="290">activity_date</TEXTDATE>
+					<TEXTDATE w="150" title="Value Date" default="now" y="210" h="20" x="10">value_date</TEXTDATE>
+					<TEXTDECIMAL w="150" title="Debit" y="230" h="20" x="10">account_debit</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Exchange Rate" y="250" h="20" x="10">exchange_rate</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="310" h="70" x="10">details</TEXTAREA>
+				</FORM>
+				<FORM name="Transfer" keyfield="account_activity_id" edit="false" delete="false" linkfield="deposit_account_id" table="account_activity">
+					<USERFIELD>entity_id</USERFIELD>
+					<DEFAULT default="1">activity_frequency_id</DEFAULT>
+					<COMBOBOX w="430" title="Type" lptable="activity_types" where="(use_key_id = 104)" y="50" h="20" x="10" lpfield="activity_type_name">activity_type_id</COMBOBOX>
 					<COMBOBOX w="430" title="Status" lptable="activity_status" orderby="activity_status_id" noorg="true" y="90" h="20" x="10" lpfield="activity_status_name">activity_status_id</COMBOBOX>
 					<COMBOBOX w="430" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="110" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Transfer Account" y="190" h="20" x="10">transfer_account_no</TEXTFIELD>
 					<TEXTDATE w="150" title="Activity Date" default="now" y="190" h="20" x="290">activity_date</TEXTDATE>
 					<TEXTDATE w="150" title="Value Date" default="now" y="210" h="20" x="10">value_date</TEXTDATE>
-					<TEXTDECIMAL w="150" title="Credit" y="210" h="20" x="290">account_credit</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Debit" y="230" h="20" x="10">account_debit</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Exchange Rate" y="250" h="20" x="10">exchange_rate</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="310" h="70" x="10">details</TEXTAREA>
+				</FORM>
+				<FORM name="Loan Payment" keyfield="account_activity_id" edit="false" delete="false" linkfield="deposit_account_id" table="account_activity">
+					<USERFIELD>entity_id</USERFIELD>
+					<DEFAULT default="1">activity_frequency_id</DEFAULT>
+					<COMBOBOX w="430" title="Type" lptable="activity_types" where="(use_key_id = 107)" y="50" h="20" x="10" lpfield="activity_type_name">activity_type_id</COMBOBOX>
+					<COMBOBOX w="430" title="Status" lptable="activity_status" orderby="activity_status_id" noorg="true" y="90" h="20" x="10" lpfield="activity_status_name">activity_status_id</COMBOBOX>
+					<COMBOBOX w="430" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="110" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Transfer Account" y="190" h="20" x="10">transfer_account_no</TEXTFIELD>
+					<TEXTDATE w="150" title="Activity Date" default="now" y="190" h="20" x="290">activity_date</TEXTDATE>
+					<TEXTDATE w="150" title="Value Date" default="now" y="210" h="20" x="10">value_date</TEXTDATE>
 					<TEXTDECIMAL w="150" title="Debit" y="230" h="20" x="10">account_debit</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Exchange Rate" y="250" h="20" x="10">exchange_rate</TEXTDECIMAL>
 					<TEXTAREA w="430" title="Details" y="310" h="70" x="10">details</TEXTAREA>
@@ -1426,7 +1462,7 @@
 				<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 				<FORM name="Account Activity" keyfield="account_activity_id" linkfield="loan_id" table="account_activity">
 					<USERFIELD>entity_id</USERFIELD>
-					<COMBOBOX w="430" title="Type" lptable="activity_types" y="50" h="20" x="10" lpfield="activity_type_name">activity_type_id</COMBOBOX>
+					<COMBOBOX w="430" title="Type" lptable="activity_types" where="(use_key_id BETWEEN 105 AND 108)" y="50" h="20" x="10" lpfield="activity_type_name">activity_type_id</COMBOBOX>
 					<COMBOBOX w="430" title="Frequency" lptable="activity_frequency" orderby="activity_frequency_id" noorg="true" y="70" h="20" x="10" lpfield="activity_frequency_name">activity_frequency_id</COMBOBOX>
 					<COMBOBOX w="430" title="Status" lptable="activity_status" orderby="activity_status_id" noorg="true" y="90" h="20" x="10" lpfield="activity_status_name">activity_status_id</COMBOBOX>
 					<COMBOBOX w="430" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="110" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>

@@ -337,15 +337,20 @@ CREATE VIEW vw_account_definations AS
 		LEFT JOIN activity_types charge_activitys ON account_definations.charge_activity_id = charge_activitys.activity_type_id;
 		
 CREATE VIEW vw_deposit_balance AS
-	SELECT fl.deposit_account_id, fl.current_balance, al.available_balance
+	SELECT cb.deposit_account_id, cb.current_balance, ab.cleared_balance, uc.unprocessed_credit
 	FROM 
 		(SELECT deposit_account_id, sum((account_credit - account_debit) * exchange_rate) as current_balance
-			FROM account_activity GROUP BY deposit_account_id) fl
+			FROM account_activity GROUP BY deposit_account_id) cb
 	LEFT JOIN
-		(SELECT deposit_account_id, sum((account_credit - account_debit) * exchange_rate) as available_balance
+		(SELECT deposit_account_id, sum((account_credit - account_debit) * exchange_rate) as cleared_balance
 			FROM account_activity WHERE activity_status_id < 3
-			GROUP BY deposit_account_id) al 
-		ON fl.deposit_account_id = al.deposit_account_id;
+			GROUP BY deposit_account_id) ab
+		ON cb.deposit_account_id = ab.deposit_account_id
+	LEFT JOIN
+		(SELECT deposit_account_id, sum(account_credit * exchange_rate) as unprocessed_credit
+			FROM account_activity WHERE activity_status_id > 2
+			GROUP BY deposit_account_id) uc
+		ON cb.deposit_account_id = uc.deposit_account_id;
 
 CREATE VIEW vw_deposit_accounts AS
 	SELECT customers.customer_id, customers.customer_name, 
@@ -359,7 +364,8 @@ CREATE VIEW vw_deposit_accounts AS
 		deposit_accounts.lockedin_until_date, deposit_accounts.application_date, deposit_accounts.approve_status, 
 		deposit_accounts.workflow_table_id, deposit_accounts.action_date, deposit_accounts.details,
 		
-		vw_deposit_balance.current_balance, vw_deposit_balance.available_balance
+		vw_deposit_balance.current_balance, vw_deposit_balance.cleared_balance, vw_deposit_balance.unprocessed_credit,
+		(vw_deposit_balance.cleared_balance - vw_deposit_balance.unprocessed_credit) AS available_balance
 	FROM deposit_accounts INNER JOIN customers ON deposit_accounts.customer_id = customers.customer_id
 		INNER JOIN vw_products ON deposit_accounts.product_id = vw_products.product_id
 		INNER JOIN activity_frequency ON deposit_accounts.activity_frequency_id = activity_frequency.activity_frequency_id
