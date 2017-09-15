@@ -1,58 +1,103 @@
 
-DROP VIEW qstudentsummary;
-DROP VIEW qcurrstudentdegreeview;
-DROP VIEW qstudentdegreeview;
-
-ALTER TABLE qstudents ADD so_approval			boolean default false not null;
 
 
-CREATE VIEW qstudentdegreeview AS
-	SELECT students.studentid, students.departmentid, students.studentname, students.Sex, students.Nationality, students.MaritalStatus,
-		students.birthdate, students.email, studentdegrees.studentdegreeid, studentdegrees.degreeid,
-		sublevels.sublevelid, sublevels.degreelevelid, sublevels.levellocationid, sublevels.sublevelname,
-        qstudents.qstudentid, qstudents.quarterid, qstudents.charges, 
-		qstudents.probation, qstudents.roomnumber, qstudents.currbalance, qstudents.applicationtime, qstudents.studylevel,
-		qstudents.finalised, qstudents.finaceapproval, qstudents.majorapproval, qstudents.chaplainapproval, qstudents.studentdeanapproval, 
-		qstudents.overloadapproval, qstudents.overloadhours, qstudents.intersession, qstudents.closed, qstudents.printed, qstudents.approved, qstudents.noapproval,
-		qstudents.org_id, qstudents.so_approval,
-		qresidenceview.residenceid, qresidenceview.residencename, qresidenceview.defaultrate,
-		qresidenceview.offcampus, qresidenceview.Sex as residencesex, qresidenceview.residencedean, qresidenceview.charges as residencecharges,
-		qresidenceview.qresidenceid, qresidenceview.residenceoption, (qresidenceview.qresidenceid || 'R' || qstudents.roomnumber) as roomid  
-	FROM (((students INNER JOIN (studentdegrees INNER JOIN sublevels ON studentdegrees.sublevelid = sublevels.sublevelid) ON students.studentid = studentdegrees.studentid)
-		INNER JOIN qstudents ON studentdegrees.studentdegreeid = qstudents.studentdegreeid)
-		LEFT JOIN qresidenceview ON qstudents.qresidenceid = qresidenceview.qresidenceid);
-		
-CREATE VIEW qcurrstudentdegreeview AS 
-	SELECT qstudentdegreeview.studentid, qstudentdegreeview.departmentid, qstudentdegreeview.studentname, qstudentdegreeview.sex, 
-		qstudentdegreeview.nationality, qstudentdegreeview.maritalstatus, qstudentdegreeview.birthdate, qstudentdegreeview.email, 
-		qstudentdegreeview.studentdegreeid, qstudentdegreeview.degreeid, qstudentdegreeview.sublevelid, qstudentdegreeview.qstudentid, 
-		qstudentdegreeview.quarterid, qstudentdegreeview.charges, qstudentdegreeview.probation, qstudentdegreeview.roomnumber, 
-		qstudentdegreeview.currbalance, qstudentdegreeview.finaceapproval, qstudentdegreeview.studylevel, 
-		qstudentdegreeview.finalised, qstudentdegreeview.majorapproval, 
-		qstudentdegreeview.chaplainapproval, qstudentdegreeview.overloadapproval, 
-		qstudentdegreeview.studentdeanapproval, qstudentdegreeview.overloadhours, qstudentdegreeview.intersession, 
-		qstudentdegreeview.closed, qstudentdegreeview.printed, qstudentdegreeview.approved, qstudentdegreeview.noapproval, 
-		qstudentdegreeview.org_id, qstudentdegreeview.so_approval,
-		qstudentdegreeview.qresidenceid, qstudentdegreeview.residenceid, qstudentdegreeview.residencename, qstudentdegreeview.roomid
-	FROM qstudentdegreeview JOIN quarters ON qstudentdegreeview.quarterid = quarters.quarterid
-	WHERE quarters.active = true;
+--------- Stupid clean up work
 
-CREATE VIEW qstudentsummary AS
-	SELECT qsd.studentid, qsd.studentname, qsd.quarterid, qsd.approved, qsd.studentdegreeid, qsd.qstudentid,
-		qsd.sex, qsd.Nationality, qsd.MaritalStatus, qsd.studylevel, qsd.org_id,
-		getcurrcredit(qsd.qstudentid) as credit, getcurrgpa(qsd.qstudentid) as gpa,
-		getcummcredit(qsd.studentdegreeid, qsd.quarterid) as cummcredit,
-		getcummgpa(qsd.studentdegreeid, qsd.quarterid) as cummgpa, 
-		quarters.publishgrades
-	FROM qstudentdegreeview as qsd INNER JOIN quarters ON qsd.quarterid = quarters.quarterid;
-	
-CREATE OR REPLACE FUNCTION approve_so(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(240) AS $$
+CREATE OR REPLACE FUNCTION deldupstudent(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
+	myrec RECORD;
+	myreca RECORD;
+	myrecb RECORD;
+	myrecc RECORD;
+	myqtr RECORD;
+	newid VARCHAR(16);
 	mystr VARCHAR(120);
 BEGIN
-	UPDATE qstudents SET so_approval = true WHERE (qstudentid = $1::integer);
-	mystr := 'School officers approval';
+	IF($2 is null) THEN 
+		newid := $3 || substring($1 from 3 for 5);
+	ELSE
+		newid := $2;
+	END IF;
+	
+	SELECT INTO myrec studentid, studentname FROM students WHERE (studentid = newid);
+	SELECT INTO myreca studentdegreeid, studentid FROM studentdegrees WHERE (studentid = $2);
+	SELECT INTO myrecb studentdegreeid, studentid FROM studentdegrees WHERE (studentid = $1);
+	SELECT INTO myrecc a.studentdegreeid, a.quarterid FROM
+	((SELECT studentdegreeid, quarterid FROM qstudents WHERE studentdegreeid = myreca.studentdegreeid)
+	EXCEPT (SELECT studentdegreeid, quarterid FROM qstudents WHERE studentdegreeid = myrecb.studentdegreeid)) as a;
+	
+	IF ($1 = $2) THEN
+		mystr := 'That the same ID no change';
+	ELSIF (myrecc.quarterid IS NOT NULL) THEN
+		mystr := 'Conflict in quarter ' || myrecc.quarterid;
+	ELSIF (myreca.studentdegreeid IS NOT NULL) AND (myrecb.studentdegreeid IS NOT NULL) THEN
+		UPDATE qstudents SET studentdegreeid = myreca.studentdegreeid WHERE studentdegreeid = myrecb.studentdegreeid;
+		UPDATE studentrequests SET studentid = $2 WHERE studentid = $1;
+		DELETE FROM studentmajors WHERE studentdegreeid = myrecb.studentdegreeid;
+		DELETE FROM studentdegrees WHERE studentdegreeid = myrecb.studentdegreeid;
+		DELETE FROM students WHERE studentid = $1;	
+		mystr := 'Changes to ' || $2;
+	ELSIF (myrec.studentid is not null) THEN
+		UPDATE studentdegrees SET studentid = $2 WHERE studentid = $1;
+		UPDATE studentrequests SET studentid = $2 WHERE studentid = $1;
+		DELETE FROM students WHERE studentid = $1;
+		mystr := 'Changes to ' || $2;
+	ELSIF ($2 is null) THEN
+		DELETE FROM studentdegrees WHERE studentid is null;
+		UPDATE studentdegrees SET studentid = null WHERE studentid = $1;
+		UPDATE studentrequests SET studentid = null WHERE studentid = $1;
+		UPDATE sun_audits SET studentid = null WHERE studentid = $1;
+		
+		UPDATE students SET studentid = newid, newstudent = false  WHERE studentid = $1;
+		UPDATE studentdegrees SET studentid = newid WHERE studentid is null;
+		UPDATE studentrequests SET studentid = newid WHERE studentid is null;
+		UPDATE sun_audits SET studentid = newid WHERE studentid = null;
+		UPDATE entitys SET user_name = newid WHERE user_name = $1;
+		mystr := 'Changes to ' || newid;
+	ELSIF ($2 is not null) AND (newid is not null) THEN
+		DELETE FROM studentdegrees WHERE studentid is null;
+		UPDATE studentdegrees SET studentid = null WHERE studentid = $1;
+		UPDATE studentrequests SET studentid = null WHERE studentid = $1;
+		UPDATE probation_list SET studentid = null WHERE studentid = $1;
+		UPDATE sun_audits SET studentid = null WHERE studentid = $1;
+		
+		UPDATE students SET studentid = newid, newstudent = false  WHERE studentid = $1;
+		UPDATE studentdegrees SET studentid = newid WHERE studentid is null;
+		UPDATE studentrequests SET studentid = newid WHERE studentid is null;
+		UPDATE sun_audits SET studentid = newid WHERE studentid = null;
+		UPDATE probation_list SET studentid = newid WHERE studentid = null;
+		UPDATE entitys SET user_name = newid WHERE user_name = $1;
+		mystr := 'Changes to ' || newid;
+	END IF;
+	
 	RETURN mystr;
 END;
 $$ LANGUAGE plpgsql;
+
+DELETE FROM students WHERE studentid IN
+(SELECT students.studentid
+FROM students LEFT JOIN studentdegrees ON students.studentid = studentdegrees.studentid
+WHERE studentdegrees.studentid is null);
+
+
+ALTER TABLE students ADD old_studentid varchar(12);
+UPDATE students SET old_studentid = studentid;
+
+ALTER TABLE qstudents DISABLE TRIGGER updb_qstudents;
+ALTER TABLE studentdegrees ALTER COLUMN studentid DROP NOT NULL;
+
+SELECT a.studentid, deldupstudent(a.studentid, '16/' || lpad(a.rnum::text, 4, '0'), null)
+
+FROM (SELECT studentdegrees.studentid, min(substr(qstudents.quarterid, 1, 4)) as study_year,
+row_number() OVER () as rnum
+FROM studentdegrees INNER JOIN qstudents ON studentdegrees.studentdegreeid = qstudents.studentdegreeid
+WHERE studentdegrees.studentid not like '%/%'
+GROUP BY studentdegrees.studentid
+ORDER BY studentdegrees.studentid) a
+
+WHERE a.study_year = '2016'
+ORDER BY a.rnum;
+
+ALTER TABLE studentdegrees ALTER COLUMN studentid SET NOT NULL;
+ALTER TABLE qstudents ENABLE TRIGGER updb_qstudents;
 
