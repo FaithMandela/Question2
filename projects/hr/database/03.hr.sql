@@ -2553,11 +2553,11 @@ BEGIN
 		INSERT INTO address(address_type_id, sys_country_id, org_id, address_name, 
 			table_name, table_id, post_office_box, postal_code, premises, 
 			street, town, phone_number, extension, mobile, fax, email, website, 
-			is_default, first_password, details, company_name, position_held)
+			details, company_name, position_held)
 		SELECT address_type_id, sys_country_id, org_id, address_name, 
 			'referees', v_entity_id, post_office_box, postal_code, premises, 
 			street, town, phone_number, extension, mobile, fax, email, website, 
-			is_default, first_password, details, company_name, position_held
+			details, company_name, position_held
 		FROM address
 		WHERE (table_id = v_applicant_id) AND (table_name = 'referees');
 			

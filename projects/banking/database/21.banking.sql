@@ -254,35 +254,39 @@ CREATE SEQUENCE link_activity_id_seq START 101;
 
 CREATE TABLE account_activity_log (
 	account_activity_log_id	serial primary key,
-	account_activity_id		integer,
-	loan_id					integer,
-	activity_frequency_id	integer,
-	activity_status_id		integer,
+	account_activity_id		integer references account_activity,
 	deposit_account_id		integer,
 	transfer_account_id		integer,
 	activity_type_id		integer,
+	activity_frequency_id	integer,
+	activity_status_id		integer,
 	currency_id				integer,
 	period_id				integer,
 	entity_id 				integer,
+	loan_id					integer,
+	transfer_loan_id		integer,
 	org_id					integer references orgs,
 	
 	link_activity_id		integer not null,
+	deposit_account_no		varchar(32),
 	transfer_account_no		varchar(32),
 	activity_date			date default current_date not null,
 	value_date				date not null,
 	
-	account_credit			real default 0 not null,
-	account_debit			real default 0 not null,
-	balance					real not null,
-	exchange_rate			real default 1 not null,
+	account_credit			real,
+	account_debit			real,
+	balance					real,
+	exchange_rate			real,
 	
-	application_date		timestamp default now(),
+	application_date		timestamp,
 	approve_status			varchar(16),
 	workflow_table_id		integer,
 	action_date				timestamp,	
+	details					text,
 	
-	details					text
+	created					timestamp default now() not null
 );
+CREATE INDEX account_activity_log_account_activity_id ON account_activity_log(account_activity_id);
 CREATE INDEX account_activity_log_org_id ON account_activity_log(org_id);
 
 CREATE VIEW vw_interest_methods AS
