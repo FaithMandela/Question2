@@ -96,6 +96,7 @@
 				<TEXTFIELD w="75" title="Replacement Model">r_model_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Replacement Serial">r_asset_serial</TEXTFIELD>
 				<TEXTDATE w="75" title="Date Issued">date_issued</TEXTDATE>
+				<CHECKBOX w="75" title="Stolen">is_stolen</CHECKBOX>
 				<TEXTFIELD w="75" title="Units">units</TEXTFIELD>
 			</GRID>
 			<GRID name="Client Links" keyfield="client_link_id" linkfield="client_id" table="vw_client_links" where="(is_issued = true) AND (is_retrived = false)">
@@ -140,6 +141,7 @@
 				<TEXTDATE w="75" title="Date Issued">date_issued</TEXTDATE>
 				<CHECKBOX w="75" title="Retrived">is_retrived</CHECKBOX>
 				<TEXTDATE w="75" title="Date Retrived">date_retrived</TEXTDATE>
+				<CHECKBOX w="75" title="Stolen">is_stolen</CHECKBOX>
 				<TEXTFIELD w="75" title="Units">units</TEXTFIELD>
 				<TEXTFIELD w="75" title="Request ID">client_request_id</TEXTFIELD>
 			</GRID>
@@ -161,6 +163,7 @@
 					<TEXTFIELD w="75" title="Retrived Model">r_model_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Retrived Serial">r_asset_serial</TEXTFIELD>
 					<CHECKBOX w="75" title="Retrived">is_retrived</CHECKBOX>
+					<CHECKBOX w="75" title="Stolen">is_stolen</CHECKBOX>
 					<TEXTDATE w="75" title="Date Retrived">date_retrived</TEXTDATE>
 					<TEXTFIELD w="75" title="Units">units</TEXTFIELD>
 					<FORM name="Ammend Assets" keyfield="client_asset_id" linkfield="client_request_id" table="client_assets">
@@ -189,7 +192,9 @@
 						<TEXTFIELD w="150" title="Units" default="1" y="110" h="20" x="10">units</TEXTFIELD>
 						<CHECKBOX w="150" title="For Client" y="110" h="20" x="290">is_for_client</CHECKBOX>
 						<TEXTFIELD w="430" title="Equipment Status" y="130" h="20" x="10">equipment_status</TEXTFIELD>
-						<TEXTFIELD w="430" title="Narrative" y="150" h="20" x="10">narrative</TEXTFIELD>
+						<CHECKBOX w="150" title="Stolen" y="150" h="20" x="10">is_stolen</CHECKBOX>
+						<TEXTDATE w="150" title="Stolen Date" y="150" h="20" x="290">stolen_date</TEXTDATE>
+						<TEXTFIELD w="430" title="Narrative" y="170" h="20" x="10">narrative</TEXTFIELD>
 					</FORM>
 				</GRID>
 				<FORM name="Client Requests" keyfield="client_request_id" linkfield="client_id" table="client_requests">

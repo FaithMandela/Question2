@@ -354,6 +354,7 @@ DECLARE
 	v_repayments			integer;
 	v_currency_id			integer;
 	v_reducing_balance		boolean;
+	v_nir					real;
 BEGIN
 
 	IF(NEW.repayment_period < 1)THEN
@@ -392,12 +393,17 @@ BEGIN
 	END IF;
 	
 	---- Calculate for repayment
-	IF((NEW.approve_status <> 'Approved')
+	IF(NEW.approve_status <> 'Approved')THEN
 		SELECT interest_methods.reducing_balance INTO v_reducing_balance
 		FROM interest_methods INNER JOIN products ON interest_methods.interest_method_id = products.interest_method_id
 		WHERE (products.product_id = NEW.product_id);
 		IF(v_reducing_balance = true)THEN
+			v_nir := NEW.interest_rate / 1200;
+			NEW.expected_repayment := (v_nir * NEW.principal_amount) / (1 - ((1 + v_nir) ^ (-NEW.repayment_period)));
 			NEW.repayment_amount := NEW.principal_amount / NEW.repayment_period;
+			
+			RAISE NOTICE 'Month Intrest % ', v_nir;
+			RAISE NOTICE 'Expected % ', NEW.expected_repayment;
 		ELSE
 			NEW.expected_repayment := NEW.principal_amount * ((1.0 + (NEW.interest_rate / 100)) ^ (NEW.repayment_period::real / 12));
 			NEW.repayment_amount := NEW.expected_repayment / NEW.repayment_period;

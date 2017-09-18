@@ -182,6 +182,10 @@ WHERE majors.majorid is null
 ORDER BY app_students.majorid;
 
 UPDATE app_students SET majorid = 'ACCT' WHERE majorid is null;
+UPDATE app_students SET majorid = 'BAFN' WHERE majorid = 'BAAC';
+
+
+
 
 UPDATE app_students SET studentid = app_student_id::varchar WHERE studentid is null;
 ---UPDATE app_students SET studentid = 'NR/' || lpad(student_number::varchar, 4, '0') WHERE studentid is null;

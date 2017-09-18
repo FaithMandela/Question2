@@ -103,7 +103,9 @@ CREATE TABLE client_assets (
 	is_for_client			boolean default false not null,
 	date_retrived			date,
 	units					integer default 1 not null,
-
+	
+	is_stolen				boolean default false not null,
+	stolen_date				date,
 	equipment_status		varchar(240),
 
 	narrative 				varchar(240),
@@ -252,7 +254,8 @@ CREATE VIEW vw_client_assets AS
 		client_assets.org_id, client_assets.client_asset_id, client_assets.is_issued, client_assets.date_issued, 
 		client_assets.is_retrived, client_assets.date_retrived, client_assets.units, client_assets.narrative, 
 		client_assets.equipment_status, client_assets.date_added, client_assets.date_changed,
-		client_assets.is_for_client
+		client_assets.is_for_client, client_assets.is_stolen, client_assets.stolen_date
+		
 	FROM client_assets INNER JOIN vw_client_requests ON client_assets.client_request_id = vw_client_requests.client_request_id
 		LEFT JOIN vw_assets ON client_assets.asset_id = vw_assets.asset_id
 		LEFT JOIN vw_assets as r_assets ON client_assets.replaced_asset_id = r_assets.asset_id;
