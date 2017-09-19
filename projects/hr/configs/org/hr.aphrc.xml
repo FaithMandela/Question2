@@ -430,10 +430,11 @@
 			</FORM>
 			<GRID name="Address" keyfield="address_id" table="address" where="table_name = 'applicant'" user="table_id">
 				<COMBOBOX w="240" title="Country" default="KE" lptable="sys_countrys" noorg="true" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+				<TEXTFIELD w="75" title="PO Box">post_office_box</TEXTFIELD>
 				<TEXTFIELD w="75" title="Postal Code">postal_code</TEXTFIELD>
 				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
 				<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
-				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
+				<TEXTFIELD w="120" title="Email">email</TEXTFIELD>
 				<DEFAULT default="applicant">table_name</DEFAULT>
 				<USERFIELD>table_id</USERFIELD>
 			</GRID>

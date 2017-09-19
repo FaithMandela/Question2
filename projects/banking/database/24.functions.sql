@@ -117,7 +117,7 @@ BEGIN
 			SELECT COALESCE(minimum_balance, 0) INTO v_minimum_balance
 			FROM deposit_accounts WHERE deposit_account_id = NEW.deposit_account_id;
 			
-			IF(v_minimum_balance > NEW.balance)THEN
+			IF(NEW.balance < v_minimum_balance)THEN
 				RAISE EXCEPTION 'You cannot withdraw below allowed minimum balance';
 			END IF;
 		END IF;
@@ -270,15 +270,15 @@ BEGIN
 
 	INSERT INTO account_activity_log(account_activity_id, deposit_account_id, 
 		transfer_account_id, activity_type_id, activity_frequency_id, 
-		activity_status_id, currency_id, period_id, entity_id, loan_id, 
-		transfer_loan_id, org_id, link_activity_id, deposit_account_no, 
+		activity_status_id, currency_id, period_id, entity_id, gl_id,
+		loan_id, transfer_loan_id, org_id, link_activity_id, deposit_account_no, 
 		transfer_account_no, activity_date, value_date, account_credit, 
 		account_debit, balance, exchange_rate, application_date, approve_status, 
 		workflow_table_id, action_date, details)
     VALUES (NEW.account_activity_id, NEW.deposit_account_id, 
 		NEW.transfer_account_id, NEW.activity_type_id, NEW.activity_frequency_id, 
-		NEW.activity_status_id, NEW.currency_id, NEW.period_id, NEW.entity_id, NEW.loan_id, 
-		NEW.transfer_loan_id, NEW.org_id, NEW.link_activity_id, NEW.deposit_account_no, 
+		NEW.activity_status_id, NEW.currency_id, NEW.period_id, NEW.entity_id, NEW.gl_id,
+		NEW.loan_id, NEW.transfer_loan_id, NEW.org_id, NEW.link_activity_id, NEW.deposit_account_no, 
 		NEW.transfer_account_no, NEW.activity_date, NEW.value_date, NEW.account_credit, 
 		NEW.account_debit, NEW.balance, NEW.exchange_rate, NEW.application_date, NEW.approve_status, 
 		NEW.workflow_table_id, NEW.action_date, NEW.details);
@@ -486,7 +486,7 @@ BEGIN
 			INSERT INTO account_activity (period_id, loan_id, transfer_account_no, activity_type_id,
 				currency_id, org_id, activity_date, value_date,
 				activity_frequency_id, activity_status_id, account_credit, account_debit)
-			VALUES (v_period_id, reca.loan_id, v_interest_account, v_activity_type_id,
+			VALUES (v_period_id, reca.loan_id, v_penalty_account, v_activity_type_id,
 				reca.currency_id, v_org_id, v_end_date, v_end_date,
 				1, 1, 0, v_penalty_amount);
 			v_repayment_amount := v_penalty_amount;
@@ -715,5 +715,40 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+CREATE OR REPLACE FUNCTION post_banking(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	reca 						RECORD;
+	v_journal_id				integer;
+	v_org_id					integer;
+	v_currency_id				integer;
+	v_period_id					integer;
+	v_start_date				date;
+	v_end_date					date;
+
+	msg							varchar(120);
+BEGIN
+
+	SELECT orgs.org_id, orgs.currency_id, periods.period_id, periods.start_date, periods.end_date
+		INTO v_org_id, v_currency_id, v_period_id, v_start_date, v_end_date
+	FROM periods
+	WHERE (period_id = $1::integer) AND (opened = true) AND (activated = true) AND (closed = false);
+	
+	UPDATE account_activity SET period_id = v_period_id 
+	WHERE (period_id is null) AND (activity_date BETWEEN v_start_date AND v_end_date);
+
+	
+	v_journal_id := nextval('journals_journal_id_seq');
+	INSERT INTO journals (journal_id, org_id, department_id, currency_id, period_id, exchange_rate, journal_date, narrative)
+	VALUES (v_journal_id, v_org_id, v_currency_id, v_period_id, 1, v_end_date, 'Banking');
+
+	
+	
+	msg := 'Banking posted';
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;
 
 
+
+	

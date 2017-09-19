@@ -221,6 +221,7 @@ CREATE TABLE account_activity (
 	currency_id				integer references currency,
 	period_id				integer references periods,
 	entity_id 				integer references entitys,
+	gl_id					integer references gls,
 	org_id					integer references orgs,
 	
 	link_activity_id		integer not null,
@@ -249,6 +250,7 @@ CREATE INDEX account_activity_activity_type_id ON account_activity(activity_type
 CREATE INDEX account_activity_currency_id ON account_activity(currency_id);
 CREATE INDEX account_activity_link_activity_id ON account_activity(link_activity_id);
 CREATE INDEX account_activity_entity_id ON account_activity(entity_id);
+CREATE INDEX account_activity_gl_id ON account_activity(gl_id);
 CREATE INDEX account_activity_org_id ON account_activity(org_id);
 
 CREATE SEQUENCE link_activity_id_seq START 101;
@@ -264,6 +266,7 @@ CREATE TABLE account_activity_log (
 	currency_id				integer,
 	period_id				integer,
 	entity_id 				integer,
+	gl_id					integer,
 	loan_id					integer,
 	transfer_loan_id		integer,
 	org_id					integer references orgs,

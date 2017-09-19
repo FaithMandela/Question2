@@ -105,10 +105,10 @@ CREATE INDEX account_activity_transfer_loan_id ON account_activity(transfer_loan
 
 
 CREATE VIEW vw_loan_balance AS
-	SELECT cb.loan_id, cb.committed_balance, COALESCE(ab.a_balance, 0) as actual_balance,
+	SELECT cb.loan_id, cb.loan_balance, COALESCE(ab.a_balance, 0) as actual_balance,
 		COALESCE(li.l_intrest, 0) as loan_intrest, COALESCE(lp.l_penalty, 0) as loan_penalty
 	FROM 
-		(SELECT loan_id, sum((account_debit - account_credit) * exchange_rate) as committed_balance
+		(SELECT loan_id, sum((account_debit - account_credit) * exchange_rate) as loan_balance
 			FROM account_activity GROUP BY loan_id) cb
 	LEFT JOIN
 		(SELECT loan_id, sum((account_debit - account_credit) * exchange_rate) as a_balance
@@ -135,7 +135,8 @@ CREATE VIEW vw_loans AS
 		loans.repayment_period, loans.expected_repayment, loans.disburse_account,
 		loans.application_date, loans.approve_status, loans.workflow_table_id, loans.action_date, loans.details,
 		
-		vw_loan_balance.committed_balance, vw_loan_balance.actual_balance
+		vw_loan_balance.loan_balance, vw_loan_balance.actual_balance, 
+		(vw_loan_balance.actual_balance - vw_loan_balance.loan_balance) as committed_balance
 	FROM loans INNER JOIN customers ON loans.customer_id = customers.customer_id
 		INNER JOIN vw_products ON loans.product_id = vw_products.product_id
 		INNER JOIN activity_frequency ON loans.activity_frequency_id = activity_frequency.activity_frequency_id

@@ -867,7 +867,7 @@
 				</ACTIONS>
 				<FORM name="Deposit Accounts" keyfield="deposit_account_id" linkfield="customer_id" table="deposit_accounts">
 					<USERFIELD>entity_id</USERFIELD>
-					<COMBOBOX w="430" title="Product" lptable="products" where="(loan_account = false)" y="10" h="20" x="10" lpfield="product_name">product_id</COMBOBOX>
+					<COMBOBOX w="430" title="Product" lptable="products" where="(loan_account = false) AND (is_active = true)" y="10" h="20" x="10" lpfield="product_name">product_id</COMBOBOX>
 					<COMBOBOX w="150" title="Interest Frequency" lptable="activity_frequency" orderby="activity_frequency_id" noorg="true" y="30" h="20" x="10" lpfield="activity_frequency_name">activity_frequency_id</COMBOBOX>
 					<CHECKBOX w="150" title="Active" default="true" y="50" h="20" x="10">is_active</CHECKBOX>
 					<TEXTDECIMAL w="150" title="Credit Limit" default="0" y="50" h="20" x="290">credit_limit</TEXTDECIMAL>
@@ -918,7 +918,7 @@
 				</ACTIONS>
 				<FORM name="Loans" keyfield="loan_id" linkfield="customer_id" table="loans">
 					<USERFIELD>entity_id</USERFIELD>
-					<COMBOBOX w="430" title="Product" lptable="products" where="(loan_account = true)" y="10" h="20" x="10" lpfield="product_name">product_id</COMBOBOX>
+					<COMBOBOX w="430" title="Product" lptable="products" where="(loan_account = true) AND (is_active = true)" y="10" h="20" x="10" lpfield="product_name">product_id</COMBOBOX>
 					<COMBOBOX w="150" title="Interest Frequency" lptable="activity_frequency" orderby="activity_frequency_id" noorg="true" y="30" h="20" x="10" lpfield="activity_frequency_name">activity_frequency_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Principal Amount" required="true" y="50" h="20" x="10">principal_amount</TEXTDECIMAL>
 					<TEXTFIELD w="150" title="Repayment Period" required="true" y="50" h="20" x="290">repayment_period</TEXTFIELD>
@@ -1075,7 +1075,7 @@
 				</ACTIONS>
 				<FORM name="Deposit Accounts" keyfield="deposit_account_id" linkfield="customer_id" table="deposit_accounts">
 					<USERFIELD>entity_id</USERFIELD>
-					<COMBOBOX w="430" title="Product" lptable="products" where="(loan_account = false)" y="10" h="20" x="10" lpfield="product_name">product_id</COMBOBOX>
+					<COMBOBOX w="430" title="Product" lptable="products" where="(loan_account = false) AND (is_active = true)" y="10" h="20" x="10" lpfield="product_name">product_id</COMBOBOX>
 					<COMBOBOX w="150" title="Interest Frequency" lptable="activity_frequency" orderby="activity_frequency_id" noorg="true" y="30" h="20" x="10" lpfield="activity_frequency_name">activity_frequency_id</COMBOBOX>
 					<CHECKBOX w="150" title="Active" default="true" y="50" h="20" x="10">is_active</CHECKBOX>
 					<TEXTDECIMAL w="150" title="Credit Limit" default="0" y="50" h="20" x="290">credit_limit</TEXTDECIMAL>
@@ -1126,7 +1126,7 @@
 				</ACTIONS>
 				<FORM name="Loans" keyfield="loan_id" linkfield="customer_id" table="loans">
 					<USERFIELD>entity_id</USERFIELD>
-					<COMBOBOX w="430" title="Product" lptable="products" where="(loan_account = true)" y="10" h="20" x="10" lpfield="product_name">product_id</COMBOBOX>
+					<COMBOBOX w="430" title="Product" lptable="products" where="(loan_account = true) AND (is_active = true)" y="10" h="20" x="10" lpfield="product_name">product_id</COMBOBOX>
 					<COMBOBOX w="150" title="Interest Frequency" lptable="activity_frequency" orderby="activity_frequency_id" noorg="true" y="30" h="20" x="10" lpfield="activity_frequency_name">activity_frequency_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Principal Amount" required="true" y="50" h="20" x="10">principal_amount</TEXTDECIMAL>
 					<TEXTFIELD w="150" title="Repayment Period" required="true" y="50" h="20" x="290">repayment_period</TEXTFIELD>
@@ -1321,6 +1321,7 @@
 				<COMBOBOX w="430" title="Activity Type" lptable="activity_types" y="10" h="20" x="10" lpfield="activity_type_name">activity_type_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Interest Method" y="30" h="20" x="10">interest_method_name</TEXTFIELD>
 				<CHECKBOX w="150" title="Reducing Balance" y="50" h="20" x="10">reducing_balance</CHECKBOX>
+				<CHECKBOX w="150" title="Reducing Payments" y="50" h="20" x="290">reducing_payments</CHECKBOX>
 				<TEXTFIELD w="430" title="Formural" y="70" h="20" x="10">formural</TEXTFIELD>
 				<TEXTFIELD w="150" title="Account Number" y="90" h="20" x="10">account_number</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
