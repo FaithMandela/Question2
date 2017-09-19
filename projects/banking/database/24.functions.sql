@@ -249,7 +249,7 @@ BEGIN
 			FROM account_activity 
 			WHERE (deposit_account_id = NEW.deposit_account_id) AND (activity_status_id = 4) AND (activity_date <= NEW.value_date)
 				AND (account_credit = 0) AND (account_debit > 0)
-			ORDER BY account_activity_id
+			ORDER BY activity_date, account_activity_id
 		LOOP
 			IF(v_actual_balance > reca.debit_amount)THEN
 				UPDATE account_activity SET activity_status_id = 1 WHERE link_activity_id = reca.link_activity_id;
@@ -354,6 +354,7 @@ DECLARE
 	v_repayments			integer;
 	v_currency_id			integer;
 	v_reducing_balance		boolean;
+	v_reducing_payments		boolean;
 	v_nir					real;
 BEGIN
 
@@ -394,13 +395,20 @@ BEGIN
 	
 	---- Calculate for repayment
 	IF(NEW.approve_status <> 'Approved')THEN
-		SELECT interest_methods.reducing_balance INTO v_reducing_balance
+		SELECT interest_methods.reducing_balance, interest_methods.reducing_payments INTO v_reducing_balance, v_reducing_payments
 		FROM interest_methods INNER JOIN products ON interest_methods.interest_method_id = products.interest_method_id
 		WHERE (products.product_id = NEW.product_id);
 		IF(v_reducing_balance = true)THEN
 			v_nir := NEW.interest_rate / 1200;
-			NEW.expected_repayment := (v_nir * NEW.principal_amount) / (1 - ((1 + v_nir) ^ (-NEW.repayment_period)));
-			NEW.repayment_amount := NEW.principal_amount / NEW.repayment_period;
+			IF(v_reducing_payments = true)THEN
+				NEW.repayment_amount := NEW.principal_amount / NEW.repayment_period;
+				NEW.expected_repayment := NEW.principal_amount * NEW.repayment_period * v_nir;
+				NEW.expected_repayment := NEW.expected_repayment - (NEW.repayment_period * (NEW.repayment_period - 1) * NEW.repayment_amount * v_nir / 2);
+				NEW.expected_repayment := NEW.expected_repayment + NEW.principal_amount;
+			ELSE
+				NEW.repayment_amount := (v_nir * NEW.principal_amount) / (1 - ((1 + v_nir) ^ (-NEW.repayment_period)));
+				NEW.expected_repayment := NEW.repayment_amount * NEW.repayment_period;
+			END IF;
 			
 			RAISE NOTICE 'Month Intrest % ', v_nir;
 			RAISE NOTICE 'Expected % ', NEW.expected_repayment;
@@ -435,7 +443,7 @@ DECLARE
 	v_penalty_account			varchar(32);
 	v_penalty_amount			real;
 	v_activity_type_id			integer;
-	v_reducing_balance			boolean;
+	v_reducing_payments			boolean;
 	v_interest_formural			varchar(320);
 	v_interest_account			varchar(32);
 	v_interest_amount			real;
@@ -475,10 +483,10 @@ BEGIN
 			WHERE (period_id = v_period_id) AND (activity_type_id = v_activity_type_id) AND (loan_id = reca.loan_id);
 		END IF;
 		IF((v_penalty_amount > 0) AND (v_account_activity_id is null))THEN
-			INSERT INTO account_activity (loan_id, transfer_account_no, activity_type_id,
+			INSERT INTO account_activity (period_id, loan_id, transfer_account_no, activity_type_id,
 				currency_id, org_id, activity_date, value_date,
 				activity_frequency_id, activity_status_id, account_credit, account_debit)
-			VALUES (reca.loan_id, v_interest_account, v_activity_type_id,
+			VALUES (v_period_id, reca.loan_id, v_interest_account, v_activity_type_id,
 				reca.currency_id, v_org_id, v_end_date, v_end_date,
 				1, 1, 0, v_penalty_amount);
 			v_repayment_amount := v_penalty_amount;
@@ -487,8 +495,8 @@ BEGIN
 		---- Compute for intrest
 		v_account_activity_id := null;
 		v_interest_amount := 0;
-		SELECT interest_methods.activity_type_id, interest_methods.formural, interest_methods.account_number, interest_methods.reducing_balance
-			INTO v_activity_type_id, v_interest_formural, v_interest_account, v_reducing_balance
+		SELECT interest_methods.activity_type_id, interest_methods.formural, interest_methods.account_number, interest_methods.reducing_payments
+			INTO v_activity_type_id, v_interest_formural, v_interest_account, v_reducing_payments
 		FROM interest_methods INNER JOIN products ON interest_methods.interest_method_id = products.interest_method_id
 		WHERE (products.product_id = reca.product_id);
 		IF(v_interest_formural is not null)THEN
@@ -501,27 +509,25 @@ BEGIN
 			WHERE (period_id = v_period_id) AND (activity_type_id = v_activity_type_id) AND (loan_id = reca.loan_id);
 		END IF;
 		IF((v_interest_amount > 0) AND (v_account_activity_id is null))THEN
-			INSERT INTO account_activity (loan_id, transfer_account_no, activity_type_id,
+			INSERT INTO account_activity (period_id, loan_id, transfer_account_no, activity_type_id,
 				currency_id, org_id, activity_date, value_date,
 				activity_frequency_id, activity_status_id, account_credit, account_debit)
-			VALUES (reca.loan_id, v_interest_account, v_activity_type_id,
+			VALUES (v_period_id, reca.loan_id, v_interest_account, v_activity_type_id,
 				reca.currency_id, v_org_id, v_end_date, v_end_date,
 				1, 1, 0, v_interest_amount);
-			IF(v_reducing_balance = true)THEN
+			IF(v_reducing_payments = true)THEN
 				v_repayment_amount := v_repayment_amount + v_interest_amount;
 			END IF;
 		END IF;
 		
 		--- Computer for repayment
+		v_account_activity_id := null;
 		SELECT activity_type_id INTO v_activity_type_id
 		FROM vw_account_definations 
 		WHERE (product_id = reca.product_id) AND (use_key_id = 107);
-		
-		v_account_activity_id := null;
 		SELECT account_activity_id INTO v_account_activity_id
 		FROM account_activity
 		WHERE (period_id = v_period_id) AND (activity_type_id = v_activity_type_id) AND (loan_id = reca.loan_id);
-		
 		IF((v_account_activity_id is null) AND (v_activity_type_id is not null))THEN
 			v_repayment_amount := v_repayment_amount + reca.repayment_amount;
 			v_activity_status_id := 1;
@@ -531,10 +537,10 @@ BEGIN
 			WHERE (account_number = reca.disburse_account);
 			IF(v_available_balance < v_repayment_amount)THEN v_activity_status_id := 4; END IF;
 			
-			INSERT INTO account_activity (loan_id, transfer_account_no, activity_type_id,
+			INSERT INTO account_activity (period_id, loan_id, transfer_account_no, activity_type_id,
 				currency_id, org_id, activity_date, value_date,
 				activity_frequency_id, activity_status_id, account_credit, account_debit)
-			VALUES (reca.loan_id, reca.disburse_account, v_activity_type_id,
+			VALUES (v_period_id, reca.loan_id, reca.disburse_account, v_activity_type_id,
 				reca.currency_id, v_org_id, v_end_date, v_end_date,
 				1, v_activity_status_id, v_repayment_amount, 0);
 		END IF;
@@ -594,10 +600,10 @@ BEGIN
 			WHERE (period_id = v_period_id) AND (activity_type_id = v_activity_type_id) AND (deposit_account_id = reca.deposit_account_id);
 		END IF;
 		IF((v_penalty_amount > 0) AND (v_account_activity_id is null))THEN
-			INSERT INTO account_activity (deposit_account_id, transfer_account_no, activity_type_id,
+			INSERT INTO account_activity (period_id, deposit_account_id, transfer_account_no, activity_type_id,
 				currency_id, org_id, activity_date, value_date,
 				activity_frequency_id, activity_status_id, account_credit, account_debit)
-			VALUES (reca.deposit_account_id, v_interest_account, v_activity_type_id,
+			VALUES (v_period_id, reca.deposit_account_id, v_interest_account, v_activity_type_id,
 				reca.currency_id, v_org_id, v_end_date, v_end_date,
 				1, 1, 0, v_penalty_amount);
 		END IF;
@@ -619,10 +625,10 @@ BEGIN
 			WHERE (period_id = v_period_id) AND (activity_type_id = v_activity_type_id) AND (deposit_account_id = reca.deposit_account_id);
 		END IF;
 		IF((v_interest_amount > 0) AND (v_account_activity_id is null))THEN
-			INSERT INTO account_activity (deposit_account_id, transfer_account_no, activity_type_id,
+			INSERT INTO account_activity (period_id, deposit_account_id, transfer_account_no, activity_type_id,
 				currency_id, org_id, activity_date, value_date,
 				activity_frequency_id, activity_status_id, account_credit, account_debit)
-			VALUES (reca.deposit_account_id, v_interest_account, v_activity_type_id,
+			VALUES (v_period_id, reca.deposit_account_id, v_interest_account, v_activity_type_id,
 				reca.currency_id, v_org_id, v_end_date, v_end_date,
 				1, 1, v_interest_amount, 0);
 		END IF;
@@ -697,7 +703,7 @@ BEGIN
 	FROM periods WHERE (period_id = $3::integer);
 
 	IF($1 = 1)THEN
-		SELECT sum((account_debit - account_credit) * exchange_rate) INTO v_actual_default
+		SELECT sum(account_credit * exchange_rate) INTO v_actual_default
 		FROM account_activity 
 		WHERE (loan_id = $2) AND (activity_status_id = 4) AND (value_date < v_start_date);
 		

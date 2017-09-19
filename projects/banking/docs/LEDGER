@@ -43,3 +43,10 @@ Dr Customer account
 Make Payment to normal account first
 Cr Loan account
 Dr Customer account
+
+
+Intrest calculations
+1. Compound intrest
+2. Reducing balance flat payment
+3. Reducing balance reduced payments
+

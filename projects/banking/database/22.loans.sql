@@ -178,9 +178,12 @@ CREATE VIEW vw_loan_activity AS
 		vw_loans.loan_id, vw_loans.principal_amount, vw_loans.interest_rate, 
 		vw_loans.disbursed_date, vw_loans.expected_matured_date, vw_loans.matured_date, 
 		
+		vw_activity_types.activity_type_id, vw_activity_types.activity_type_name, 
+		vw_activity_types.account_type_name, vw_activity_types.account_id, vw_activity_types.account_no, vw_activity_types.account_name,
+		vw_activity_types.use_key_id, vw_activity_types.use_key_name,
+		
 		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
-		activity_status.activity_status_id, activity_status.activity_status_name, 
-		activity_types.activity_type_id, activity_types.activity_type_name, 
+		activity_status.activity_status_id, activity_status.activity_status_name,
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		
 		account_activity.transfer_account_id, trnf_accounts.account_number as trnf_account_number,
@@ -194,9 +197,9 @@ CREATE VIEW vw_loan_activity AS
 		account_activity.workflow_table_id, account_activity.action_date, account_activity.details
 		
 	FROM account_activity INNER JOIN vw_loans ON account_activity.loan_id = vw_loans.loan_id
+		INNER JOIN vw_activity_types ON account_activity.activity_type_id = vw_activity_types.activity_type_id
 		INNER JOIN activity_frequency ON account_activity.activity_frequency_id = activity_frequency.activity_frequency_id
 		INNER JOIN activity_status ON account_activity.activity_status_id = activity_status.activity_status_id
-		INNER JOIN activity_types ON account_activity.activity_type_id = activity_types.activity_type_id
 		INNER JOIN currency ON account_activity.currency_id = currency.currency_id
 		LEFT JOIN vw_deposit_accounts trnf_accounts ON account_activity.transfer_account_id =  trnf_accounts.deposit_account_id;
     
