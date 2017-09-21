@@ -126,7 +126,7 @@ CREATE VIEW vw_loan_balance AS
 		ON cb.loan_id = lp.loan_id;
 
 CREATE VIEW vw_loans AS
-	SELECT customers.customer_id, customers.customer_name, 
+	SELECT customers.customer_id, customers.customer_name, customers.business_account,
 		vw_products.product_id, vw_products.product_name, 
 		vw_products.currency_id, vw_products.currency_name, vw_products.currency_symbol,
 		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
@@ -175,12 +175,14 @@ CREATE VIEW vw_loan_notes AS
 	FROM loan_notes INNER JOIN vw_loans ON loan_notes.loan_id = vw_loans.loan_id;
 	
 CREATE VIEW vw_loan_activity AS
-	SELECT vw_loans.customer_id, vw_loans.customer_name, vw_loans.product_id, vw_loans.product_name, 
+	SELECT vw_loans.customer_id, vw_loans.customer_name,  vw_loans.business_account,
+		vw_loans.product_id, vw_loans.product_name, 
 		vw_loans.loan_id, vw_loans.principal_amount, vw_loans.interest_rate, 
 		vw_loans.disbursed_date, vw_loans.expected_matured_date, vw_loans.matured_date, 
 		
 		vw_activity_types.activity_type_id, vw_activity_types.activity_type_name, 
-		vw_activity_types.account_type_name, vw_activity_types.account_id, vw_activity_types.account_no, vw_activity_types.account_name,
+		vw_activity_types.dr_account_id, vw_activity_types.dr_account_no, vw_activity_types.dr_account_name,
+		vw_activity_types.cr_account_id, vw_activity_types.cr_account_no, vw_activity_types.cr_account_name,
 		vw_activity_types.use_key_id, vw_activity_types.use_key_name,
 		
 		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
@@ -191,17 +193,22 @@ CREATE VIEW vw_loan_activity AS
 		trnf_accounts.customer_id as trnf_customer_id, trnf_accounts.customer_name as trnf_customer_name,
 		trnf_accounts.product_id as trnf_product_id,  trnf_accounts.product_name as trnf_product_name,
 		
+		vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.fiscal_year_id, vw_periods.fiscal_year,
+		
 		account_activity.org_id, account_activity.account_activity_id, account_activity.activity_date, 
 		account_activity.value_date, account_activity.transfer_account_no,
 		account_activity.account_credit, account_activity.account_debit, account_activity.balance, 
 		account_activity.exchange_rate, account_activity.application_date, account_activity.approve_status, 
-		account_activity.workflow_table_id, account_activity.action_date, account_activity.details
+		account_activity.workflow_table_id, account_activity.action_date, account_activity.details,
 		
+		(account_activity.account_credit * account_activity.exchange_rate) as base_credit,
+		(account_activity.account_debit * account_activity.exchange_rate) as base_debit
 	FROM account_activity INNER JOIN vw_loans ON account_activity.loan_id = vw_loans.loan_id
 		INNER JOIN vw_activity_types ON account_activity.activity_type_id = vw_activity_types.activity_type_id
 		INNER JOIN activity_frequency ON account_activity.activity_frequency_id = activity_frequency.activity_frequency_id
 		INNER JOIN activity_status ON account_activity.activity_status_id = activity_status.activity_status_id
 		INNER JOIN currency ON account_activity.currency_id = currency.currency_id
+		LEFT JOIN vw_periods ON account_activity.period_id = vw_periods.period_id
 		LEFT JOIN vw_deposit_accounts trnf_accounts ON account_activity.transfer_account_id =  trnf_accounts.deposit_account_id;
     
 ------------Hooks to approval trigger

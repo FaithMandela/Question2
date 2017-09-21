@@ -63,7 +63,8 @@ CREATE TABLE activity_status (
 
 CREATE TABLE activity_types (
 	activity_type_id		serial primary key,
-	account_id				integer not null references accounts,
+	dr_account_id			integer not null references accounts,
+	cr_account_id			integer not null references accounts,
 	use_key_id				integer not null references use_keys,
 	org_id					integer references orgs,
 	activity_type_name		varchar(120) not null,
@@ -71,7 +72,8 @@ CREATE TABLE activity_types (
 	details					text,
 	UNIQUE(org_id, activity_type_name)
 );
-CREATE INDEX activity_types_account_id ON activity_types(account_id);
+CREATE INDEX activity_types_dr_account_id ON activity_types(dr_account_id);
+CREATE INDEX activity_types_cr_account_id ON activity_types(cr_account_id);
 CREATE INDEX activity_types_use_key_id ON activity_types(use_key_id);
 CREATE INDEX activity_types_org_id ON activity_types(org_id);
 
@@ -221,7 +223,6 @@ CREATE TABLE account_activity (
 	currency_id				integer references currency,
 	period_id				integer references periods,
 	entity_id 				integer references entitys,
-	gl_id					integer references gls,
 	org_id					integer references orgs,
 	
 	link_activity_id		integer not null,
@@ -250,10 +251,12 @@ CREATE INDEX account_activity_activity_type_id ON account_activity(activity_type
 CREATE INDEX account_activity_currency_id ON account_activity(currency_id);
 CREATE INDEX account_activity_link_activity_id ON account_activity(link_activity_id);
 CREATE INDEX account_activity_entity_id ON account_activity(entity_id);
-CREATE INDEX account_activity_gl_id ON account_activity(gl_id);
 CREATE INDEX account_activity_org_id ON account_activity(org_id);
 
 CREATE SEQUENCE link_activity_id_seq START 101;
+
+ALTER TABLE gls ADD account_activity_id		integer references account_activity;
+CREATE INDEX gls_account_activity_id ON gls (account_activity_id);
 
 CREATE TABLE account_activity_log (
 	account_activity_log_id	serial primary key,
@@ -266,7 +269,6 @@ CREATE TABLE account_activity_log (
 	currency_id				integer,
 	period_id				integer,
 	entity_id 				integer,
-	gl_id					integer,
 	loan_id					integer,
 	transfer_loan_id		integer,
 	org_id					integer references orgs,
@@ -307,11 +309,13 @@ CREATE VIEW vw_penalty_methods AS
 	FROM penalty_methods INNER JOIN activity_types ON penalty_methods.activity_type_id = activity_types.activity_type_id;
 
 CREATE VIEW vw_activity_types AS
-	SELECT vw_accounts.account_type_name, vw_accounts.account_id, vw_accounts.account_no, vw_accounts.account_name,
+	SELECT activity_types.dr_account_id, dra.account_no as dr_account_no, dra.account_name as dr_account_name,
+		activity_types.cr_account_id, cra.account_no as cr_account_no, cra.account_name as cr_account_name,
 		use_keys.use_key_id, use_keys.use_key_name, 
 		activity_types.org_id, activity_types.activity_type_id, activity_types.activity_type_name, 
 		activity_types.is_active, activity_types.details
-	FROM activity_types INNER JOIN vw_accounts ON activity_types.account_id = vw_accounts.account_id
+	FROM activity_types INNER JOIN vw_accounts dra ON activity_types.dr_account_id = dra.account_id
+		INNER JOIN vw_accounts cra ON activity_types.cr_account_id = cra.account_id
 		INNER JOIN use_keys ON activity_types.use_key_id = use_keys.use_key_id;
 
 CREATE VIEW vw_products AS
@@ -362,7 +366,7 @@ CREATE VIEW vw_deposit_balance AS
 		ON cb.deposit_account_id = uc.deposit_account_id;
 
 CREATE VIEW vw_deposit_accounts AS
-	SELECT customers.customer_id, customers.customer_name, 
+	SELECT customers.customer_id, customers.customer_name, customers.business_account,
 		vw_products.product_id, vw_products.product_name, 
 		vw_products.currency_id, vw_products.currency_name, vw_products.currency_symbol,
 		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
@@ -390,12 +394,13 @@ CREATE VIEW vw_account_notes AS
 	FROM account_notes INNER JOIN vw_deposit_accounts ON account_notes.deposit_account_id = vw_deposit_accounts.deposit_account_id;
 
 CREATE VIEW vw_account_activity AS
-	SELECT vw_deposit_accounts.customer_id, vw_deposit_accounts.customer_name, 
+	SELECT vw_deposit_accounts.customer_id, vw_deposit_accounts.customer_name, vw_deposit_accounts.business_account,
 		vw_deposit_accounts.product_id, vw_deposit_accounts.product_name, 
 		vw_deposit_accounts.deposit_account_id, vw_deposit_accounts.is_active, 
 		vw_deposit_accounts.account_number, vw_deposit_accounts.last_closing_date,
 		vw_activity_types.activity_type_id, vw_activity_types.activity_type_name, 
-		vw_activity_types.account_type_name, vw_activity_types.account_id, vw_activity_types.account_no, vw_activity_types.account_name,
+		vw_activity_types.dr_account_id, vw_activity_types.dr_account_no, vw_activity_types.dr_account_name,
+		vw_activity_types.cr_account_id, vw_activity_types.cr_account_no, vw_activity_types.cr_account_name,
 		vw_activity_types.use_key_id, vw_activity_types.use_key_name, 
 		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
 		activity_status.activity_status_id, activity_status.activity_status_name, 
@@ -405,16 +410,22 @@ CREATE VIEW vw_account_activity AS
 		trnf_accounts.customer_id as trnf_customer_id, trnf_accounts.customer_name as trnf_customer_name,
 		trnf_accounts.product_id as trnf_product_id,  trnf_accounts.product_name as trnf_product_name,
 		
+		vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.fiscal_year_id, vw_periods.fiscal_year,
+		
 		account_activity.org_id, account_activity.account_activity_id, account_activity.activity_date, 
 		account_activity.value_date, account_activity.transfer_account_no,
 		account_activity.account_credit, account_activity.account_debit, account_activity.balance, 
 		account_activity.exchange_rate, account_activity.application_date, account_activity.approve_status, 
-		account_activity.workflow_table_id, account_activity.action_date, account_activity.details
+		account_activity.workflow_table_id, account_activity.action_date, account_activity.details,
+		
+		(account_activity.account_credit * account_activity.exchange_rate) as base_credit,
+		(account_activity.account_debit * account_activity.exchange_rate) as base_debit
 	FROM account_activity INNER JOIN vw_deposit_accounts ON account_activity.deposit_account_id = vw_deposit_accounts.deposit_account_id
 		INNER JOIN vw_activity_types ON account_activity.activity_type_id = vw_activity_types.activity_type_id
 		INNER JOIN activity_frequency ON account_activity.activity_frequency_id = activity_frequency.activity_frequency_id
 		INNER JOIN activity_status ON account_activity.activity_status_id = activity_status.activity_status_id
 		INNER JOIN currency ON account_activity.currency_id = currency.currency_id
+		LEFT JOIN vw_periods ON account_activity.period_id = vw_periods.period_id
 		LEFT JOIN vw_deposit_accounts trnf_accounts ON account_activity.transfer_account_id =  trnf_accounts.deposit_account_id;
 
 

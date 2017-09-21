@@ -36,6 +36,12 @@
 			<MENU name="Error Messages">75</MENU>
 		</MENU>
 		<MENU name="Reports">
+			<MENU name="Customers">250</MENU>
+			<MENU name="Deposit accounts">230</MENU>
+			<MENU name="Loans">235</MENU>
+			<MENU name="Configuration">255</MENU>
+		</MENU>
+		<MENU name="Operations Reports">
 			<MENU name="Operational Entitys">220</MENU>
 			<MENU name="Bank Accounts">225</MENU>
 			<MENU name="Tax Types">135</MENU>
@@ -853,6 +859,7 @@
 			<ACTIONS>
 				<ACTION fnct="apply_approval" approval="1">Approval Application</ACTION>
 			</ACTIONS>
+			<JASPER name="Personal" reportfile="customers_cd.jasper"></JASPER>
 			<GRID name="Deposit Accounts" keyfield="deposit_account_id" linkfield="customer_id" table="vw_deposit_accounts">
 				<TEXTFIELD w="75" title="Deposit Account ID">deposit_account_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>
@@ -1061,6 +1068,7 @@
 			<ACTIONS>
 				<ACTION fnct="apply_approval" approval="1">Approval Application</ACTION>
 			</ACTIONS>
+			<JASPER name="Report" reportfile="customers_cd.jasper"></JASPER>
 			<GRID name="Deposit Accounts" keyfield="deposit_account_id" linkfield="customer_id" table="vw_deposit_accounts">
 				<TEXTFIELD w="75" title="Deposit Account ID">deposit_account_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>
@@ -1298,16 +1306,20 @@
 		</GRID>
 		<GRID name="Activity Types" keyfield="activity_type_id" table="vw_activity_types">
 			<TEXTFIELD w="75" title="Activity Type ID">activity_type_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Account No">account_no</TEXTFIELD>
-			<TEXTFIELD w="75" title="Account Name">account_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Activity Type">activity_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Dr Account No">dr_account_no</TEXTFIELD>
+			<TEXTFIELD w="75" title="Dr Account">dr_account_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Cr Account No">cr_account_no</TEXTFIELD>
+			<TEXTFIELD w="75" title="Cr Account">cr_account_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Use">use_key_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 			<FORM name="Activity Types" keyfield="activity_type_id" table="activity_types">
-				<COMBOBOX w="430" title="Account" lptable="vw_accounts" y="10" h="20" x="10" lpfield="account_description">account_id</COMBOBOX>
-				<COMBOBOX w="430" title="Use" lptable="use_keys" noorg="true" where="(use_function = 4)" y="30" h="20" x="10" lpfield="use_key_name">use_key_id</COMBOBOX>
-				<TEXTFIELD w="430" title="Activity Type" y="50" h="20" x="10">activity_type_name</TEXTFIELD>
-				<CHECKBOX w="150" title="Active" y="70" h="20" x="10">is_active</CHECKBOX>
-				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+				<COMBOBOX w="430" title="Dr Account" lptable="vw_accounts" lpkey="account_id" y="10" h="20" x="10" lpfield="account_description">dr_account_id</COMBOBOX>
+				<COMBOBOX w="430" title="Cr Account" lptable="vw_accounts" lpkey="account_id" y="30" h="20" x="10" lpfield="account_description">cr_account_id</COMBOBOX>
+				<COMBOBOX w="430" title="Use" lptable="use_keys" noorg="true" where="(use_function = 4)" y="50" h="20" x="10" lpfield="use_key_name">use_key_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Activity Type" y="70" h="20" x="10">activity_type_name</TEXTFIELD>
+				<CHECKBOX w="150" title="Active" y="90" h="20" x="10">is_active</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Interest Methods" keyfield="interest_method_id" table="vw_interest_methods">
@@ -1433,6 +1445,7 @@
 					<TEXTAREA w="430" tab="Note" y="2" h="70" x="10">note</TEXTAREA>
 				</FORM>
 			</GRID>
+			<JASPER name="Report" reportfile="vw_account_activity.jasper"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Loans" key="120" h="550">
@@ -2435,7 +2448,7 @@
 	</DESK>
 	<DESK w="800" name="Journals" key="35" h="500">
 		<GRID name="Periods" keyfield="period_id" table="vw_periods" where="(opened = true) AND (closed = false)">
-			<TEXTFIELD w="75" title="Fiscal Year">fiscal_year_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Fiscal Year">fiscal_year</TEXTFIELD>
 			<TEXTDATE w="75" title="Period Start">start_date</TEXTDATE>
 			<TEXTDATE w="75" title="Period End">end_date</TEXTDATE>
 			<GRID name="Journals" keyfield="journal_id" linkfield="period_id" table="vw_journals">
@@ -2450,21 +2463,14 @@
 					<ACTION fnct="process_journal">Post</ACTION>
 				</ACTIONS>
 				<GRID name="Gls" keyfield="gl_id" linkfield="journal_id" table="vw_gls">
-					<TEXTFIELD w="75" title="Account ID">account_id</TEXTFIELD>
-					<TEXTFIELD w="75" title="Accounts Class Name">accounts_class_name</TEXTFIELD>
-					<TEXTFIELD w="75" title="Account Type Name">account_type_name</TEXTFIELD>
-					<TEXTFIELD w="75" title="Account Name">account_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Account No">account_no</TEXTFIELD>
+					<TEXTFIELD w="75" title="Account Class">account_class_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Account Type">account_type_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Account">account_name</TEXTFIELD>
 					<TEXTDECIMAL w="75" title="Debit">debit</TEXTDECIMAL>
 					<TEXTDECIMAL w="75" title="Credit">credit</TEXTDECIMAL>
 					<FORM name="Gls" keyfield="gl_id" linkfield="journal_id" table="gls">
-						<GRIDBOX w="430" title="Account" lptable="vw_accounts" webgrid="90" y="10" h="20" x="10" lpfield="account_description">account_id
-							<GRID name="Account" keyfield="account_id" table="vw_accounts" where="(is_header = false) and (is_active = true)">
-								<TEXTFIELD w="75" title="Account ID">account_id</TEXTFIELD>
-								<TEXTFIELD w="150" title="Accounts Class Name">accounts_class_name</TEXTFIELD>
-								<TEXTFIELD w="150" title="Account Type Name">account_type_name</TEXTFIELD>
-								<TEXTFIELD w="250" title="Account Name">account_name</TEXTFIELD>
-							</GRID>
-						</GRIDBOX>
+						<COMBOBOX w="430" title="Account" lptable="vw_accounts" y="10" h="20" x="10" lpfield="account_description">account_id</COMBOBOX>
 						<TEXTDECIMAL w="150" title="Debit" y="30" h="20" x="10">debit</TEXTDECIMAL>
 						<TEXTDECIMAL w="150" title="Credit" y="30" h="20" x="290">credit</TEXTDECIMAL>
 						<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">gl_narrative</TEXTFIELD>
@@ -2479,6 +2485,17 @@
 					<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
+		</GRID>
+		<GRID name="Bank Posting" keyfield="period_id" table="vw_periods" where="((opened = true) AND (activated = false) AND (closed = false))">
+			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
+			<TEXTDATE w="75" title="Period Start">start_date</TEXTDATE>
+			<TEXTDATE w="75" title="Period End">end_date</TEXTDATE>
+			<CHECKBOX w="75" title="Opened">opened</CHECKBOX>
+			<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
+			<CHECKBOX w="75" title="Active">activated</CHECKBOX>
+			<ACTIONS>
+				<ACTION fnct="post_banking" approval="1">Ledger Posting</ACTION>
+			</ACTIONS>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Petty Cash" key="90" h="500">
@@ -2991,5 +3008,22 @@
 	<DESK w="700" name="Issues" key="180" h="550">
 		<JASPER name="Open Issues" reportfile="vw_helpdesk.jasper"></JASPER>
 		<JASPER name="Closed Issues" reportfile="vw_helpdesk_c.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Deposit Accounts" key="230" h="550">
+		<JASPER name="Deposit Accounts" reportfile="vw_deposit_accounts.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Loans" key="235" h="550">
+		<JASPER name="Loans" reportfile="vw_loans.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Customers" key="250" h="550">
+		<JASPER name="Personal" reportfile="customers_p.jasper"></JASPER>
+		<JASPER name="Corporate" reportfile="customers_c.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Configuration" key="255" h="550">
+		<JASPER name="Products" reportfile="vw_products.jasper"></JASPER>
+		<JASPER name="Activity Types" reportfile="vw_activity_types.jasper"></JASPER>
+		<JASPER name="Interest Methods" reportfile="vw_interest_methods.jasper"></JASPER>
+		<JASPER name="Penalty Methods" reportfile="vw_penalty_methods.jasper"></JASPER>
+		<JASPER name="Product Defination" reportfile="vw_products_d.jasper"></JASPER>
 	</DESK>
 </APP>

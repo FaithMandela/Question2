@@ -73,6 +73,7 @@ CREATE TRIGGER ins_deposit_accounts BEFORE INSERT OR UPDATE ON deposit_accounts
 CREATE OR REPLACE FUNCTION ins_account_activity() RETURNS trigger AS $$
 DECLARE
 	v_deposit_account_id		integer;
+	v_period_id					integer;
 	v_loan_id					integer;
 	v_activity_type_id			integer;
 	v_use_key_id				integer;
@@ -86,6 +87,14 @@ BEGIN
 		RAISE EXCEPTION 'The amounts must be positive';
 	ELSIF((NEW.account_credit > 0) AND (NEW.account_debit > 0))THEN
 		RAISE EXCEPTION 'Both debit and credit cannot not have an amount at the same time';
+	END IF;
+	
+	SELECT periods.period_id INTO NEW.period_id
+	FROM periods
+	WHERE (opened = true) AND (activated = true) AND (closed = false)
+		AND (start_date <= NEW.activity_date) AND (end_date >= NEW.activity_date);
+	IF(NEW.period_id is null)THEN
+		RAISE EXCEPTION 'The transaction needs to be in an open and actiive period';
 	END IF;
 	
 	IF(NEW.link_activity_id is null)THEN
@@ -270,14 +279,14 @@ BEGIN
 
 	INSERT INTO account_activity_log(account_activity_id, deposit_account_id, 
 		transfer_account_id, activity_type_id, activity_frequency_id, 
-		activity_status_id, currency_id, period_id, entity_id, gl_id,
+		activity_status_id, currency_id, period_id, entity_id,
 		loan_id, transfer_loan_id, org_id, link_activity_id, deposit_account_no, 
 		transfer_account_no, activity_date, value_date, account_credit, 
 		account_debit, balance, exchange_rate, application_date, approve_status, 
 		workflow_table_id, action_date, details)
     VALUES (NEW.account_activity_id, NEW.deposit_account_id, 
 		NEW.transfer_account_id, NEW.activity_type_id, NEW.activity_frequency_id, 
-		NEW.activity_status_id, NEW.currency_id, NEW.period_id, NEW.entity_id, NEW.gl_id,
+		NEW.activity_status_id, NEW.currency_id, NEW.period_id, NEW.entity_id,
 		NEW.loan_id, NEW.transfer_loan_id, NEW.org_id, NEW.link_activity_id, NEW.deposit_account_no, 
 		NEW.transfer_account_no, NEW.activity_date, NEW.value_date, NEW.account_credit, 
 		NEW.account_debit, NEW.balance, NEW.exchange_rate, NEW.application_date, NEW.approve_status, 
@@ -730,20 +739,32 @@ BEGIN
 
 	SELECT orgs.org_id, orgs.currency_id, periods.period_id, periods.start_date, periods.end_date
 		INTO v_org_id, v_currency_id, v_period_id, v_start_date, v_end_date
-	FROM periods
-	WHERE (period_id = $1::integer) AND (opened = true) AND (activated = true) AND (closed = false);
+	FROM periods INNER JOIN orgs ON periods.org_id = orgs.org_id
+	WHERE (period_id = $1::integer) AND (opened = true) AND (activated = false) AND (closed = false);
 	
-	UPDATE account_activity SET period_id = v_period_id 
-	WHERE (period_id is null) AND (activity_date BETWEEN v_start_date AND v_end_date);
-
+	IF(v_period_id is null)THEN
+		msg := 'Banking not posted period need to be open but not active';
+	ELSE
+		UPDATE account_activity SET period_id = v_period_id 
+		WHERE (period_id is null) AND (activity_date BETWEEN v_start_date AND v_end_date);
+		
+		v_journal_id := nextval('journals_journal_id_seq');
+		INSERT INTO journals (journal_id, org_id, currency_id, period_id, exchange_rate, journal_date, narrative)
+		VALUES (v_journal_id, v_org_id, v_currency_id, v_period_id, 1, v_end_date, 'Banking - ' || to_char(v_start_date, 'MMYYY'));
+		
+		INSERT INTO gls(org_id, journal_id, account_activity_id, account_id, 
+			debit, credit, gl_narrative)
+		SELECT v_org_id, v_journal_id, account_activity.account_activity_id, activity_types.account_id,
+			(account_activity.account_debit * account_activity.exchange_rate),
+			(account_activity.account_credit * account_activity.exchange_rate),
+			COALESCE(deposit_accounts.account_number, loans.account_number)
+		FROM account_activity INNER JOIN activity_types ON account_activity.activity_type_id = activity_types.activity_type_id
+			LEFT JOIN deposit_accounts ON account_activity.deposit_account_id = deposit_accounts.deposit_account_id
+			LEFT JOIN loans ON account_activity.loan_id = loans.loan_id
+		WHERE (account_activity.period_id = v_period_id);
 	
-	v_journal_id := nextval('journals_journal_id_seq');
-	INSERT INTO journals (journal_id, org_id, department_id, currency_id, period_id, exchange_rate, journal_date, narrative)
-	VALUES (v_journal_id, v_org_id, v_currency_id, v_period_id, 1, v_end_date, 'Banking');
-
-	
-	
-	msg := 'Banking posted';
+		msg := 'Banking posted';
+	END IF;
 
 	RETURN msg;
 END;

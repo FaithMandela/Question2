@@ -1221,7 +1221,7 @@
 	</DESK>
 	<DESK w="800" name="Journals" key="35" h="500">
 		<GRID name="Periods" keyfield="period_id" table="vw_periods" where="(opened = true) AND (closed = false)">
-			<TEXTFIELD w="75" title="Fiscal Year">fiscal_year_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Fiscal Year">fiscal_year</TEXTFIELD>
 			<TEXTDATE w="75" title="Period Start">start_date</TEXTDATE>
 			<TEXTDATE w="75" title="Period End">end_date</TEXTDATE>
 			<GRID name="Journals" keyfield="journal_id" linkfield="period_id" table="vw_journals">
@@ -1236,21 +1236,14 @@
 					<ACTION fnct="process_journal">Post</ACTION>
 				</ACTIONS>
 				<GRID name="Gls" keyfield="gl_id" linkfield="journal_id" table="vw_gls">
-					<TEXTFIELD w="75" title="Account ID">account_id</TEXTFIELD>
-					<TEXTFIELD w="75" title="Accounts Class Name">accounts_class_name</TEXTFIELD>
-					<TEXTFIELD w="75" title="Account Type Name">account_type_name</TEXTFIELD>
-					<TEXTFIELD w="75" title="Account Name">account_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Account No">account_no</TEXTFIELD>
+					<TEXTFIELD w="75" title="Account Class">account_class_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Account Type">account_type_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Account">account_name</TEXTFIELD>
 					<TEXTDECIMAL w="75" title="Debit">debit</TEXTDECIMAL>
 					<TEXTDECIMAL w="75" title="Credit">credit</TEXTDECIMAL>
 					<FORM name="Gls" keyfield="gl_id" linkfield="journal_id" table="gls">
-						<GRIDBOX w="430" title="Account" lptable="vw_accounts" webgrid="90" y="10" h="20" x="10" lpfield="account_description">account_id
-							<GRID name="Account" keyfield="account_id" table="vw_accounts" where="(is_header = false) and (is_active = true)">
-								<TEXTFIELD w="75" title="Account ID">account_id</TEXTFIELD>
-								<TEXTFIELD w="150" title="Accounts Class Name">accounts_class_name</TEXTFIELD>
-								<TEXTFIELD w="150" title="Account Type Name">account_type_name</TEXTFIELD>
-								<TEXTFIELD w="250" title="Account Name">account_name</TEXTFIELD>
-							</GRID>
-						</GRIDBOX>
+						<COMBOBOX w="430" title="Account" lptable="vw_accounts" y="10" h="20" x="10" lpfield="account_description">account_id</COMBOBOX>
 						<TEXTDECIMAL w="150" title="Debit" y="30" h="20" x="10">debit</TEXTDECIMAL>
 						<TEXTDECIMAL w="150" title="Credit" y="30" h="20" x="290">credit</TEXTDECIMAL>
 						<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">gl_narrative</TEXTFIELD>
