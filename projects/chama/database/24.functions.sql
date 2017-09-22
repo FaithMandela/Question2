@@ -1,29 +1,29 @@
 ---Project Database Functions File
 
-CREATE OR REPLACE FUNCTION aft_customers() RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION ins_members() RETURNS trigger AS $$
 DECLARE
 	v_entity_type_id		integer;
-	v_entity_id				integer;
-	v_user_name				varchar(32);
+	v_user_name				varchar(120);
 BEGIN
 
-	IF((TG_OP = 'INSERT') AND (NEW.business_account = 0))THEN
+	IF(TG_OP = 'INSERT')THEN
 		SELECT entity_type_id INTO v_entity_type_id
 		FROM entity_types 
 		WHERE (org_id = NEW.org_id) AND (use_key_id = 100);
-		v_entity_id := nextval('entitys_entity_id_seq');
-		v_user_name := 'OR' || NEW.org_id || 'EN' || v_entity_id;
+		IF(NEW.entity_id is null)THEN
+			NEW.entity_id := nextval('entitys_entity_id_seq');
+		END IF;
 		
-		INSERT INTO entitys (entity_id, org_id, use_key_id, entity_type_id, customer_id, entity_name, user_name, primary_email, primary_telephone, function_role)
-		VALUES (v_entity_id, NEW.org_id, 100, v_entity_type_id, NEW.customer_id, NEW.customer_name, v_user_name, lower(trim(NEW.client_email)), NEW.telephone_number, 'client');
+		INSERT INTO entitys (entity_id, org_id, use_key_id, entity_type_id, entity_name, user_name, primary_email, primary_telephone, function_role)
+		VALUES (NEW.entity_id, NEW.org_id, 100, v_entity_type_id, NEW.member_name, v_user_name, lower(trim(NEW.email)), NEW.phone_number, 'member');
 	END IF;
 
-	RETURN NULL;
+	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER aft_customers AFTER INSERT OR UPDATE ON customers
-	FOR EACH ROW EXECUTE PROCEDURE aft_customers();
+CREATE TRIGGER ins_members BEFORE INSERT OR UPDATE ON members
+	FOR EACH ROW EXECUTE PROCEDURE ins_members();
 
 CREATE OR REPLACE FUNCTION ins_deposit_accounts() RETURNS trigger AS $$
 DECLARE
@@ -37,7 +37,7 @@ BEGIN
 			minimum_balance, maximum_balance INTO myrec
 		FROM products WHERE product_id = NEW.product_id;
 	
-		NEW.account_number := '4' || lpad(NEW.org_id::varchar, 2, '0')  || lpad(NEW.customer_id::varchar, 4, '0') || lpad(NEW.deposit_account_id::varchar, 2, '0');
+		NEW.account_number := '4' || lpad(NEW.org_id::varchar, 2, '0')  || lpad(NEW.entity_id::varchar, 4, '0') || lpad(NEW.deposit_account_id::varchar, 2, '0');
 		
 		NEW.minimum_balance := myrec.minimum_balance;
 		NEW.maximum_balance := myrec.maximum_balance;
@@ -310,8 +310,8 @@ DECLARE
 BEGIN
 
 	IF($3 = '1')THEN
-		UPDATE customers SET approve_status = 'Completed' 
-		WHERE (customer_id = $1::integer) AND (approve_status = 'Draft');
+		UPDATE members SET approve_status = 'Completed' 
+		WHERE (entity_id = $1::integer) AND (approve_status = 'Draft');
 
 		msg := 'Applied for client approval';
 	ELSIF($3 = '2')THEN
@@ -325,7 +325,7 @@ BEGIN
 			INTO v_deposit_account_id, v_principal_amount, v_repayment_amount, v_repayment_period, v_maximum_repayments
 		FROM deposit_accounts INNER JOIN loans ON (deposit_accounts.account_number = loans.disburse_account)
 			INNER JOIN products ON loans.product_id = products.product_id
-			AND (deposit_accounts.customer_id = loans.customer_id) AND (loans.loan_id = $1::integer)
+			AND (deposit_accounts.entity_id = loans.entity_id) AND (loans.loan_id = $1::integer)
 			AND (deposit_accounts.approve_status = 'Approved');
 		
 		IF(v_deposit_account_id is null)THEN
@@ -378,7 +378,7 @@ BEGIN
 			minimum_balance, maximum_balance INTO myrec
 		FROM products WHERE product_id = NEW.product_id;
 	
-		NEW.account_number := '5' || lpad(NEW.org_id::varchar, 2, '0')  || lpad(NEW.customer_id::varchar, 4, '0') || lpad(NEW.loan_id::varchar, 2, '0');
+		NEW.account_number := '5' || lpad(NEW.org_id::varchar, 2, '0')  || lpad(NEW.entity_id::varchar, 4, '0') || lpad(NEW.loan_id::varchar, 2, '0');
 			
 		NEW.interest_rate := myrec.interest_rate;
 		NEW.activity_frequency_id := myrec.activity_frequency_id;
@@ -467,7 +467,7 @@ BEGIN
 	FROM periods
 	WHERE (period_id = $1::integer) AND (opened = true) AND (activated = true) AND (closed = false);
 
-	FOR reca IN SELECT currency_id, loan_id, customer_id, product_id, activity_frequency_id,
+	FOR reca IN SELECT currency_id, loan_id, entity_id, product_id, activity_frequency_id,
 			account_number, disburse_account, principal_amount, interest_rate,
 			repayment_period, repayment_amount, disbursed_date, actual_balance
 		FROM vw_loans

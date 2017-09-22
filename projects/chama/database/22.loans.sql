@@ -50,7 +50,6 @@ CREATE TABLE guarantees (
 	details					text
 );
 CREATE INDEX guarantees_loan_id ON guarantees(loan_id);
-CREATE INDEX guarantees_customer_id ON guarantees(customer_id);
 CREATE INDEX guarantees_entity_id ON guarantees(entity_id);
 CREATE INDEX guarantees_org_id ON guarantees(org_id);
 
@@ -66,6 +65,7 @@ CREATE INDEX collateral_types_org_id ON collateral_types(org_id);
 CREATE TABLE collaterals (
 	collateral_id			serial primary key,
 	loan_id					integer references loans,
+	collateral_type_id		integer references collateral_types,
 	entity_id 				integer references entitys,
 	org_id					integer references orgs,
 	
@@ -124,7 +124,7 @@ CREATE VIEW vw_loan_balance AS
 		ON cb.loan_id = lp.loan_id;
 
 CREATE VIEW vw_loans AS
-	SELECT customers.customer_id, customers.customer_name, customers.business_account,
+	SELECT members.entity_id, members.member_name, 
 		vw_products.product_id, vw_products.product_name, 
 		vw_products.currency_id, vw_products.currency_name, vw_products.currency_symbol,
 		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
@@ -135,25 +135,25 @@ CREATE VIEW vw_loans AS
 		
 		vw_loan_balance.loan_balance, vw_loan_balance.actual_balance, 
 		(vw_loan_balance.actual_balance - vw_loan_balance.loan_balance) as committed_balance
-	FROM loans INNER JOIN customers ON loans.customer_id = customers.customer_id
+	FROM loans INNER JOIN members ON loans.entity_id = members.entity_id
 		INNER JOIN vw_products ON loans.product_id = vw_products.product_id
 		INNER JOIN activity_frequency ON loans.activity_frequency_id = activity_frequency.activity_frequency_id
 		LEFT JOIN vw_loan_balance ON loans.loan_id = vw_loan_balance.loan_id;
 		
 CREATE VIEW vw_guarantees AS
-	SELECT vw_loans.customer_id, vw_loans.customer_name, vw_loans.product_id, vw_loans.product_name, 
+	SELECT vw_loans.entity_id, vw_loans.member_name, vw_loans.product_id, vw_loans.product_name, 
 		vw_loans.loan_id, vw_loans.principal_amount, vw_loans.interest_rate, 
 		vw_loans.activity_frequency_id, vw_loans.activity_frequency_name, 
 		vw_loans.disbursed_date, vw_loans.expected_matured_date, vw_loans.matured_date, 
-		customers.customer_id as guarantor_id, customers.customer_name as guarantor_name, 
+		members.entity_id as guarantor_id, members.member_name as guarantor_name, 
 		guarantees.org_id, guarantees.guarantee_id, guarantees.guarantee_amount, guarantees.guarantee_accepted,
 		guarantees.accepted_date, guarantees.application_date, 
 		guarantees.approve_status, guarantees.workflow_table_id, guarantees.action_date, guarantees.details
 	FROM guarantees INNER JOIN vw_loans ON guarantees.loan_id = vw_loans.loan_id
-		INNER JOIN customers ON guarantees.customer_id = customers.customer_id;
+		INNER JOIN members ON guarantees.entity_id = members.entity_id;
 		
 CREATE VIEW vw_collaterals AS
-	SELECT vw_loans.customer_id, vw_loans.customer_name, vw_loans.product_id, vw_loans.product_name, 
+	SELECT vw_loans.entity_id, vw_loans.member_name, vw_loans.product_id, vw_loans.product_name, 
 		vw_loans.loan_id, vw_loans.principal_amount, vw_loans.interest_rate, 
 		vw_loans.activity_frequency_id, vw_loans.activity_frequency_name, 
 		vw_loans.disbursed_date, vw_loans.expected_matured_date, vw_loans.matured_date, 
@@ -165,7 +165,7 @@ CREATE VIEW vw_collaterals AS
 		INNER JOIN collateral_types ON collaterals.collateral_type_id = collateral_types.collateral_type_id;
 		
 CREATE VIEW vw_loan_notes AS
-	SELECT vw_loans.customer_id, vw_loans.customer_name, vw_loans.product_id, vw_loans.product_name, 
+	SELECT vw_loans.entity_id, vw_loans.member_name, vw_loans.product_id, vw_loans.product_name, 
 		vw_loans.loan_id, vw_loans.principal_amount, vw_loans.interest_rate, 
 		vw_loans.activity_frequency_id, vw_loans.activity_frequency_name, 
 		vw_loans.disbursed_date, vw_loans.expected_matured_date, vw_loans.matured_date, 
@@ -173,7 +173,7 @@ CREATE VIEW vw_loan_notes AS
 	FROM loan_notes INNER JOIN vw_loans ON loan_notes.loan_id = vw_loans.loan_id;
 	
 CREATE VIEW vw_loan_activity AS
-	SELECT vw_loans.customer_id, vw_loans.customer_name,  vw_loans.business_account,
+	SELECT vw_loans.entity_id, vw_loans.member_name,
 		vw_loans.product_id, vw_loans.product_name, 
 		vw_loans.loan_id, vw_loans.principal_amount, vw_loans.interest_rate, 
 		vw_loans.disbursed_date, vw_loans.expected_matured_date, vw_loans.matured_date, 
@@ -188,7 +188,7 @@ CREATE VIEW vw_loan_activity AS
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		
 		account_activity.transfer_account_id, trnf_accounts.account_number as trnf_account_number,
-		trnf_accounts.customer_id as trnf_customer_id, trnf_accounts.customer_name as trnf_customer_name,
+		trnf_accounts.entity_id as trnf_entity_id, trnf_accounts.member_name as trnf_member_name,
 		trnf_accounts.product_id as trnf_product_id,  trnf_accounts.product_name as trnf_product_name,
 		
 		vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.fiscal_year_id, vw_periods.fiscal_year,

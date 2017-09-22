@@ -10,6 +10,10 @@ CREATE TABLE members (
 	id_number				varchar(50),
 	email					varchar(50),
 	date_of_birth 			date,
+	
+	address					varchar(50),
+	town					varchar(50),
+	zip_code				varchar(50),
 
 	gender 					varchar(1),
 	marital_status 			varchar(1),
@@ -415,7 +419,7 @@ CREATE VIEW vw_deposit_balance AS
 		ON cb.deposit_account_id = uc.deposit_account_id;
 
 CREATE VIEW vw_deposit_accounts AS
-	SELECT customers.customer_id, customers.customer_name, customers.business_account,
+	SELECT members.entity_id, members.member_name, 
 		vw_products.product_id, vw_products.product_name, 
 		vw_products.currency_id, vw_products.currency_name, vw_products.currency_symbol,
 		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
@@ -428,13 +432,13 @@ CREATE VIEW vw_deposit_accounts AS
 		
 		vw_deposit_balance.current_balance, vw_deposit_balance.cleared_balance, vw_deposit_balance.unprocessed_credit,
 		(vw_deposit_balance.cleared_balance - vw_deposit_balance.unprocessed_credit) AS available_balance
-	FROM deposit_accounts INNER JOIN customers ON deposit_accounts.customer_id = customers.customer_id
+	FROM deposit_accounts INNER JOIN members ON deposit_accounts.entity_id = members.entity_id
 		INNER JOIN vw_products ON deposit_accounts.product_id = vw_products.product_id
 		INNER JOIN activity_frequency ON deposit_accounts.activity_frequency_id = activity_frequency.activity_frequency_id
 		LEFT JOIN vw_deposit_balance ON deposit_accounts.deposit_account_id = vw_deposit_balance.deposit_account_id;
 
 CREATE VIEW vw_account_notes AS
-	SELECT vw_deposit_accounts.customer_id, vw_deposit_accounts.customer_name, 
+	SELECT vw_deposit_accounts.entity_id, vw_deposit_accounts.member_name, 
 		vw_deposit_accounts.product_id, vw_deposit_accounts.product_name, 
 		vw_deposit_accounts.deposit_account_id, vw_deposit_accounts.is_active, 
 		vw_deposit_accounts.account_number, vw_deposit_accounts.last_closing_date,
@@ -443,7 +447,7 @@ CREATE VIEW vw_account_notes AS
 	FROM account_notes INNER JOIN vw_deposit_accounts ON account_notes.deposit_account_id = vw_deposit_accounts.deposit_account_id;
 
 CREATE VIEW vw_account_activity AS
-	SELECT vw_deposit_accounts.customer_id, vw_deposit_accounts.customer_name, vw_deposit_accounts.business_account,
+	SELECT vw_deposit_accounts.entity_id, vw_deposit_accounts.member_name,
 		vw_deposit_accounts.product_id, vw_deposit_accounts.product_name, 
 		vw_deposit_accounts.deposit_account_id, vw_deposit_accounts.is_active, 
 		vw_deposit_accounts.account_number, vw_deposit_accounts.last_closing_date,
@@ -456,7 +460,7 @@ CREATE VIEW vw_account_activity AS
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		
 		account_activity.transfer_account_id, trnf_accounts.account_number as trnf_account_number,
-		trnf_accounts.customer_id as trnf_customer_id, trnf_accounts.customer_name as trnf_customer_name,
+		trnf_accounts.entity_id as trnf_entity_id, trnf_accounts.member_name as trnf_member_name,
 		trnf_accounts.product_id as trnf_product_id,  trnf_accounts.product_name as trnf_product_name,
 		
 		vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.fiscal_year_id, vw_periods.fiscal_year,
@@ -479,7 +483,7 @@ CREATE VIEW vw_account_activity AS
 
 
 ------------Hooks to approval trigger
-CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON customers
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON members
 	FOR EACH ROW EXECUTE PROCEDURE upd_action();
     
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON products
