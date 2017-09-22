@@ -2194,6 +2194,9 @@ BEGIN
 	ELSIF(rec.leave_days > rec.leave_days_span)THEN
 		msg := 'Days applied for excced the span allowed';
 		RAISE EXCEPTION '%', msg;
+	ELSIF(rec.leave_from < current_date - 30)THEN
+		msg := 'Apply leave within correct period';
+		RAISE EXCEPTION '%', msg;
 	ELSIF(v_leave_balance <= 0)THEN
 		msg := 'You do not have enough days to apply for this leave';
 		RAISE EXCEPTION '%', msg;

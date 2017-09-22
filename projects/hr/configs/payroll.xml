@@ -852,7 +852,7 @@
 				<TEXTFIELD w="75" title="Department Role Name">department_role_name</TEXTFIELD>
 				<FORM name="Details" keyfield="employee_month_id" linkfield="period_id" table="employee_month">
 					<COMBOBOX w="430" title="Department Role" lptable="vw_department_roles" cmb_fnct="department_name || ', ' || department_role_name" orderby="department_name" y="10" h="20" x="10" lpfield="department_role">department_role_id</COMBOBOX>
-					<COMBOBOX w="430" title="Employee" lptable="entitys" where="(entity_type_id = 1)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<COMBOBOX w="430" title="Staff" lptable="vw_employees" y="30" h="20" x="10" lpfield="employee_name">entity_id</COMBOBOX>
 					<COMBOBOX w="430" title="Currency" lptable="currency" y="50" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 					<COMBOBOX w="150" title="Pay Group" lptable="pay_groups" noorg="true" y="70" h="20" x="10" lpfield="pay_group_name">pay_group_id</COMBOBOX>
 					<COMBOBOX w="430" title="Bank Branch" lptable="vw_bank_branch" cmb_fnct="(bank_name || ', ' || bank_branch_name)" orderby="bank_name" y="90" h="20" x="10" lpfield="bank_branch">bank_branch_id</COMBOBOX>
@@ -1344,7 +1344,7 @@
 			</GRID>
 			<FORM name="Loan" keyfield="loan_id" table="loans">
 				<COMBOBOX w="430" title="Loan Type" lptable="loan_types" y="10" h="20" x="10" lpfield="loan_type_name">loan_type_id</COMBOBOX>
-				<COMBOBOX w="430" title="Staff Name" lptable="entitys" where="(entity_type_id = 1)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Staff" lptable="vw_employees" y="30" h="20" x="10" lpfield="employee_name">entity_id</COMBOBOX>
 				<TEXTDECIMAL w="150" title="Principle" y="50" h="20" x="10">principle</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Interest" y="50" h="20" x="290">interest</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Repayment" y="70" h="20" x="10">monthly_repayment</TEXTDECIMAL>
