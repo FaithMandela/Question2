@@ -1,10 +1,10 @@
 ---Project Database File
 CREATE TABLE loans (
 	loan_id					serial primary key,
-	customer_id				integer references customers,
+	entity_id 				integer references entitys,
 	product_id	 			integer references products,
 	activity_frequency_id	integer references activity_frequency,
-	entity_id 				integer references entitys,
+	created_by 				integer references entitys,
 	org_id					integer references orgs,
 
 	account_number			varchar(32) not null unique,
@@ -26,16 +26,15 @@ CREATE TABLE loans (
 	
 	details					text
 );
-CREATE INDEX loans_customer_id ON loans(customer_id);
+CREATE INDEX loans_entity_id ON loans(entity_id);
 CREATE INDEX loans_product_id ON loans(product_id);
 CREATE INDEX loans_activity_frequency_id ON loans(activity_frequency_id);
-CREATE INDEX loans_entity_id ON loans(entity_id);
+CREATE INDEX loans_created_by ON loans(created_by);
 CREATE INDEX loans_org_id ON loans(org_id);
 
 CREATE TABLE guarantees (
 	guarantee_id			serial primary key,
 	loan_id					integer references loans,
-	customer_id				integer references customers,
 	entity_id 				integer references entitys,
 	org_id					integer references orgs,
 	
@@ -67,7 +66,6 @@ CREATE INDEX collateral_types_org_id ON collateral_types(org_id);
 CREATE TABLE collaterals (
 	collateral_id			serial primary key,
 	loan_id					integer references loans,
-	collateral_type_id		integer references collateral_types,
 	entity_id 				integer references entitys,
 	org_id					integer references orgs,
 	

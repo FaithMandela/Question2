@@ -1,45 +1,62 @@
 ---Project Database File
 CREATE TABLE members (
-	entity_id 					integer primary key references entitys,
-	bank_branch_id 				integer references bank_branch,
- 	org_id 						integer references orgs,
+	entity_id 				integer primary key references entitys,
+	sales_agent_id			integer references entitys,
+	bank_branch_id 			integer references bank_branch,
+	org_id 					integer references orgs,
 
-	person_title				varchar(50),
-	surname 					varchar(50) ,
-	first_name 					varchar(50) ,
-  	middle_name 				varchar(50),
-  	full_name					varchar(50),
-  	id_number					varchar(50) ,
-  	email						varchar(50),
-  	date_of_birth 				date,
-  	
-	gender 						varchar(10),
- 	phone						varchar(50),
- 	bank_account_number			varchar(50),
-  	nationality 				char(2) references sys_countrys,
-  	marital_status 				varchar(20),
-	joining_date				date,
-	exit_date					date,
-	merry_go_round_number 		integer,
+	person_title			varchar(50),
+	member_name 			varchar(150) not null,
+	id_number				varchar(50),
+	email					varchar(50),
+	date_of_birth 			date,
 
- 	picture_file 				character varying(32),
-  	active 						boolean DEFAULT true,
-  	details 					text
+	gender 					varchar(1),
+	marital_status 			varchar(1),
+	phone_number			varchar(50) not null,
+	phone_number2			varchar(50),
+	bank_account_number		varchar(50),
+	nationality 			char(2) references sys_countrys,
+	joining_date			date,
+	exit_date				date,
+	merry_go_round_number 	integer,
+
+	picture_file 			character varying(32),
+	is_active 				boolean default true,
+	
+	application_date		timestamp default now() not null,
+	approve_status			varchar(16) default 'Draft' not null,
+	workflow_table_id		integer,
+	action_date				timestamp,
+	
+	details 				text
 );
+CREATE INDEX members_bank_sales_agent_id ON members (sales_agent_id);
 CREATE INDEX members_bank_branch_id ON members (bank_branch_id);
 CREATE INDEX members_nationality ON members (nationality);
 CREATE INDEX members_org_id ON members (org_id);
 
 CREATE TABLE meetings (
-	meeting_id					serial primary key,
-	org_id                      integer references orgs,
-	meeting_date				date,
-	meeting_place				varchar (120) not null,
-	status						varchar (16) default 'Draft' not null,
-	minutes						text,
-	details						text
+	meeting_id				serial primary key,
+	org_id					integer references orgs,
+	meeting_date			date,
+	meeting_place			varchar (120) not null,
+	minutes					text,
+	details					text
 );
 CREATE INDEX meetings_org_id ON meetings (org_id);
+
+CREATE TABLE member_meetings (
+	member_meeting_id		serial primary key,
+	meeting_id				integer references meetings,
+	entity_id 				integer references entitys,
+	org_id					integer references orgs,
+	apologies				boolean default false not null,
+	narrative				text
+);
+CREATE INDEX member_meetings_meeting_id ON member_meetings (meeting_id);
+CREATE INDEX member_meetings_entity_id ON member_meetings (entity_id);
+CREATE INDEX member_meetings_org_id ON member_meetings (org_id);
 
 CREATE TABLE activity_frequency (
 	activity_frequency_id	integer primary key,
@@ -160,10 +177,10 @@ CREATE INDEX account_definations_org_id ON account_definations(org_id);
 
 CREATE TABLE deposit_accounts (
 	deposit_account_id		serial primary key,
-	customer_id				integer references customers,
+	entity_id 				integer references entitys,
 	product_id 				integer references products,
 	activity_frequency_id	integer references activity_frequency,
-	entity_id 				integer references entitys,
+	created_by 				integer references entitys,
 	org_id					integer references orgs,
 
 	is_active				boolean default false not null,
@@ -186,10 +203,10 @@ CREATE TABLE deposit_accounts (
 	
 	details					text
 );
-CREATE INDEX deposit_accounts_customer_id ON deposit_accounts(customer_id);
+CREATE INDEX deposit_accounts_entity_id ON deposit_accounts(entity_id);
 CREATE INDEX deposit_accounts_product_id ON deposit_accounts(product_id);
 CREATE INDEX deposit_accounts_activity_frequency_id ON deposit_accounts(activity_frequency_id);
-CREATE INDEX deposit_accounts_entity_id ON deposit_accounts(entity_id);
+CREATE INDEX deposit_accounts_created_by ON deposit_accounts(created_by);
 CREATE INDEX deposit_accounts_org_id ON deposit_accounts(org_id);
 
 CREATE TABLE account_notes (
@@ -284,6 +301,48 @@ CREATE TABLE account_activity_log (
 );
 CREATE INDEX account_activity_log_account_activity_id ON account_activity_log(account_activity_id);
 CREATE INDEX account_activity_log_org_id ON account_activity_log(org_id);
+
+CREATE TABLE investment_types (
+	investment_type_id		serial primary key,
+	org_id					integer references orgs,
+	investment_type_name	varchar (120),
+	interest_amount 		real,
+	details					text
+);
+CREATE INDEX investment_types_org_id ON investment_types (org_id);
+
+CREATE TABLE investments (
+	investment_id			serial primary key,
+	investment_type_id		integer references investment_types,
+	currency_id				integer references currency,
+	entity_id 				integer references entitys,
+	org_id					integer references orgs,
+
+	investment_name 		varchar(120),
+	investment_status		varchar(25) NOT NULL DEFAULT 'Prospective',
+	date_of_accrual			date,
+	principal 				real,
+	interest				real,
+	repayment_period		real,
+	initial_payment			real default 0 not null,
+	monthly_payments		real,
+
+	approve_status			varchar(16) default 'Draft' not null,
+	workflow_table_id		integer,
+	action_date				timestamp,
+
+	is_active				boolean default true not null,
+	details					text
+);
+CREATE INDEX investments_investment_type_id ON investments (investment_type_id);
+CREATE INDEX investments_currency_id ON investments (currency_id);
+CREATE INDEX investments_entity_id ON investments (entity_id);
+CREATE INDEX investments_org_id ON investments (org_id);
+
+
+ALTER TABLE transactions ADD investment_id integer references investments;
+CREATE INDEX transactions_investment_id ON transactions (investment_id);
+
 
 CREATE VIEW vw_interest_methods AS
 	SELECT activity_types.activity_type_id, activity_types.activity_type_name, activity_types.use_key_id,
