@@ -33,8 +33,7 @@ DECLARE
 BEGIN
 
 	IF(TG_OP = 'INSERT')THEN
-		SELECT interest_rate, activity_frequency_id, min_opening_balance, lockin_period_frequency,
-			minimum_balance, maximum_balance INTO myrec
+		SELECT interest_rate, activity_frequency_id, min_opening_balance, minimum_balance, maximum_balance INTO myrec
 		FROM products WHERE product_id = NEW.product_id;
 	
 		NEW.account_number := '4' || lpad(NEW.org_id::varchar, 2, '0')  || lpad(NEW.entity_id::varchar, 4, '0') || lpad(NEW.deposit_account_id::varchar, 2, '0');
@@ -44,7 +43,6 @@ BEGIN
 	
 		NEW.interest_rate := myrec.interest_rate;
 		NEW.activity_frequency_id := myrec.activity_frequency_id;
-		NEW.lockin_period_frequency := myrec.lockin_period_frequency;
 	ELSE
 		IF(NEW.approve_status = 'Approved')THEN
 			INSERT INTO account_activity (deposit_account_id, activity_type_id, activity_frequency_id,
@@ -374,8 +372,7 @@ BEGIN
 	END IF;
 	
 	IF(TG_OP = 'INSERT')THEN
-		SELECT interest_rate, activity_frequency_id, min_opening_balance, lockin_period_frequency,
-			minimum_balance, maximum_balance INTO myrec
+		SELECT interest_rate, activity_frequency_id, min_opening_balance, minimum_balance, maximum_balance INTO myrec
 		FROM products WHERE product_id = NEW.product_id;
 	
 		NEW.account_number := '5' || lpad(NEW.org_id::varchar, 2, '0')  || lpad(NEW.entity_id::varchar, 4, '0') || lpad(NEW.loan_id::varchar, 2, '0');
@@ -587,7 +584,7 @@ BEGIN
 	WHERE (period_id = $1::integer) AND (opened = true) AND (activated = true) AND (closed = false);
 
 	FOR reca IN SELECT currency_id, deposit_account_id, product_id, activity_frequency_id, credit_limit,
-		minimum_balance, maximum_balance, interest_rate, lockin_period_frequency, lockedin_until_date
+		minimum_balance, maximum_balance, interest_rate
 	FROM vw_deposit_accounts
 	WHERE (org_id = v_org_id) AND (approve_status = 'Approved') AND (is_active = true) AND (action_date < v_start_date)
 	LOOP

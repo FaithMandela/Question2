@@ -124,7 +124,7 @@ CREATE VIEW vw_loan_balance AS
 		ON cb.loan_id = lp.loan_id;
 
 CREATE VIEW vw_loans AS
-	SELECT members.entity_id, members.member_name, 
+	SELECT members.entity_id, members.member_name, members.member_type,
 		vw_products.product_id, vw_products.product_name, 
 		vw_products.currency_id, vw_products.currency_name, vw_products.currency_symbol,
 		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
@@ -173,7 +173,7 @@ CREATE VIEW vw_loan_notes AS
 	FROM loan_notes INNER JOIN vw_loans ON loan_notes.loan_id = vw_loans.loan_id;
 	
 CREATE VIEW vw_loan_activity AS
-	SELECT vw_loans.entity_id, vw_loans.member_name,
+	SELECT vw_loans.entity_id, vw_loans.member_name, vw_loans.member_type,
 		vw_loans.product_id, vw_loans.product_name, 
 		vw_loans.loan_id, vw_loans.principal_amount, vw_loans.interest_rate, 
 		vw_loans.disbursed_date, vw_loans.expected_matured_date, vw_loans.matured_date, 

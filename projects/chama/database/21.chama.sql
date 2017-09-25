@@ -5,6 +5,7 @@ CREATE TABLE members (
 	bank_branch_id 			integer references bank_branch,
 	org_id 					integer references orgs,
 
+	member_type				integer default 1 not null,
 	person_title			varchar(50),
 	member_name 			varchar(150) not null,
 	id_number				varchar(50),
@@ -131,7 +132,6 @@ CREATE TABLE products (
 	
 	interest_rate			real not null,
 	min_opening_balance		real,
-	lockin_period_frequency real,
 	minimum_balance			real,
 	maximum_balance			real,
 	minimum_day				real,
@@ -192,13 +192,11 @@ CREATE TABLE deposit_accounts (
 	narrative				varchar(120),
 	last_closing_date		date,
 	
+	commitment_amount		real default 0 not null,
 	credit_limit			real,
 	minimum_balance			real,
 	maximum_balance			real,
-	
 	interest_rate			real not null,
-	lockin_period_frequency	real,
-	lockedin_until_date		date,
 
 	application_date		timestamp default now() not null,
 	approve_status			varchar(16) default 'Draft' not null,
@@ -378,8 +376,7 @@ CREATE VIEW vw_products AS
 		penalty_methods.penalty_method_id, penalty_methods.penalty_method_name,
 		products.org_id, products.product_id, products.product_name, products.description, 
 		products.loan_account, products.is_active, products.interest_rate, 
-		products.min_opening_balance, products.lockin_period_frequency, 
-		products.minimum_balance, products.maximum_balance, products.minimum_day, products.maximum_day,
+		products.min_opening_balance, products.minimum_balance, products.maximum_balance, products.minimum_day, products.maximum_day,
 		products.minimum_trx, products.maximum_trx, products.details
 	FROM products INNER JOIN activity_frequency ON products.activity_frequency_id = activity_frequency.activity_frequency_id
 		INNER JOIN currency ON products.currency_id = currency.currency_id
@@ -419,15 +416,15 @@ CREATE VIEW vw_deposit_balance AS
 		ON cb.deposit_account_id = uc.deposit_account_id;
 
 CREATE VIEW vw_deposit_accounts AS
-	SELECT members.entity_id, members.member_name, 
+	SELECT members.entity_id, members.member_name, members.member_type,
 		vw_products.product_id, vw_products.product_name, 
 		vw_products.currency_id, vw_products.currency_name, vw_products.currency_symbol,
 		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
 		deposit_accounts.org_id, deposit_accounts.deposit_account_id, deposit_accounts.is_active, 
 		deposit_accounts.account_number, deposit_accounts.narrative, deposit_accounts.last_closing_date, 
 		deposit_accounts.credit_limit, deposit_accounts.minimum_balance, deposit_accounts.maximum_balance, 
-		deposit_accounts.interest_rate, deposit_accounts.lockin_period_frequency, 
-		deposit_accounts.lockedin_until_date, deposit_accounts.application_date, deposit_accounts.approve_status, 
+		deposit_accounts.interest_rate, deposit_accounts.commitment_amount, 
+		deposit_accounts.application_date, deposit_accounts.approve_status, 
 		deposit_accounts.workflow_table_id, deposit_accounts.action_date, deposit_accounts.details,
 		
 		vw_deposit_balance.current_balance, vw_deposit_balance.cleared_balance, vw_deposit_balance.unprocessed_credit,
@@ -447,7 +444,7 @@ CREATE VIEW vw_account_notes AS
 	FROM account_notes INNER JOIN vw_deposit_accounts ON account_notes.deposit_account_id = vw_deposit_accounts.deposit_account_id;
 
 CREATE VIEW vw_account_activity AS
-	SELECT vw_deposit_accounts.entity_id, vw_deposit_accounts.member_name,
+	SELECT vw_deposit_accounts.entity_id, vw_deposit_accounts.member_name, vw_deposit_accounts.member_type,
 		vw_deposit_accounts.product_id, vw_deposit_accounts.product_name, 
 		vw_deposit_accounts.deposit_account_id, vw_deposit_accounts.is_active, 
 		vw_deposit_accounts.account_number, vw_deposit_accounts.last_closing_date,
