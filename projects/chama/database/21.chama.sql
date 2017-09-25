@@ -22,7 +22,7 @@ CREATE TABLE members (
 	phone_number2			varchar(50),
 	bank_account_number		varchar(50),
 	nationality 			char(2) references sys_countrys,
-	joining_date			date,
+	joining_date			date not null,
 	exit_date				date,
 	merry_go_round_number 	integer,
 
@@ -345,6 +345,23 @@ CREATE INDEX investments_org_id ON investments (org_id);
 ALTER TABLE transactions ADD investment_id integer references investments;
 CREATE INDEX transactions_investment_id ON transactions (investment_id);
 
+
+CREATE VIEW vw_members AS
+	SELECT vw_bank_branch.bank_id, vw_bank_branch.bank_name, vw_bank_branch.bank_branch_id, 
+		vw_bank_branch.bank_branch_name, vw_bank_branch.bank_branch_code,
+		members.sales_agent_id, sales_agents.entity_name as sales_agent_name,
+		sys_countrys.sys_country_id, sys_countrys.sys_country_name, 
+		members.org_id, members.entity_id, members.member_type, members.person_title, members.member_name, 
+		members.id_number, members.email, members.date_of_birth, members.address, members.town, 
+		members.zip_code, members.gender, members.marital_status, members.phone_number, 
+		members.phone_number2, members.bank_account_number, members.nationality, 
+		members.joining_date, members.exit_date, members.merry_go_round_number, 
+		members.picture_file, members.is_active, members.application_date, 
+		members.approve_status, members.workflow_table_id, members.action_date, members.details
+		
+	FROM members INNER JOIN vw_bank_branch ON members.bank_branch_id = vw_bank_branch.bank_branch_id
+		INNER JOIN entitys sales_agents ON members.sales_agent_id = sales_agents.entity_id
+		INNER JOIN sys_countrys ON members.nationality = sys_countrys.sys_country_id;
 
 CREATE VIEW vw_interest_methods AS
 	SELECT activity_types.activity_type_id, activity_types.activity_type_name, activity_types.use_key_id,

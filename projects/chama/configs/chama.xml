@@ -9,6 +9,7 @@
 			<MENU name="Approvals">83</MENU>
 		</MENU>
 		<MENU name="Operations">
+			<MENU name="Sales Agents">18</MENU>
 			<MENU name="Clients and Suppliers">17</MENU>
 			<MENU name="Sales">2</MENU>
 			<MENU name="Purchase">27</MENU>
@@ -36,7 +37,7 @@
 			<MENU name="Error Messages">75</MENU>
 		</MENU>
 		<MENU name="Reports">
-			<MENU name="Customers">250</MENU>
+			<MENU name="Members">250</MENU>
 			<MENU name="Deposit accounts">230</MENU>
 			<MENU name="Loans">235</MENU>
 			<MENU name="Configuration">255</MENU>
@@ -58,8 +59,11 @@
 	</MENU>
 	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
 		<DASHBOARD w="700" name="Dashboard">
-			<TILE name="Total Customers" groupby="org_id" table="customers" where="(approve_status = 'Approved')">
-				<TEXTFIELD w="75" fnct="COALESCE(count(customer_id), 0)" title="Total Customer">total_customer</TEXTFIELD>
+			<TILE name="Members" groupby="org_id" table="members" where="(member_type = 1) AND (approve_status = 'Approved') AND (is_active = true)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(entity_id), 0)" title="Total Customer">members_count</TEXTFIELD>
+			</TILE>
+			<TILE name="Loans" groupby="org_id" table="loans" where="(approve_status = 'Approved')">
+				<TEXTFIELD w="75" fnct="COALESCE(count(loan_id), 0)" title="Total Customer">loans_count</TEXTFIELD>
 			</TILE>
 		</DASHBOARD>
 	</DESK>
@@ -856,15 +860,15 @@
 			<TEXTDATE w="75" title="Date Of Birth">date_of_birth</TEXTDATE>
 			<TEXTFIELD w="75" title="Address">address</TEXTFIELD>
 			<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
-			<CHECKBOX w="75" title="Gender">gender</CHECKBOX>
-			<CHECKBOX w="75" title="Marital Status">marital_status</CHECKBOX>
+			<TEXTFIELD w="75" title="Gender">gender</TEXTFIELD>
+			<TEXTFIELD w="75" title="Marital Status">marital_status</TEXTFIELD>
 			<TEXTDATE w="75" title="Joining Date">joining_date</TEXTDATE>
 			<TEXTDATE w="75" title="Exit Date">exit_date</TEXTDATE>
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 			<ACTIONS>
 				<ACTION fnct="apply_approval" approval="1">Approval Application</ACTION>
 			</ACTIONS>
-			<JASPER name="Member" reportfile="member_d.jasper"></JASPER>
+			<JASPER name="Member" reportfile="vw_members_d.jasper"></JASPER>
 			<GRID name="Deposit Accounts" keyfield="deposit_account_id" linkfield="entity_id" table="vw_deposit_accounts">
 				<TEXTFIELD w="75" title="Deposit Account ID">deposit_account_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>
@@ -880,14 +884,13 @@
 				<FORM name="Deposit Accounts" keyfield="deposit_account_id" linkfield="entity_id" table="deposit_accounts">
 					<USERFIELD>created_by</USERFIELD>
 					<COMBOBOX w="430" title="Product" lptable="products" where="(loan_account = false) AND (is_active = true)" y="10" h="20" x="10" lpfield="product_name">product_id</COMBOBOX>
-					<COMBOBOX w="150" title="Interest Frequency" lptable="activity_frequency" orderby="activity_frequency_id" noorg="true" y="30" h="20" x="10" lpfield="activity_frequency_name">activity_frequency_id</COMBOBOX>
+					<COMBOBOX w="150" title="Saving Frequency" lptable="activity_frequency" orderby="activity_frequency_id" noorg="true" y="30" h="20" x="10" lpfield="activity_frequency_name">activity_frequency_id</COMBOBOX>
 					<CHECKBOX w="150" title="Active" default="true" y="50" h="20" x="10">is_active</CHECKBOX>
 					<TEXTDECIMAL w="150" title="Credit Limit" default="0" y="50" h="20" x="290">credit_limit</TEXTDECIMAL>
-					<TEXTDECIMAL w="150" title="Minimum Balance" y="70" h="20" x="10">minimum_balance</TEXTDECIMAL>
-					<TEXTDECIMAL w="150" title="Maximum Balance" y="70" h="20" x="290">maximum_balance</TEXTDECIMAL>
-					<TEXTDECIMAL w="150" title="Interest Rate" y="90" h="20" x="10">interest_rate</TEXTDECIMAL>
-					<TEXTDECIMAL w="150" title="Lockin Period Frequency" y="90" h="20" x="290">lockin_period_frequency</TEXTDECIMAL>
-					<TEXTDATE w="150" title="Lockedin Until Date" y="110" h="20" x="10">lockedin_until_date</TEXTDATE>
+					<TEXTDECIMAL w="150" title="Commitment Amount" y="70" h="20" x="10">commitment_amount</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Minimum Balance" y="90" h="20" x="10">minimum_balance</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Maximum Balance" y="90" h="20" x="290">maximum_balance</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Interest Rate" y="110" h="20" x="10">interest_rate</TEXTDECIMAL>
 					<TEXTFIELD w="430" title="Narrative" y="130" h="20" x="10">narrative</TEXTFIELD>
 					<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
 				</FORM>
@@ -1013,7 +1016,7 @@
 				<TEXTDATE w="150" title="Date Of Birth" y="30" h="20" x="290">date_of_birth</TEXTDATE>
 				<TEXTFIELD w="150" title="Email" y="50" h="20" x="10" span="true">email</TEXTFIELD>
 				<TEXTFIELD w="150" title="Address" y="50" h="20" x="10" span="true">address</TEXTFIELD>
-				<TEXTFIELD w="150" title="Town" y="70" h="20" x="10">town</TEXTFIELD>
+				<TEXTFIELD w="150" title="Town" y="70" h="20" x="10" span="true">town</TEXTFIELD>
 				<TEXTFIELD w="150" title="Zip Code" y="70" h="20" x="290">zip_code</TEXTFIELD>
 				<COMBOLIST w="150" title="Gender" y="90" h="20" x="10" span="true">gender
 					<DATA key="M">Male</DATA>
@@ -1026,16 +1029,16 @@
 					<DATA key="W">Widowed</DATA>
 					<DATA key="X">Separated</DATA>
 				</COMBOLIST>
-				<TEXTFIELD w="150" title="Phone Number" y="110" h="20" x="10">phone_number</TEXTFIELD>
+				<TEXTFIELD w="150" title="Phone Number" y="110" h="20" x="10" span="true">phone_number</TEXTFIELD>
 				<TEXTFIELD w="150" title="Phone Number2" y="110" h="20" x="290">phone_number2</TEXTFIELD>
-				<TEXTDATE w="150" title="Joining Date" y="130" h="20" x="10">joining_date</TEXTDATE>
+				<TEXTDATE w="150" title="Joining Date" y="130" h="20" x="10" span="true">joining_date</TEXTDATE>
 				<TEXTDATE w="150" title="Exit Date" y="130" h="20" x="290">exit_date</TEXTDATE>
-				<COMBOBOX w="150" title="Nationality" lptable="sys_countrys" default_org_fnct="get_default_country" noorg="true" lpkey="sys_country_id" y="150" h="20" x="10" lpfield="sys_country_name">nationality</COMBOBOX>
+				<COMBOBOX w="150" title="Nationality" lptable="sys_countrys" default_org_fnct="get_default_country" noorg="true" lpkey="sys_country_id" y="150" h="20" x="10" span="true" lpfield="sys_country_name">nationality</COMBOBOX>
 				<CHECKBOX w="150" title="Active" y="150" h="20" x="10">is_active</CHECKBOX>
-				<COMBOBOX w="150" title="Sales Agent" lptable="entitys" lpkey="entity_id" y="170" h="20" x="10" lpfield="entity_name">sales_agent_id</COMBOBOX>
-				<COMBOBOX w="150" title="Bank Branch" lptable="bank_branch" y="190" h="20" x="10" lpfield="bank_branch_name">bank_branch_id</COMBOBOX>
-				<TEXTFIELD w="150" title="Bank Account Number" y="190" h="20" x="10">bank_account_number</TEXTFIELD>
-				<TEXTFIELD w="150" tab="Picture" y="2" h="20" x="10">picture_file</TEXTFIELD>
+				<COMBOBOX w="150" title="Sales Agent" lptable="entitys" lpkey="entity_id" where="(use_key_id = 0)" y="170" h="20" x="10" lpfield="entity_name">sales_agent_id</COMBOBOX>
+				<COMBOBOX w="150" title="Bank Branch" lptable="vw_bank_branch" y="190" h="20" x="10" span="true" lpfield="bank_branch_disp">bank_branch_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Account Number" y="190" h="20" x="10">bank_account_number</TEXTFIELD>
+				<PICTURE w="150" tab="Picture" access="ob" y="2" h="20" x="10">picture_file</PICTURE>
 				<TEXTAREA w="430" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
@@ -1059,8 +1062,7 @@
 				<CHECKBOX w="150" title="Loan Account" y="110" h="20" x="10">loan_account</CHECKBOX>
 				<CHECKBOX w="150" title="Active" y="110" h="20" x="290">is_active</CHECKBOX>
 				<TEXTDECIMAL w="150" title="Interest Rate" y="130" h="20" x="10">interest_rate</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Min Opening Balance" y="150" h="20" x="290">min_opening_balance</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Lockin Period Frequency" y="170" h="20" x="10">lockin_period_frequency</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Opening Balance" y="150" h="20" x="290">min_opening_balance</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Minimum Balance" y="190" h="20" x="10">minimum_balance</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Maximum Balance" y="190" h="20" x="290">maximum_balance</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Minimum Day" y="210" h="20" x="10">minimum_day</TEXTDECIMAL>
@@ -1158,9 +1160,9 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Deposit Accounts" key="115" h="550">
-		<GRID name="Deposit Accounts" keyfield="deposit_account_id" table="vw_deposit_accounts" where="(approve_status = 'Approved')">
+		<GRID name="Deposit Accounts" keyfield="deposit_account_id" table="vw_deposit_accounts" where="(approve_status = 'Approved') AND (is_active = true)">
 			<TEXTFIELD w="75" title="Account Number">account_number</TEXTFIELD>
-			<TEXTFIELD w="75" title="Customer">customer_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Member">member_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
@@ -1247,7 +1249,7 @@
 	<DESK w="700" name="Loans" key="120" h="550">
 		<GRID name="Loans" keyfield="loan_id" table="vw_loans" where="(approve_status = 'Approved')">
 			<TEXTFIELD w="75" title="Loan Account">account_number</TEXTFIELD>
-			<TEXTFIELD w="75" title="Customer">customer_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Member">member_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Principal Amount">principal_amount</TEXTDECIMAL>
@@ -1299,6 +1301,58 @@
 				<ACTION fnct="compute_loans" approval="1">Loan Computations</ACTION>
 				<ACTION fnct="compute_savings" approval="1">Savings Computations</ACTION>
 			</ACTIONS>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Sales Agents" key="18" h="500">
+		<GRID name="Sales Agents" keyfield="entity_id" table="entitys" where="(use_key_id = 7)">
+			<TEXTFIELD w="75" title="Client ID">entity_id</TEXTFIELD>
+			<TEXTFIELD w="140" title="Client Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Attention">attention</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Telephone">primary_telephone</TEXTFIELD>
+			<TEXTTIMESTAMP w="175" title="Date Enroled" format="timestamp">date_enroled</TEXTTIMESTAMP>
+			<CHECKBOX w="75" title="Active" format="boolean">is_active</CHECKBOX>
+			<GRID wheresql="table_name = 'entitys'" name="Address" keyfield="address_id" linkfield="table_id" table="vw_address">
+				<TEXTFIELD w="100" title="Postal Code">postal_code</TEXTFIELD>
+				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
+				<TEXTFIELD w="100" title="Country">sys_country_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
+				<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
+				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
+				<TEXTFIELD w="140" title="Default">is_default</TEXTFIELD>
+				<FORM name="Address" keyfield="address_id" linkfield="table_id" table="address">
+					<DEFAULT default="entitys">table_name</DEFAULT>
+					<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Post Office Box" y="30" h="20" x="10">post_office_box</TEXTFIELD>
+					<TEXTFIELD w="150" title="Postal Code" y="30" h="20" x="290">postal_code</TEXTFIELD>
+					<TEXTFIELD w="150" title="Town" y="50" h="20" x="10">town</TEXTFIELD>
+					<TEXTFIELD w="430" title="Premises" y="70" h="20" x="10">premises</TEXTFIELD>
+					<TEXTFIELD w="430" title="Street" y="90" h="20" x="10">street</TEXTFIELD>
+					<TEXTFIELD w="430" title="Phone Number" y="110" h="20" x="10">phone_number</TEXTFIELD>
+					<TEXTFIELD w="150" title="Extension" y="130" h="20" x="10">extension</TEXTFIELD>
+					<TEXTFIELD w="430" title="Mobile" y="150" h="20" x="10">mobile</TEXTFIELD>
+					<TEXTFIELD w="430" title="Fax" y="170" h="20" x="10">fax</TEXTFIELD>
+					<TEXTFIELD w="430" title="Email" y="190" h="20" x="10">email</TEXTFIELD>
+					<TEXTFIELD w="250" title="Website" y="210" h="20" x="10">website</TEXTFIELD>
+					<CHECKBOX w="50" title="Default" y="210" h="20" x="390">is_default</CHECKBOX>
+					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<FORM name="Sales Agent" keyfield="entity_id" table="entitys">
+				<DEFAULT default="salesagent">function_role</DEFAULT>
+				<DEFAULT default="7">use_key_id</DEFAULT>
+				<COMBOBOX w="430" title="Type" lptable="entity_types" where="(use_key_id = 2)" y="10" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Account" lptable="vw_accounts" webgrid="90" default_org_fnct="get_default_account_id(51" y="10" h="20" x="10" lpfield="account_description">account_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Client Name" y="30" h="20" x="10">entity_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="User Name" y="50" h="20" x="10">user_name</TEXTFIELD>
+				<TEXTFIELD w="350" title="Attention" y="70" h="20" x="10">attention</TEXTFIELD>
+				<TEXTFIELD w="430" title="Primary Email" y="90" h="20" x="10">primary_email</TEXTFIELD>
+				<TEXTFIELD w="150" title="Primary Telephone" y="110" h="20" x="10">primary_telephone</TEXTFIELD>
+				<CHECKBOX w="150" title="Active" default="true" y="130" h="20" x="10">is_active</CHECKBOX>
+				<TEXTFIELD w="150" title="First Password" y="130" h="20" x="290">first_password</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="110" h="150" x="10">details</TEXTAREA>
+			</FORM>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Client and Supplier" key="17" h="500">
@@ -2811,9 +2865,8 @@
 	<DESK w="700" name="Loans" key="235" h="550">
 		<JASPER name="Loans" reportfile="vw_loans.jasper"></JASPER>
 	</DESK>
-	<DESK w="700" name="Customers" key="250" h="550">
-		<JASPER name="Personal" reportfile="customers_p.jasper"></JASPER>
-		<JASPER name="Corporate" reportfile="customers_c.jasper"></JASPER>
+	<DESK w="700" name="Members" key="250" h="550">
+		<JASPER name="Members" reportfile="vw_members.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Configuration" key="255" h="550">
 		<JASPER name="Products" reportfile="vw_products.jasper"></JASPER>
