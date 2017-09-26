@@ -128,11 +128,11 @@ VALUES (10, 1, 1, 5, 0, 'Loan Payment', '2017-01-01', NULL, '400000001', true);
 INSERT INTO members (entity_id, org_id, member_name, id_number, email, phone_number, date_of_birth, nationality, approve_status, member_type, joining_date)
 VALUES (2, 0, 'OpenBaraza Chama', '0', 'info@openbaraza.org', '+254', '2017-01-01', 'KE', 'Approved', 0, '2017-01-01');
 
-INSERT INTO deposit_accounts (entity_id, product_id, org_id, is_active, approve_status, narrative) VALUES 
-(2, 0, 0, true, 'Approved', 'Deposits'),
-(2, 0, 0, true, 'Approved', 'Charges'),
-(2, 0, 0, true, 'Approved', 'Interest'),
-(2, 0, 0, true, 'Approved', 'Penalty');
+INSERT INTO deposit_accounts (entity_id, product_id, org_id, is_active, approve_status, narrative, account_number) VALUES 
+(2, 0, 0, true, 'Approved', 'Deposits', '400000001'),
+(2, 0, 0, true, 'Approved', 'Charges', '400000002'),
+(2, 0, 0, true, 'Approved', 'Interest', '400000003'),
+(2, 0, 0, true, 'Approved', 'Penalty', '400000004');
 
 UPDATE deposit_accounts SET minimum_balance = -100000000000;
 SELECT pg_catalog.setval('entitys_entity_id_seq', 3, true);

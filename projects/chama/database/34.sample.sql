@@ -11,6 +11,9 @@ DELETE FROM currency WHERE currency_id > 1;
 INSERT INTO banks (org_id, bank_id, bank_name) VALUES (0, 1, 'Safaricom');
 INSERT INTO bank_branch (org_id, bank_branch_id, bank_id, bank_branch_name) VALUES (0, 1, 1, 'MPESA');
 
+INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, fee_amount, account_number, is_active, has_charge) 
+VALUES (21, 1, 1, 3, 0, 'Opening account', '2017-01-01', NULL, 300, '400000002', true, true);
+
 
 INSERT INTO entitys (entity_id, org_id, entity_type_id, use_key_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password) VALUES
 (11, 0, 7, 7, 'cyril', 'cyril', 'cyril@localhost', true, true, false, 'baraza'),
@@ -99,3 +102,7 @@ SELECT org_id, entity_id, 3, true, 'Approved'
 FROM members
 WHERE (member_type = 1)
 ORDER BY entity_id;
+
+
+SELECT pg_catalog.setval('deposit_accounts_deposit_account_id_seq', 100, true);
+

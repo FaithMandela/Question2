@@ -36,7 +36,9 @@ BEGIN
 		SELECT interest_rate, activity_frequency_id, min_opening_balance, minimum_balance, maximum_balance INTO myrec
 		FROM products WHERE product_id = NEW.product_id;
 	
-		NEW.account_number := '4' || lpad(NEW.org_id::varchar, 2, '0')  || lpad(NEW.entity_id::varchar, 4, '0') || lpad(NEW.deposit_account_id::varchar, 2, '0');
+		IF(NEW.account_number is null)THEN
+			NEW.account_number := '4' || lpad(NEW.org_id::varchar, 2, '0')  || lpad(NEW.entity_id::varchar, 4, '0') || lpad(NEW.deposit_account_id::varchar, 2, '0');
+		END IF;
 		
 		NEW.minimum_balance := myrec.minimum_balance;
 		NEW.maximum_balance := myrec.maximum_balance;

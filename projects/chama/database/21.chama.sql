@@ -495,7 +495,19 @@ CREATE VIEW vw_account_activity AS
 		LEFT JOIN vw_periods ON account_activity.period_id = vw_periods.period_id
 		LEFT JOIN vw_deposit_accounts trnf_accounts ON account_activity.transfer_account_id =  trnf_accounts.deposit_account_id;
 
-
+CREATE VIEW vw_investments AS
+	SELECT currency.currency_id, currency.currency_name, currency.currency_symbol,
+		entitys.entity_id, entitys.entity_name, 
+		investment_types.investment_type_id, investment_types.investment_type_name, 
+		investments.org_id, investments.investment_id, investments.investment_name, investments.investment_status, 
+		investments.date_of_accrual, investments.principal, investments.interest, investments.repayment_period, 
+		investments.initial_payment, investments.monthly_payments, 
+		investments.approve_status, investments.workflow_table_id, investments.action_date, 
+		investments.is_active, investments.details
+	FROM investments INNER JOIN investment_types ON investments.investment_type_id = investment_types.investment_type_id
+		INNER JOIN currency ON investments.currency_id = currency.currency_id
+		INNER JOIN entitys ON investments.entity_id = entitys.entity_id;
+	
 ------------Hooks to approval trigger
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON members
 	FOR EACH ROW EXECUTE PROCEDURE upd_action();

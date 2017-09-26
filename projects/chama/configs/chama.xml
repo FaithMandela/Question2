@@ -1166,7 +1166,6 @@
 			<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
-			<TEXTDATE w="75" title="Last Closing Date">last_closing_date</TEXTDATE>
 			<TEXTDECIMAL w="75" title="Credit Limit">credit_limit</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Current Balance">current_balance</TEXTDECIMAL>
