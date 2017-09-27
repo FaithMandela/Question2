@@ -895,7 +895,7 @@
 					<TEXTFIELD w="430" title="Narrative" y="130" h="20" x="10">narrative</TEXTFIELD>
 					<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
 				</FORM>
-				<GRID name="Account Activity" keyfield="account_activity_id" linkfield="deposit_account_id" table="vw_account_activity">
+				<GRID name="Account Activity" keyfield="account_activity_id" orderby="account_activity_id desc" linkfield="deposit_account_id" table="vw_account_activity">
 					<TEXTFIELD w="75" title="Activity ID">account_activity_id</TEXTFIELD>
 					<TEXTFIELD w="75" title="Activity">activity_type_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Frequency">activity_frequency_name</TEXTFIELD>
@@ -988,7 +988,7 @@
 						<TEXTAREA w="430" title="Note" y="50" h="70" x="10">note</TEXTAREA>
 					</FORM>
 				</GRID>
-				<GRID name="Loan Activity" keyfield="account_activity_id" linkfield="loan_id" table="vw_loan_activity">
+				<GRID name="Loan Activity" keyfield="account_activity_id" orderby="account_activity_id desc" linkfield="loan_id" table="vw_loan_activity">
 					<TEXTFIELD w="75" title="Activity ID">account_activity_id</TEXTFIELD>
 					<TEXTFIELD w="75" title="Activity">activity_type_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Frequency">activity_frequency_name</TEXTFIELD>
@@ -1171,7 +1171,7 @@
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Current Balance">current_balance</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Available Balance">available_balance</TEXTDECIMAL>
-			<GRID name="Account Activity" keyfield="account_activity_id" edit="false" linkfield="deposit_account_id" table="vw_account_activity">
+			<GRID limit="100" name="Account Activity" keyfield="account_activity_id" edit="false" orderby="account_activity_id desc" linkfield="deposit_account_id" table="vw_account_activity">
 				<TEXTFIELD w="75" title="Activity ID">account_activity_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Activity">activity_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Frequency">activity_frequency_name</TEXTFIELD>
@@ -1259,7 +1259,7 @@
 			<TEXTDATE w="75" title="Disbursed Date">disbursed_date</TEXTDATE>
 			<TEXTDECIMAL w="75" title="Committed Balance">committed_balance</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Actual Balance">actual_balance</TEXTDECIMAL>
-			<GRID name="Loan Activity" keyfield="account_activity_id" linkfield="loan_id" table="vw_loan_activity">
+			<GRID limit="100" name="Loan Activity" keyfield="account_activity_id" orderby="account_activity_id desc" linkfield="loan_id" table="vw_loan_activity">
 				<TEXTFIELD w="75" title="Activity ID">account_activity_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Activity">activity_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Frequency">activity_frequency_name</TEXTFIELD>

@@ -72,9 +72,9 @@ SELECT pg_catalog.setval('penalty_methods_penalty_method_id_seq', 2, true);
 INSERT INTO products (product_id, activity_frequency_id, interest_method_id, penalty_method_id, currency_id, org_id, product_name, description, loan_account, is_active, interest_rate, min_opening_balance, minimum_balance, maximum_balance, minimum_day, maximum_day, minimum_trx, maximum_trx) VALUES
 (0, 4, 0, 0, 1, 0, 'Chama', 'Chama', false, false, 0, 0, 0, 0, 0, 0, 0, 0),
 (1, 4, 0, 0, 1, 0, 'Merry go round', 'Merry go round', false, true, 0, 0, 0, 0, 0, 0, 0, 0),
-(2, 4, 1, 1, 1, 0, 'Basic loans', 'Basic loans', true, true, 12, 0, 0, 0, 0, 0, 0, 0),
-(3, 4, 3, 0, 1, 0, 'Savings', 'To handle savings', false, true, 3, 0, 0, 0, 0, 0, 0, 0),
-(4, 4, 2, 1, 1, 0, 'Compound loans', 'Compound loans', true, true, 12, 0, 0, 0, 0, 0, 0, 0),
+(2, 4, 1, 1, 1, 0, 'Basic loans', 'Basic loans', true, true, 20, 0, 0, 0, 0, 0, 0, 0),
+(3, 4, 3, 0, 1, 0, 'Savings', 'To handle savings', false, true, 12, 0, 0, 0, 0, 0, 0, 0),
+(4, 4, 2, 1, 1, 0, 'Compound loans', 'Compound loans', true, true, 20, 0, 0, 0, 0, 0, 0, 0),
 (5, 4, 4, 1, 1, 0, 'Reducing balance loans', 'Reducing balance loans', true, true, 12, 0, 0, 0, 0, 0, 0, 0);
 SELECT pg_catalog.setval('products_product_id_seq', 5, true);
 

@@ -98,11 +98,12 @@ UPDATE members SET bank_branch_id = 1, nationality = 'KE', approve_status = 'App
 
 
 INSERT INTO deposit_accounts (org_id, entity_id, product_id, is_active, approve_status)
-SELECT org_id, entity_id, 3, true, 'Approved'
+SELECT org_id, entity_id, 3, true, 'Draft'
 FROM members
 WHERE (member_type = 1)
 ORDER BY entity_id;
 
+UPDATE deposit_accounts SET approve_status = 'Completed' WHERE entity_id > 2;
 
 SELECT pg_catalog.setval('deposit_accounts_deposit_account_id_seq', 100, true);
 
