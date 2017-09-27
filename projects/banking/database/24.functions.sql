@@ -52,13 +52,13 @@ BEGIN
 				activity_date, value_date, account_debit)
 			SELECT NEW.deposit_account_id, account_definations.activity_type_id, account_definations.activity_frequency_id,
 				1, products.currency_id, NEW.entity_id, NEW.org_id, account_definations.account_number,
-				current_date, current_date, account_definations.fee_amount
+				NEW.opening_date, NEW.opening_date, account_definations.fee_amount
 			FROM account_definations INNER JOIN activity_types ON account_definations.activity_type_id = activity_types.activity_type_id
 				INNER JOIN products ON account_definations.product_id = products.product_id
 			WHERE (account_definations.product_id = NEW.product_id) AND (account_definations.org_id = NEW.org_id)
 				AND (account_definations.activity_frequency_id = 1) AND (activity_types.use_key_id = 201) 
 				AND (account_definations.is_active = true)
-				AND (account_definations.start_date < current_date);
+				AND (account_definations.start_date < NEW.opening_date);
 		END IF;
 	END IF;
 	

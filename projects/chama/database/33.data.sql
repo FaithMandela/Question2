@@ -133,6 +133,7 @@ INSERT INTO deposit_accounts (entity_id, product_id, org_id, is_active, approve_
 (2, 0, 0, true, 'Approved', 'Charges', '400000002'),
 (2, 0, 0, true, 'Approved', 'Interest', '400000003'),
 (2, 0, 0, true, 'Approved', 'Penalty', '400000004');
+(2, 0, 0, true, 'Approved', 'Investment', '400000005');
 
 UPDATE deposit_accounts SET minimum_balance = -100000000000;
 SELECT pg_catalog.setval('entitys_entity_id_seq', 3, true);

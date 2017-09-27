@@ -97,8 +97,8 @@ INSERT INTO members (org_id, member_name, joining_date, gender, date_of_birth, i
 UPDATE members SET bank_branch_id = 1, nationality = 'KE', approve_status = 'Approved'; 
 
 
-INSERT INTO deposit_accounts (org_id, entity_id, product_id, is_active, approve_status)
-SELECT org_id, entity_id, 3, true, 'Draft'
+INSERT INTO deposit_accounts (org_id, entity_id, product_id, is_active, approve_status, opening_date)
+SELECT org_id, entity_id, 3, true, 'Draft', joining_date
 FROM members
 WHERE (member_type = 1)
 ORDER BY entity_id;
