@@ -1187,11 +1187,11 @@ BEGIN
 	WHERE (user_name = NEW.studentid);
 
 	IF(v_entity_id is null)THEN
-		INSERT INTO entitys (org_id, entity_type_id, entity_name, user_name, primary_email, first_password, entity_password)
-		VALUES(0, 9, NEW.studentname, NEW.studentid, NEW.email, NEW.firstpass, NEW.studentpass);
+		INSERT INTO entitys (org_id, use_key_id, entity_type_id, entity_name, user_name, primary_email, first_password, entity_password)
+		VALUES(0, 8, 8, NEW.studentname, NEW.studentid, NEW.email, NEW.firstpass, NEW.studentpass);
 
-		INSERT INTO entitys (org_id, entity_type_id, entity_name, user_name, primary_email, first_password, entity_password)
-		VALUES(0, 10, COALESCE(NEW.guardianname, NEW.studentname), 'G' || NEW.studentid, NEW.gemail, NEW.gfirstpass, NEW.gstudentpass);
+		INSERT INTO entitys (org_id, use_key_id, entity_type_id, entity_name, user_name, primary_email, first_password, entity_password)
+		VALUES(0, 10, 10, COALESCE(NEW.guardianname, NEW.studentname), 'G' || NEW.studentid, NEW.gemail, NEW.gfirstpass, NEW.gstudentpass);
 	END IF;
 
 	RETURN NULL;

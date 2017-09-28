@@ -122,7 +122,6 @@ BEGIN
 			FROM ledger
 			WHERE (domain_name = NEW.domain_name) AND (id > NEW.id) AND (renewal_refund = false);
 			
-			IF(new_ledger_id is null)THEN
 				INSERT INTO audit.master (audit_user, audit_login) VALUES ('automation', 'automation');
 				
 				cr_amount := ((-1)*NEW.total);
@@ -131,10 +130,6 @@ BEGIN
 				VALUES (NEW.client_roid, 'Refund on domain renewal', 'KES', cr_amount, cr_amount, cr_tax, true, 'Refund', 'ke', '2', NEW.domain_roid, NEW.domain_name, NEW.id, '16.0', 'VAT');
 
 				UPDATE domain SET exdate = NEW.previous_expiry_date WHERE name = NEW.domain_name;
-			END IF;
-		END IF;
-		IF((OLD.renewal_refund = true) AND (NEW.renewal_refund = false)) THEN
-			NEW.renewal_refund := true;
 		END IF;
 	END IF;
 

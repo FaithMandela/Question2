@@ -2194,6 +2194,9 @@ BEGIN
 	ELSIF(rec.leave_days > rec.leave_days_span)THEN
 		msg := 'Days applied for excced the span allowed';
 		RAISE EXCEPTION '%', msg;
+	ELSIF(rec.leave_from < current_date - 30)THEN
+		msg := 'Apply leave within correct period';
+		RAISE EXCEPTION '%', msg;
 	ELSIF(v_leave_balance <= 0)THEN
 		msg := 'You do not have enough days to apply for this leave';
 		RAISE EXCEPTION '%', msg;
@@ -2553,11 +2556,11 @@ BEGIN
 		INSERT INTO address(address_type_id, sys_country_id, org_id, address_name, 
 			table_name, table_id, post_office_box, postal_code, premises, 
 			street, town, phone_number, extension, mobile, fax, email, website, 
-			is_default, first_password, details, company_name, position_held)
+			details, company_name, position_held)
 		SELECT address_type_id, sys_country_id, org_id, address_name, 
 			'referees', v_entity_id, post_office_box, postal_code, premises, 
 			street, town, phone_number, extension, mobile, fax, email, website, 
-			is_default, first_password, details, company_name, position_held
+			details, company_name, position_held
 		FROM address
 		WHERE (table_id = v_applicant_id) AND (table_name = 'referees');
 			

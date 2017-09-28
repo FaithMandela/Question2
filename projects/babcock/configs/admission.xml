@@ -428,6 +428,16 @@
 				<ACTION fnct="pick_appfees">Clear</ACTION>
 			</ACTIONS>
 		</GRID>
+		<GRID new="false" name="Admit List" keyfield="registrationid" delete="false" table="registrationview" where="(submitapplication= true) and (isaccepted = true)">
+			<TEXTFIELD w="80" title="Application ID">registrationid</TEXTFIELD>
+			<TEXTFIELD w="100" title="Application Date">applicationdate</TEXTFIELD>
+			<TEXTFIELD w="100" title="First Name">firstname</TEXTFIELD>
+			<TEXTFIELD w="100" title="Middle name">othernames</TEXTFIELD>
+			<TEXTFIELD w="100" title="Last Name">surname</TEXTFIELD>
+			<TEXTFIELD w="40" title="Gender">sex</TEXTFIELD>
+			<TEXTFIELD w="100" title="Programme">majorname</TEXTFIELD>
+			<CHECKBOX w="75" title="Reported">isreported</CHECKBOX>
+		</GRID>
 	</DESK>
 	<DESK w="695" name="Admited Applicants" key="17" h="585">
 		<GRID name="Admited Applicants" keyfield="registrationid" updatetable="registrations" table="registrations" where="(existingid is not null)">

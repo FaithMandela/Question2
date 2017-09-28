@@ -29,6 +29,12 @@
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<parameter name="stage" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="category" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<parameter name="category_ref_id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<queryString>
@@ -46,13 +52,17 @@ vw_survey_100.receiving_officer_profession,
 vw_survey_100.health_facility_name,
 vw_survey_100.county_name,
 vw_survey_100.action_taken, vw_survey_100.receiving_officer_date, vw_survey_100.receiving_officer_time,  vw_survey_100.referral_time,
-vw_survey_100.category, vw_survey_100.category_name
+vw_survey_100.category, vw_survey_100.category_name,
+categories.category_ref_id
 FROM vw_survey_100
+INNER JOIN categories ON categories.category_ref_id = vw_survey_100.category
+
 WHERE vw_survey_100.village_id = '$P!{village_id}'
-AND vw_survey_100.receiving_officer_name != ''
+AND category_ref_id = category
+---AND vw_survey_100.receiving_officer_name != ""
 AND vw_survey_100.referral_time::date BETWEEN'$P!{start_date}' AND '$P!{end_date}'
 AND vw_survey_100.link_health_facility_id = '$P!{link_health_facility_id}'
-AND vw_survey_100.category = $P!{stage}]]>
+AND categories.category_ref_id = '$P!{category_ref_id}']]>
 	</queryString>
 	<field name="worker_name" class="java.lang.String"/>
 	<field name="worker_mobile_num" class="java.lang.String"/>
@@ -83,6 +93,7 @@ AND vw_survey_100.category = $P!{stage}]]>
 	<field name="referral_time" class="java.sql.Timestamp"/>
 	<field name="category" class="java.lang.Integer"/>
 	<field name="category_name" class="java.lang.String"/>
+	<field name="category_ref_id" class="java.lang.Integer"/>
 	<variable name="survey_count" class="java.lang.Integer" calculation="Count">
 		<variableExpression><![CDATA[$F{survey_100_id}]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>

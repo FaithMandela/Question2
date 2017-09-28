@@ -1,4 +1,4 @@
-<APP>
+<APP name="MYSA" org="org_id" password="change_password">
 	<MENU name="MYSA">
 		<MENU name="Entries">
 			<MENU name="Matches">1</MENU>
@@ -11,6 +11,7 @@
 			<MENU name="Community Services" role="admin">6</MENU>
 			<MENU name="Meetings">10</MENU>
 			<MENU name="Workshops">24</MENU>
+			<MENU name="Orgs">17</MENU>
 			<MENU name="Users" role="admin">19</MENU>
 		</MENU>
 		<MENU name="Report">
@@ -42,17 +43,17 @@
 		</MENU>
 	</MENU>
 	<DESK w="715" name="Members" type="vert" key="11" h="550">
-		<GRID limit="100" name="Members" keyfield="memberid" orderby="memberid desc" table="vwmembers">
-			<TEXTFIELD w="40" title="Member ID">memberid</TEXTFIELD>
+		<GRID limit="100" name="Members" keyfield="memberid" orderby="memberid desc" table="vwmembers" noorg="true">
 			<TEXTFIELD w="80" title="Member Name">membername</TEXTFIELD>
+			<TEXTFIELD w="40" title="Member ID">memberid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Date of Birth">dateofbirth</TEXTFIELD>
 			<TEXTFIELD w="40" title="Next of Kin">nextofkeen</TEXTFIELD>
 			<TEXTFIELD w="40" title="Relationship">relationship</TEXTFIELD>
 			<TEXTFIELD w="80" title="Zone">zonename</TEXTFIELD>
 			<TEXTFIELD w="80" title="Team">teamname</TEXTFIELD>
 			<TEXTFIELD w="40" title="Contacts">contacts</TEXTFIELD>
-			<TEXTFIELD w="40" title="Active">active</TEXTFIELD>
-			<FORM name="Members" keyfield="memberid" table="members">
+			<CHECKBOX w="40" title="Active">active</CHECKBOX>
+			<FORM name="Members" keyfield="memberid" table="members" noorg="true">
 				<TEXTFIELD w="150" title="First Name" y="10" h="20" x="10">firstname</TEXTFIELD>
 				<TEXTFIELD w="150" title="Last Name" y="10" h="20" x="290">lastname</TEXTFIELD>
 				<TEXTFIELD w="150" title="Family Name" y="30" h="20" x="10">familyname</TEXTFIELD>
@@ -64,7 +65,7 @@
 					<DATA key="F">Female</DATA>
 				</COMBOLIST>
 				<TEXTFIELD w="150" title="Occupation" y="70" h="20" x="290">occupation</TEXTFIELD>
-				<CHECKBOX w="50" title="Active" y="90" h="20" x="10">active</CHECKBOX>
+				<CHECKBOX w="50" title="Active" default="true" y="90" h="20" x="10">active</CHECKBOX>
 				<TEXTDATE w="150" title="Member Since" y="90" h="20" x="290">member_since</TEXTDATE>
 				<TEXTFIELD w="150" title="Next of Kin" y="110" h="20" x="10">nextofkeen</TEXTFIELD>
 				<TEXTFIELD w="150" title="Relationship" y="110" h="20" x="290">relationship</TEXTFIELD>
@@ -84,15 +85,15 @@
 				<EDITFIELD w="250" title="Narrative" editkey="case_file_id" edittable="case_files">narrative</EDITFIELD>
 			</FILES>
 		</GRID>
-		<GRID limit="100" name="Edit Members" keyfield="memberid" orderby="memberid desc" table="vwmembers">
-			<TEXTFIELD w="40" title="Member ID">memberid</TEXTFIELD>
+		<GRID limit="100" name="Edit Members" keyfield="memberid" orderby="memberid desc" table="vw_members_nt" noorg="true">
 			<TEXTFIELD w="80" title="Member Name">membername</TEXTFIELD>
+			<TEXTFIELD w="40" title="Member ID">memberid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Date of Birth">dateofbirth</TEXTFIELD>
 			<TEXTFIELD w="40" title="Next of Kin">nextofkeen</TEXTFIELD>
 			<TEXTFIELD w="40" title="Relationship">relationship</TEXTFIELD>
 			<TEXTFIELD w="40" title="Contacts">contacts</TEXTFIELD>
-			<TEXTFIELD w="40" title="Active">active</TEXTFIELD>
-			<FORM name="Members" keyfield="memberid" table="members">
+			<CHECKBOX w="40" title="Active">active</CHECKBOX>
+			<FORM name="Members" keyfield="memberid" table="members" noorg="true">
 				<TEXTFIELD w="150" title="First Name" y="10" h="20" x="10">firstname</TEXTFIELD>
 				<TEXTFIELD w="150" title="Last Name" y="10" h="20" x="290">lastname</TEXTFIELD>
 				<TEXTFIELD w="150" title="Family Name" y="30" h="20" x="10">familyname</TEXTFIELD>
@@ -108,19 +109,22 @@
 				<TEXTFIELD w="150" title="Passport Ref No." y="130" h="20" x="10">passportrefno</TEXTFIELD>
 				<TEXTFIELD w="150" title="National ID No." y="130" h="20" x="290">nationalid</TEXTFIELD>
 				<TEXTFIELD w="150" title="Occupation" y="150" h="20" x="10">occupation</TEXTFIELD>
-				<CHECKBOX w="50" title="Active" y="150" h="20" x="290">active</CHECKBOX>
+				<CHECKBOX w="50" title="Active" default="true" y="150" h="20" x="290">active</CHECKBOX>
 				<TEXTFIELD w="150" title="Next of Kin" y="170" h="20" x="10">nextofkeen</TEXTFIELD>
 				<TEXTFIELD w="150" title="Relationship" y="170" h="20" x="290">relationship</TEXTFIELD>
 				<TEXTFIELD w="150" title="ID No." y="190" h="20" x="10">idno</TEXTFIELD>
 				<TEXTFIELD w="150" title="Phone No." y="190" h="20" x="290">phoneno</TEXTFIELD>
 				<TEXTFIELD w="150" title="Gender" y="210" h="20" x="10">gender</TEXTFIELD>
-				<CHECKBOX w="150" title="Has Photo" y="210" h="20" x="290">hasphoto</CHECKBOX>
+				<TEXTFIELD w="150" title="School" tab="School" y="2" h="20" x="10">school</TEXTFIELD>
+				<TEXTFIELD w="150" title="Level" tab="School" y="2" h="20" x="290">level</TEXTFIELD>
+				<TEXTFIELD w="150" title="Class" tab="School" y="22" h="20" x="10">class</TEXTFIELD>
+				<CHECKBOX w="150" title="Has Photo" tab="Picture" y="210" h="20" x="290">hasphoto</CHECKBOX>
 				<PICTURE w="550" username="root" repository="http://localhost:8080/repository/webdav/pictures/" tab="Picture" pictures="http://localhost:8080/repository/barazapictures" access="enter2012" password="enter" y="1" h="150" x="10">picture_file</PICTURE>
 				<TEXTAREA w="430" title="Location/Address" tab="location" y="230" h="40" x="10">contacts</TEXTAREA>
 				<TEXTAREA w="430" title="Details" tab="Details" y="270" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID name="Staff" keyfield="staffid" orderby="staffid" table="staff">
+		<GRID name="Staff" keyfield="staffid" orderby="staffid" table="staff" noorg="true">
 			<TEXTFIELD w="100" title="Mysastaffid" y="160" h="20" x="10">mysastaffid</TEXTFIELD>
 			<TEXTFIELD w="100" title="Staff Name">staffname</TEXTFIELD>
 			<TEXTDATE w="60" title="Date Of Birth" y="200" h="20" x="10">date_of_birth</TEXTDATE>
@@ -131,7 +135,7 @@
 			<TEXTDATE w="80" title="Contract End" y="180" h="20" x="290">contract_end</TEXTDATE>
 			<TEXTFIELD w="80" title="Mobile No.">mobile</TEXTFIELD>
 			<TEXTFIELD w="90" title="Email">email</TEXTFIELD>
-			<FORM name="Staff" keyfield="staffid" linkfield="staffid" table="staff">
+			<FORM name="Staff" keyfield="staffid" linkfield="staffid" table="staff" noorg="true">
 				<TEXTFIELD w="150" title="Staff Name" y="10" h="20" x="10">staffname</TEXTFIELD>
 				<TEXTFIELD w="150" title="Staff Position" y="10" h="20" x="290">staffposition</TEXTFIELD>
 				<CHECKBOX w="150" title="Volunteer" y="30" h="20" x="10">volunteer</CHECKBOX>
@@ -146,15 +150,15 @@
 				<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
 			</FORM>
 		</GRID>
-		<GRID name="Referees" keyfield="refereeid" orderby="refereeid" table="referees">
+		<GRID name="Referees" keyfield="refereeid" orderby="refereeid" table="referees" noorg="true">
 			<TEXTFIELD w="40" title="Referee ID">refereeid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Referee Name">refereename</TEXTFIELD>
 			<TEXTFIELD w="40" title="Qualifications">qualifications</TEXTFIELD>
 			<TEXTFIELD w="40" title="Fifa Status">fifastatus</TEXTFIELD>
-			<TEXTFIELD w="40" title="Volunteer">volunteer</TEXTFIELD>
+			<CHECKBOX w="40" title="Volunteer">volunteer</CHECKBOX>
 			<TEXTFIELD w="40" title="Mobile">mobile</TEXTFIELD>
 			<TEXTFIELD w="40" title="Email">email</TEXTFIELD>
-			<FORM name="Referees" keyfield="refereeid" linkfield="refereeid" table="referees">
+			<FORM name="Referees" keyfield="refereeid" linkfield="refereeid" table="referees" noorg="true">
 				<TEXTFIELD w="150" title="Referee Name" y="10" h="20" x="10">refereename</TEXTFIELD>
 				<TEXTFIELD w="150" title="Qualifications" y="10" h="20" x="290">qualifications</TEXTFIELD>
 				<TEXTFIELD w="150" title="Fifa Status" y="30" h="20" x="10">fifastatus</TEXTFIELD>
@@ -166,28 +170,28 @@
 		</GRID>
 	</DESK>
 	<DESK w="715" name="Points" type="vert" key="15" h="500">
-		<GRID name="Point Types" keyfield="pointtypeid" orderby="pointtypeid" table="pointtypes">
+		<GRID name="Point Types" keyfield="pointtypeid" orderby="pointtypeid" table="pointtypes" noorg="true">
 			<TEXTFIELD w="40" title="Point Type ID">pointtypeid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Point Type Name">pointtypename</TEXTFIELD>
-			<GRID name="Points" keyfield="pointid" linkfield="pointtypeid" table="points">
+			<GRID name="Points" keyfield="pointid" linkfield="pointtypeid" table="points" noorg="true">
 				<TEXTFIELD w="240" title="Activity">activity</TEXTFIELD>
 				<TEXTFIELD w="40" title="Quantity">quantity</TEXTFIELD>
 				<TEXTFIELD w="40" title="Points">points</TEXTFIELD>
-				<FORM name="Points" keyfield="pointid" linkfield="pointtypeid" table="points">
+				<FORM name="Points" keyfield="pointid" linkfield="pointtypeid" table="points" noorg="true">
 					<TEXTFIELD w="430" title="Activity" y="10" h="20" x="10">activity</TEXTFIELD>
 					<TEXTFIELD w="150" title="Quantity" y="30" h="20" x="10">quantity</TEXTFIELD>
 					<TEXTFIELD w="150" title="Points" y="30" h="20" x="290">points</TEXTFIELD>
 					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM name="Point Types" keyfield="pointtypeid" table="pointtypes">
+			<FORM name="Point Types" keyfield="pointtypeid" table="pointtypes" noorg="true">
 				<TEXTFIELD w="430" title="Point Type" y="10" h="20" x="10">pointtypename</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>
 	<DESK w="715" name="Zones" type="vert" key="25" h="500">
-		<GRID name="Zones" keyfield="zoneid" orderby="zoneid" table="zones" key="1">
+		<GRID name="Zones" keyfield="zoneid" orderby="zoneid" table="zones" noorg="true">
 			<TEXTFIELD w="40" title="Zone">zoneid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Zone Name">zonename</TEXTFIELD>
 			<TEXTFIELD w="40" title="Group Name">groupname</TEXTFIELD>
@@ -195,7 +199,7 @@
 			<GRID name="Zone Staff" keyfield="zonestaffid" linkfield="zoneid" table="vwzonestaff" key="3">
 				<TEXTFIELD w="40" title="Staff">staffname</TEXTFIELD>
 				<TEXTFIELD w="40" title="Zone">zonename</TEXTFIELD>
-				<TEXTFIELD w="40" title="Active">active</TEXTFIELD>
+				<CHECKBOX w="40" title="Active">active</CHECKBOX>
 				<TEXTFIELD w="40" title="Start Date">startdate</TEXTFIELD>
 				<TEXTFIELD w="40" title="Endadte">endadte</TEXTFIELD>
 				<FORM name="Zone Staff" keyfield="zonestaffid" linkfield="zoneid" table="zonestaff" key="4" inputkey="1">
@@ -210,7 +214,7 @@
 				<TEXTFIELD w="40" title="Branch">branchid</TEXTFIELD>
 				<TEXTFIELD w="40" title="Branch Name">branchname</TEXTFIELD>
 				<TEXTFIELD w="40" title="Zone">zonename</TEXTFIELD>
-				<GRID name="Fields" keyfield="fieldid" linkfield="branchid" table="vwfields" key="7">
+				<GRID name="Fields" keyfield="fieldid" linkfield="branchid" table="vwfields" noorg="true" key="7">
 					<TEXTFIELD w="40" title="Field">fieldid</TEXTFIELD>
 					<TEXTFIELD w="40" title="Field Name">fieldname</TEXTFIELD>
 					<TEXTFIELD w="40" title="Branch">branchname</TEXTFIELD>
@@ -224,16 +228,17 @@
 					<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM name="Zones" keyfield="zoneid" table="zones">
-				<TEXTFIELD w="150" title="Zone Name" y="10" h="20" x="10">zonename</TEXTFIELD>
-				<TEXTFIELD w="150" title="Group Name" y="10" h="20" x="290">groupname</TEXTFIELD>
-				<TEXTFIELD w="150" title="Region Name" y="30" h="20" x="10">regionname</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+			<FORM name="Zones" keyfield="zoneid" table="zones" noorg="true">
+				<COMBOBOX w="430" title="Org" lptable="orgs" lpkey="org_id" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Zone Name" y="30" h="20" x="10">zonename</TEXTFIELD>
+				<TEXTFIELD w="150" title="Group Name" y="30" h="20" x="290">groupname</TEXTFIELD>
+				<TEXTFIELD w="150" title="Region Name" y="50" h="20" x="10">regionname</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>
 	<DESK w="725" name="Categories" type="vert" key="2" h="600">
-		<GRID name="Categories" keyfield="categoryid" orderby="categoryid" table="categories">
+		<GRID name="Categories" keyfield="categoryid" orderby="categoryid" table="categories" noorg="true">
 			<TEXTFIELD w="40" title="Category Name">categoryname</TEXTFIELD>
 			<TEXTFIELD w="40" title="Age Limit">agelimit</TEXTFIELD>
 			<TEXTFIELD w="40" title="Gender">gender</TEXTFIELD>
@@ -242,8 +247,8 @@
 			<TEXTFIELD w="40" title="Rounds">rounds</TEXTFIELD>
 			<TEXTFIELD w="40" title="Players">players</TEXTFIELD>
 			<GRID name="Teams" keyfield="teamid" linkfield="categoryid" table="vwteams">
-				<TEXTFIELD w="40" title="Team ID">teamid</TEXTFIELD>
 				<TEXTFIELD w="80" title="Team Name">teamname</TEXTFIELD>
+				<TEXTFIELD w="40" title="Team ID">teamid</TEXTFIELD>
 				<TEXTFIELD w="80" title="Category">categoryname</TEXTFIELD>
 				<TEXTFIELD w="80" title="Branch">branchname</TEXTFIELD>
 				<GRID name="Team Members" keyfield="teammemberid" linkfield="teamid" table="vwteammembers">
@@ -252,11 +257,11 @@
 					<TEXTFIELD w="40" title="School">school</TEXTFIELD>
 					<TEXTFIELD w="40" title="Level">level</TEXTFIELD>
 					<TEXTFIELD w="40" title="Class">class</TEXTFIELD>
-					<TEXTFIELD w="40" title="Coach">coach</TEXTFIELD>
-					<TEXTFIELD w="40" title="Captain">captain</TEXTFIELD>
+					<CHECKBOX w="40" title="Coach">coach</CHECKBOX>
+					<CHECKBOX w="40" title="Captain">captain</CHECKBOX>
 					<FORM name="Team Members" keyfield="teammemberid" linkfield="teamid" table="teammembers" inputkey="3">
 						<GRIDBOX w="430" title="Member" lptable="vwmembers" webgrid="54" y="10" h="20" x="10" lpfield="membername">memberid
-							<GRID name="Members" keyfield="memberid" table="vwmembers" key="1" pos="top">
+							<GRID name="Members" keyfield="memberid" table="vw_members_nt" key="1" pos="top">
 								<TEXTFIELD w="40" title="Member ID">memberid</TEXTFIELD>
 								<TEXTFIELD w="80" title="Member Name">membername</TEXTFIELD>
 								<TEXTFIELD w="40" title="Date of Birth">dateofbirth</TEXTFIELD>
@@ -277,7 +282,7 @@
 					<TEXTFIELD w="430" title="Team Name" y="30" h="20" x="10">teamname</TEXTFIELD>
 					<TEXTDATE w="150" title="Start Date" y="50" h="20" x="10">startdate</TEXTDATE>
 					<TEXTDATE w="150" title="End Date" y="50" h="20" x="290">enddate</TEXTDATE>
-					<CHECKBOX w="50" title="Active" y="70" h="20" x="10">active</CHECKBOX>
+					<CHECKBOX w="50" title="Active" default="true" y="70" h="20" x="10">active</CHECKBOX>
 					<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
 				</FORM>
 				<JASPER name="Team List" reportfile="vwteammembers.jasper"></JASPER>
@@ -298,23 +303,23 @@
 		</GRID>
 	</DESK>
 	<DESK w="715" name="Seasons" type="vert" key="20" h="500">
-		<GRID name="Seasons" keyfield="seasonid" orderby="startdate" table="seasons">
+		<GRID name="Seasons" keyfield="seasonid" orderby="startdate" table="seasons" noorg="true">
 			<TEXTFIELD w="40" title="Season">seasonid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Start Date">startdate</TEXTFIELD>
 			<TEXTFIELD w="40" title="End Date">enddate</TEXTFIELD>
-			<TEXTFIELD w="40" title="Active">active</TEXTFIELD>
-			<GRID name="Pools" keyfield="poolid" linkfield="seasonid" table="vwpools">
+			<CHECKBOX w="40" title="Active">active</CHECKBOX>
+			<GRID name="Pools" keyfield="poolid" linkfield="seasonid" table="vwpools" noorg="true">
 				<TEXTFIELD w="40" title="Pool Name">poolname</TEXTFIELD>
 				<TEXTFIELD w="40" title="Season">seasonid</TEXTFIELD>
 				<TEXTFIELD w="40" fnct="categoryname ||':'|| gender" title="Category">category_show</TEXTFIELD>
 				<TEXTFIELD w="40" title="Start Date">startdate</TEXTFIELD>
 				<TEXTFIELD w="40" title="End Date">enddate</TEXTFIELD>
-				<TEXTFIELD w="40" title="Championship">championship</TEXTFIELD>
-				<GRID name="Championships" keyfield="championshipid" linkfield="poolid" table="vwchampionships" key="5">
+				<CHECKBOX w="40" title="Championship">championship</CHECKBOX>
+				<GRID name="Championships" keyfield="championshipid" linkfield="poolid" table="vwchampionships" noorg="true" key="5">
 					<TEXTFIELD w="40" title="Pool">poolname</TEXTFIELD>
 					<TEXTFIELD w="40" title="Team">teamname</TEXTFIELD>
 					<TEXTFIELD w="40" title="Game Pool">gamepool</TEXTFIELD>
-					<FORM name="Championships" keyfield="championshipid" linkfield="poolid" table="championships" key="6" inputkey="3">
+					<FORM name="Championships" keyfield="championshipid" linkfield="poolid" table="championships" noorg="true" key="6" inputkey="3">
 						<GRIDBOX w="430" title="Team" lptable="teams" y="10" h="20" x="10" lpfield="teamname">teamid
 							<GRID name="Teams" keyfield="teamid" table="vwteams" key="3" pos="top">
 								<TEXTFIELD w="40" title="Team ID">teamid</TEXTFIELD>
@@ -327,10 +332,10 @@
 						<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 					</FORM>
 				</GRID>
-				<FORM name="Pools" keyfield="poolid" linkfield="seasonid" table="pools">
+				<FORM name="Pools" keyfield="poolid" linkfield="seasonid" table="pools" noorg="true">
 					<TEXTFIELD w="430" title="Pool Name" y="10" h="20" x="10">poolname</TEXTFIELD>
-					<GRIDBOX w="250" title="Category" lptable="categories" y="30" h="20" x="10" lpfield="categoryname || ':' || gender">categoryid
-						<GRID name="Categories" keyfield="categoryid" table="categories">
+					<GRIDBOX w="250" title="Category" lptable="categories" noorg="true" y="30" h="20" x="10" lpfield="categoryname || ':' || gender">categoryid
+						<GRID name="Categories" keyfield="categoryid" table="categories" noorg="true">
 							<TEXTFIELD w="40" title="Category Name">categoryname</TEXTFIELD>
 							<TEXTFIELD w="40" title="Gender">gender</TEXTFIELD>
 							<TEXTFIELD w="40" title="Age Limit">agelimit</TEXTFIELD>
@@ -342,7 +347,7 @@
 					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM name="Seasons" table="seasons">
+			<FORM name="Seasons" keyfield="seasonid" table="seasons" noorg="true">
 				<TEXTFIELD w="150" title="Season" y="10" h="20" x="10">seasonid</TEXTFIELD>
 				<CHECKBOX w="50" title="Active" y="10" h="20" x="290">active</CHECKBOX>
 				<TEXTDATE w="150" title="Start Date" y="30" h="20" x="10">startdate</TEXTDATE>
@@ -361,8 +366,8 @@
 				<TEXTFIELD w="40" title="Season">seasonid</TEXTFIELD>
 				<TEXTFIELD w="40" title="Position">position</TEXTFIELD>
 				<FORM name="Committees" keyfield="commeteeid" linkfield="commeteetypeid" table="commetees" inputkey="1">
-					<GRIDBOX w="430" title="Member" lptable="vwmembers" y="10" h="20" x="10" lpfield="membername">memberid
-						<GRID limit="100" name="Members" keyfield="memberid" table="vwmembers">
+					<GRIDBOX w="430" title="Member" lptable="vwmembers" noorg="true" y="10" h="20" x="10" lpfield="membername">memberid
+						<GRID limit="100" name="Members" keyfield="memberid" table="vwmembers" noorg="true">
 							<TEXTFIELD w="40" title="Member ID">memberid</TEXTFIELD>
 							<TEXTFIELD w="80" title="Member Name">membername</TEXTFIELD>
 							<TEXTFIELD w="40" title="Date of Birth">dateofbirth</TEXTFIELD>
@@ -371,7 +376,7 @@
 							<TEXTFIELD w="40" title="Contacts">contacts</TEXTFIELD>
 						</GRID>
 					</GRIDBOX>
-					<COMBOBOX w="150" title="Season" lptable="seasons" y="30" h="20" x="10" lpfield="seasonid">seasonid</COMBOBOX>
+					<COMBOBOX w="150" title="Season" lptable="seasons" noorg="true" y="30" h="20" x="10" lpfield="seasonid">seasonid</COMBOBOX>
 					<TEXTFIELD w="150" title="Position" y="30" h="20" x="290">position</TEXTFIELD>
 					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 				</FORM>
@@ -383,19 +388,19 @@
 		</GRID>
 	</DESK>
 	<DESK w="785" name="Matches" type="vert" key="1" h="600">
-		<GRID name="Seasons" keyfield="seasonid" table="seasons" key="1">
+		<GRID name="Seasons" keyfield="seasonid" table="seasons" noorg="true" where="(active = true)" key="1">
 			<TEXTFIELD w="40" title="Season">seasonid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Start Date">startdate</TEXTFIELD>
 			<TEXTFIELD w="40" title="End Date">enddate</TEXTFIELD>
-			<TEXTFIELD w="40" title="Active">active</TEXTFIELD>
-			<GRID name="Pools" keyfield="poolid" linkfield="seasonid" table="vwpools">
+			<CHECKBOX w="40" title="Active">active</CHECKBOX>
+			<GRID name="Pools" keyfield="poolid" linkfield="seasonid" table="vwpools" noorg="true">
 				<TEXTFIELD w="40" title="Pool Name">poolname</TEXTFIELD>
 				<TEXTFIELD w="40" fnct="categoryname ||':'|| gender" title="Category">category_show</TEXTFIELD>
 				<TEXTFIELD w="40" title="Start Date">startdate</TEXTFIELD>
 				<TEXTFIELD w="40" title="End Date">enddate</TEXTFIELD>
 				<TEXTFIELD w="40" title="Season">seasonid</TEXTFIELD>
-				<TEXTFIELD w="40" title="Championship">championship</TEXTFIELD>
-				<GRID name="Matches" keyfield="matchid" linkfield="poolid" table="vwmatches" params="teama,teamb">
+				<CHECKBOX w="40" title="Championship">championship</CHECKBOX>
+				<GRID name="Matches" keyfield="matchid" linkfield="poolid" table="vwmatches" params="teama,teamb" noorg="true">
 					<TEXTFIELD w="40" title="Team A">teamaname</TEXTFIELD>
 					<TEXTFIELD w="40" title="Team B">teambname</TEXTFIELD>
 					<TEXTFIELD w="40" title="Field">fieldname</TEXTFIELD>
@@ -404,14 +409,14 @@
 					<TEXTFIELD w="40" title="Start Time">starttime</TEXTFIELD>
 					<TEXTFIELD w="40" title="Rest Time">resttime</TEXTFIELD>
 					<TEXTFIELD w="40" title="End Time">endtime</TEXTFIELD>
-					<TEXTFIELD w="40" title="Played">played</TEXTFIELD>
-					<GRID name="Players" keyfield="playerid" linkfield="matchid" table="vwplayers" key="5">
+					<CHECKBOX w="40" title="Played">played</CHECKBOX>
+					<GRID name="Players" keyfield="playerid" linkfield="matchid" table="vwplayers" noorg="true" key="5">
 						<TEXTFIELD w="40" title="Team">teamname</TEXTFIELD>
 						<TEXTFIELD w="40" title="Player ID">memberid</TEXTFIELD>
 						<TEXTFIELD w="40" title="Player">membername</TEXTFIELD>
-						<TEXTFIELD w="40" title="Substitute">substitute</TEXTFIELD>
-						<TEXTFIELD w="40" title="Fair Play">fairplay</TEXTFIELD>
-						<TEXTFIELD w="40" title="Best Player">bestplayer</TEXTFIELD>
+						<CHECKBOX w="40" title="Substitute">substitute</CHECKBOX>
+						<CHECKBOX w="40" title="Fair Play">fairplay</CHECKBOX>
+						<CHECKBOX w="40" title="Best Player">bestplayer</CHECKBOX>
 						<TEXTFIELD w="40" title="In Time">intime</TEXTFIELD>
 						<FORM name="Players" keyfield="playerid" linkfield="matchid" table="players">
 							<GRIDBOX w="430" title="Team Member" lptable="vwteammembers" webgrid="51" y="10" h="20" x="10" lpfield="teamname || ' : ' || membername">teammemberid
@@ -436,7 +441,7 @@
 						<ACTIONS>
 							<ACTION fnct="addplayers_tomatch" approval="3">Not To Play</ACTION>
 						</ACTIONS>
-						<GRID name="Scores" keyfield="scoreid" linkfield="playerid" table="vwscores">
+						<GRID name="Scores" keyfield="scoreid" linkfield="playerid" table="vwscores" noorg="true">
 							<TEXTFIELD w="40" title="Team Name">teamname</TEXTFIELD>
 							<TEXTFIELD w="40" title="Player">membername</TEXTFIELD>
 							<TEXTFIELD w="40" title="Score Time">scoretime</TEXTFIELD>
@@ -451,7 +456,7 @@
 								<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 							</FORM>
 						</GRID>
-						<GRID name="Injurys" keyfield="injuryid" linkfield="playerid" table="vwinjurys">
+						<GRID name="Injurys" keyfield="injuryid" linkfield="playerid" table="vwinjurys" noorg="true">
 							<TEXTFIELD w="40" title="Team Name">teamname</TEXTFIELD>
 							<TEXTFIELD w="40" title="Player">membername</TEXTFIELD>
 							<TEXTFIELD w="40" title="Injury Time">injurytime</TEXTFIELD>
@@ -463,7 +468,7 @@
 								<TEXTAREA w="430" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
 							</FORM>
 						</GRID>
-						<GRID name="Cards" keyfield="offenceid" linkfield="playerid" table="vwoffences">
+						<GRID name="Cards" keyfield="offenceid" linkfield="playerid" table="vwoffences" noorg="true">
 							<TEXTFIELD w="40" title="Team Name">teamname</TEXTFIELD>
 							<TEXTFIELD w="40" title="Player">membername</TEXTFIELD>
 							<TEXTFIELD w="40" title="Offence Time">offencetime</TEXTFIELD>
@@ -481,60 +486,60 @@
 						</GRID>
 					</GRID>
 					<FORM name="Matches" keyfield="matchid" linkfield="poolid" table="matches">
-						<GRIDBOX w="150" title="Team A" lptable="teams" webgrid="52" lpkey="teamid" y="10" h="20" x="10" lpfield="teamname">teama
-							<GRID name="Teams" keyfield="teamid" table="vwteams" key="3" pos="top">
+						<GRIDBOX w="150" title="Team A" lptable="teams" webgrid="52" noorg="true" lpkey="teamid" y="10" h="20" x="10" lpfield="teamname">teama
+							<GRID name="Teams" keyfield="teamid" table="vwteams" noorg="true" key="3" pos="top">
 								<TEXTFIELD w="40" title="Team ID">teamid</TEXTFIELD>
 								<TEXTFIELD w="80" title="Category">categoryname</TEXTFIELD>
 								<TEXTFIELD w="80" title="Branch">branchname</TEXTFIELD>
 								<TEXTFIELD w="80" title="Team Name">teamname</TEXTFIELD>
 							</GRID>
 						</GRIDBOX>
-						<GRIDBOX w="150" title="Team B" lptable="teams" webgrid="53" lpkey="teamid" y="10" h="20" x="290" lpfield="teamname">teamb
-							<GRID name="Teams" keyfield="teamid" table="vwteams" key="3" pos="top">
+						<GRIDBOX w="150" title="Team B" lptable="teams" webgrid="53" noorg="true" lpkey="teamid" y="10" h="20" x="290" lpfield="teamname">teamb
+							<GRID name="Teams" keyfield="teamid" table="vwteams" noorg="true" key="3" pos="top">
 								<TEXTFIELD w="40" title="Team ID">teamid</TEXTFIELD>
 								<TEXTFIELD w="80" title="Category">categoryname</TEXTFIELD>
 								<TEXTFIELD w="80" title="Branch">branchname</TEXTFIELD>
 								<TEXTFIELD w="80" title="Team Name">teamname</TEXTFIELD>
 							</GRID>
 						</GRIDBOX>
-						<COMBOBOX w="150" title="Field" lptable="fields" y="30" h="20" x="10" lpfield="fieldname">fieldid</COMBOBOX>
-						<COMBOBOX w="150" title="Staff" lptable="staff" y="30" h="20" x="290" lpfield="staffname">staffid</COMBOBOX>
+						<COMBOBOX w="150" title="Field" lptable="fields" noorg="true" y="30" h="20" x="10" lpfield="fieldname">fieldid</COMBOBOX>
+						<COMBOBOX w="150" title="Staff" lptable="staff" noorg="true" y="30" h="20" x="290" lpfield="staffname">staffid</COMBOBOX>
 						<TEXTDATE w="150" title="Date of Match" y="70" h="20" x="290">dateofmatch</TEXTDATE>
 						<SPINTIME w="150" title="Start Time" y="90" h="20" x="10">starttime</SPINTIME>
 						<SPINTIME w="150" title="Rest Time" y="90" h="20" x="290">resttime</SPINTIME>
 						<SPINTIME w="150" title="End Time" y="110" h="20" x="10">endtime</SPINTIME>
-						<CHECKBOX w="150" title="Played" y="110" h="20" x="290">played</CHECKBOX>
+						<CHECKBOX w="150" title="Played" default="true" y="110" h="20" x="290">played</CHECKBOX>
 						<TEXTFIELD w="150" title="Match Number" y="130" h="20" x="10">match_number</TEXTFIELD>
 						<TEXTAREA w="430" tab="Comments" y="2" h="70" x="10">comments</TEXTAREA>
 						<TEXTAREA w="430" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
 					</FORM>
-					<GRID name="Add Team A" keyfield="teammemberid" table="vwteammembers" linkparams="teama=teamid">
+					<GRID name="Add Team A" keyfield="teammemberid" table="vwteammembers" noorg="true" linkparams="teama=teamid">
 						<TEXTFIELD w="40" title="Team">teamname</TEXTFIELD>
 						<TEXTFIELD w="40" title="Member ID">memberid</TEXTFIELD>
 						<TEXTFIELD w="40" title="Member">membername</TEXTFIELD>
 						<TEXTFIELD w="40" title="School">school</TEXTFIELD>
 						<TEXTFIELD w="40" title="Level">level</TEXTFIELD>
 						<TEXTFIELD w="40" title="Class">class</TEXTFIELD>
-						<TEXTFIELD w="40" title="Coach">coach</TEXTFIELD>
-						<TEXTFIELD w="40" title="Captain">captain</TEXTFIELD>
+						<CHECKBOX w="40" title="Coach">coach</CHECKBOX>
+						<CHECKBOX w="40" title="Captain">captain</CHECKBOX>
 						<ACTIONS>
 							<ACTION fnct="addplayers_tomatch" approval="1">To Play</ACTION>
 						</ACTIONS>
 					</GRID>
-					<GRID name="Add Team B" keyfield="teammemberid" table="vwteammembers" linkparams="teamb=teamid">
+					<GRID name="Add Team B" keyfield="teammemberid" table="vwteammembers" noorg="true" linkparams="teamb=teamid">
 						<TEXTFIELD w="40" title="Team">teamname</TEXTFIELD>
 						<TEXTFIELD w="40" title="Member ID">memberid</TEXTFIELD>
 						<TEXTFIELD w="40" title="Member">membername</TEXTFIELD>
 						<TEXTFIELD w="40" title="School">school</TEXTFIELD>
 						<TEXTFIELD w="40" title="Level">level</TEXTFIELD>
 						<TEXTFIELD w="40" title="Class">class</TEXTFIELD>
-						<TEXTFIELD w="40" title="Coach">coach</TEXTFIELD>
-						<TEXTFIELD w="40" title="Captain">captain</TEXTFIELD>
+						<CHECKBOX w="40" title="Coach">coach</CHECKBOX>
+						<CHECKBOX w="40" title="Captain">captain</CHECKBOX>
 						<ACTIONS>
 							<ACTION fnct="addplayers_tomatch" approval="1">To Play</ACTION>
 						</ACTIONS>
 					</GRID>
-					<GRID name="Referees" keyfield="match_referee_id" linkfield="matchid" table="vw_match_referees">
+					<GRID name="Referees" keyfield="match_referee_id" linkfield="matchid" table="vw_match_referees" noorg="true">
 						<TEXTFIELD w="75" title="Member ID">memberid</TEXTFIELD>
 						<TEXTFIELD w="75" title="Member Name">membername</TEXTFIELD>
 						<FORM name="Match Referees" keyfield="match_referee_id" linkfield="matchid" table="match_referees">
@@ -569,7 +574,7 @@
 			<GRID name="Participants" keyfield="participantid" linkfield="communityserviceid" table="vwparticipants" key="3">
 				<TEXTFIELD w="40" title="Member">membername</TEXTFIELD>
 				<FORM name="Participants" keyfield="participantid" linkfield="communityserviceid" table="participants" key="4" inputkey="1">
-					<GRIDBOX w="430" title="Member" lptable="vwmembers" webgrid="54" y="10" h="20" x="10" lpfield="membername">memberid
+					<GRIDBOX w="430" title="Member" lptable="vw_members_nt" webgrid="54" y="10" h="20" x="10" lpfield="membername">memberid
 						<GRID name="Members" keyfield="memberid" table="vwmembers" key="1" pos="top">
 							<TEXTFIELD w="40" title="Member ID">memberid</TEXTFIELD>
 							<TEXTFIELD w="80" title="Member Name">membername</TEXTFIELD>
@@ -583,8 +588,8 @@
 				</FORM>
 			</GRID>
 			<FORM name="Community Services" keyfield="communityserviceid" table="communityservices" key="2">
-				<GRIDBOX w="430" title="Activity" lptable="points" webgrid="55" y="10" h="20" x="10" lpfield="activity">pointid
-					<GRID name="Points" keyfield="pointid" table="points">
+				<GRIDBOX w="430" title="Activity" lptable="points" webgrid="55" noorg="true" y="10" h="20" x="10" lpfield="activity">pointid
+					<GRID name="Points" keyfield="pointid" table="points" noorg="true">
 						<TEXTFIELD w="240" title="Activity">activity</TEXTFIELD>
 						<TEXTFIELD w="40" title="Quantity">quantity</TEXTFIELD>
 						<TEXTFIELD w="40" title="Points">points</TEXTFIELD>
@@ -632,6 +637,7 @@
 						<TEXTFIELD w="40" title="Points">points</TEXTFIELD>
 					</GRID>
 				</GRIDBOX>
+				<COMBOBOX w="150" title="Org" lptable="orgs" noorg="true" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
 				<TEXTDATE w="150" title="Date of Meeting" y="30" h="20" x="10">dateofmeeting</TEXTDATE>
 				<TEXTFIELD w="150" title="Meeting Venue" y="30" h="20" x="290">meetingvenue</TEXTFIELD>
 				<SPINTIME w="150" title="Start Time" y="50" h="20" x="10">starttime</SPINTIME>
@@ -654,8 +660,8 @@
 			<GRID name="Participants" keyfield="participantid" linkfield="workshopid" table="vwparticipants" key="3">
 				<TEXTFIELD w="40" title="Member">membername</TEXTFIELD>
 				<FORM name="Participants" keyfield="participantid" linkfield="workshopid" table="participants" key="4" inputkey="1">
-					<GRIDBOX w="430" title="Member" lptable="vwmembers" webgrid="54" y="10" h="20" x="10" lpfield="membername">memberid
-						<GRID name="Members" keyfield="memberid" table="vwmembers" key="1" pos="top">
+					<GRIDBOX w="430" title="Member" lptable="vw_members_nt" webgrid="54" noorg="true" y="10" h="20" x="10" lpfield="membername">memberid
+						<GRID name="Members" keyfield="memberid" table="vw_members_nt" noorg="true" key="1" pos="top">
 							<TEXTFIELD w="40" title="Member ID">memberid</TEXTFIELD>
 							<TEXTFIELD w="80" title="Member Name">membername</TEXTFIELD>
 							<TEXTFIELD w="40" title="Date of Birth">dateofbirth</TEXTFIELD>
@@ -669,7 +675,7 @@
 			</GRID>
 			<FORM name="Workshops" keyfield="workshopid" table="workshops" key="2">
 				<GRIDBOX w="430" title="Activity" lptable="points" y="10" h="20" x="10" lpfield="activity">pointid
-					<GRID name="Points" keyfield="pointid" table="points" key="3" pos="top">
+					<GRID name="Points" keyfield="pointid" table="points" noorg="true">
 						<TEXTFIELD w="240" title="Activity">activity</TEXTFIELD>
 						<TEXTFIELD w="40" title="Quantity">quantity</TEXTFIELD>
 						<TEXTFIELD w="40" title="Points">points</TEXTFIELD>
@@ -685,8 +691,26 @@
 			</FORM>
 		</GRID>
 	</DESK>
+	<DESK w="700" name="Organisation" key="17" h="500">
+		<FORM foredit="true" new="false" name="Select Organisation" keyfield="entity_id" delete="false" table="entitys" noorg="true" user="entity_id">
+			<COMBOBOX w="150" title="Org" lptable="orgs" noorg="true" where="(is_active = true)" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
+		</FORM>
+		<GRID name="Organisation" keyfield="org_id" table="orgs" noorg="true">
+			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
+			<TEXTFIELD w="275" title="Org Name">org_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Default">is_default</CHECKBOX>
+			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+			<FORM name="Organisation" keyfield="org_id" table="orgs" noorg="true">
+				<TEXTFIELD w="350" title="Organisation" y="10" h="20" x="10">org_name</TEXTFIELD>
+				<CHECKBOX w="150" title="Default" y="30" h="20" x="10">is_default</CHECKBOX>
+				<CHECKBOX w="150" title="Active" y="30" h="20" x="290">is_active</CHECKBOX>
+				<TEXTFIELD w="350" title="Logo" y="50" h="20" x="10">logo</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
 	<DESK w="700" name="Users" key="19" h="500">
-		<GRID name="Entitys" keyfield="entity_id" table="entitys">
+		<GRID name="Entitys" keyfield="entity_id" table="entitys" noorg="true">
 			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Entity Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
@@ -694,7 +718,7 @@
 			<CHECKBOX w="100" title="Entity Leader" format="boolean">entity_leader</CHECKBOX>
 			<TEXTTIMESTAMP w="175" title="Date Enroled" format="timestamp">date_enroled</TEXTTIMESTAMP>
 			<CHECKBOX w="75" title="Active" format="boolean">is_active</CHECKBOX>
-			<GRID wheresql="table_name = 'entitys'" name="Address" keyfield="address_id" linkfield="table_id" table="vw_address">
+			<GRID wheresql="table_name = 'entitys'" name="Address" keyfield="address_id" linkfield="table_id" table="vw_address" noorg="true">
 				<TEXTFIELD w="100" title="Country Name">sys_country_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="Postal Code">postal_code</TEXTFIELD>
 				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
@@ -704,7 +728,7 @@
 				<TEXTFIELD w="140" title="Default">is_default</TEXTFIELD>
 				<FORM name="Address" keyfield="address_id" linkfield="table_id" table="address">
 					<DEFAULT default="entitys">table_name</DEFAULT>
-					<COMBOBOX w="430" title="Sys Country Id" default="KE" lptable="sys_countrys" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+					<COMBOBOX w="430" title="Sys Country Id" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Post Office Box" y="30" h="20" x="10">post_office_box</TEXTFIELD>
 					<TEXTFIELD w="150" title="Postal Code" y="30" h="20" x="290">postal_code</TEXTFIELD>
 					<TEXTFIELD w="150" title="Town" y="50" h="20" x="10">town</TEXTFIELD>
@@ -721,8 +745,8 @@
 				</FORM>
 			</GRID>
 			<FORM name="Entitys" keyfield="entity_id" table="entitys">
-				<COMBOBOX w="150" title="Org" lptable="orgs" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
-				<COMBOBOX w="150" title="Entity Type" lptable="entity_types" y="10" h="20" x="290" lpfield="entity_type_name">entity_type_id</COMBOBOX>
+				<COMBOBOX w="150" title="Org" lptable="orgs" noorg="true" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
+				<COMBOBOX w="150" title="Entity Type" lptable="entity_types" noorg="true" y="10" h="20" x="290" lpfield="entity_type_name">entity_type_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Entity Name" y="30" h="20" x="10">entity_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="User Name" y="50" h="20" x="10">user_name</TEXTFIELD>
 				<CHECKBOX w="150" title="Super User" y="70" h="20" x="10">super_user</CHECKBOX>
@@ -733,24 +757,24 @@
 				<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID name="Entity Types" keyfield="entity_type_id" table="entity_types">
+		<GRID name="Entity Types" keyfield="entity_type_id" table="entity_types" noorg="true">
 			<TEXTFIELD w="75" title="Entity Type ID">entity_type_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity Type Name">entity_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity Role">entity_role</TEXTFIELD>
 			<TEXTFIELD w="75" title="Use Key">use_key</TEXTFIELD>
-			<GRID name="Entity Subscriptions" keyfield="entity_subscription_id" linkfield="entity_type_id" table="vw_entity_subscriptions">
+			<GRID name="Entity Subscriptions" keyfield="entity_subscription_id" linkfield="entity_type_id" table="vw_entity_subscriptions" noorg="true">
 				<TEXTFIELD w="75" title="Entity Type ID">entity_type_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Entity Type Name">entity_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Entity Subscription ID">entity_subscription_id</TEXTFIELD>
-				<FORM name="Entity Subscriptions" keyfield="entity_subscription_id" linkfield="entity_type_id" table="entity_subscriptions">
+				<FORM name="Entity Subscriptions" keyfield="entity_subscription_id" linkfield="entity_type_id" table="entity_subscriptions" noorg="true">
 					<COMBOBOX w="430" title="Entity" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<COMBOBOX w="430" title="Subscription Level" lptable="subscription_levels" y="30" h="20" x="10" lpfield="subscription_level_name">subscription_level_id</COMBOBOX>
 					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM name="Entity Types" keyfield="entity_type_id" table="entity_types">
+			<FORM name="Entity Types" keyfield="entity_type_id" table="entity_types" noorg="true">
 				<TEXTFIELD w="430" title="Entity Type Name" y="10" h="20" x="10">entity_type_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="Entity Role" y="30" h="20" x="10">entity_role</TEXTFIELD>
 				<TEXTFIELD w="150" title="Use Key" y="50" h="20" x="10">use_key</TEXTFIELD>
@@ -758,7 +782,7 @@
 				<TEXTAREA w="430" title="Details" y="140" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID name="Subscription Levels" keyfield="subscription_level_id" table="subscription_levels">
+		<GRID name="Subscription Levels" keyfield="subscription_level_id" table="subscription_levels" noorg="true">
 			<TEXTFIELD w="75" title="Level ID">subscription_level_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Level Name">subscription_level_name</TEXTFIELD>
 			<FORM name="Subscription Levels" keyfield="subscription_level_id" table="subscription_levels">
@@ -767,7 +791,7 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Team Member Search" type="horl" key="51" h="500">
+	<DESK w="700" name="Team Member Search" type="horl" key="51" h="600">
 		<GRID limit="100" name="Team Members" keyfield="teammemberid" table="vwteammembers">
 			<TEXTFIELD w="40" title="Team">teamname</TEXTFIELD>
 			<TEXTFIELD w="40" title="Member ID">memberid</TEXTFIELD>
@@ -780,8 +804,8 @@
 			<SEARCH w="75" fnct="(teamname || ' : ' || membername)" title="Select">team_member</SEARCH>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Team A Serach" type="horl" key="52" h="500">
-		<GRID limit="100" name="Teams" return="teama" keyfield="teamid" table="vwteams">
+	<DESK w="700" name="Team A Search" type="horl" key="52" h="500">
+		<GRID limit="100" name="Teams" return="teama" keyfield="teamid" table="vwteams" noorg="true">
 			<TEXTFIELD w="40" title="Team ID">teamid</TEXTFIELD>
 			<TEXTFIELD w="80" title="Category">categoryname</TEXTFIELD>
 			<TEXTFIELD w="80" title="Branch">branchname</TEXTFIELD>
@@ -790,7 +814,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Team B Search" type="horl" key="53" h="500">
-		<GRID limit="100" name="Teams" return="teamb" keyfield="teamid" table="vwteams">
+		<GRID limit="100" name="Teams" return="teamb" keyfield="teamid" table="vwteams" noorg="true">
 			<TEXTFIELD w="40" title="Team ID">teamid</TEXTFIELD>
 			<TEXTFIELD w="80" title="Category">categoryname</TEXTFIELD>
 			<TEXTFIELD w="80" title="Branch">branchname</TEXTFIELD>
@@ -799,7 +823,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Members" type="horl" key="54" h="500">
-		<GRID limit="100" name="Members" keyfield="memberid" table="vwmembers" where="(active = true)">
+		<GRID limit="100" name="Members" keyfield="memberid" table="vw_members_nt" noorg="true" where="(active = true)">
 			<TEXTFIELD w="50" title="Member ID">memberid</TEXTFIELD>
 			<TEXTFIELD w="120" title="Member Name">membername</TEXTFIELD>
 			<TEXTFIELD w="50" title="Date of Birth">dateofbirth</TEXTFIELD>
@@ -807,7 +831,7 @@
 			<TEXTFIELD w="50" title="Relationship">relationship</TEXTFIELD>
 			<TEXTFIELD w="50" title="Contacts">contacts</TEXTFIELD>
 			<SEARCH w="45" fnct="(memberid || ' : ' || membername)" title="Select">member</SEARCH>
-			<FORM name="Members" keyfield="memberid" table="members">
+			<FORM name="Members" keyfield="memberid" table="members" noorg="true">
 				<TEXTFIELD w="150" title="First Name" y="10" h="20" x="10">firstname</TEXTFIELD>
 				<TEXTFIELD w="150" title="Last Name" y="10" h="20" x="290">lastname</TEXTFIELD>
 				<TEXTFIELD w="150" title="Family Name" y="30" h="20" x="10">familyname</TEXTFIELD>
@@ -833,7 +857,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Points" type="horl" key="55" h="500">
-		<GRID name="Points" keyfield="pointid" table="points" key="3" pos="top">
+		<GRID name="Points" keyfield="pointid" table="points" noorg="true">
 			<TEXTFIELD w="240" title="Activity">activity</TEXTFIELD>
 			<TEXTFIELD w="40" title="Quantity">quantity</TEXTFIELD>
 			<TEXTFIELD w="40" title="Points">points</TEXTFIELD>
@@ -877,23 +901,23 @@
 		<JASPER name="Injuries" reportfile="vwinjurys.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Matches" type="horl" key="109" h="500">
-		<GRID name="Seasons" keyfield="seasonid" table="seasons" key="1">
+		<GRID name="Seasons" keyfield="seasonid" table="seasons" noorg="true" key="1">
 			<TEXTFIELD w="40" title="Season">seasonid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Start Date">startdate</TEXTFIELD>
 			<TEXTFIELD w="40" title="End Date">enddate</TEXTFIELD>
-			<TEXTFIELD w="40" title="Active">active</TEXTFIELD>
-			<GRID name="Pools" keyfield="poolid" linkfield="seasonid" table="vwpools" key="2">
+			<CHECKBOX w="40" title="Active">active</CHECKBOX>
+			<GRID name="Pools" keyfield="poolid" linkfield="seasonid" table="vwpools" noorg="true" key="2">
 				<TEXTFIELD w="40" title="Pool Name">poolname</TEXTFIELD>
 				<TEXTFIELD w="40" fnct="categoryname ||':'|| gender" title="Category">category_type</TEXTFIELD>
 				<TEXTFIELD w="40" title="Start date">startdate</TEXTFIELD>
 				<TEXTFIELD w="40" title="End date">enddate</TEXTFIELD>
-				<TEXTFIELD w="40" title="Championship">championship</TEXTFIELD>
-				<GRID name="Matches" keyfield="matchid" linkfield="poolid" table="vwmatches" key="3">
+				<CHECKBOX w="40" title="Championship">championship</CHECKBOX>
+				<GRID name="Matches" keyfield="matchid" linkfield="poolid" table="vwmatches" noorg="true" key="3">
 					<TEXTFIELD w="40" title="Team A">teamaname</TEXTFIELD>
 					<TEXTFIELD w="40" title="Team B">teambname</TEXTFIELD>
 					<TEXTFIELD w="40" title="Field">fieldname</TEXTFIELD>
 					<TEXTFIELD w="40" title="Date of Match">dateofmatch</TEXTFIELD>
-					<TEXTFIELD w="40" title="Played">played</TEXTFIELD>
+					<CHECKBOX w="40" title="Played">played</CHECKBOX>
 					<JASPER name="Matches" reportfile="vwmatches.jasper"></JASPER>
 				</GRID>
 			</GRID>
@@ -918,11 +942,11 @@
 		<JASPER name="Point Types" reportfile="pointtypes.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Pools" type="horl" key="117" h="500">
-		<GRID name="Seasons" keyfield="seasonid" table="seasons" key="1">
+		<GRID name="Seasons" keyfield="seasonid" table="seasons" noorg="true" key="1">
 			<TEXTFIELD w="40" title="Season">seasonid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Start Date">startdate</TEXTFIELD>
 			<TEXTFIELD w="40" title="End Date">enddate</TEXTFIELD>
-			<TEXTFIELD w="40" title="Active">active</TEXTFIELD>
+			<CHECKBOX w="40" title="Active">active</CHECKBOX>
 			<JASPER filtered="true" name="Pools" linkfield="seasonid" reportfile="vwpools.jasper" key="2"></JASPER>
 		</GRID>
 	</DESK>
@@ -932,18 +956,26 @@
 	<DESK w="700" name="Scores" type="horl" key="119" h="500">
 		<JASPER name="Scores" reportfile="vwscores.jasper"></JASPER>
 	</DESK>
-	<DESK w="700" name="Seasons" type="horl" key="120" h="500">
+	<DESK w="700" name="Seasons" noorg="true" type="horl" key="120" h="500">
 		<JASPER name="Seasons" reportfile="seasons.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Teammembers" type="horl" key="122" h="500">
-		<FILTER location="250" name="Teammembers" type="horl">
-			<DRILLDOWN name="teammembers" keyfield="teamid" table="teams" listfield="teamname"></DRILLDOWN>
+		<FILTER location="250" name="Current Zone" type="horl">
+			<DRILLDOWN name="Zone Teams" keyfield="teamid" table="teams" listfield="teamname"></DRILLDOWN>
+			<JASPER filtered="true" name="Teammembers" reportfile="vwteammembers.jasper"></JASPER>
+		</FILTER>
+		<FILTER location="250" name="All Zones" type="horl">
+			<DRILLDOWN name="All Teams" keyfield="teamid" table="teams" noorg="true" listfield="teamname"></DRILLDOWN>
 			<JASPER filtered="true" name="Teammembers" reportfile="vwteammembers.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Teams" type="horl" key="123" h="500">
-		<FILTER location="250" name="Teams" type="horl">
-			<DRILLDOWN name="branches" keyfield="branchid" table="branches" listfield="branchname"></DRILLDOWN>
+		<FILTER location="250" name="Current Zone" type="horl">
+			<DRILLDOWN name="Zone Branches" keyfield="branchid" table="branches" listfield="branchname"></DRILLDOWN>
+			<JASPER filtered="true" name="Teams" reportfile="vwteams.jasper"></JASPER>
+		</FILTER>
+		<FILTER location="250" name="All Zones" type="horl">
+			<DRILLDOWN name="All Branches" keyfield="branchid" table="branches" noorg="true" listfield="branchname"></DRILLDOWN>
 			<JASPER filtered="true" name="Teams" reportfile="vwteams.jasper"></JASPER>
 		</FILTER>
 	</DESK>
@@ -963,13 +995,17 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Teams List" type="horl" key="128" h="500">
-		<FILTER location="250" name="Teams List" type="horl">
-			<DRILLDOWN name="Teams" keyfield="teamid" table="teams" listfield="teamname"></DRILLDOWN>
+		<FILTER location="250" name="Current Zone" type="horl">
+			<DRILLDOWN name="Zone Teams" keyfield="teamid" table="teams" listfield="teamname"></DRILLDOWN>
+			<JASPER filtered="true" name="Team List" reportfile="team.jasper"></JASPER>
+		</FILTER>
+		<FILTER location="250" name="All Zones" type="horl">
+			<DRILLDOWN name="All Teams" keyfield="teamid" table="teams" noorg="true" listfield="teamname"></DRILLDOWN>
 			<JASPER filtered="true" name="Team List" reportfile="team.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Member Details" type="horl" key="129" h="500">
-		<GRID limit="100" name="Members" keyfield="memberid" table="vwmembers">
+		<GRID limit="100" name="Members" keyfield="memberid" table="vw_members_nt" noorg="true">
 			<TEXTFIELD w="20" title="Member ID">memberid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Member Name">membername</TEXTFIELD>
 			<JASPER filtered="true" name="Member Details" linkfield="memberid" reportfile="vwmembersb.jasper" key="2"></JASPER>
@@ -995,8 +1031,8 @@
 	<DESK w="700" name="League Standing" type="vert" key="140" h="500">
 		<FILTER name="Filter" key="1">
 			<FILTERFORM name="Seasons">
-				<COMBOBOX w="250" title="Branch" lptable="branches" y="10" h="20" x="10" lpfield="branchname">branchid</COMBOBOX>
-				<COMBOBOX w="250" title="Season" lptable="seasons" y="10" h="20" x="390" lpfield="seasonid">seasonid</COMBOBOX>
+				<COMBOBOX w="250" title="Branch" lptable="branches" noorg="true" y="10" h="20" x="10" lpfield="branchname">branchid</COMBOBOX>
+				<COMBOBOX w="250" title="Season" lptable="seasons" noorg="true" y="10" h="20" x="390" lpfield="seasonid">seasonid</COMBOBOX>
 			</FILTERFORM>
 			<JASPER filtered="true" name="League Standing" reportfile="standings.jasper"></JASPER>
 		</FILTER>
@@ -1004,34 +1040,44 @@
 	<DESK w="700" name="Leadership Awards" type="vert" key="130" h="500">
 		<FILTER name="Filter" key="1">
 			<FILTERFORM name="Seasons">
-				<COMBOBOX w="250" title="Branch" lptable="branches" y="10" h="20" x="10" lpfield="branchname">branchid</COMBOBOX>
-				<COMBOBOX w="250" title="Season" lptable="seasons" y="10" h="20" x="390" lpfield="seasonid">seasonid</COMBOBOX>
+				<COMBOBOX w="250" title="Branch" lptable="branches" noorg="true" y="10" h="20" x="10" lpfield="branchname">branchid</COMBOBOX>
+				<COMBOBOX w="250" title="Season" lptable="seasons" noorg="true" y="10" h="20" x="390" lpfield="seasonid">seasonid</COMBOBOX>
 			</FILTERFORM>
 			<JASPER filtered="true" name="Leadership Awards" reportfile="award1.jasper"></JASPER>
 		</FILTER>
 		<FILTER name="Male" key="1">
 			<FILTERFORM name="Seasons">
-				<COMBOBOX w="250" title="Branch" lptable="branches" y="10" h="20" x="10" lpfield="branchname">branchid</COMBOBOX>
-				<COMBOBOX w="250" title="Season" lptable="seasons" y="10" h="20" x="390" lpfield="seasonid">seasonid</COMBOBOX>
+				<COMBOBOX w="250" title="Branch" lptable="branches" noorg="true" y="10" h="20" x="10" lpfield="branchname">branchid</COMBOBOX>
+				<COMBOBOX w="250" title="Season" lptable="seasons" noorg="true" y="10" h="20" x="390" lpfield="seasonid">seasonid</COMBOBOX>
 			</FILTERFORM>
-			<JASPER filtered="true" name="Leadership Awards" reportfile="award_male.jasper"></JASPER>
+			<JASPER filtered="true" name="Leadership Awards" reportfile="award_male_new.jasper"></JASPER>
 		</FILTER>
 		<FILTER name="Female" key="1">
 			<FILTERFORM name="Seasons">
-				<COMBOBOX w="250" title="Branch" lptable="branches" y="10" h="20" x="10" lpfield="branchname">branchid</COMBOBOX>
-				<COMBOBOX w="250" title="Season" lptable="seasons" y="10" h="20" x="390" lpfield="seasonid">seasonid</COMBOBOX>
+				<COMBOBOX w="250" title="Branch" lptable="branches" noorg="true" y="10" h="20" x="10" lpfield="branchname">branchid</COMBOBOX>
+				<COMBOBOX w="250" title="Season" lptable="seasons" noorg="true" y="10" h="20" x="390" lpfield="seasonid">seasonid</COMBOBOX>
 			</FILTERFORM>
-			<JASPER filtered="true" name="Leadership Awards" reportfile="award_female.jasper"></JASPER>
+			<JASPER filtered="true" name="Leadership Awards" reportfile="award_female_new.jasper"></JASPER>
 		</FILTER>
 		<FILTER name="Male And Female" key="1">
 			<FILTERFORM name="Seasons">
-				<COMBOBOX w="250" title="Branch" lptable="branches" y="10" h="20" x="10" lpfield="branchname">branchid</COMBOBOX>
-				<COMBOBOX w="250" title="Season" lptable="seasons" y="10" h="20" x="390" lpfield="seasonid">seasonid</COMBOBOX>
+				<COMBOBOX w="250" title="Branch" lptable="branches" noorg="true" y="10" h="20" x="10" lpfield="branchname">branchid</COMBOBOX>
+				<COMBOBOX w="250" title="Season" lptable="seasons" noorg="true" y="10" h="20" x="390" lpfield="seasonid">seasonid</COMBOBOX>
 			</FILTERFORM>
 			<JASPER filtered="true" name="Leadership Awards" reportfile="award_male_female.jasper"></JASPER>
 		</FILTER>
-		<JASPER filtered="true" name="All Male Members" reportfile="award_male_all_zones.jasper"></JASPER>
-		<JASPER filtered="true" name="All Female Members" reportfile="award_female_all_zones.jasper"></JASPER>
+		<FILTER name="All Male Members" key="1">
+			<FILTERFORM name="Seasons">
+				<COMBOBOX w="250" title="Season" lptable="seasons" noorg="true" y="10" h="20" x="390" lpfield="seasonid">seasonid</COMBOBOX>
+			</FILTERFORM>
+			<JASPER filtered="true" name="All Male Members" reportfile="award_male_all_zones.jasper"></JASPER>
+		</FILTER>
+		<FILTER name="All Female Members" key="1">
+			<FILTERFORM name="Seasons">
+				<COMBOBOX w="250" title="Season" lptable="seasons" noorg="true" y="10" h="20" x="390" lpfield="seasonid">seasonid</COMBOBOX>
+			</FILTERFORM>
+			<JASPER filtered="true" name="All Female Members" reportfile="award_female_all_zones.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 	<DESK w="700" name="Meetings" type="horl" key="235" h="500">
 		<JASPER name="Meetings" reportfile="vwmeetings.jasper"></JASPER>

@@ -178,7 +178,8 @@ CREATE VIEW vw_bank_branch AS
 	SELECT sys_countrys.sys_country_id, sys_countrys.sys_country_code, sys_countrys.sys_country_name,
 		banks.bank_id, banks.bank_name, banks.bank_code, banks.swift_code,  banks.sort_code,
 		bank_branch.bank_branch_id, bank_branch.org_id, bank_branch.bank_branch_name, 
-		bank_branch.bank_branch_code, bank_branch.narrative
+		bank_branch.bank_branch_code, bank_branch.narrative,
+		(banks.bank_name || ', ' || bank_branch.bank_branch_name) as bank_branch_disp
 	FROM bank_branch INNER JOIN banks ON bank_branch.bank_id = banks.bank_id
 		LEFT JOIN sys_countrys ON banks.sys_country_id = sys_countrys.sys_country_id;
 		
@@ -291,6 +292,13 @@ BEGIN
 	SELECT year_closed INTO year_close
 	FROM fiscal_years
 	WHERE (fiscal_year_id = NEW.fiscal_year_id);
+
+	IF(year_close = true)THEN
+		RAISE EXCEPTION 'The year is closed not transactions are allowed.';
+	END IF;
+	IF(NEW.start_date > NEW.end_date)THEN
+		RAISE EXCEPTION 'The starting date has to be before the ending date.';
+	END IF;
 	
 	IF(TG_OP = 'UPDATE')THEN    
 		IF (OLD.closed = true) AND (NEW.closed = false) THEN
@@ -307,17 +315,13 @@ BEGIN
 		NEW.closed = true;
 	END IF;
 
-	IF(year_close = true)THEN
-		RAISE EXCEPTION 'The year is closed not transactions are allowed.';
-	END IF;
 
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_periods BEFORE INSERT OR UPDATE ON periods
-    FOR EACH ROW EXECUTE PROCEDURE ins_periods();
-    
+	FOR EACH ROW EXECUTE PROCEDURE ins_periods();
     
 CREATE OR REPLACE FUNCTION open_periods(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE

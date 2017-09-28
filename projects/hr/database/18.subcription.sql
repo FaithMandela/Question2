@@ -314,7 +314,7 @@ BEGIN
 		UPDATE entitys SET org_id = NEW.org_id, entity_type_id = v_entity_type_id, function_role='subscription,admin,staff,finance'
 		WHERE entity_id = NEW.entity_id;
 		
-		UPDATE entity_subscriptions SET entity_type_id = v_entity_type_id
+		UPDATE entity_subscriptions SET org_id = NEW.org_id, entity_type_id = v_entity_type_id
 		WHERE entity_id = NEW.entity_id;
 		
 		INSERT INTO workflows (link_copy, org_id, source_entity_id, workflow_name, table_name, approve_email, reject_email) 

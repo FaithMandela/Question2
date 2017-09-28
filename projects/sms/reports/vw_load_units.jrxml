@@ -67,6 +67,7 @@ FROM vw_load_usage
 WHERE (to_char(sms_day, 'YYYY') = '$P!{filterid}')
 
 GROUP BY org_id, org_name
+
 ORDER BY org_name]]>
 		</queryString>
 		<field name="org_id" class="java.lang.Integer"/>
@@ -91,8 +92,9 @@ FROM vw_load_usage
 
 WHERE (to_char(sms_day, 'YYYY') = '$P!{filterid}')
 
-GROUP BY to_char(sms_day, 'Month')
-]]>
+GROUP BY to_char(sms_day, 'Month'), to_char(sms_day, 'MM')
+
+ORDER BY to_char(sms_day, 'MM')]]>
 		</queryString>
 		<field name="sms_month" class="java.lang.String"/>
 		<field name="s_sms_count" class="java.math.BigDecimal"/>

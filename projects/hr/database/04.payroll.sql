@@ -1164,8 +1164,8 @@ BEGIN
 
 	IF(v_period_tax_type_id is null) AND (v_employee_month_id is null)THEN
 
-		INSERT INTO period_tax_types (period_id, org_id, tax_type_id, period_tax_type_name, formural, tax_relief, percentage, linear, employer, employer_ps, tax_type_order, in_tax, account_id)
-		SELECT v_period_id, org_id, tax_type_id, tax_type_name, formural, tax_relief, percentage, linear, employer, employer_ps, tax_type_order, in_tax, account_id
+		INSERT INTO period_tax_types (period_id, org_id, tax_type_id, period_tax_type_name, formural, tax_relief, percentage, linear, employer, employer_ps, tax_type_order, in_tax, account_id, employer_formural)
+		SELECT v_period_id, org_id, tax_type_id, tax_type_name, formural, tax_relief, percentage, linear, employer, employer_ps, tax_type_order, in_tax, account_id, employer_formural
 		FROM tax_types
 		WHERE (active = true) AND (org_id = v_org_id);
 
@@ -1192,7 +1192,7 @@ BEGIN
 		--- compute autogenated overtime
 		msg := get_attendance_pay($1, $2, $3);
 
-		PERFORM updTax(employee_month_id, Period_id)
+		PERFORM upd_tax(employee_month_id, Period_id)
 		FROM employee_month
 		WHERE (period_id = v_period_id);
 		
@@ -1212,8 +1212,8 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION ins_period_tax_types() RETURNS trigger AS $$
 BEGIN
-	INSERT INTO period_tax_rates (org_id, period_tax_type_id, tax_range, tax_rate)
-	SELECT NEW.org_id, NEW.period_tax_type_id, tax_range, tax_rate
+	INSERT INTO period_tax_rates (org_id, period_tax_type_id, tax_range, tax_rate, employer_rate)
+	SELECT NEW.org_id, NEW.period_tax_type_id, tax_range, tax_rate, employer_rate
 	FROM tax_rates
 	WHERE (tax_type_id = NEW.tax_type_id);
 
@@ -1307,7 +1307,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER upd_employee_month AFTER INSERT ON employee_month
     FOR EACH ROW EXECUTE PROCEDURE upd_employee_month();
 
-CREATE OR REPLACE FUNCTION gettax(float, int) RETURNS float AS $$
+CREATE OR REPLACE FUNCTION get_tax(float, int, int) RETURNS float AS $$
 DECLARE
 	reca		RECORD;
 	tax			REAL;
@@ -1318,15 +1318,16 @@ BEGIN
 
 	IF(reca.linear = true) THEN
 		SELECT SUM(CASE WHEN tax_range < $1 
-		THEN (tax_rate / 100) * (tax_range - getTaxMin(tax_range, reca.period_tax_type_id)) 
-		ELSE (tax_rate / 100) * ($1 - getTaxMin(tax_range, reca.period_tax_type_id)) END) INTO tax
+		THEN (tax_rate / 100) * (tax_range - get_tax_min(tax_range, reca.period_tax_type_id, $3)) 
+		ELSE (tax_rate / 100) * ($1 - get_tax_min(tax_range, reca.period_tax_type_id, $3)) END) INTO tax
 		FROM period_tax_rates 
-		WHERE (getTaxMin(tax_range, reca.period_tax_type_id) <= $1) AND (period_tax_type_id = reca.period_tax_type_id);
+		WHERE (get_tax_min(tax_range, reca.period_tax_type_id, $3) <= $1) 
+			AND (employer_rate = $3) AND (period_tax_type_id = reca.period_tax_type_id);
 	ELSIF(reca.linear = false) THEN 
 		SELECT max(tax_rate) INTO tax
 		FROM period_tax_rates 
-		WHERE (getTaxMin(tax_range, reca.period_tax_type_id) < $1) AND (tax_range >= $1) 
-			AND (period_tax_type_id = reca.period_tax_type_id);
+		WHERE (get_tax_min(tax_range, reca.period_tax_type_id, $3) < $1) AND (tax_range >= $1) 
+			AND (employer_rate = $3) AND (period_tax_type_id = reca.period_tax_type_id);
 	END IF;
 
 	IF (tax is null) THEN
@@ -1364,15 +1365,15 @@ BEGIN
 
 	IF ($2 = 1) THEN
 		v_income := getAdjustment(v_employee_month_id, 1) / v_exchange_rate;
-		v_tax := getTax(v_income, v_period_tax_type_id);
+		v_tax := get_tax(v_income, v_period_tax_type_id, 0);
 
 	ELSIF ($2 = 2) THEN
 		v_income := getAdjustment(v_employee_month_id, 2) / v_exchange_rate;
-		v_tax := getTax(v_income, v_period_tax_type_id) - getAdjustment(v_employee_month_id, 4, 25) / v_exchange_rate;
+		v_tax := get_tax(v_income, v_period_tax_type_id, 0) - getAdjustment(v_employee_month_id, 4, 25) / v_exchange_rate;
 
 	ELSIF ($2 = 3) THEN
 		v_income := getAdjustment(v_employee_month_id, 3) / v_exchange_rate;
-		v_tax := getTax(v_income, v_period_tax_type_id);
+		v_tax := get_tax(v_income, v_period_tax_type_id, 0);
 	
 	ELSIF ($2 = 4) THEN
 		v_income := getAdjustment(v_employee_month_id, 2) / v_exchange_rate;
@@ -1380,8 +1381,12 @@ BEGIN
 		if(v_tax_relief < 16666.67) then v_tax_relief := 16666.67; end if;
 		v_tax_relief := v_tax_relief + getAdjustment(v_employee_month_id, 1) / 5;
 		v_income := v_income - v_tax_relief;
-		v_tax := getTax(v_income, v_period_tax_type_id) - getAdjustment(v_employee_month_id, 4, 25) / v_exchange_rate;
-	
+		v_tax := get_tax(v_income, v_period_tax_type_id, 0) - getAdjustment(v_employee_month_id, 4, 25) / v_exchange_rate;
+		
+	ELSIF ($2 = 5) THEN	---- employer tax
+		v_income := getAdjustment(v_employee_month_id, 2) / v_exchange_rate;
+		v_tax := get_tax(v_income, v_period_tax_type_id, 1) - getAdjustment(v_employee_month_id, 4, 25) / v_exchange_rate;
+		
 	ELSE
 		v_tax := 0;
 	END IF;
@@ -1396,16 +1401,17 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION updtax(int, int) RETURNS float AS $$
+CREATE OR REPLACE FUNCTION upd_tax(int, int) RETURNS float AS $$
 DECLARE
-	reca 				RECORD;
-	income 				REAL;
-	tax 				REAL;
-	InsuranceRelief 	REAL;
+	reca 					RECORD;
+	income 					real;
+	tax 					real;
+	tax_employer			real;
+	InsuranceRelief 		real;
 BEGIN
 
 	FOR reca IN SELECT employee_tax_types.employee_tax_type_id, employee_tax_types.tax_type_id, period_tax_types.formural,
-			 period_tax_types.employer, period_tax_types.employer_ps
+			 period_tax_types.employer, period_tax_types.employer_ps, period_tax_types.employer_formural
 		FROM employee_tax_types INNER JOIN period_tax_types ON (employee_tax_types.tax_type_id = period_tax_types.tax_type_id)
 		WHERE (employee_month_id = $1) AND (Period_Tax_Types.Period_ID = $2)
 		ORDER BY Period_Tax_Types.Tax_Type_order 
@@ -1413,8 +1419,16 @@ BEGIN
 
 		EXECUTE 'SELECT ' || reca.formural || ' FROM employee_tax_types WHERE employee_tax_type_id = ' || reca.employee_tax_type_id 
 		INTO tax;
-
-		UPDATE employee_tax_types SET amount = tax, employer = reca.employer + (tax * reca.employer_ps / 100)
+		
+		tax_employer := 0;
+		IF(reca.employer_formural is not null)THEN
+			EXECUTE 'SELECT ' || reca.employer_formural || ' FROM employee_tax_types WHERE employee_tax_type_id = ' || reca.employee_tax_type_id 
+			INTO tax_employer;
+			IF(tax_employer is null)THEN tax_employer := 0; END IF;
+		END IF;
+		tax_employer := tax_employer + reca.employer + (tax * reca.employer_ps / 100);
+		
+		UPDATE employee_tax_types SET amount = tax, employer = tax_employer
 		WHERE employee_tax_type_id = reca.employee_tax_type_id;
 	END LOOP;
 
@@ -1439,7 +1453,7 @@ BEGIN
 		--- costs on projects based on staff
 		msg := get_task_costs($1, $2, $3);
 	
-		PERFORM updTax(employee_month_id, period_id)
+		PERFORM upd_tax(employee_month_id, period_id)
 		FROM employee_month
 		WHERE (period_id = CAST($1 as int));
 
@@ -1563,12 +1577,12 @@ BEGIN
 				WHERE (entity_id = entityid) AND (adjustment_id = NEW.adjustment_id);
 			END IF;
 
-			PERFORM updTax(employee_month_id, Period_id)
+			PERFORM upd_tax(employee_month_id, Period_id)
 			FROM employee_month
 			WHERE (period_id = periodid);
 		END IF;
 	ELSE
-		PERFORM updTax(employee_month_id, Period_id)
+		PERFORM upd_tax(employee_month_id, Period_id)
 		FROM employee_month
 		WHERE (period_id = periodid);
 	END IF;

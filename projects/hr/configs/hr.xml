@@ -1940,7 +1940,7 @@
 				<TEXTFIELD w="175" title="Narrative">narrative</TEXTFIELD>
 				<FORM name="Employee Leave" keyfield="employee_leave_id" linkfield="entity_id" table="employee_leave">
 					<COMBOBOX w="430" title="Leave Type" lptable="leave_types" y="10" h="20" x="10" lpfield="leave_type_name">leave_type_id</COMBOBOX>
-					<COMBOBOX w="430" title="Contact Person" lptable="entitys" lpkey="entity_id" where="(entity_type_id = 1)" y="30" h="20" x="10" lpfield="entity_name">contact_entity_id</COMBOBOX>
+					<COMBOBOX w="430" title="Contact Person" lptable="vw_employees" y="30" h="20" x="10" lpfield="employee_name">contact_entity_id</COMBOBOX>
 					<TEXTDATE w="150" title="Leave From" y="50" h="20" x="10">leave_from</TEXTDATE>
 					<TEXTDATE w="150" title="Leave To" y="50" h="20" x="290">leave_to</TEXTDATE>
 					<CHECKBOX w="150" title="Start Half Day" y="70" h="20" x="10">Start_Half_Day</CHECKBOX>

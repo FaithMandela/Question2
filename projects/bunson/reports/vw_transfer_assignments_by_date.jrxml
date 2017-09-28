@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_transfer_assignments_by_date" language="groovy" pageWidth="595" pageHeight="421" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="08747894-0f5b-4c39-9485-6be2f4dac043">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="164"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -168,7 +168,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<textFieldExpression><![CDATA[$F{dropoff}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd MMMMM yyyy" isBlankWhenNull="true">
-				<reportElement style="Detail" x="80" y="93" width="77" height="15" isRemoveLineWhenBlank="true" uuid="330b5e66-1835-46a2-b67e-05556eac6b03"/>
+				<reportElement style="Detail" x="80" y="93" width="99" height="15" isRemoveLineWhenBlank="true" uuid="330b5e66-1835-46a2-b67e-05556eac6b03"/>
 				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -456,7 +456,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<textFieldExpression><![CDATA["LPO : " + $F{reference_data}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd MMM yyyy" isBlankWhenNull="true">
-				<reportElement style="Detail" x="80" y="113" width="77" height="15" uuid="dd134383-7c8d-40f2-b86f-6c8128bb773d"/>
+				<reportElement style="Detail" x="80" y="113" width="99" height="15" uuid="dd134383-7c8d-40f2-b86f-6c8128bb773d"/>
 				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -504,7 +504,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<textFieldExpression><![CDATA[$F{payment_type_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="272" y="113" width="25" height="15" forecolor="#000000" uuid="db60ce0c-89b9-45d6-a45f-3fe5fd6f5d2e"/>
+				<reportElement style="Column header" x="483" y="113" width="25" height="15" forecolor="#000000" uuid="db60ce0c-89b9-45d6-a45f-3fe5fd6f5d2e"/>
 				<box leftPadding="1"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" isBold="false" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -512,7 +512,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<text><![CDATA[HRS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="317" y="113" width="43" height="15" forecolor="#000000" uuid="bf7476f3-0756-4c83-b885-f833550e20a5"/>
+				<reportElement style="Column header" x="179" y="113" width="77" height="15" forecolor="#000000" uuid="bf7476f3-0756-4c83-b885-f833550e20a5"/>
 				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -520,7 +520,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<text><![CDATA[Flight ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="159" y="93" width="77" height="15" forecolor="#000000" uuid="31fbfd81-9da4-4576-bbfd-650e855a9b3e"/>
+				<reportElement style="Column header" x="179" y="93" width="77" height="15" forecolor="#000000" uuid="31fbfd81-9da4-4576-bbfd-650e855a9b3e"/>
 				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -528,15 +528,15 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<text><![CDATA[Pickup Time]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" pattern="dd MMMMM yyyy" isBlankWhenNull="true">
-				<reportElement style="Detail" x="159" y="113" width="77" height="15" uuid="a7e30db3-fa8e-45a7-9c85-a11f327c95b5"/>
+				<reportElement style="Detail" x="397" y="113" width="50" height="15" uuid="a7e30db3-fa8e-45a7-9c85-a11f327c95b5"/>
 				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{tab} == 1 ? "Departure Time" : "Arrival Time"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tab} == 1 ? "ETD" : "ETA"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="272" y="93" width="25" height="15" forecolor="#000000" uuid="68d11b34-69f0-4069-a66d-117e5b677414"/>
+				<reportElement style="Column header" x="292" y="93" width="25" height="15" forecolor="#000000" uuid="68d11b34-69f0-4069-a66d-117e5b677414"/>
 				<box leftPadding="1"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" isBold="false" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -544,7 +544,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<text><![CDATA[HRS]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" pattern="HH.mm" isBlankWhenNull="true">
-				<reportElement style="Detail" x="237" y="93" width="35" height="15" uuid="849b4cf9-04c7-4ab0-bb0b-b99fa3852d23"/>
+				<reportElement style="Detail" x="257" y="93" width="35" height="15" uuid="849b4cf9-04c7-4ab0-bb0b-b99fa3852d23"/>
 				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -552,7 +552,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<textFieldExpression><![CDATA[$F{pickup_time}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="360" y="113" width="185" height="15" uuid="9d554248-8884-43f9-bc4d-ab8357ff1fe1"/>
+				<reportElement style="Detail" x="257" y="113" width="140" height="15" uuid="9d554248-8884-43f9-bc4d-ab8357ff1fe1"/>
 				<box leftPadding="4"/>
 				<textElement markup="html">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -562,12 +562,12 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 +  $F{start_airport} + " - " + $F{end_airport}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="HH.mm" isBlankWhenNull="true">
-				<reportElement style="Detail" x="237" y="113" width="35" height="15" uuid="0548938e-a7a1-45f1-ac62-f04d3503cfc7"/>
+				<reportElement style="Detail" x="448" y="113" width="35" height="15" uuid="0548938e-a7a1-45f1-ac62-f04d3503cfc7"/>
 				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{tab} == 1 ? $F{end_time} : $F{start_time}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tab} == 1 ? $F{start_time} : $F{end_time}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

@@ -1,0 +1,926 @@
+<VERSIONS version="1.0">
+	<VERSION name="payroll" source="../payroll.xml" destination="payroll.xml">
+		<REMOVE>
+			<MENU name="P9A">111</MENU>
+			<MENU name="P10">112</MENU>
+			<MENU name="Loans" role="admin,payroll"></MENU>
+		</REMOVE>
+		<REPLACE>
+			<DESK w="770" name="Employee Statutory" key="118" h="750">
+				<FILTER w="770" name="Statutory Deductions" split="150" type="horl" key="6" h="550">
+					<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" pos="top">
+						<DRILLDOWN name="Month" keyfield="Period_ID" orderby="month_id" wherefield="Period_Year" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
+					</DRILLDOWN>
+					<DRILLDOWN name="Statutory  Deductions" keyfield="tax_type_id" table="vw_tax_types" where="(use_function = 1)" listfield="tax_type_name" filter="tax_type_id"></DRILLDOWN>
+					<JASPER name="Statutory  Deductions" reportfile="vw_employee_tax_types_2.jasper"></JASPER>
+				</FILTER>
+			</DESK>
+			<DESK w="700" name="Employees" key="3" h="650">
+				<GRID name="Employees" keyfield="entity_id" orderby="first_name" table="vw_employees" where="(active = true)">
+					<TEXTFIELD w="75" title="ID">employee_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
+					<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+					<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
+					<ACTIONS>
+						<ACTION fnct="increment_payroll" approval="1" role="hr">Generate Amounts</ACTION>
+						<ACTION fnct="increment_payroll" approval="2" role="hr">Step Increment</ACTION>
+					</ACTIONS>
+					<FORM cols="2" tw="570" name="Details" keyfield="entity_id" table="employees" th="180">
+						<COMBOBOX w="150" title="Designation" lptable="vw_department_roles" cmb_fnct="department_name || ', ' || department_role_name" orderby="department_name" y="10" h="20" x="10" lpfield="department_role">department_role_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Employee ID" y="30" h="20" x="10" span="true">employee_id</TEXTFIELD>
+						<TEXTFIELD w="150" title="Phone" y="30" h="20" x="290">phone</TEXTFIELD>
+						<COMBOLIST w="70" title="" y="50" h="20" x="70" span="true">person_title
+							<DATA>Miss</DATA>
+							<DATA>Mr</DATA>
+							<DATA>Mrs</DATA>
+							<DATA>Dr</DATA>
+							<DATA>Prof</DATA>
+						</COMBOLIST>
+						<TEXTFIELD w="100" title="Surname" lw="130" y="50" h="20" x="10">surname</TEXTFIELD>
+						<TEXTFIELD w="100" title="Middle Name" lw="90" y="50" h="20" x="250" span="true">middle_name</TEXTFIELD>
+						<TEXTFIELD w="100" title="First Name" lw="70" y="50" h="20" x="440">first_name</TEXTFIELD>
+						<TEXTDATE w="150" title="Date Of Birth" y="70" h="20" x="10" span="true">date_of_birth</TEXTDATE>
+						<COMBOBOX w="150" title="Nationality" lptable="sys_countrys" default_org_fnct="get_default_country" noorg="true" lpkey="sys_country_id" y="70" h="20" x="290" lpfield="sys_country_name">nationality</COMBOBOX>
+						<COMBOLIST w="150" title="Gender" y="90" ischar="true" h="20" x="10" span="true">gender
+							<DATA key="M">Male</DATA>
+							<DATA key="F">Female</DATA>
+						</COMBOLIST>
+						<COMBOLIST w="150" title="Marital Status" y="90" h="20" x="290">marital_status
+							<DATA key="M">Married</DATA>
+							<DATA key="S">Single</DATA>
+							<DATA key="D">DIvorced</DATA>
+							<DATA key="W">Widowed</DATA>
+							<DATA key="X">Separated</DATA>
+						</COMBOLIST>
+						<COMBOBOX w="150" title="Birth Nation" lptable="sys_countrys" default_org_fnct="get_default_country" noorg="true" lpkey="sys_country_id" y="110" h="20" x="10" span="true" lpfield="sys_country_name">nation_of_birth</COMBOBOX>
+						<TEXTFIELD w="150" title="Place of Birth" y="110" h="20" x="290">place_of_birth</TEXTFIELD>
+						<COMBOBOX w="150" title="Location" lptable="locations" y="130" h="20" x="10" span="true" lpfield="location_name">location_id</COMBOBOX>
+						<COMBOBOX w="150" title="Pay Group" lptable="pay_groups" y="170" h="20" x="10" lpfield="pay_group_name">pay_group_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Identity Card" y="190" h="20" x="10" span="true">identity_card</TEXTFIELD>
+						<CHECKBOX w="150" title="Active" default="true" y="190" h="20" x="290">active</CHECKBOX>
+						<TEXTFIELD w="150" title="Bank Account" y="210" h="20" x="10" span="true">bank_account</TEXTFIELD>
+						<COMBOBOX w="150" title="Bank Branch" lptable="vw_bank_branch" cmb_fnct="(bank_name || ', ' || bank_branch_name)" orderby="bank_name" y="230" h="20" x="10" lpfield="bank_branch">bank_branch_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Language" y="250" h="20" x="10">language</TEXTFIELD>
+						<COMBOBOX w="150" title="Org" lptable="orgs" tab="Terms" where="(is_active = true)" y="10" h="20" x="10" span="true" lpfield="org_name">org_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Chinese Name" tab="Terms" y="10" h="20" x="290">employee_full_name</TEXTFIELD>
+						<TEXTDATE w="150" title="Appointment Date" tab="Terms" y="30" h="20" x="10" span="true">appointment_date</TEXTDATE>
+						<TEXTDATE w="150" title="Exit Date" tab="Terms" y="30" h="20" x="290">exit_date</TEXTDATE>
+						<CHECKBOX w="150" title="Contract" tab="Terms" y="50" h="20" x="10" span="true">contract</CHECKBOX>
+						<TEXTFIELD w="150" title="Contract Period" default="0" tab="Terms" y="50" h="20" x="290">contract_period</TEXTFIELD>
+						<TEXTDECIMAL w="150" title="Basic Salary" default="0" tab="Terms" y="70" h="20" x="10" span="true">basic_salary</TEXTDECIMAL>
+						<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" tab="Terms" y="70" h="20" x="290" lpfield="currency_name">currency_id</COMBOBOX>
+						<COMBOBOX w="150" title="Pay Scale" lptable="pay_scales" tab="Terms" y="90" h="20" x="10" span="true" lpfield="pay_scale_name">pay_scale_id</COMBOBOX>
+						<COMBOBOX w="150" title="Pay Step" lptable="vw_pay_scale_steps" tab="Terms" y="90" h="20" x="290" lpfield="pay_step_name">pay_scale_step_id</COMBOBOX>
+						<TEXTDECIMAL w="150" title="Average Daily Rate" tab="Terms" y="110" h="20" x="10" span="true">average_daily_rate</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Normal Work Hours" tab="Terms" y="110" h="20" x="290">normal_work_hours</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Overtime Rate" tab="Terms" y="130" h="20" x="10" span="true">overtime_rate</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Special Rate" tab="Terms" y="130" h="20" x="290">special_time_rate</TEXTDECIMAL>
+						<TEXTAREA w="150" title="Employment Terms" tab="Terms" y="150" h="20" x="10" span="true" rows="5">employment_terms</TEXTAREA>
+						<CHECKBOX w="150" title="Per day earning" tab="Terms" y="130" h="20" x="290">per_day_earning</CHECKBOX>
+						<TEXTAREA w="550" tab="Objective" y="1" h="150" x="10">objective</TEXTAREA>
+						<TEXTAREA w="550" tab="Interests" y="1" h="150" x="10">Interests</TEXTAREA>
+						<TEXTAREA w="550" tab="Field of Study" y="1" h="150" x="10">field_of_study</TEXTAREA>
+						<PICTURE w="550" tab="Picture" access="ob" y="1" h="150" x="10">picture_file</PICTURE>
+						<TEXTDECIMAL w="150" title="Height" tab="Medical" y="2" h="20" x="10">height</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Weight" tab="Medical" y="2" h="20" x="290">weight</TEXTDECIMAL>
+						<TEXTFIELD w="150" title="Blood Group" tab="Medical" y="22" h="20" x="10">blood_group</TEXTFIELD>
+						<TEXTAREA w="150" title="Allergies" tab="Medical" y="42" h="40" x="10" rows="5">allergies</TEXTAREA>
+						<TEXTAREA w="550" tab="Details" y="1" h="150" x="10">details</TEXTAREA>
+					</FORM>
+					<GRID name="Statutory Deductions" keyfield="default_tax_type_id" linkfield="entity_id" table="vw_default_tax_types">
+						<TEXTFIELD w="75" title="ID">tax_type_id</TEXTFIELD>
+						<TEXTFIELD w="75" title="Type Name">tax_type_name</TEXTFIELD>
+						<TEXTFIELD w="75" title="Identification">tax_identification</TEXTFIELD>
+						<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+						<CHECKBOX w="75" title="Active">active</CHECKBOX>
+						<FORM name="Statutory Deduction" keyfield="default_tax_type_id" linkfield="entity_id" table="default_tax_types">
+							<COMBOBOX w="430" title="Type Name Type" lptable="vw_tax_types" where="(use_function = 1)" y="10" h="20" x="10" lpfield="tax_type_name">tax_type_id</COMBOBOX>
+							<TEXTFIELD w="150" title="Identification" y="30" h="20" x="10">tax_identification</TEXTFIELD>
+							<CHECKBOX w="150" title="Active" default="true" y="30" h="20" x="290">active</CHECKBOX>
+							<TEXTDECIMAL w="150" title="Additional" default="0" y="50" h="20" x="10">additional</TEXTDECIMAL>
+							<TEXTFIELD w="430" title="Narrative" y="70" h="20" x="10">narrative</TEXTFIELD>
+						</FORM>
+					</GRID>
+					<GRID name="Allowances" keyfield="default_adjustment_id" linkfield="entity_id" table="vw_default_adjustments" where="(adjustment_type = 1)">
+						<TEXTFIELD w="75" title="Allowance">adjustment_name</TEXTFIELD>
+						<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+						<TEXTDATE w="75" title="Final Date">final_date</TEXTDATE>
+						<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+						<CHECKBOX w="75" title="Active">active</CHECKBOX>
+						<FORM name="Allowance" keyfield="default_adjustment_id" linkfield="entity_id" table="default_adjustments">
+							<COMBOBOX w="430" title="Allowance" lptable="adjustments" where="(adjustment_type = 1)" y="10" h="20" x="10" lpfield="adjustment_name">adjustment_id</COMBOBOX>
+							<TEXTDECIMAL w="150" title="Amount" y="30" h="20" x="10">amount</TEXTDECIMAL>
+							<TEXTDATE w="150" title="Final Date" y="30" h="20" x="290">final_date</TEXTDATE>
+							<CHECKBOX w="150" title="Active" default="true" y="50" h="20" x="10">active</CHECKBOX>
+							<TEXTDECIMAL w="150" title="Balance" y="50" h="20" x="290">balance</TEXTDECIMAL>
+							<TEXTFIELD w="430" title="Narrative" y="70" h="20" x="10">narrative</TEXTFIELD>
+						</FORM>
+					</GRID>
+					<GRID name="Deductions" keyfield="default_adjustment_id" linkfield="entity_id" table="vw_default_adjustments" where="(adjustment_type = 2)">
+						<TEXTFIELD w="75" title="Deduction">adjustment_name</TEXTFIELD>
+						<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+						<TEXTDATE w="75" title="Final Date">final_date</TEXTDATE>
+						<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+						<CHECKBOX w="75" title="Active">active</CHECKBOX>
+						<FORM name="Deduction" keyfield="default_adjustment_id" linkfield="entity_id" table="default_adjustments">
+							<COMBOBOX w="430" title="Deduction" lptable="adjustments" where="(adjustment_type = 2)" y="10" h="20" x="10" lpfield="adjustment_name">adjustment_id</COMBOBOX>
+							<TEXTDECIMAL w="150" title="Amount" y="30" h="20" x="10">amount</TEXTDECIMAL>
+							<TEXTDATE w="150" title="Final Date" y="30" h="20" x="290">final_date</TEXTDATE>
+							<CHECKBOX w="150" title="Active" default="true" y="50" h="20" x="10">active</CHECKBOX>
+							<TEXTDECIMAL w="150" title="Balance" y="50" h="20" x="290">balance</TEXTDECIMAL>
+							<TEXTFIELD w="430" title="Narrative" y="70" h="20" x="10">narrative</TEXTFIELD>
+						</FORM>
+					</GRID>
+					<GRID name="Expenses" keyfield="default_adjustment_id" linkfield="entity_id" table="vw_default_adjustments" where="(adjustment_type = 3)">
+						<TEXTFIELD w="75" title="Expense">adjustment_name</TEXTFIELD>
+						<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+						<TEXTDATE w="75" title="Final Date">final_date</TEXTDATE>
+						<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+						<CHECKBOX w="75" title="Active">active</CHECKBOX>
+						<FORM name="Expense" keyfield="default_adjustment_id" linkfield="entity_id" table="default_adjustments">
+							<COMBOBOX w="430" title="Expense" lptable="adjustments" where="(adjustment_type = 3)" y="10" h="20" x="10" lpfield="adjustment_name">adjustment_id</COMBOBOX>
+							<TEXTDECIMAL w="150" title="Amount" y="30" h="20" x="10">amount</TEXTDECIMAL>
+							<TEXTDATE w="150" title="Final Date" y="30" h="20" x="290">final_date</TEXTDATE>
+							<CHECKBOX w="150" title="Active" default="true" y="50" h="20" x="10">active</CHECKBOX>
+							<TEXTFIELD w="430" title="Narrative" y="70" h="20" x="10">narrative</TEXTFIELD>
+						</FORM>
+					</GRID>
+					<GRID name="Extra Banking" keyfield="default_banking_id" linkfield="entity_id" table="vw_default_banking">
+						<TEXTFIELD w="75" title="Bank Name">bank_name</TEXTFIELD>
+						<TEXTFIELD w="75" title="Bank Branch Name">bank_branch_name</TEXTFIELD>
+						<TEXTFIELD w="75" title="Bank Branch Code">bank_branch_code</TEXTFIELD>
+						<TEXTFIELD w="75" title="Currency Name">currency_name</TEXTFIELD>
+						<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+						<TEXTDATE w="75" title="Final Date">final_date</TEXTDATE>
+						<CHECKBOX w="75" title="Active">active</CHECKBOX>
+						<FORM name="Extra Banking" keyfield="default_banking_id" linkfield="entity_id" table="default_banking">
+							<COMBOBOX w="430" title="Bank Branch" lptable="vw_bank_branch" cmb_fnct="(bank_name || ', ' || bank_branch_name)" orderby="bank_name" y="10" h="20" x="10" lpfield="bank_branch">bank_branch_id</COMBOBOX>
+							<COMBOBOX w="430" title="Currency" lptable="currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+							<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="10">amount</TEXTDECIMAL>
+							<TEXTDATE w="150" title="Final Date" y="70" h="20" x="10">final_date</TEXTDATE>
+							<CHECKBOX w="150" title="Active" default="true" y="70" h="20" x="290">active</CHECKBOX>
+							<TEXTFIELD w="430" title="Bank Account" y="90" h="20" x="10">bank_account</TEXTFIELD>
+							<TEXTFIELD w="430" title="Narrative" y="110" h="20" x="10">narrative</TEXTFIELD>
+						</FORM>
+					</GRID>
+					<GRID name="Pensions" keyfield="pension_id" linkfield="entity_id" table="vw_pensions">
+						<TEXTFIELD w="75" title="Deduction">adjustment_name</TEXTFIELD>
+						<TEXTFIELD w="75" title="Pension Company">pension_company</TEXTFIELD>
+						<TEXTFIELD w="75" title="Pension Number">pension_number</TEXTFIELD>
+						<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+						<CHECKBOX w="75" title="Use Formular">use_formura</CHECKBOX>
+						<TEXTFIELD w="75" title="Contribution">contribution_name</TEXTFIELD>
+						<TEXTDECIMAL w="75" title="Employer %">employer_ps</TEXTDECIMAL>
+						<TEXTDECIMAL w="75" title="Employer Amount">employer_amount</TEXTDECIMAL>
+						<CHECKBOX w="75" title="Employer Formular">employer_formural</CHECKBOX>
+						<CHECKBOX w="75" title="Active">active</CHECKBOX>
+						<FORM name="Pensions" keyfield="pension_id" linkfield="entity_id" table="pensions">
+							<COMBOBOX w="430" title="Deduction" lptable="adjustments" where="(adjustment_type = 2)" y="10" h="20" x="10" lpfield="adjustment_name">adjustment_id</COMBOBOX>
+							<TEXTFIELD w="150" title="Pension Company" y="30" h="20" x="10">pension_company</TEXTFIELD>
+							<TEXTFIELD w="150" title="Pension Number" y="30" h="20" x="290">pension_number</TEXTFIELD>
+							<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="10">amount</TEXTDECIMAL>
+							<CHECKBOX w="150" title="Use Formular" y="50" h="20" x="290">use_formura</CHECKBOX>
+							<CHECKBOX w="150" title="Active" default="true" y="70" h="20" x="10">active</CHECKBOX>
+							<COMBOBOX w="430" title="Contribution" lptable="adjustments" tab="Employer" lpkey="adjustment_id" where="(adjustment_type = 1)" y="2" h="20" x="10" lpfield="adjustment_name">contribution_id</COMBOBOX>
+							<TEXTDECIMAL w="150" title="Employer %" tab="Employer" y="22" h="20" x="10">employer_ps</TEXTDECIMAL>
+							<TEXTDECIMAL w="150" title="Employer Amount" tab="Employer" y="22" h="20" x="290">employer_amount</TEXTDECIMAL>
+							<CHECKBOX w="150" title="Employer Formular" tab="Employer" y="42" h="20" x="10">employer_formural</CHECKBOX>
+							<TEXTAREA w="430" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
+						</FORM>
+					</GRID>
+					<GRID name="Claims" keyfield="claim_id" linkfield="entity_id" table="vw_claims">
+						<TEXTFIELD w="75" title="Claim Type">claim_type_name</TEXTFIELD>
+						<TEXTDATE w="75" title="Claim Date">claim_date</TEXTDATE>
+						<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+						<CHECKBOX w="75" title="In Payroll">in_payroll</CHECKBOX>
+						<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+						<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+						<GRID name="Claim Details" keyfield="claim_detail_id" linkfield="claim_id" table="vw_claim_details">
+							<TEXTFIELD w="175" title="Nature Of Expence">nature_of_expence</TEXTFIELD>
+							<TEXTFIELD w="175" title="Receipt Number">receipt_number</TEXTFIELD>
+							<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+							<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+							<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
+							<TEXTFIELD w="75" title="Expense Code">expense_code</TEXTFIELD>
+							<FORM name="Claim Details" keyfield="claim_detail_id" linkfield="claim_id" table="claim_details">
+								<TEXTFIELD w="150" title="Nature Of Expence" y="10" h="20" x="10">nature_of_expence</TEXTFIELD>
+								<TEXTFIELD w="150" title="Receipt Number" y="10" h="20" x="290">receipt_number</TEXTFIELD>
+								<COMBOBOX w="430" title="Currency" lptable="currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+								<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="10">amount</TEXTDECIMAL>
+								<TEXTDECIMAL w="150" title="Exchange Rate" y="50" h="20" x="290">exchange_rate</TEXTDECIMAL>
+								<TEXTFIELD w="150" title="Expense Code" y="70" h="20" x="10">expense_code</TEXTFIELD>
+								<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+							</FORM>
+						</GRID>
+						<FORM name="Claims" keyfield="claim_id" linkfield="entity_id" table="claims">
+							<COMBOBOX w="430" title="Claim Type" lptable="claim_types" y="10" h="20" x="10" lpfield="claim_type_name">claim_type_id</COMBOBOX>
+							<TEXTDATE w="150" title="Claim Date" y="30" h="20" x="10">claim_date</TEXTDATE>
+							<CHECKBOX w="150" title="In Payroll" y="30" h="20" x="290">in_payroll</CHECKBOX>
+							<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">narrative</TEXTFIELD>
+							<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+						</FORM>
+						<JASPER name="Claim Report" reportfile="vw_claim_details.jasper"></JASPER>
+					</GRID>
+				</GRID>
+				<GRID name="Archive" keyfield="entity_id" orderby="first_name" table="vw_employees" where="(active = false)">
+					<TEXTFIELD w="75" title="ID">employee_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
+					<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+					<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
+					<FORM cols="2" tw="570" name="Details" keyfield="entity_id" table="employees" th="180">
+						<COMBOBOX w="150" title="Designation" lptable="vw_department_roles" cmb_fnct="department_name || ', ' || department_role_name" orderby="department_name" y="10" h="20" x="10" lpfield="department_role">department_role_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Employee ID" y="30" h="20" x="10" span="true">employee_id</TEXTFIELD>
+						<TEXTFIELD w="150" title="Phone" y="30" h="20" x="290">phone</TEXTFIELD>
+						<COMBOLIST w="70" title="" y="50" h="20" x="70" span="true">person_title
+							<DATA>Miss</DATA>
+							<DATA>Mr</DATA>
+							<DATA>Mrs</DATA>
+							<DATA>Dr</DATA>
+							<DATA>Prof</DATA>
+						</COMBOLIST>
+						<TEXTFIELD w="100" title="Surname" lw="130" y="50" h="20" x="10">surname</TEXTFIELD>
+						<TEXTFIELD w="100" title="Middle Name" lw="90" y="50" h="20" x="250" span="true">middle_name</TEXTFIELD>
+						<TEXTFIELD w="100" title="First Name" lw="70" y="50" h="20" x="440">first_name</TEXTFIELD>
+						<TEXTDATE w="150" title="Date Of Birth" y="70" h="20" x="10" span="true">date_of_birth</TEXTDATE>
+						<COMBOBOX w="150" title="Nationality" lptable="sys_countrys" default_org_fnct="get_default_country" noorg="true" lpkey="sys_country_id" y="70" h="20" x="290" lpfield="sys_country_name">nationality</COMBOBOX>
+						<COMBOLIST w="150" title="Gender" y="90" ischar="true" h="20" x="10" span="true">gender
+							<DATA key="M">Male</DATA>
+							<DATA key="F">Female</DATA>
+						</COMBOLIST>
+						<COMBOLIST w="150" title="Marital Status" y="90" h="20" x="290">marital_status
+							<DATA key="M">Married</DATA>
+							<DATA key="S">Single</DATA>
+							<DATA key="D">DIvorced</DATA>
+							<DATA key="W">Widowed</DATA>
+							<DATA key="X">Separated</DATA>
+						</COMBOLIST>
+						<COMBOBOX w="150" title="Birth Nation" lptable="sys_countrys" default_org_fnct="get_default_country" noorg="true" lpkey="sys_country_id" y="110" h="20" x="10" span="true" lpfield="sys_country_name">nation_of_birth</COMBOBOX>
+						<TEXTFIELD w="150" title="Place of Birth" y="110" h="20" x="290">place_of_birth</TEXTFIELD>
+						<COMBOBOX w="150" title="Location" lptable="locations" y="130" h="20" x="10" span="true" lpfield="location_name">location_id</COMBOBOX>
+						<COMBOBOX w="150" title="Pay Group" lptable="pay_groups" y="170" h="20" x="10" lpfield="pay_group_name">pay_group_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Identity Card" y="190" h="20" x="10" span="true">identity_card</TEXTFIELD>
+						<CHECKBOX w="150" title="Active" default="true" y="190" h="20" x="290">active</CHECKBOX>
+						<TEXTFIELD w="150" title="Bank Account" y="210" h="20" x="10" span="true">bank_account</TEXTFIELD>
+						<COMBOBOX w="150" title="Bank Branch" lptable="vw_bank_branch" cmb_fnct="(bank_name || ', ' || bank_branch_name)" orderby="bank_name" y="230" h="20" x="10" lpfield="bank_branch">bank_branch_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Language" y="250" h="20" x="10">language</TEXTFIELD>
+						<COMBOBOX w="150" title="Org" lptable="orgs" tab="Terms" where="(is_active = true)" y="10" h="20" x="10" span="true" lpfield="org_name">org_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Chinese Name" tab="Terms" y="10" h="20" x="290">employee_full_name</TEXTFIELD>
+						<TEXTDATE w="150" title="Appointment Date" tab="Terms" y="30" h="20" x="10" span="true">appointment_date</TEXTDATE>
+						<TEXTDATE w="150" title="Exit Date" tab="Terms" y="30" h="20" x="290">exit_date</TEXTDATE>
+						<CHECKBOX w="150" title="Contract" tab="Terms" y="50" h="20" x="10" span="true">contract</CHECKBOX>
+						<TEXTFIELD w="150" title="Contract Period" default="0" tab="Terms" y="50" h="20" x="290">contract_period</TEXTFIELD>
+						<TEXTDECIMAL w="150" title="Basic Salary" default="0" tab="Terms" y="70" h="20" x="10" span="true">basic_salary</TEXTDECIMAL>
+						<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" tab="Terms" y="70" h="20" x="290" lpfield="currency_name">currency_id</COMBOBOX>
+						<COMBOBOX w="150" title="Pay Scale" lptable="pay_scales" tab="Terms" y="90" h="20" x="10" span="true" lpfield="pay_scale_name">pay_scale_id</COMBOBOX>
+						<COMBOBOX w="150" title="Pay Step" lptable="vw_pay_scale_steps" tab="Terms" y="90" h="20" x="290" lpfield="pay_step_name">pay_scale_step_id</COMBOBOX>
+						<TEXTDECIMAL w="150" title="Average Daily Rate" tab="Terms" y="110" h="20" x="10" span="true">average_daily_rate</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Normal Work Hours" tab="Terms" y="110" h="20" x="290">normal_work_hours</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Overtime Rate" tab="Terms" y="130" h="20" x="10" span="true">overtime_rate</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Special Rate" tab="Terms" y="130" h="20" x="290">special_time_rate</TEXTDECIMAL>
+						<TEXTAREA w="150" title="Employment Terms" tab="Terms" y="150" h="20" x="10" span="true" rows="5">employment_terms</TEXTAREA>
+						<CHECKBOX w="150" title="Per day earning" tab="Terms" y="130" h="20" x="290">per_day_earning</CHECKBOX>
+						<TEXTAREA w="550" tab="Objective" y="1" h="150" x="10">objective</TEXTAREA>
+						<TEXTAREA w="550" tab="Interests" y="1" h="150" x="10">Interests</TEXTAREA>
+						<TEXTAREA w="550" tab="Field of Study" y="1" h="150" x="10">field_of_study</TEXTAREA>
+						<PICTURE w="550" tab="Picture" access="ob" y="1" h="150" x="10">picture_file</PICTURE>
+						<TEXTDECIMAL w="150" title="Height" tab="Medical" y="2" h="20" x="10">height</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Weight" tab="Medical" y="2" h="20" x="290">weight</TEXTDECIMAL>
+						<TEXTFIELD w="150" title="Blood Group" tab="Medical" y="22" h="20" x="10">blood_group</TEXTFIELD>
+						<TEXTAREA w="150" title="Allergies" tab="Medical" y="42" h="40" x="10" rows="5">allergies</TEXTAREA>
+						<TEXTAREA w="550" tab="Details" y="1" h="150" x="10">details</TEXTAREA>
+					</FORM>
+					<GRID name="Statutory Deductions" keyfield="default_tax_type_id" linkfield="entity_id" table="vw_default_tax_types">
+						<TEXTFIELD w="75" title="ID">tax_type_id</TEXTFIELD>
+						<TEXTFIELD w="75" title="Type Name">tax_type_name</TEXTFIELD>
+						<TEXTFIELD w="75" title="Identification">tax_identification</TEXTFIELD>
+						<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+						<CHECKBOX w="75" title="Active">active</CHECKBOX>
+					</GRID>
+					<GRID name="Allowances" keyfield="default_adjustment_id" linkfield="entity_id" table="vw_default_adjustments" where="(adjustment_type = 1)">
+						<TEXTFIELD w="75" title="Allowance">adjustment_name</TEXTFIELD>
+						<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+						<TEXTDATE w="75" title="Final Date">final_date</TEXTDATE>
+						<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+						<CHECKBOX w="75" title="Active">active</CHECKBOX>
+					</GRID>
+					<GRID name="Deductions" keyfield="default_adjustment_id" linkfield="entity_id" table="vw_default_adjustments" where="(adjustment_type = 2)">
+						<TEXTFIELD w="75" title="Deduction">adjustment_name</TEXTFIELD>
+						<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+						<TEXTDATE w="75" title="Final Date">final_date</TEXTDATE>
+						<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+						<CHECKBOX w="75" title="Active">active</CHECKBOX>
+					</GRID>
+					<GRID name="Expences" keyfield="default_adjustment_id" linkfield="entity_id" table="vw_default_adjustments" where="(adjustment_type = 3)">
+						<TEXTFIELD w="75" title="Expence">adjustment_name</TEXTFIELD>
+						<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+						<TEXTDATE w="75" title="Final Date">final_date</TEXTDATE>
+						<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+						<CHECKBOX w="75" title="Active">active</CHECKBOX>
+					</GRID>
+					<GRID name="Extra Banking" keyfield="default_banking_id" linkfield="entity_id" table="vw_default_banking">
+						<TEXTFIELD w="75" title="Bank Name">bank_name</TEXTFIELD>
+						<TEXTFIELD w="75" title="Bank Branch Name">bank_branch_name</TEXTFIELD>
+						<TEXTFIELD w="75" title="Bank Branch Code">bank_branch_code</TEXTFIELD>
+						<TEXTFIELD w="75" title="Currency Name">currency_name</TEXTFIELD>
+						<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+						<TEXTDATE w="75" title="Final Date">final_date</TEXTDATE>
+						<CHECKBOX w="75" title="Active">active</CHECKBOX>
+					</GRID>
+				</GRID>
+			</DESK>
+			<DESK w="700" name="Payslip" key="110" h="750">
+				<GRID name="Periods" keyfield="period_id" orderby="start_date desc" table="vw_periods">
+					<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
+					<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+					<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+					<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
+					<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
+					<GRID name="Payroll" keyfield="employee_month_id" orderby="employee_name" linkfield="period_id" table="vw_employee_month">
+						<TEXTFIELD w="75" title="Employee ID">employee_id</TEXTFIELD>
+						<TEXTFIELD w="75" title="Employee Name">employee_name</TEXTFIELD>
+						<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
+						<TEXTFIELD w="75" title="Department Role Name">department_role_name</TEXTFIELD>
+						<TEXTDECIMAL w="75" title="Basic Pay">basic_pay</TEXTDECIMAL>
+						<TEXTDECIMAL w="75" title="Allowance">payroll_allowance</TEXTDECIMAL>
+						<TEXTDECIMAL w="75" title="Deduction">payroll_deduction</TEXTDECIMAL>
+						<TEXTDECIMAL w="75" title="Expense">payroll_expense</TEXTDECIMAL>
+						<TEXTDECIMAL w="75" title="Net Pay">net_pay</TEXTDECIMAL>
+						<JASPER name="Payslip" linkfield="filterid" reportfile="payslip_hk.jasper"></JASPER>
+					</GRID>
+				</GRID>
+			</DESK>
+		</REPLACE>
+	</VERSION>
+
+	<VERSION name="projects" source="../projects.xml" destination="projects.xml">
+		<REMOVE>
+			<MENU name="Farming">30</MENU>
+		</REMOVE>
+	</VERSION>
+
+	<VERSION name="projects" source="../hr.xml" destination="hr.xml">
+		<REPLACE>
+			<DESK w="700" name="Employees" key="24" h="650">
+				<GRID name="Employees" keyfield="entity_id" orderby="first_name" table="vw_employees" tab.count="count(entity_id)" where="(active = true)">
+					<TEXTFIELD w="75" title="ID">employee_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
+					<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Designation">department_role_name</TEXTFIELD>
+					<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
+					<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+					<FORM cols="2" tw="570" name="Details" keyfield="entity_id" table="employees" th="180">
+						<COMBOBOX w="150" title="Designation" lptable="vw_department_roles" cmb_fnct="department_name || ', ' || department_role_name" orderby="department_name" y="10" h="20" x="10" lpfield="department_role">department_role_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Employee ID" y="30" h="20" x="10" span="true">employee_id</TEXTFIELD>
+						<TEXTFIELD w="150" title="Phone" y="30" h="20" x="290">phone</TEXTFIELD>
+						<COMBOLIST w="70" title="" y="50" h="20" x="70" span="true">person_title
+							<DATA>Miss</DATA>
+							<DATA>Mr</DATA>
+							<DATA>Mrs</DATA>
+							<DATA>Dr</DATA>
+							<DATA>Prof</DATA>
+						</COMBOLIST>
+						<TEXTFIELD w="100" title="Surname" lw="130" y="50" h="20" x="10">surname</TEXTFIELD>
+						<TEXTFIELD w="100" title="Middle Name" lw="90" y="50" h="20" x="250" span="true">middle_name</TEXTFIELD>
+						<TEXTFIELD w="100" title="First Name" lw="70" y="50" h="20" x="440">first_name</TEXTFIELD>
+						<TEXTDATE w="150" title="Date Of Birth" y="70" h="20" x="10" span="true">date_of_birth</TEXTDATE>
+						<COMBOBOX w="150" title="Nationality" lptable="sys_countrys" default_org_fnct="get_default_country" noorg="true" lpkey="sys_country_id" y="70" h="20" x="290" lpfield="sys_country_name">nationality</COMBOBOX>
+						<COMBOLIST w="150" title="Gender" y="90" ischar="true" h="20" x="10" span="true">gender
+							<DATA key="M">Male</DATA>
+							<DATA key="F">Female</DATA>
+						</COMBOLIST>
+						<COMBOLIST w="150" title="Marital Status" y="90" h="20" x="290">marital_status
+							<DATA key="M">Married</DATA>
+							<DATA key="S">Single</DATA>
+							<DATA key="D">DIvorced</DATA>
+							<DATA key="W">Widowed</DATA>
+							<DATA key="X">Separated</DATA>
+						</COMBOLIST>
+						<COMBOBOX w="150" title="Birth Nation" lptable="sys_countrys" default_org_fnct="get_default_country" noorg="true" lpkey="sys_country_id" y="110" h="20" x="10" span="true" lpfield="sys_country_name">nation_of_birth</COMBOBOX>
+						<TEXTFIELD w="150" title="Place of Birth" y="110" h="20" x="290">place_of_birth</TEXTFIELD>
+						<COMBOBOX w="150" title="Location" lptable="locations" y="130" h="20" x="10" span="true" lpfield="location_name">location_id</COMBOBOX>
+						<COMBOBOX w="150" title="Pay Group" lptable="pay_groups" y="170" h="20" x="10" lpfield="pay_group_name">pay_group_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Identity Card" y="190" h="20" x="10" span="true">identity_card</TEXTFIELD>
+						<CHECKBOX w="150" title="Active" default="true" y="190" h="20" x="290">active</CHECKBOX>
+						<TEXTFIELD w="150" title="Bank Account" y="210" h="20" x="10" span="true">bank_account</TEXTFIELD>
+						<COMBOBOX w="150" title="Bank Branch" lptable="vw_bank_branch" cmb_fnct="(bank_name || ', ' || bank_branch_name)" orderby="bank_name" y="230" h="20" x="10" lpfield="bank_branch">bank_branch_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Language" y="250" h="20" x="10">language</TEXTFIELD>
+						<COMBOBOX w="150" title="Org" lptable="orgs" tab="Terms" where="(is_active = true)" y="10" h="20" x="10" span="true" lpfield="org_name">org_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Chinese Name" tab="Terms" y="10" h="20" x="290">employee_full_name</TEXTFIELD>
+						<TEXTDATE w="150" title="Appointment Date" tab="Terms" y="30" h="20" x="10" span="true">appointment_date</TEXTDATE>
+						<TEXTDATE w="150" title="Exit Date" tab="Terms" y="30" h="20" x="290">exit_date</TEXTDATE>
+						<CHECKBOX w="150" title="Contract" tab="Terms" y="50" h="20" x="10" span="true">contract</CHECKBOX>
+						<TEXTFIELD w="150" title="Contract Period" default="0" tab="Terms" y="50" h="20" x="290">contract_period</TEXTFIELD>
+						<TEXTDECIMAL w="150" title="Basic Salary" default="0" tab="Terms" y="70" h="20" x="10" span="true">basic_salary</TEXTDECIMAL>
+						<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" tab="Terms" y="70" h="20" x="290" lpfield="currency_name">currency_id</COMBOBOX>
+						<COMBOBOX w="150" title="Pay Scale" lptable="pay_scales" tab="Terms" y="90" h="20" x="10" span="true" lpfield="pay_scale_name">pay_scale_id</COMBOBOX>
+						<COMBOBOX w="150" title="Pay Step" lptable="vw_pay_scale_steps" tab="Terms" y="90" h="20" x="290" lpfield="pay_step_name">pay_scale_step_id</COMBOBOX>
+						<TEXTDECIMAL w="150" title="Average Daily Rate" tab="Terms" y="110" h="20" x="10" span="true">average_daily_rate</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Normal Work Hours" tab="Terms" y="110" h="20" x="290">normal_work_hours</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Overtime Rate" tab="Terms" y="130" h="20" x="10" span="true">overtime_rate</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Special Rate" tab="Terms" y="130" h="20" x="290">special_time_rate</TEXTDECIMAL>
+						<TEXTAREA w="150" title="Employment Terms" tab="Terms" y="150" h="20" x="10" span="true" rows="5">employment_terms</TEXTAREA>
+						<CHECKBOX w="150" title="Per day earning" tab="Terms" y="130" h="20" x="290">per_day_earning</CHECKBOX>
+						<TEXTAREA w="550" tab="Objective" y="1" h="150" x="10">objective</TEXTAREA>
+						<TEXTAREA w="550" tab="Interests" y="1" h="150" x="10">Interests</TEXTAREA>
+						<TEXTAREA w="550" tab="Field of Study" y="1" h="150" x="10">field_of_study</TEXTAREA>
+						<PICTURE w="550" tab="Picture" access="ob" y="1" h="150" x="10">picture_file</PICTURE>
+						<TEXTDECIMAL w="150" title="Height" tab="Medical" y="2" h="20" x="10">height</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Weight" tab="Medical" y="2" h="20" x="290">weight</TEXTDECIMAL>
+						<TEXTFIELD w="150" title="Blood Group" tab="Medical" y="22" h="20" x="10">blood_group</TEXTFIELD>
+						<TEXTAREA w="150" title="Allergies" tab="Medical" y="42" h="40" x="10" rows="5">allergies</TEXTAREA>
+						<TEXTAREA w="550" tab="Details" y="1" h="150" x="10">details</TEXTAREA>
+					</FORM>
+					<GRID name="Address" keyfield="address_id" linkfield="table_id" table="vw_address" where="table_name = 'employees'">
+						<TEXTFIELD w="100" title="Country Name">sys_country_name</TEXTFIELD>
+						<TEXTFIELD w="100" title="Postal Code">postal_code</TEXTFIELD>
+						<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
+						<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
+						<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
+						<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
+						<TEXTFIELD w="140" title="Default">is_default</TEXTFIELD>
+						<FORM name="Address" keyfield="address_id" linkfield="table_id" table="address">
+							<DEFAULT default="employees">table_name</DEFAULT>
+							<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+							<TEXTFIELD w="150" title="Post Office Box" y="30" h="20" x="10">post_office_box</TEXTFIELD>
+							<TEXTFIELD w="150" title="Postal Code" y="30" h="20" x="290">postal_code</TEXTFIELD>
+							<TEXTFIELD w="150" title="Town" y="50" h="20" x="10">town</TEXTFIELD>
+							<TEXTFIELD w="430" title="Premises" y="70" h="20" x="10">premises</TEXTFIELD>
+							<TEXTFIELD w="430" title="Street" y="90" h="20" x="10">street</TEXTFIELD>
+							<TEXTFIELD w="430" title="Phone Number" y="110" h="20" x="10">phone_number</TEXTFIELD>
+							<TEXTFIELD w="150" title="Extension" y="130" h="20" x="10">extension</TEXTFIELD>
+							<TEXTFIELD w="430" title="Mobile" y="150" h="20" x="10">mobile</TEXTFIELD>
+							<TEXTFIELD w="430" title="Fax" y="170" h="20" x="10">fax</TEXTFIELD>
+							<TEXTFIELD w="430" title="Email" y="190" h="20" x="10">email</TEXTFIELD>
+							<CHECKBOX w="30" title="Default" y="210" h="20" x="10">is_default</CHECKBOX>
+							<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
+						</FORM>
+					</GRID>
+					<GRID name="Education" keyfield="education_id" orderby="date_from desc" linkfield="entity_id" table="vw_education">
+						<TEXTFIELD w="75" title="Education Class Name">education_class_name</TEXTFIELD>
+						<TEXTDATE w="75" title="Date From">date_from</TEXTDATE>
+						<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
+						<TEXTFIELD w="75" title="Name Of Institution">name_of_school</TEXTFIELD>
+						<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
+						<TEXTFIELD w="75" title="Grades Obtained">grades_obtained</TEXTFIELD>
+						<FORM name="Education" keyfield="education_id" linkfield="entity_id" table="education">
+							<COMBOBOX w="430" title="Education Class" lptable="education_class" orderby="education_class_id" y="10" h="20" x="10" lpfield="education_class_name">education_class_id</COMBOBOX>
+							<TEXTDATE w="150" title="Date From" required="true" y="30" h="20" x="10">date_from</TEXTDATE>
+							<TEXTDATE w="150" title="Date To" y="30" h="20" x="290">date_to</TEXTDATE>
+							<TEXTFIELD w="430" title="Name of Institution" required="true" y="50" h="20" x="10">name_of_school</TEXTFIELD>
+							<TEXTFIELD w="430" title="Certification or Degree" placeholder="Certification or Degree: e.g. Msc Computer Science" y="70" h="20" x="10">examination_taken</TEXTFIELD>
+							<TEXTFIELD w="150" title="Grades Obtained" placeholder="Grades Obtained: e.g. Upper second-class honours" y="90" h="20" x="10">grades_obtained</TEXTFIELD>
+							<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+						</FORM>
+					</GRID>
+					<GRID name="Employment" keyfield="employment_id" orderby="date_from desc" linkfield="entity_id" table="vw_employment">
+						<TEXTDATE w="75" title="Date From">date_from</TEXTDATE>
+						<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
+						<TEXTFIELD w="75" title="Employers Name">employers_name</TEXTFIELD>
+						<TEXTFIELD w="75" title="Position Held">position_held</TEXTFIELD>
+						<FORM name="Employment" keyfield="employment_id" linkfield="entity_id" table="employment">
+							<TEXTDATE w="150" title="Date From" y="10" h="20" x="10">date_from</TEXTDATE>
+							<TEXTDATE w="150" title="Date To" y="10" h="20" x="290">date_to</TEXTDATE>
+							<TEXTFIELD w="430" title="Employers Name" y="30" h="20" x="10">employers_name</TEXTFIELD>
+							<TEXTFIELD w="430" title="Position Held" y="50" h="20" x="10">position_held</TEXTFIELD>
+							<CHECKBOX w="150" title="Principal Employment" y="70" h="20" x="10">principal_employment</CHECKBOX>
+							<TEXTDECIMAL w="150" title="Salary" y="70" h="20" x="290">alternative_salary</TEXTDECIMAL>
+							<TEXTFIELD w="430" title="Address" y="90" h="20" x="10">alternative_address</TEXTFIELD>
+							<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+						</FORM>
+					</GRID>
+					<GRID name="Kins" keyfield="kin_id" orderby="kin_type_id" linkfield="entity_id" table="vw_kins">
+						<TEXTFIELD w="75" title="Kin Type Name">kin_type_name</TEXTFIELD>
+						<TEXTDATE w="75" title="Date Of Birth">date_of_birth</TEXTDATE>
+						<TEXTFIELD w="75" title="Name">full_names</TEXTFIELD>
+						<TEXTFIELD w="75" title="Identification">identification</TEXTFIELD>
+						<CHECKBOX w="140" title="Emergency Contact">emergency_contact</CHECKBOX>
+						<FORM name="Kins" keyfield="kin_id" linkfield="entity_id" table="kins">
+							<COMBOBOX w="430" title="Kin Type" lptable="kin_types" y="10" h="20" x="10" lpfield="kin_type_name">kin_type_id</COMBOBOX>
+							<TEXTFIELD w="430" title="Full Names" y="30" h="20" x="10">full_names</TEXTFIELD>
+							<TEXTDATE w="150" title="Date Of Birth" y="50" h="20" x="10">date_of_birth</TEXTDATE>
+							<TEXTFIELD w="150" title="Identification" y="50" h="20" x="290">identification</TEXTFIELD>
+							<TEXTFIELD w="150" title="Relation" y="70" h="20" x="10">relation</TEXTFIELD>
+							<CHECKBOX w="150" title="Emergency Contact" y="90" h="20" x="10">emergency_contact</CHECKBOX>
+							<CHECKBOX w="150" title="Beneficiary" y="110" h="20" x="10">beneficiary</CHECKBOX>
+							<TEXTDECIMAL w="150" title="Benefit %" y="110" h="20" x="290">beneficiary_ps</TEXTDECIMAL>
+							<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
+						</FORM>
+						<GRID name="Address" keyfield="address_id" linkfield="table_id" table="vw_address" where="table_name = 'kins'">
+							<TEXTFIELD w="100" title="Country Name">sys_country_name</TEXTFIELD>
+							<TEXTFIELD w="100" title="Postal Code">postal_code</TEXTFIELD>
+							<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
+							<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
+							<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
+							<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
+							<TEXTFIELD w="140" title="Default">is_default</TEXTFIELD>
+							<FORM name="Address" keyfield="address_id" linkfield="table_id" table="address">
+								<DEFAULT default="kins">table_name</DEFAULT>
+								<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+								<TEXTFIELD w="150" title="Post Office Box" y="30" h="20" x="10">post_office_box</TEXTFIELD>
+								<TEXTFIELD w="150" title="Postal Code" y="30" h="20" x="290">postal_code</TEXTFIELD>
+								<TEXTFIELD w="150" title="Town" y="50" h="20" x="10">town</TEXTFIELD>
+								<TEXTFIELD w="430" title="Premises" y="70" h="20" x="10">premises</TEXTFIELD>
+								<TEXTFIELD w="430" title="Street" y="90" h="20" x="10">street</TEXTFIELD>
+								<TEXTFIELD w="430" title="Phone Number" y="110" h="20" x="10">phone_number</TEXTFIELD>
+								<TEXTFIELD w="150" title="Extension" y="130" h="20" x="10">extension</TEXTFIELD>
+								<TEXTFIELD w="430" title="Mobile" y="150" h="20" x="10">mobile</TEXTFIELD>
+								<TEXTFIELD w="430" title="Fax" y="170" h="20" x="10">fax</TEXTFIELD>
+								<TEXTFIELD w="430" title="Email" y="190" h="20" x="10">email</TEXTFIELD>
+								<CHECKBOX w="30" title="Default" y="210" h="20" x="10">is_default</CHECKBOX>
+								<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
+							</FORM>
+						</GRID>
+					</GRID>
+					<GRID name="Seminars" keyfield="cv_seminar_id" linkfield="entity_id" table="vw_cv_seminars">
+						<TEXTFIELD w="75" title="Seminar Name">cv_seminar_name</TEXTFIELD>
+						<TEXTDATE w="75" title="Seminar Date">cv_seminar_date</TEXTDATE>
+						<FORM name="Cv Seminars" keyfield="cv_seminar_id" linkfield="entity_id" table="cv_seminars">
+							<TEXTFIELD w="430" title="Seminar Name" y="10" h="20" x="10">cv_seminar_name</TEXTFIELD>
+							<TEXTDATE w="150" title="Seminar Date" y="30" h="20" x="10">cv_seminar_date</TEXTDATE>
+							<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+						</FORM>
+					</GRID>
+					<GRID name="Projects" keyfield="cv_projectid" linkfield="entity_id" table="vw_cv_projects">
+						<TEXTFIELD w="75" title="Project Name">cv_project_name</TEXTFIELD>
+						<TEXTDATE w="75" title="Project Date">cv_project_date</TEXTDATE>
+						<FORM name="Projects" keyfield="cv_projectid" linkfield="entity_id" table="cv_projects">
+							<TEXTFIELD w="430" title="Project Name" y="10" h="20" x="10">cv_project_name</TEXTFIELD>
+							<TEXTDATE w="150" title="Project Date" y="30" h="20" x="10">cv_project_date</TEXTDATE>
+							<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+						</FORM>
+					</GRID>
+					<GRID name="Skills" keyfield="skill_id" linkfield="entity_id" table="vw_skills">
+						<TEXTFIELD w="75" title="Skill Type Name">skill_type_name</TEXTFIELD>
+						<TEXTFIELD w="75" title="Skill Level">skill_level_name</TEXTFIELD>
+						<CHECKBOX w="75" title="Aquired">aquired</CHECKBOX>
+						<TEXTDATE w="75" title="Training Date">training_date</TEXTDATE>
+						<CHECKBOX w="75" title="Trained">trained</CHECKBOX>
+						<TEXTFIELD w="75" title="Training Institution">training_institution</TEXTFIELD>
+						<TEXTDECIMAL w="75" title="Training Cost">training_cost</TEXTDECIMAL>
+						<FORM name="Skills" keyfield="skill_id" linkfield="entity_id" table="skills">
+							<COMBOBOX w="430" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id</COMBOBOX>
+							<COMBOBOX w="430" title="Skill Level" lptable="skill_levels" y="30" h="20" x="10" lpfield="skill_level_name">skill_level_id</COMBOBOX>
+							<CHECKBOX w="150" title="Aquired" y="30" h="20" x="290">aquired</CHECKBOX>
+							<TEXTDATE w="150" title="Training Date" y="50" h="20" x="10">training_date</TEXTDATE>
+							<CHECKBOX w="150" title="Trained" y="50" h="20" x="290">trained</CHECKBOX>
+							<TEXTFIELD w="430" title="Training Institution" y="70" h="20" x="10">training_institution</TEXTFIELD>
+							<TEXTDECIMAL w="150" title="Training Cost" y="90" h="20" x="10">training_cost</TEXTDECIMAL>
+							<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+						</FORM>
+					</GRID>
+					<GRID name="Referees" keyfield="address_id" linkfield="table_id" table="vw_referees">
+						<TEXTFIELD w="100" title="Name">address_name</TEXTFIELD>
+						<TEXTFIELD w="100" title="Company">company_name</TEXTFIELD>
+						<TEXTFIELD w="100" title="Position">position_held</TEXTFIELD>
+						<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
+						<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
+						<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
+						<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
+						<FORM name="Referees" keyfield="address_id" linkfield="table_id" table="address">
+							<DEFAULT default="referees">table_name</DEFAULT>
+							<TEXTFIELD w="430" title="Name" y="10" h="20" x="10">address_name</TEXTFIELD>
+							<TEXTFIELD w="150" title="Company Name" y="30" h="20" x="10">company_name</TEXTFIELD>
+							<TEXTFIELD w="150" title="Position Held" y="30" h="20" x="290">position_held</TEXTFIELD>
+							<TEXTFIELD w="150" title="Post Office Box" y="50" h="20" x="10">post_office_box</TEXTFIELD>
+							<TEXTFIELD w="150" title="Postal Code" y="50" h="20" x="290">postal_code</TEXTFIELD>
+							<TEXTFIELD w="150" title="Town" y="70" h="20" x="10">town</TEXTFIELD>
+							<TEXTFIELD w="430" title="Premises" y="90" h="20" x="10">premises</TEXTFIELD>
+							<TEXTFIELD w="430" title="Street" y="110" h="20" x="10">street</TEXTFIELD>
+							<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="130" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+							<TEXTFIELD w="250" title="Phone Number" y="150" h="20" x="10">phone_number</TEXTFIELD>
+							<TEXTFIELD w="50" title="Extension" y="150" h="20" x="390">extension</TEXTFIELD>
+							<TEXTFIELD w="430" title="Mobile" y="170" h="20" x="10">mobile</TEXTFIELD>
+							<TEXTFIELD w="430" title="Fax" y="190" h="20" x="10">fax</TEXTFIELD>
+							<TEXTFIELD w="430" title="Email" y="210" h="20" x="10">email</TEXTFIELD>
+							<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
+						</FORM>
+					</GRID>
+					<GRID name="Identifications" keyfield="identification_id" linkfield="entity_id" table="vw_identifications">
+						<TEXTFIELD w="75" title="Identification Type Name">identification_type_name</TEXTFIELD>
+						<TEXTFIELD w="75" title="Identification">identification</TEXTFIELD>
+						<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+						<TEXTDATE w="75" title="Starting From">starting_from</TEXTDATE>
+						<TEXTDATE w="75" title="Expiring At">expiring_at</TEXTDATE>
+						<FORM name="Identifications" keyfield="identification_id" linkfield="entity_id" table="identifications">
+							<COMBOBOX w="430" title="Identification Type" lptable="identification_types" y="10" h="20" x="10" lpfield="identification_type_name">identification_type_id</COMBOBOX>
+							<COMBOBOX w="430" title="Nationality" default="KE" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="30" h="20" x="10" lpfield="sys_country_name">nationality</COMBOBOX>
+							<TEXTFIELD w="150" title="Identification Number" y="50" h="20" x="10">identification</TEXTFIELD>
+							<CHECKBOX w="150" title="Active" y="50" h="20" x="290">is_active</CHECKBOX>
+							<TEXTFIELD w="150" title="Place Of Issue" y="70" h="20" x="10">place_of_issue</TEXTFIELD>
+							<TEXTDATE w="150" title="Starting From" y="70" h="20" x="10">starting_from</TEXTDATE>
+							<TEXTDATE w="150" title="Expiring At" y="90" h="20" x="290">expiring_at</TEXTDATE>
+							<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+						</FORM>
+					</GRID>
+					<FILES username="repository" repository="/repository/webdav/files/" name="Documents" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='employees')" filetable="employees" password="baraza">
+						<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
+						<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
+						<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
+						<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
+					</FILES>
+					<JASPER name="CV" org.table="vw_employees" file.sql="SELECT entity_name FROM entitys WHERE entity_id = " reportfile="cv_employees.jasper"></JASPER>
+				</GRID>
+				<GRID name="Education Class" keyfield="education_class_id" table="education_class">
+					<TEXTFIELD w="75" title="Education Class ID">education_class_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Education Class Name">education_class_name</TEXTFIELD>
+					<FORM name="Education Class" keyfield="education_class_id" table="education_class">
+						<TEXTFIELD w="150" title="Education Class" y="10" h="20" x="10">education_class_name</TEXTFIELD>
+						<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
+				<GRID name="Kin Types" keyfield="kin_type_id" table="kin_types">
+					<TEXTFIELD w="75" title="Kin Type ID">kin_type_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Kin Type Name">kin_type_name</TEXTFIELD>
+					<FORM name="Kin Types" keyfield="kin_type_id" table="kin_types">
+						<TEXTFIELD w="150" title="Kin Type Name" y="10" h="20" x="10">kin_type_name</TEXTFIELD>
+						<CHECKBOX w="150" title="Spouse" default="false" y="30" h="20" x="10">spouse</CHECKBOX>
+						<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
+				<GRID name="Skill Category" keyfield="skill_category_id" table="skill_category">
+					<TEXTFIELD w="75" title="Skill Category ID">skill_category_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Skill Category Name">skill_category_name</TEXTFIELD>
+					<GRID name="Skill Types" keyfield="skill_type_id" linkfield="skill_category_id" table="vw_skill_types">
+						<TEXTFIELD w="75" title="Skill Type ID">skill_type_id</TEXTFIELD>
+						<TEXTFIELD w="75" title="Skill Type Name">skill_type_name</TEXTFIELD>
+						<TEXTFIELD w="75" title="Basic">basic</TEXTFIELD>
+						<TEXTFIELD w="75" title="Intermediate">intermediate</TEXTFIELD>
+						<TEXTFIELD w="75" title="Advanced">advanced</TEXTFIELD>
+						<FORM name="Skill Types" keyfield="skill_type_id" linkfield="skill_category_id" table="skill_types">
+							<TEXTFIELD w="430" title="Skill Type" y="10" h="20" x="10">skill_type_name</TEXTFIELD>
+							<TEXTFIELD w="430" title="Basic" y="30" h="20" x="10">basic</TEXTFIELD>
+							<TEXTFIELD w="430" title="Intermediate" y="50" h="20" x="10">intermediate</TEXTFIELD>
+							<TEXTFIELD w="430" title="Advanced" y="70" h="20" x="10">advanced</TEXTFIELD>
+							<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+						</FORM>
+					</GRID>
+					<FORM name="Skill Category" keyfield="skill_category_id" table="skill_category">
+						<TEXTFIELD w="350" title="Skill Category" y="10" h="20" x="10">skill_category_name</TEXTFIELD>
+						<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
+				<GRID name="Identification Types" keyfield="identification_type_id" table="identification_types">
+					<TEXTFIELD w="75" title="Identification Type ID">identification_type_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Identification Type Name">identification_type_name</TEXTFIELD>
+					<FORM name="Identification Types" keyfield="identification_type_id" table="identification_types">
+						<TEXTFIELD w="150" title="Identification Type Name" y="10" h="20" x="10">identification_type_name</TEXTFIELD>
+						<CHECKBOX w="150" title="Passport" default="false" y="30" h="20" x="10">passport</CHECKBOX>
+						<TEXTAREA w="430" title="Details" y="40" h="70" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
+			</DESK>
+			<DESK w="700" name="Employees Archives" key="54" h="650">
+				<GRID name="Employees" keyfield="entity_id" orderby="first_name" table="vw_employees" where="(active = false)">
+					<TEXTFIELD w="75" title="ID">employee_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
+					<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Designation">department_role_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+					<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
+					<FORM new="false" cols="2" tw="570" name="Details" keyfield="entity_id" delete="false" table="employees" th="180">
+						<COMBOBOX w="150" title="Designation" lptable="vw_department_roles" cmb_fnct="department_name || ', ' || department_role_name" orderby="department_name" y="10" h="20" x="10" lpfield="department_role">department_role_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Employee ID" y="30" h="20" x="10" span="true">employee_id</TEXTFIELD>
+						<TEXTFIELD w="150" title="Phone" y="30" h="20" x="290">phone</TEXTFIELD>
+						<COMBOLIST w="70" title="" y="50" h="20" x="70" span="true">person_title
+							<DATA>Miss</DATA>
+							<DATA>Mr</DATA>
+							<DATA>Mrs</DATA>
+							<DATA>Dr</DATA>
+							<DATA>Prof</DATA>
+						</COMBOLIST>
+						<TEXTFIELD w="100" title="Surname" lw="130" y="50" h="20" x="10">surname</TEXTFIELD>
+						<TEXTFIELD w="100" title="Middle Name" lw="90" y="50" h="20" x="250" span="true">middle_name</TEXTFIELD>
+						<TEXTFIELD w="100" title="First Name" lw="70" y="50" h="20" x="440">first_name</TEXTFIELD>
+						<TEXTDATE w="150" title="Date Of Birth" y="70" h="20" x="10" span="true">date_of_birth</TEXTDATE>
+						<COMBOBOX w="150" title="Nationality" lptable="sys_countrys" default_org_fnct="get_default_country" noorg="true" lpkey="sys_country_id" y="70" h="20" x="290" lpfield="sys_country_name">nationality</COMBOBOX>
+						<COMBOLIST w="150" title="Gender" y="90" ischar="true" h="20" x="10" span="true">gender
+							<DATA key="M">Male</DATA>
+							<DATA key="F">Female</DATA>
+						</COMBOLIST>
+						<COMBOLIST w="150" title="Marital Status" y="90" h="20" x="290">marital_status
+							<DATA key="M">Married</DATA>
+							<DATA key="S">Single</DATA>
+							<DATA key="D">DIvorced</DATA>
+							<DATA key="W">Widowed</DATA>
+							<DATA key="X">Separated</DATA>
+						</COMBOLIST>
+						<COMBOBOX w="150" title="Birth Nation" lptable="sys_countrys" default_org_fnct="get_default_country" noorg="true" lpkey="sys_country_id" y="110" h="20" x="10" span="true" lpfield="sys_country_name">nation_of_birth</COMBOBOX>
+						<TEXTFIELD w="150" title="Place of Birth" y="110" h="20" x="290">place_of_birth</TEXTFIELD>
+						<COMBOBOX w="150" title="Location" lptable="locations" y="130" h="20" x="10" span="true" lpfield="location_name">location_id</COMBOBOX>
+						<COMBOBOX w="150" title="Pay Group" lptable="pay_groups" y="170" h="20" x="10" lpfield="pay_group_name">pay_group_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Identity Card" y="190" h="20" x="10" span="true">identity_card</TEXTFIELD>
+						<CHECKBOX w="150" title="Active" default="true" y="190" h="20" x="290">active</CHECKBOX>
+						<TEXTFIELD w="150" title="Bank Account" y="210" h="20" x="10" span="true">bank_account</TEXTFIELD>
+						<COMBOBOX w="150" title="Bank Branch" lptable="vw_bank_branch" cmb_fnct="(bank_name || ', ' || bank_branch_name)" orderby="bank_name" y="230" h="20" x="10" lpfield="bank_branch">bank_branch_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Language" y="250" h="20" x="10">language</TEXTFIELD>
+						<COMBOBOX w="150" title="Org" lptable="orgs" tab="Terms" where="(is_active = true)" y="10" h="20" x="10" span="true" lpfield="org_name">org_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Chinese Name" tab="Terms" y="10" h="20" x="290">employee_full_name</TEXTFIELD>
+						<TEXTDATE w="150" title="Appointment Date" tab="Terms" y="30" h="20" x="10" span="true">appointment_date</TEXTDATE>
+						<TEXTDATE w="150" title="Exit Date" tab="Terms" y="30" h="20" x="290">exit_date</TEXTDATE>
+						<CHECKBOX w="150" title="Contract" tab="Terms" y="50" h="20" x="10" span="true">contract</CHECKBOX>
+						<TEXTFIELD w="150" title="Contract Period" default="0" tab="Terms" y="50" h="20" x="290">contract_period</TEXTFIELD>
+						<TEXTDECIMAL w="150" title="Basic Salary" default="0" tab="Terms" y="70" h="20" x="10" span="true">basic_salary</TEXTDECIMAL>
+						<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" tab="Terms" y="70" h="20" x="290" lpfield="currency_name">currency_id</COMBOBOX>
+						<COMBOBOX w="150" title="Pay Scale" lptable="pay_scales" tab="Terms" y="90" h="20" x="10" span="true" lpfield="pay_scale_name">pay_scale_id</COMBOBOX>
+						<COMBOBOX w="150" title="Pay Step" lptable="vw_pay_scale_steps" tab="Terms" y="90" h="20" x="290" lpfield="pay_step_name">pay_scale_step_id</COMBOBOX>
+						<TEXTDECIMAL w="150" title="Average Daily Rate" tab="Terms" y="110" h="20" x="10" span="true">average_daily_rate</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Normal Work Hours" tab="Terms" y="110" h="20" x="290">normal_work_hours</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Overtime Rate" tab="Terms" y="130" h="20" x="10" span="true">overtime_rate</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Special Rate" tab="Terms" y="130" h="20" x="290">special_time_rate</TEXTDECIMAL>
+						<TEXTAREA w="150" title="Employment Terms" tab="Terms" y="150" h="20" x="10" span="true" rows="5">employment_terms</TEXTAREA>
+						<CHECKBOX w="150" title="Per day earning" tab="Terms" y="130" h="20" x="290">per_day_earning</CHECKBOX>
+						<TEXTAREA w="550" tab="Objective" y="1" h="150" x="10">objective</TEXTAREA>
+						<TEXTAREA w="550" tab="Interests" y="1" h="150" x="10">Interests</TEXTAREA>
+						<TEXTAREA w="550" tab="Field of Study" y="1" h="150" x="10">field_of_study</TEXTAREA>
+						<PICTURE w="550" tab="Picture" access="ob" y="1" h="150" x="10">picture_file</PICTURE>
+						<TEXTDECIMAL w="150" title="Height" tab="Medical" y="2" h="20" x="10">height</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Weight" tab="Medical" y="2" h="20" x="290">weight</TEXTDECIMAL>
+						<TEXTFIELD w="150" title="Blood Group" tab="Medical" y="22" h="20" x="10">blood_group</TEXTFIELD>
+						<TEXTAREA w="150" title="Allergies" tab="Medical" y="42" h="40" x="10" rows="5">allergies</TEXTAREA>
+						<TEXTAREA w="550" tab="Details" y="1" h="150" x="10">details</TEXTAREA>
+					</FORM>
+					<GRID name="Address" keyfield="address_id" delete="false" linkfield="table_id" table="vw_address" where="table_name = 'employees'">
+						<TEXTFIELD w="100" title="Country Name">sys_country_name</TEXTFIELD>
+						<TEXTFIELD w="100" title="Postal Code">postal_code</TEXTFIELD>
+						<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
+						<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
+						<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
+						<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
+						<TEXTFIELD w="140" title="Default">is_default</TEXTFIELD>
+						<FORM new="false" name="Address" keyfield="address_id" edit="false" delete="false" linkfield="table_id" table="address">
+							<DEFAULT default="employees">table_name</DEFAULT>
+							<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+							<TEXTFIELD w="150" title="Post Office Box" y="30" h="20" x="10">post_office_box</TEXTFIELD>
+							<TEXTFIELD w="150" title="Postal Code" y="30" h="20" x="290">postal_code</TEXTFIELD>
+							<TEXTFIELD w="150" title="Town" y="50" h="20" x="10">town</TEXTFIELD>
+							<TEXTFIELD w="430" title="Premises" y="70" h="20" x="10">premises</TEXTFIELD>
+							<TEXTFIELD w="430" title="Street" y="90" h="20" x="10">street</TEXTFIELD>
+							<TEXTFIELD w="430" title="Phone Number" y="110" h="20" x="10">phone_number</TEXTFIELD>
+							<TEXTFIELD w="150" title="Extension" y="130" h="20" x="10">extension</TEXTFIELD>
+							<TEXTFIELD w="430" title="Mobile" y="150" h="20" x="10">mobile</TEXTFIELD>
+							<TEXTFIELD w="430" title="Fax" y="170" h="20" x="10">fax</TEXTFIELD>
+							<TEXTFIELD w="430" title="Email" y="190" h="20" x="10">email</TEXTFIELD>
+							<CHECKBOX w="30" title="Default" y="210" h="20" x="10">is_default</CHECKBOX>
+							<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
+						</FORM>
+					</GRID>
+					<GRID name="Education" keyfield="education_id" delete="false" orderby="education_class_id" linkfield="entity_id" table="vw_education">
+						<TEXTFIELD w="75" title="Education Class Name">education_class_name</TEXTFIELD>
+						<TEXTDATE w="75" title="Date From">date_from</TEXTDATE>
+						<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
+						<TEXTFIELD w="75" title="Name Of Institution">name_of_school</TEXTFIELD>
+						<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
+						<TEXTFIELD w="75" title="Grades Obtained">grades_obtained</TEXTFIELD>
+						<FORM new="false" name="Education" keyfield="education_id" edit="false" delete="false" linkfield="entity_id" table="education">
+							<COMBOBOX w="430" title="Education Class" lptable="education_class" orderby="education_class_id" y="10" h="20" x="10" lpfield="education_class_name">education_class_id</COMBOBOX>
+							<TEXTDATE w="150" title="Date From" y="30" h="20" x="10">date_from</TEXTDATE>
+							<TEXTDATE w="150" title="Date To" y="30" h="20" x="290">date_to</TEXTDATE>
+							<TEXTFIELD w="430" title="Name Of Institution" y="50" h="20" x="10">name_of_school</TEXTFIELD>
+							<TEXTFIELD w="430" title="Certification or Degree" y="70" h="20" x="10">examination_taken</TEXTFIELD>
+							<TEXTFIELD w="150" title="Grades Obtained" y="90" h="20" x="10">grades_obtained</TEXTFIELD>
+							<TEXTFIELD w="150" title="Certificate Number" y="90" h="20" x="290">certificate_number</TEXTFIELD>
+							<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+						</FORM>
+					</GRID>
+					<GRID name="Employment" keyfield="employment_id" delete="false" linkfield="entity_id" table="vw_employment">
+						<TEXTDATE w="75" title="Date From">date_from</TEXTDATE>
+						<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
+						<TEXTFIELD w="75" title="Employers Name">employers_name</TEXTFIELD>
+						<TEXTFIELD w="75" title="Position Held">position_held</TEXTFIELD>
+						<FORM new="false" name="Employment" keyfield="employment_id" edit="false" delete="false" linkfield="entity_id" table="employment">
+							<TEXTDATE w="150" title="Date From" y="10" h="20" x="10">date_from</TEXTDATE>
+							<TEXTDATE w="150" title="Date To" y="10" h="20" x="290">date_to</TEXTDATE>
+							<TEXTFIELD w="430" title="Employers Name" y="30" h="20" x="10">employers_name</TEXTFIELD>
+							<TEXTFIELD w="430" title="Position Held" y="50" h="20" x="10">position_held</TEXTFIELD>
+							<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+						</FORM>
+					</GRID>
+					<GRID name="Kins" keyfield="kin_id" delete="false" orderby="kin_type_id" linkfield="entity_id" table="vw_kins">
+						<TEXTFIELD w="75" title="Kin Type Name">kin_type_name</TEXTFIELD>
+						<TEXTDATE w="75" title="Date Of Birth">date_of_birth</TEXTDATE>
+						<TEXTFIELD w="75" title="Name">full_names</TEXTFIELD>
+						<TEXTFIELD w="75" title="Identification">identification</TEXTFIELD>
+						<TEXTFIELD w="140" title="Emergency Contact">emergency_contact</TEXTFIELD>
+						<FORM new="false" name="Kins" keyfield="kin_id" edit="false" delete="false" linkfield="entity_id" table="kins">
+							<COMBOBOX w="430" title="Kin Type" lptable="kin_types" orderby="kin_type_id" y="10" h="20" x="10" lpfield="kin_type_name">kin_type_id</COMBOBOX>
+							<TEXTFIELD w="430" title="Full Names" y="30" h="20" x="10">full_names</TEXTFIELD>
+							<TEXTDATE w="150" title="Date Of Birth" y="50" h="20" x="10">date_of_birth</TEXTDATE>
+							<TEXTFIELD w="150" title="Identification" y="50" h="20" x="290">identification</TEXTFIELD>
+							<TEXTFIELD w="150" title="Relation" y="70" h="20" x="10">relation</TEXTFIELD>
+							<CHECKBOX w="50" title="Emergency Contact" y="70" h="20" x="290">emergency_contact</CHECKBOX>
+							<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+						</FORM>
+						<GRID name="Address" keyfield="address_id" delete="false" linkfield="table_id" table="vw_address" where="table_name = 'kins'">
+							<TEXTFIELD w="100" title="Country Name">sys_country_name</TEXTFIELD>
+							<TEXTFIELD w="100" title="Postal Code">postal_code</TEXTFIELD>
+							<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
+							<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
+							<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
+							<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
+							<TEXTFIELD w="140" title="Default">is_default</TEXTFIELD>
+							<FORM new="false" name="Address" keyfield="address_id" edit="false" delete="false" linkfield="table_id" table="address">
+								<DEFAULT default="kins">table_name</DEFAULT>
+								<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+								<TEXTFIELD w="150" title="Post Office Box" y="30" h="20" x="10">post_office_box</TEXTFIELD>
+								<TEXTFIELD w="150" title="Postal Code" y="30" h="20" x="290">postal_code</TEXTFIELD>
+								<TEXTFIELD w="150" title="Town" y="50" h="20" x="10">town</TEXTFIELD>
+								<TEXTFIELD w="430" title="Premises" y="70" h="20" x="10">premises</TEXTFIELD>
+								<TEXTFIELD w="430" title="Street" y="90" h="20" x="10">street</TEXTFIELD>
+								<TEXTFIELD w="430" title="Phone Number" y="110" h="20" x="10">phone_number</TEXTFIELD>
+								<TEXTFIELD w="150" title="Extension" y="130" h="20" x="10">extension</TEXTFIELD>
+								<TEXTFIELD w="430" title="Mobile" y="150" h="20" x="10">mobile</TEXTFIELD>
+								<TEXTFIELD w="430" title="Fax" y="170" h="20" x="10">fax</TEXTFIELD>
+								<TEXTFIELD w="430" title="Email" y="190" h="20" x="10">email</TEXTFIELD>
+								<CHECKBOX w="30" title="Default" y="210" h="20" x="10">is_default</CHECKBOX>
+								<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
+							</FORM>
+						</GRID>
+					</GRID>
+					<GRID name="Seminars" keyfield="cv_seminar_id" delete="false" linkfield="entity_id" table="vw_cv_seminars">
+						<TEXTFIELD w="75" title="Seminar Name">cv_seminar_name</TEXTFIELD>
+						<TEXTDATE w="75" title="Seminar Date">cv_seminar_date</TEXTDATE>
+						<FORM new="false" name="Cv Seminars" keyfield="cv_seminar_id" edit="false" delete="false" linkfield="entity_id" table="cv_seminars">
+							<TEXTFIELD w="430" title="Seminar Name" y="10" h="20" x="10">cv_seminar_name</TEXTFIELD>
+							<TEXTDATE w="150" title="Seminar Date" y="30" h="20" x="10">cv_seminar_date</TEXTDATE>
+							<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+						</FORM>
+					</GRID>
+					<GRID name="Projects" keyfield="cv_projectid" delete="false" linkfield="entity_id" table="vw_cv_projects">
+						<TEXTFIELD w="75" title="Project Name">cv_project_name</TEXTFIELD>
+						<TEXTDATE w="75" title="Project Date">cv_project_date</TEXTDATE>
+						<FORM new="false" name="Projects" keyfield="cv_projectid" edit="false" delete="false" linkfield="entity_id" table="cv_projects">
+							<TEXTFIELD w="430" title="Project Name" y="10" h="20" x="10">cv_project_name</TEXTFIELD>
+							<TEXTDATE w="150" title="Project Date" y="30" h="20" x="10">cv_project_date</TEXTDATE>
+							<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+						</FORM>
+					</GRID>
+					<GRID name="Skills" keyfield="skill_id" linkfield="entity_id" table="vw_skills">
+						<TEXTFIELD w="75" title="Skill Type Name">skill_type_name</TEXTFIELD>
+						<TEXTFIELD w="75" title="Skill Level">skill_level_name</TEXTFIELD>
+						<CHECKBOX w="75" title="Aquired">aquired</CHECKBOX>
+						<TEXTDATE w="75" title="Training Date">training_date</TEXTDATE>
+						<CHECKBOX w="75" title="Trained">trained</CHECKBOX>
+						<TEXTFIELD w="75" title="Training Institution">training_institution</TEXTFIELD>
+						<TEXTDECIMAL w="75" title="Training Cost">training_cost</TEXTDECIMAL>
+						<FORM name="Skills" keyfield="skill_id" linkfield="entity_id" table="skills">
+							<COMBOBOX w="430" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id</COMBOBOX>
+							<COMBOBOX w="430" title="Skill Level" lptable="skill_levels" y="30" h="20" x="10" lpfield="skill_level_name">skill_level_id</COMBOBOX>
+							<CHECKBOX w="150" title="Aquired" y="30" h="20" x="290">aquired</CHECKBOX>
+							<TEXTDATE w="150" title="Training Date" y="50" h="20" x="10">training_date</TEXTDATE>
+							<CHECKBOX w="150" title="Trained" y="50" h="20" x="290">trained</CHECKBOX>
+							<TEXTFIELD w="430" title="Training Institution" y="70" h="20" x="10">training_institution</TEXTFIELD>
+							<TEXTDECIMAL w="150" title="Training Cost" y="90" h="20" x="10">training_cost</TEXTDECIMAL>
+							<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+						</FORM>
+					</GRID>
+					<GRID name="Referees" keyfield="address_id" linkfield="table_id" table="vw_referees">
+						<TEXTFIELD w="100" title="Name">sys_country_name</TEXTFIELD>
+						<TEXTFIELD w="100" title="Company">company_name</TEXTFIELD>
+						<TEXTFIELD w="100" title="Position">position_held</TEXTFIELD>
+						<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
+						<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
+						<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
+						<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
+						<FORM name="Referees" keyfield="address_id" linkfield="table_id" table="address">
+							<DEFAULT default="cv_referees">table_name</DEFAULT>
+							<TEXTFIELD w="430" title="Name" y="10" h="20" x="10">address_name</TEXTFIELD>
+							<TEXTFIELD w="150" title="Company Name" y="30" h="20" x="10">company_name</TEXTFIELD>
+							<TEXTFIELD w="150" title="Position Held" y="30" h="20" x="290">position_held</TEXTFIELD>
+							<TEXTFIELD w="150" title="Post Office Box" y="50" h="20" x="10">post_office_box</TEXTFIELD>
+							<TEXTFIELD w="150" title="Postal Code" y="50" h="20" x="290">postal_code</TEXTFIELD>
+							<TEXTFIELD w="150" title="Town" y="70" h="20" x="10">town</TEXTFIELD>
+							<TEXTFIELD w="430" title="Premises" y="90" h="20" x="10">premises</TEXTFIELD>
+							<TEXTFIELD w="430" title="Street" y="110" h="20" x="10">street</TEXTFIELD>
+							<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="130" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+							<TEXTFIELD w="250" title="Phone Number" y="150" h="20" x="10">phone_number</TEXTFIELD>
+							<TEXTFIELD w="50" title="Extension" y="150" h="20" x="390">extension</TEXTFIELD>
+							<TEXTFIELD w="430" title="Mobile" y="170" h="20" x="10">mobile</TEXTFIELD>
+							<TEXTFIELD w="430" title="Fax" y="190" h="20" x="10">fax</TEXTFIELD>
+							<TEXTFIELD w="430" title="Email" y="210" h="20" x="10">email</TEXTFIELD>
+							<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
+						</FORM>
+					</GRID>
+					<FILES edit="false" keyfield="sys_file_id" linkfield="table_id" params="table_name" table="sys_files" where="(table_name='employees')" password="enter" new="false" username="root" repository="/repository/webdav/files/" name="Documents" delete="false" filetable="employees">
+						<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
+						<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
+						<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
+						<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
+					</FILES>
+					<JASPER name="CV" org.table="vw_employees" reportfile="cv_employees.jasper"></JASPER>
+				</GRID>
+			</DESK>
+		</REPLACE>
+	</VERSION>
+</VERSIONS>

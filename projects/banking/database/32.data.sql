@@ -101,7 +101,9 @@ INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('61005'
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('61010',610,'ASSET REVALUATION GAIN / LOSS');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('70005',700,'GOODS SALES');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('70010',700,'SERVICE SALES');
-INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('70015',700,'SALES DISCOUNT');
+INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('70015',700,'INTEREST INCOME');
+INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('70020',700,'CHARGES INCOME');
+INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('70025',700,'PENALTY INCOME');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('71000',710,'FAIR VALUE GAIN/LOSS IN INVESTMENTS');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('71005',710,'DONATION');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('71010',710,'EXCHANGE GAIN(LOSS)');

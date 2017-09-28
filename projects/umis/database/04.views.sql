@@ -174,9 +174,10 @@ CREATE VIEW vw_students AS
 		students.onprobation, students.offcampus, students.currentcontact, students.currentemail, students.currenttel,
 		students.seeregistrar, students.hallseats, students.staff, students.fullbursary, students.details,
 		students.room_number, students.probation_details, students.registrar_details,
-		students.gfirstpass, ('G' || students.studentid) as gstudentid,
-		('<a href="a_statement_acct.jsp?view=1:0&accountno=' || students.accountnumber ||
-			'" target="_blank">View Accounts</a>') as view_statement
+		students.student_edit, students.disability, students.dis_details, students.passport,
+		students.national_id, students.identification_no,
+		students.gfirstpass, ('G' || students.studentid) as gstudentid
+		
 	FROM (((denominationview INNER JOIN students ON denominationview.denominationid = students.denominationid)
 		INNER JOIN schools ON students.schoolid = schools.schoolid)
 		LEFT JOIN residences ON students.residenceid = residences.residenceid)

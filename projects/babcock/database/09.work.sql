@@ -160,6 +160,7 @@ ALTER TABLE studentdegrees ALTER COLUMN studentid SET NOT NULL;
 
 
 --------------- Adding a new student
+CREATE TABLE adm_import1 (app_id int, bussary_code varchar(50), card_number varchar(50));
 DELETE FROM adm_import1;
 INSERT INTO adm_import1 (app_id, bussary_code, card_number) VALUES ('');
 
@@ -181,6 +182,10 @@ WHERE majors.majorid is null
 ORDER BY app_students.majorid;
 
 UPDATE app_students SET majorid = 'ACCT' WHERE majorid is null;
+UPDATE app_students SET majorid = 'BAFN' WHERE majorid = 'BAAC';
+
+
+
 
 UPDATE app_students SET studentid = app_student_id::varchar WHERE studentid is null;
 ---UPDATE app_students SET studentid = 'NR/' || lpad(student_number::varchar, 4, '0') WHERE studentid is null;

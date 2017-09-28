@@ -10571,10 +10571,7 @@ SELECT pg_catalog.setval('entity_values_entity_value_id_seq', 1, false);
 
 INSERT INTO entitys (entity_id, entity_type_id, use_key_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, credit_limit, account_id) VALUES (0, 0, 0, 0, 'root', 'root', 'root@localhost', NULL, true, true, false, NULL, '2017-06-27 17:18:53.617653', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, 0, NULL);
 INSERT INTO entitys (entity_id, entity_type_id, use_key_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, credit_limit, account_id) VALUES (1, 0, 0, 0, 'repository', 'repository', 'repository@localhost', NULL, false, true, false, NULL, '2017-06-27 17:18:53.617653', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, 0, NULL);
-INSERT INTO entitys (entity_id, entity_type_id, use_key_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, credit_limit, account_id) VALUES (2, 18, 5, 2, 'Peter', 'admin', 'peter.mwangi@dewcis.com', '0708154384', false, true, false, 'subscription,admin,staff,finance', '2017-07-10 15:21:10.875684', true, '21232f297a57a5a743894a0e4a801fc3', 'admin', NULL, NULL, false, NULL, NULL, 0, NULL);
 INSERT INTO entitys (entity_id, entity_type_id, use_key_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, credit_limit, account_id) VALUES (3, 13, 6, 2, 'Arwim Chege Ndoro', 'arwin', 'arwin@gmail.com', '0708154384', false, false, false, 'tenants', '2017-07-10 15:23:30.629519', true, '971f498caca7cad075f82de780b33f22', 'arwin', NULL, NULL, false, NULL, 'ABC', 0, 100282);
-INSERT INTO entitys (entity_id, entity_type_id, use_key_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, credit_limit, account_id) VALUES (4, 13, 6, 2, 'Chairman Maina Kamau', 'maina', 'cmk@gmail.com', '0735789741', false, false, false, 'tenants', '2017-07-10 15:23:52.087113', true, '55bcb5b22e126345d70814c13a99d22e', 'maina', NULL, NULL, false, NULL, 'ABC', 0, 100282);
-INSERT INTO entitys (entity_id, entity_type_id, use_key_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, credit_limit, account_id) VALUES (5, 16, 2, 2, 'Susan Lee', 'susan', 'susan@gmail.com', '078154456', false, false, false, 'client', '2017-07-10 15:24:19.557112', true, 'ac575e3eecf0fa410518c2d3a2e7209f', 'susan', NULL, NULL, false, NULL, 'ABC', 0, 100282);
 INSERT INTO entitys (entity_id, entity_type_id, use_key_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, credit_limit, account_id) VALUES (6, 16, 2, 2, 'Peter I Mwangi', 'peter', 'peter.mwangi@dewcis.com', '0725789963', false, false, false, 'client', '2017-07-18 17:32:28.818849', true, '51dc30ddc473d43a6011e9ebba6ca770', 'peter', NULL, NULL, false, NULL, 'ABC', 0, 100282);
 INSERT INTO entitys (entity_id, entity_type_id, use_key_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, credit_limit, account_id) VALUES (7, 13, 6, 2, 'David Dismas Vio', 'david', 'david@gmail.com', '0735789741', false, false, false, 'tenants', '2017-07-18 17:34:23.210477', true, '172522ec1028ab781d9dfd17eaca4427', 'david', NULL, NULL, false, NULL, 'ABC', 0, 100282);
 INSERT INTO entitys (entity_id, entity_type_id, use_key_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, credit_limit, account_id) VALUES (8, 24, 5, 3, 'Dorcas', 'dorcas', 'dorcas@mail.com', NULL, false, false, false, 'subscription,admin,staff,finance', '2017-07-25 17:13:37.007123', true, '4919ef6bb945013c03d28cfe68f3cb46', 'dorcas', NULL, NULL, false, NULL, NULL, 0, NULL);
@@ -10583,6 +10580,9 @@ INSERT INTO entitys (entity_id, entity_type_id, use_key_id, org_id, entity_name,
 INSERT INTO entitys (entity_id, entity_type_id, use_key_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, credit_limit, account_id) VALUES (12, 25, 6, 4, 'Oduor Kimeto', 'oduorkim', 'oduorkim@gmail.com', '0202233555', false, false, false, 'tenants', '2017-07-26 10:22:43.463681', true, '3b255997dd96bb334004b5ce95a0fc0d', '355I650RM', NULL, NULL, false, NULL, NULL, 0, 100582);
 INSERT INTO entitys (entity_id, entity_type_id, use_key_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, credit_limit, account_id) VALUES (13, 25, 6, 4, 'Kevin Munene', 'kmunene', 'kevin@munene.com', '0208888966', false, false, false, 'tenants', '2017-07-26 10:25:38.478458', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, 0, 100582);
 INSERT INTO entitys (entity_id, entity_type_id, use_key_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, credit_limit, account_id) VALUES (10, 28, 2, 4, 'Florence Ngugi', 'fngugi', 'fngugi@gmail.com', '0202233555', false, false, false, 'client', '2017-07-26 10:20:52.735169', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, 0, 100582);
+INSERT INTO entitys (entity_id, entity_type_id, use_key_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, credit_limit, account_id) VALUES (2, 18, 5, 2, 'Peter', 'admin', 'peter.mwangi@dewcis.com', '0708154384', false, true, false, 'subscription,admin,staff,finance', '2017-07-10 15:21:10.875684', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, 0, NULL);
+INSERT INTO entitys (entity_id, entity_type_id, use_key_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, credit_limit, account_id) VALUES (4, 13, 6, 2, 'Maina Kamau', 'tenant', 'cmk@gmail.com', '0735789741', false, false, false, 'tenants', '2017-07-10 15:23:52.087113', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, 'ABC', 0, 100282);
+INSERT INTO entitys (entity_id, entity_type_id, use_key_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, credit_limit, account_id) VALUES (5, 16, 2, 2, 'Susan Lee', 'client', 'susan@gmail.com', '078154456', false, false, false, 'client', '2017-07-10 15:24:19.557112', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, 'ABC', 0, 100282);
 
 
 --
@@ -11627,13 +11627,16 @@ INSERT INTO sys_audit_trail (sys_audit_trail_id, user_id, user_ip, change_date, 
 INSERT INTO sys_audit_trail (sys_audit_trail_id, user_id, user_ip, change_date, table_name, record_id, change_type, narrative) VALUES (441, '9', '192.168.0.51', '2017-07-26 11:03:27.974339', 'entitys', '13', 'EDIT', NULL);
 INSERT INTO sys_audit_trail (sys_audit_trail_id, user_id, user_ip, change_date, table_name, record_id, change_type, narrative) VALUES (442, '9', '192.168.0.51', '2017-07-26 11:08:57.311223', 'entitys', '10', 'EDIT', NULL);
 INSERT INTO sys_audit_trail (sys_audit_trail_id, user_id, user_ip, change_date, table_name, record_id, change_type, narrative) VALUES (443, '2', '127.0.0.1', '2017-07-26 16:46:56.036418', 'add_periods', '1', 'FUNCTION', NULL);
+INSERT INTO sys_audit_trail (sys_audit_trail_id, user_id, user_ip, change_date, table_name, record_id, change_type, narrative) VALUES (444, '0', '127.0.0.1', '2017-08-28 12:37:14.390676', 'entitys', '2', 'EDIT', NULL);
+INSERT INTO sys_audit_trail (sys_audit_trail_id, user_id, user_ip, change_date, table_name, record_id, change_type, narrative) VALUES (445, '0', '127.0.0.1', '2017-08-28 12:37:58.46408', 'entitys', '4', 'EDIT', NULL);
+INSERT INTO sys_audit_trail (sys_audit_trail_id, user_id, user_ip, change_date, table_name, record_id, change_type, narrative) VALUES (446, '0', '127.0.0.1', '2017-08-28 12:39:27.29399', 'entitys', '5', 'EDIT', NULL);
 
 
 --
 -- Name: sys_audit_trail_sys_audit_trail_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('sys_audit_trail_sys_audit_trail_id_seq', 443, true);
+SELECT pg_catalog.setval('sys_audit_trail_sys_audit_trail_id_seq', 446, true);
 
 
 --
@@ -15943,13 +15946,57 @@ INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative
 INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3898, 2, '2017-08-28 10:05:00.993927', '127.0.0.1', NULL);
 INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3899, 2, '2017-08-28 10:05:02.313223', '127.0.0.1', NULL);
 INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3900, 2, '2017-08-28 10:05:03.039914', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3901, 0, '2017-08-28 12:15:13.554821', 'dewcis/127.0.1.1', 'TOMCAT');
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3902, 0, '2017-08-28 12:17:55.548962', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3903, 0, '2017-08-28 12:18:39.00243', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3904, 0, '2017-08-28 12:18:41.210944', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3905, 0, '2017-08-28 12:18:41.869747', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3906, 0, '2017-08-28 12:18:53.562285', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3907, 0, '2017-08-28 12:18:54.266531', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3908, 0, '2017-08-28 12:18:57.383914', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3909, 0, '2017-08-28 12:18:58.040236', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3910, 2, '2017-08-28 12:20:46.472421', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3911, 2, '2017-08-28 12:31:17.005719', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3912, 2, '2017-08-28 12:31:20.536372', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3913, 2, '2017-08-28 12:31:24.195843', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3914, 2, '2017-08-28 12:31:26.172893', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3915, 2, '2017-08-28 12:31:26.78863', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3916, 2, '2017-08-28 12:31:28.269169', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3917, 2, '2017-08-28 12:31:49.584977', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3918, 2, '2017-08-28 12:31:50.161881', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3919, 2, '2017-08-28 12:31:55.767649', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3920, 2, '2017-08-28 12:31:56.420289', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3921, 0, '2017-08-28 12:32:27.061515', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3922, 0, '2017-08-28 12:32:30.465646', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3923, 0, '2017-08-28 12:32:31.042563', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3924, 0, '2017-08-28 12:32:33.217453', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3925, 0, '2017-08-28 12:32:35.208195', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3926, 0, '2017-08-28 12:32:35.774055', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3927, 0, '2017-08-28 12:32:38.104994', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3928, 0, '2017-08-28 12:32:38.831721', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3929, 0, '2017-08-28 12:32:40.544527', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3930, 0, '2017-08-28 12:32:41.147739', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3931, 0, '2017-08-28 12:32:47.585032', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3932, 0, '2017-08-28 12:34:52.547542', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3933, 0, '2017-08-28 12:34:53.139794', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3934, 0, '2017-08-28 12:37:05.712134', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3935, 0, '2017-08-28 12:37:14.326391', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3936, 0, '2017-08-28 12:37:14.951866', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3937, 0, '2017-08-28 12:37:18.332471', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3938, 0, '2017-08-28 12:37:58.417861', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3939, 0, '2017-08-28 12:37:59.061257', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3940, 0, '2017-08-28 12:38:00.975878', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3941, 0, '2017-08-28 12:39:27.223392', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3942, 0, '2017-08-28 12:39:27.85443', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3943, 2, '2017-08-28 12:39:44.1089', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3944, 5, '2017-08-28 12:48:28.881395', '127.0.0.1', NULL);
 
 
 --
 -- Name: sys_logins_sys_login_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('sys_logins_sys_login_id_seq', 3900, true);
+SELECT pg_catalog.setval('sys_logins_sys_login_id_seq', 3944, true);
 
 
 --

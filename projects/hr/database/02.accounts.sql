@@ -100,6 +100,7 @@ CREATE TABLE tax_types (
 	percentage				boolean default true,
 	employer				float default 0 not null,
 	employer_ps				float default 0 not null,
+	employer_formural		varchar(320),
 	account_number			varchar(32),
 	employer_account		varchar(32),
 	active					boolean default true,
@@ -119,6 +120,7 @@ CREATE TABLE tax_rates (
 	org_id					integer references orgs,
 	tax_range				float not null,
 	tax_rate				float not null,
+	employer_rate			integer default false 0 null,
 	narrative				varchar(240)
 );
 CREATE INDEX tax_rates_tax_type_id ON tax_rates (tax_type_id);
@@ -140,6 +142,7 @@ CREATE TABLE period_tax_types (
 	in_tax					boolean not null default false,
 	employer				float not null,
 	employer_ps				float not null,
+	employer_formural		varchar(320),
 	account_number			varchar(32),
 	details					text,
 	
@@ -157,6 +160,7 @@ CREATE TABLE period_tax_rates (
 	org_id					integer references orgs,
 	tax_range				float not null,
 	tax_rate				float not null,
+	employer_rate			integer default 0 not null,
 	narrative				varchar(240),
 	
 	UNIQUE(period_tax_type_id, tax_rate_id)
@@ -320,15 +324,15 @@ CREATE VIEW vw_period_tax_types AS
 		INNER JOIN tax_types ON period_tax_types.tax_type_id = tax_types.tax_type_id
 		INNER JOIN use_keys ON tax_types.use_key_id = use_keys.use_key_id;
 
-CREATE OR REPLACE FUNCTION getTaxMin(float, int) RETURNS float AS $$
+CREATE OR REPLACE FUNCTION get_tax_min(float, int, int) RETURNS float AS $$
 	SELECT CASE WHEN max(tax_range) is null THEN 0 ELSE max(tax_range) END 
-	FROM period_tax_rates WHERE (tax_range < $1) AND (period_tax_type_id = $2);
+	FROM period_tax_rates WHERE (tax_range < $1) AND (period_tax_type_id = $2) AND (employer_rate = $3);
 $$ LANGUAGE SQL;
 
 CREATE VIEW vw_period_tax_rates AS
 	SELECT period_tax_types.period_tax_type_id, period_tax_types.period_tax_type_name, period_tax_types.tax_type_id, 
 		period_tax_types.period_id, period_tax_rates.period_tax_rate_id, 
-		getTaxMin(period_tax_rates.tax_range, period_tax_types.period_tax_type_id) as min_range, 
+		get_tax_min(period_tax_rates.tax_range, period_tax_types.period_tax_type_id, 0) as min_range, 
 		period_tax_rates.org_id, period_tax_rates.tax_range as max_range, period_tax_rates.tax_rate, period_tax_rates.narrative
 	FROM period_tax_rates INNER JOIN period_tax_types ON period_tax_rates.period_tax_type_id = period_tax_types.period_tax_type_id;
 	

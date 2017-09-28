@@ -28,10 +28,13 @@
 	<parameter name="end_date" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2015-08-01"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="village_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_decision_support.health_worker_id, vw_decision_support.worker_name, vw_decision_support.org_id,
 vw_decision_support.org_name, vw_decision_support.county_id, vw_decision_support.county_name,
-vw_decision_support.sub_county_id, vw_decision_support.sub_county_name, vw_decision_support.survey_id,
+vw_decision_support.sub_county_id, vw_decision_support.sub_county_name, vw_decision_support.survey_id,vw_decision_support.village_id,
 vw_decision_support.village_name, vw_decision_support.name, vw_decision_support.survey_time,
 vw_decision_support.location_lat, vw_decision_support.location_lng,
 (CASE WHEN  vw_decision_support.survey_status = 0 THEN 'Pending'
@@ -53,6 +56,7 @@ vw_survey_100.other_facility
 FROM vw_decision_support
 INNER JOIN vw_survey_100 ON vw_survey_100.dss_id = vw_decision_support.survey_id
 WHERE vw_decision_support.health_worker_id = '$P!{health_worker_id}'
+AND vw_decision_support.village_id = '$P!{village_id}'
 AND vw_decision_support.survey_time::date BETWEEN'$P!{start_date}'::date AND '$P!{end_date}'::date]]>
 	</queryString>
 	<field name="health_worker_id" class="java.lang.Integer"/>
@@ -64,6 +68,7 @@ AND vw_decision_support.survey_time::date BETWEEN'$P!{start_date}'::date AND '$P
 	<field name="sub_county_id" class="java.lang.Integer"/>
 	<field name="sub_county_name" class="java.lang.String"/>
 	<field name="survey_id" class="java.lang.Integer"/>
+	<field name="village_id" class="java.lang.Integer"/>
 	<field name="village_name" class="java.lang.String"/>
 	<field name="name" class="java.lang.String"/>
 	<field name="survey_time" class="java.sql.Timestamp"/>
@@ -80,7 +85,7 @@ AND vw_decision_support.survey_time::date BETWEEN'$P!{start_date}'::date AND '$P
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="166" splitType="Stretch">
+		<band height="181" splitType="Stretch">
 			<staticText>
 				<reportElement style="Title" x="0" y="0" width="802" height="62" uuid="6c4a99bb-b0b8-4119-9023-80f97f831697"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -145,33 +150,44 @@ AND vw_decision_support.survey_time::date BETWEEN'$P!{start_date}'::date AND '$P
 				<text><![CDATA[Health Worker Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="341" y="140" width="65" height="15" forecolor="#000000" uuid="35097522-f91e-40a8-a36b-d46c7b34121b"/>
+				<reportElement style="Column header" x="341" y="158" width="65" height="15" forecolor="#000000" uuid="35097522-f91e-40a8-a36b-d46c7b34121b"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[End Date : ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="81" y="140" width="159" height="15" uuid="7d470367-8363-4229-bd7b-5e3ca10c8f6e"/>
+				<reportElement style="Detail" x="81" y="158" width="159" height="15" uuid="7d470367-8363-4229-bd7b-5e3ca10c8f6e"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{start_date}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="16" y="140" width="65" height="15" forecolor="#000000" uuid="a57e6f3c-5ab5-4c35-8635-39c129991c74"/>
+				<reportElement style="Column header" x="16" y="158" width="65" height="15" forecolor="#000000" uuid="a57e6f3c-5ab5-4c35-8635-39c129991c74"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Start Date : ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="406" y="140" width="159" height="15" uuid="12fdef3e-edd3-499a-8fbc-84d4354771ce"/>
+				<reportElement style="Detail" x="406" y="158" width="159" height="15" uuid="12fdef3e-edd3-499a-8fbc-84d4354771ce"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{end_date}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="139" y="130" width="382" height="15" uuid="30bb1d8c-44ab-4278-802d-3840a7e62ea4"/>
+				<textFieldExpression><![CDATA[$F{village_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="13" y="130" width="126" height="15" forecolor="#000000" uuid="1450b70f-bf94-4d0e-8f21-fe61d2f8489d"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" pdfFontName="Times-Bold"/>
+				</textElement>
+				<text><![CDATA[Village]]></text>
+			</staticText>
 		</band>
 	</title>
 	<pageHeader>

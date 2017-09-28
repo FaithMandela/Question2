@@ -87,7 +87,7 @@ public class umisRegistration {
 				xml += "</TRANSFERS>\n";
 				
 				// Writting data
-				String resp = port.addWsData(xml, "test123");
+				String resp = port.addWsData(xml, "babcockWB12345");
 				System.out.println("Add student data: \n" + resp);
 				
 				String updStr = "UPDATE registrations SET is_picked = true ";

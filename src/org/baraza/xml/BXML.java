@@ -93,4 +93,12 @@ public class BXML {
 			io.saveFile(xmlFile, el.toString());
 		}
 	}
+	
+	public void saveFile(String fileName) {
+		if(fileName != null) {
+			BElement el = root.getFirst();
+			Bio io = new Bio();
+			io.saveFile(fileName, el.toString());
+		}
+	}
 }
