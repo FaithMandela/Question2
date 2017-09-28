@@ -722,7 +722,6 @@ public class BWeb {
 		return hasAccess;
 	}
 	
-	
 	public String getWhere(HttpServletRequest request) {
 		String linkData = "";
 			
