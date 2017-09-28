@@ -47,7 +47,7 @@ public class BWebBody extends BQuery {
 		for(BElement el : view.getElements()) {
 			if(el.getName().equals("ACTIONS")) hasAction = true;
 			if(el.getName().equals("GRID") || el.getName().equals("FORM") || el.getName().equals("JASPER")) hasSubs = true;
-			if(el.getName().equals("FILES") || el.getName().equals("DIARY")) hasSubs = true;
+			if(el.getName().equals("TABLEVIEW") || el.getName().equals("FILES") || el.getName().equals("DIARY")) hasSubs = true;
 			if(el.getName().equals("COLFIELD") || el.getName().equals("TITLEFIELD")) hasTitle = true;
 			if(el.getName().equals("FILTERGRID")) hasFilter = true;
 		}
@@ -62,7 +62,7 @@ public class BWebBody extends BQuery {
 			addJSc = false;
 		} else {
 			myhtml.append("<div class='table-scrollable'>\n");
-			myhtml.append("<table class='table table-striped table-hover'>\n");
+			myhtml.append("<table class='table table-bordered table-hover'>\n");
 			myhtml.append("\n<thead>\n<tr>");
 			if(hasAction && (keyField != null)) {
 				myhtml.append("\n<th data-field='ID'>ID</th>");

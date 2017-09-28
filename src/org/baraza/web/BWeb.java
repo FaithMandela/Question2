@@ -68,7 +68,7 @@ public class BWeb {
 	boolean selectAll = false;
 	boolean isLicense = true;
 	boolean isExpired = false;
-	String[] deskTypes = {"ACCORDION", "CROSSTAB", "DASHBOARD", "DIARY",  "FILES", "FILTER", "FORM", "FORMVIEW", "GRID", "JASPER"};	// The search data  has to be ordered alphabetically
+	String[] deskTypes = {"ACCORDION", "CROSSTAB", "DASHBOARD", "DIARY",  "FILES", "FILTER", "FORM", "FORMVIEW", "GRID", "JASPER", "TABLEVIEW"};	// The search data  has to be ordered alphabetically
 	String viewKey = null;
 	String dataItem = null;
 	String userID = null;
@@ -864,6 +864,11 @@ public class BWeb {
 			body += webbody.getGrid(viewKeys, viewData, true, viewKey, false);
 			webbody.close();
 		} else if(view.getName().equals("FORMVIEW")) {
+			BWebBody webbody = new BWebBody(db, view, wheresql, sortby);
+			if(selectAll) webbody.setSelectAll();
+			body += webbody.getGrid(viewKeys, viewData, true, viewKey, false);
+			webbody.close();
+		} else if(view.getName().equals("TABLEVIEW")) {
 			BWebBody webbody = new BWebBody(db, view, wheresql, sortby);
 			if(selectAll) webbody.setSelectAll();
 			body += webbody.getGrid(viewKeys, viewData, true, viewKey, false);

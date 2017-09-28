@@ -1152,14 +1152,14 @@
 				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID name="Collateral Types" keyfield="collateral_type_id" table="collateral_types">
+		<TABLEVIEW name="Collateral Types" keyfield="collateral_type_id" table="collateral_types">
 			<TEXTFIELD w="75" title="Collateral Type ID">collateral_type_id</TEXTFIELD>
 			<TEXTFIELD w="175" title="Collateral Type">collateral_type_name</TEXTFIELD>
 			<FORM name="Collateral Types" keyfield="collateral_type_id" table="collateral_types">
 				<TEXTFIELD w="150" title="Collateral Type" y="10" h="20" x="10">collateral_type_name</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
-		</GRID>
+		</TABLEVIEW>
 	</DESK>
 	<DESK w="700" name="Deposit Accounts" key="115" h="550">
 		<GRID name="Deposit Accounts" keyfield="deposit_account_id" table="vw_deposit_accounts" where="(approve_status = 'Approved') AND (is_active = true)">
