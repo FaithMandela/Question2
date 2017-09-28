@@ -15,3 +15,5 @@ CREATE OR REPLACE VIEW vw_group_rates AS
 SELECT group_rates.group_rate_id, group_rates.org_id, group_rates.rate_plan_id, group_rates.days, group_rates.rate,
  group_rates.description,  rate_plan.rate_plan_name, group_rates.is_adult
 FROM group_rates INNER JOIN rate_plan ON group_rates.rate_plan_id = rate_plan.rate_plan_id ;
+
+ALTER table passengers add column group_rate_id integer references group_rates;

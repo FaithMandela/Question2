@@ -42,13 +42,13 @@
 	</MENU>
 	<DESK w="700" h="500" name="Dashboard" key="1">
 		<DASHBOARD w="650" name="Dashboard">
-			<TILE noorg.query="false" role="user" w="60" h="25" name="Today Sales" where="(DATE(approved_date)=CURRENT_DATE AND is_valid is true AND approved is true)" user="entity_id" table="vw_allpassengers">
+			<TILE noorg.query="false" role="user" w="60" h="25" name="Today Sales" where="(DATE(approved_date)=CURRENT_DATE AND is_valid is true AND approved is true)" groupby="entity_id" user="entity_id" table="vw_allpassengers">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id),0)" title="Total Sales">total_passengers</TEXTFIELD>
 			</TILE>
 			<TILE noorg.query="true" role="agency,broker" w="60" h="25" name="Today Sales" where="(DATE(approved_date)=CURRENT_DATE AND is_valid is true AND approved is true)" table="vw_allpassengers">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id),0)" title="Total Sales">total_passengers</TEXTFIELD>
 			</TILE>
-			<TILE noorg.query="true" role="user" name="Total Amount" where="(approved is true AND is_valid is true)" user="entity_id" table="vw_allpassengers">
+			<TILE noorg.query="true" role="user" name="Total Amount" where="(approved is true AND is_valid is true)" groupby="entity_id" user="entity_id" table="vw_allpassengers">
 				<TEXTFIELD w="75" fnct="ROUND(sum(totalamount_covered)::numeric,2)" title="Total Amount">Total_covered</TEXTFIELD>
 			</TILE>
 			<TILE noorg.query="true" role="agency" name="Total Amount" where="(approved is true AND is_valid is true)" table="vw_allpassengers">
@@ -57,7 +57,7 @@
 			<TILE noorg="true" noorg.query="true" role="admin,manager" w="60" h="25" name="Today Sales" where="(DATE(approved_date)=CURRENT_DATE AND is_valid is true AND approved is true)" table="vw_allpassengers">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id), 0)" title="Total Members">total_passengers</TEXTFIELD>
 			</TILE>
-			<TILE noorg="true" noorg.query="true" role="individual" jumpview="invoice" w="60" h="25" name="Unpaid Invoice" where="(is_valid is true AND approved is false)" groupby="entity_id" user="entity_id" table="vw_allpassengers">
+			<TILE noorg="true" noorg.query="true" role="individual" w="60" h="25" name="Unpaid Invoice" where="(is_valid is true AND approved is false)" groupby="entity_id" user="entity_id" table="vw_allpassengers" url="invoice">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id), 0)" title="Unpaid Invoice">total_invoices</TEXTFIELD>
 			</TILE>
 			<TILE noorg="true" noorg.query="true" role="individual" jumpview="82:0" w="60" h="25" name="Paid Invoices" where="(is_valid is true AND approved is true)" groupby="entity_id" user="entity_id" table="vw_allpassengers">
@@ -1301,7 +1301,7 @@
 	</DESK>
 	<DESK w="700" h="550" name="My Insurance" key="82">
 		<GRID role="admin,manager,individual,user" jumpview="invoice" keyfield="passenger_id" name="My Insurance" orderby="passenger_id DESC" where="(approved is true) AND (is_valid is true)" tab.count="count(passenger_id)" user="entity_id" table="vw_allpassengers">
-			<TEXTFIELD jumpview="1.0" w="75" title="Policy Number">policy_number</TEXTFIELD>
+			<TEXTLINK w="75" title="Policy Number">policy_number</TEXTLINK>
 			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>

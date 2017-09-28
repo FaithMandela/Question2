@@ -128,7 +128,8 @@ CREATE INDEX corporate_rates_rate_type_id ON corporate_rates(rate_type_id);
 CREATE TABLE passengers(
 	passenger_id 			serial primary key,
 	rate_id 				integer REFERENCES rates ,
-	corporate_rate_id			integer REFERENCES corporate_rates,
+	corporate_rate_id		integer REFERENCES corporate_rates,
+	group_rate_id			integer REFERENCES group_rates,
 	entity_id 				integer REFERENCES entitys,
 	org_id 					integer REFERENCES orgs,
 	policy_number 			character varying(50),
@@ -324,7 +325,7 @@ SELECT corporate_benefits.corporate_benefit_type_id,  corporate_benefit_types.co
 	    currency.currency_symbol AS base_currency_symbol,  currency_rates.exchange_date, currency_rates.exchange_rate
 	   FROM currency_rates
 	     JOIN currency ON currency_rates.currency_id = currency.currency_id;
-		 
+
  CREATE OR REPLACE VIEW vw_group_rates AS
  SELECT group_rates.group_rate_id, group_rates.org_id, group_rates.rate_plan_id, group_rates.days, group_rates.rate,
   group_rates.description,  rate_plan.rate_plan_name, group_rates.is_adult
