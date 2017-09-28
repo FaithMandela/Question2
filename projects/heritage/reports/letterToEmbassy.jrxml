@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="letterToEmbassy" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" scriptletClass="net.sf.jasperreports.engine.JRDefaultScriptlet" whenResourceMissingType="Empty" uuid="01ac051a-bdf8-47ed-a470-8666b23c63a7">
 	<property name="ireport.zoom" value="1.1000000000000003"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="294"/>
+	<property name="ireport.y" value="198"/>
 	<parameter name="filterid" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[$P{passenger_id}]]></defaultValueExpression>
 	</parameter>
@@ -15,22 +15,22 @@
 	<queryString>
 		<![CDATA[SELECT
 regexp_replace(
- to_char(vw_passengers.days_from,'DD'|| case when (EXTRACT(DAY FROM vw_passengers.days_from) IN (01,1,21,31)) then '<sup>ST</sup>'
+ to_char(vw_passengers.days_from,'FMDD'|| case when (EXTRACT(DAY FROM vw_passengers.days_from) IN (01,1,21,31)) then '<sup>ST</sup>'
 when (EXTRACT(DAY FROM vw_passengers.days_from) IN (03,3,23)) then '"<sup>RD</sup>"'
 when (EXTRACT(DAY FROM vw_passengers.days_from) IN (02,2,22)) then '"<sup>ND</sup>"'
-ELSE  '<sup>TH</sup>' end ||' MONTH YYYY'),'\s+', ' ','g') || ' TO ' ||(regexp_replace(to_char(vw_passengers.days_to,'DD'|| case when (EXTRACT(DAY FROM vw_passengers.days_to) IN (01,1,21,31)) then '<sup>ST</sup>'
+ELSE  '<sup>TH</sup>' end ||' MONTH YYYY'),'\s+', ' ','g') || ' TO ' ||(regexp_replace(to_char(vw_passengers.days_to,'FMDD'|| case when (EXTRACT(DAY FROM vw_passengers.days_to) IN (01,1,21,31)) then '<sup>ST</sup>'
 when (EXTRACT(DAY FROM vw_passengers.days_to) IN (03,3,23)) then '"<sup>RD</sup>"'
 when (EXTRACT(DAY FROM vw_passengers.days_to) IN (02,2,22)) then '"<sup>ND</sup>"'
 ELSE  '<sup>TH</sup>' end || ' MONTH YYYY'),'\s+', ' ','g') ||'.') as p1,
-vw_passengers.passenger_id,vw_passengers.passenger_name,vw_passengers.rate_type_id as rate_type_id,regexp_replace(to_char(vw_passengers.approved_date::date,'DD'|| case when (EXTRACT(DAY FROM vw_passengers.approved_date) IN (01,1,21,31)) then '<sup>ST</sup>'
+vw_passengers.passenger_id,vw_passengers.passenger_name,vw_passengers.rate_type_id as rate_type_id,regexp_replace(to_char(vw_passengers.approved_date::date,'FMDD'|| case when (EXTRACT(DAY FROM vw_passengers.approved_date) IN (01,1,21,31)) then '<sup>ST</sup>'
 when (EXTRACT(DAY FROM vw_passengers.approved_date::date) IN (03,3,23)) then '"<sup>RD</sup>"'
 when (EXTRACT(DAY FROM vw_passengers.approved_date) IN (02,2,22)) then '"<sup>ND</sup>"'
 ELSE  '<sup>TH</sup>' end ||'  MONTH YYYY'),'\s+', ' ','g') as approved_date,vw_passengers.passenger_id_no,vw_passengers.destown ||',' as destown,'EMBASSY OF '|| vw_passengers.destown as embassy,vw_passengers.policy_number,vw_passengers.passport_num,
-(regexp_replace(to_char(vw_passengers.days_from,'DD'|| case when (EXTRACT(DAY FROM vw_passengers.days_from) IN (01,1,21,31)) then '<sup>ST</sup>'
+(regexp_replace(to_char(vw_passengers.days_from,'FMDD'|| case when (EXTRACT(DAY FROM vw_passengers.days_from) IN (01,1,21,31)) then '<sup>ST</sup>'
 when (EXTRACT(DAY FROM vw_passengers.days_from) IN (03,3,23)) then '"<sup>RD</sup>"'
 when (EXTRACT(DAY FROM vw_passengers.days_from) IN (02,2,22)) then '"<sup>ND</sup>"'
 ELSE  '<sup>TH</sup>' end ||' MONTH YYYY'),'\s+', ' ','g'))as days_from,
-(regexp_replace(to_char(vw_passengers.days_to,'DD'|| case when (EXTRACT(DAY FROM vw_passengers.days_to) IN (01,1,21,31)) then '<sup>ST</sup>'
+(regexp_replace(to_char(vw_passengers.days_to,'FMDD'|| case when (EXTRACT(DAY FROM vw_passengers.days_to) IN (01,1,21,31)) then '<sup>ST</sup>'
 when (EXTRACT(DAY FROM vw_passengers.days_to) IN (03,3,23)) then '"<sup>RD</sup>"'
 when (EXTRACT(DAY FROM vw_passengers.days_to) IN (02,2,22)) then '"<sup>ND</sup>"'
 ELSE  '<sup>TH</sup> ' end || ' MONTH YYYY'),'\s+', ' ','g') ||'.')as days_to,
@@ -155,13 +155,6 @@ WHERE passenger_id  = '$P!{passenger_id}']]>
 				</textElement>
 				<text><![CDATA[POLICY NUMBER:]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="82" y="174" width="56" height="20" uuid="2e3a6bcb-c812-4e9e-8e3e-0609b441a975"/>
-				<textElement>
-					<font fontName="Arial" size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[INSURED:]]></text>
-			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="179" y="154" width="283" height="20" uuid="00c2565f-f68d-441b-991a-af9a19e9649e"/>
 				<textElement>
@@ -170,19 +163,18 @@ WHERE passenger_id  = '$P!{passenger_id}']]>
 				<textFieldExpression><![CDATA[$F{policy_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="138" y="174" width="324" height="20" uuid="4413232b-798d-4950-b766-c41c183bc7a0"/>
+				<reportElement x="82" y="174" width="380" height="20" uuid="4413232b-798d-4950-b766-c41c183bc7a0"/>
 				<textElement>
-					<font fontName="Arial" size="11" isBold="true"/>
+					<font fontName="Arial" size="11" isBold="true" isUnderline="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{passenger_name}.toUpperCase()]]></textFieldExpression>
+				<textFieldExpression><![CDATA["INSURED:  "+$F{passenger_name}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="544" width="268" height="33" uuid="ee72dfbd-6c74-4b9e-b283-9a8f8787dc8a"/>
+				<reportElement x="0" y="554" width="268" height="23" uuid="ee72dfbd-6c74-4b9e-b283-9a8f8787dc8a"/>
 				<textElement>
-					<font fontName="Times New Roman" size="12"/>
+					<font fontName="Times New Roman" size="12" isBold="true" isUnderline="true"/>
 				</textElement>
-				<text><![CDATA[VALERIE MURIITHI
-SALES & DISTRIBUTION DEPARTMENT]]></text>
+				<text><![CDATA[SALES & DISTRIBUTION DEPARTMENT]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="134" width="29" height="20" uuid="04a37615-9faa-4030-b500-2fadc4c93212"/>
@@ -217,7 +209,7 @@ SALES & DISTRIBUTION DEPARTMENT]]></text>
 				<textFieldExpression><![CDATA[$V{benefits}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="0" y="412" width="218" height="132" uuid="3aabf701-7e0e-419f-afe7-a8706c9d38dd"/>
+				<reportElement x="0" y="412" width="199" height="122" uuid="3aabf701-7e0e-419f-afe7-a8706c9d38dd"/>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "sign.png"]]></imageExpression>
 			</image>
 			<staticText>
@@ -256,6 +248,13 @@ SALES & DISTRIBUTION DEPARTMENT]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA["The policy is valid from <style isBold=\"true\">" +$F{days_from} + " TO "+$F{days_to} + "</style>"]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="1" y="534" width="267" height="20" uuid="0f4aaa7d-673a-4b45-9cb0-dcd61e517a67"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VALERIE MURIITHI]]></text>
+			</staticText>
 		</band>
 	</detail>
 	<pageFooter>

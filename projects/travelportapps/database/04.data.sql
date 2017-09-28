@@ -1685,7 +1685,7 @@ INSERT INTO city_codes VALUES ('DUR', 'Durban', 'South Africa', 'ZA');
 INSERT INTO city_codes VALUES ('ELS', 'East London', 'South Africa', 'ZA');
 INSERT INTO city_codes VALUES ('ELL', 'Ellisras', 'South Africa', 'ZA');
 INSERT INTO city_codes VALUES ('GRJ', 'George', 'South Africa', 'ZA');
-INSERT INTO city_codes VALUES ('JNB', 'Johannesburg', 'South Africa', 'ZA');
+INSERT INTO city_codes VALUES ('JNB', 'OR Tambo International Arpt(JNB)', 'South Africa', 'ZA');
 INSERT INTO city_codes VALUES ('KIM', 'Kimberley', 'South Africa', 'ZA');
 INSERT INTO city_codes VALUES ('KLZ', 'Kleinsee', 'South Africa', 'ZA');
 INSERT INTO city_codes VALUES ('HLA', 'Lanseria', 'South Africa', 'ZA');

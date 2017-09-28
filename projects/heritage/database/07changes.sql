@@ -1,25 +1,17 @@
-CREATE OR REPLACE FUNCTION update_levy(integer) RETURNS character varying(20) AS $$
-DECLARE
-rec	RECORD;
-v_amount real;
-v_policy_holder_fund real;
-v_stamp_duty real;
-v_training_levy real;
-msg 	varchar(120);
-BEGIN
 
-FOR rec IN SELECT passenger_id, cover_amount  FROM passengers WHERE passenger_id > $1
-LOOP
-	v_policy_holder_fund := 0.25/100 *rec.cover_amount;
-	v_stamp_duty := 0.39;
-	v_training_levy := 0.2/100 *rec.cover_amount;
-	UPDATE passengers SET training_levy =ROUND(v_training_levy::numeric,2) , stamp_duty=ROUND(v_stamp_duty::numeric,2), policy_holder_fund =ROUND(v_policy_holder_fund::numeric,2)
-	 WHERE  passenger_id = rec.passenger_id;
+CREATE TABLE group_rates   (
+	group_rate_id 		        	serial PRIMARY KEY,
+	org_id							integer references orgs,
+	rate_plan_id 		    		integer references rate_plan,
+	days 		      				integer,
+	rate 	    					real,
+	is_adult 						boolean default true,
+	description						text
+	);
+CREATE INDEX group_rates_rate_plan_id ON group_rates(rate_plan_id);
+CREATE INDEX orgs_org_id ON group_rates(org_id);
 
-END LOOP;
-msg := 'updated';
-
-RETURN msg;
-
-END;
-$$ LANGUAGE plpgsql;
+CREATE OR REPLACE VIEW vw_group_rates AS
+SELECT group_rates.group_rate_id, group_rates.org_id, group_rates.rate_plan_id, group_rates.days, group_rates.rate,
+ group_rates.description,  rate_plan.rate_plan_name, group_rates.is_adult
+FROM group_rates INNER JOIN rate_plan ON group_rates.rate_plan_id = rate_plan.rate_plan_id ;
