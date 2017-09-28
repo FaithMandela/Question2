@@ -133,6 +133,14 @@ public class BJSONQuery extends BQuery {
 							if(el.getAttribute("hint") != null) mydv += " title='" + getString(el.getAttribute("hint")) +  "'"; 
 							mydv += "><img src='assets/images/form.png'></a>";
 							myjo.add(mydn, mydv);
+						} else if(el.getName().equals("TEXTLINK")) {
+							String sk = getSelectKey();
+							mydv = cellData;
+							if(sk != null) {
+								mydv = "<a href='?view=" + viewKey + ":" + sk + "&data=" + rs.getString(keyField) + ">";
+								mydv += cellData + "</a>";
+							}
+							myjo.add(mydn, mydv);
 						} else {
 							myjo.add(mydn, cellData);
 						}
