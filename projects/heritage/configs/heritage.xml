@@ -383,6 +383,19 @@
 				<TEXTAREA w="430" h="70" x="10" y="30" title="Details">details</TEXTAREA>
 			</FORM>
 		</GRID>
+		<GRID noorg="true" keyfield="group_rate_id" name="Group Rates" tab.count="count(group_rate_id)" table="vw_group_rates">
+			<TEXTFIELD w="75" title="Group Rate ID">group_rate_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Plan">rate_plan_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Rates">rate</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Is Adult">is_adult</CHECKBOX>
+			<TEXTAREA w="75" title="Rates">description</TEXTAREA>
+			<FORM keyfield="group_rate_id" name="Group Rates" table="group_rates">
+				<COMBOBOX noorg="true" w="150" h="20" lpfield="rate_plan_name" x="10" y="30" lptable="rate_plan" title="Rate Plan">rate_plan_id</COMBOBOX>
+				<TEXTDECIMAL w="150" h="20" x="10" y="10" title="Daily Rates">rate</TEXTDECIMAL>
+				<CHECKBOX w="150" h="20" x="290" y="150" title="Adult">is_adult</CHECKBOX>
+				<TEXTAREA w="430" h="70" x="10" y="30" title="Details">description</TEXTAREA>
+			</FORM>
+		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Exchange Rate" key="201">
 		<GRID noorg="true" keyfield="currency_id" name="Currency" table="currency">

@@ -44,7 +44,8 @@ CREATE TABLE sys_countrys (
 	sys_currency_name		varchar(50),
 	sys_currency_cents		varchar(50),
 	sys_currency_code		varchar(3),
-	sys_currency_exchange	real
+	sys_currency_exchange	real,
+	is_active				boolean default true
 );
 CREATE INDEX sys_countrys_sys_continent_id ON sys_countrys (sys_continent_id);
 
@@ -455,6 +456,16 @@ CREATE TABLE jp_pay (
 );
 CREATE INDEX jp_pay_entity_id ON jp_pay (entity_id);
 CREATE INDEX jp_pay_org_id ON jp_pay (org_id);
+CREATE TABLE pesapal_trans(
+  pesapal_trans_id serial NOT NULL,
+  merchant_orderid integer references passengers,
+  pesapal_transaction_tracking_id character varying(200),
+  status character varying(30),
+  jp_timestamp timestamp without time zone DEFAULT now(),
+  details text
+
+);
+CREATE INDEX pesapal_trans_passenger_id ON pesapal_trans (merchant_orderid);
 
 CREATE TABLE jamboverify (
 	jv_id					serial primary key,
@@ -479,10 +490,10 @@ CREATE VIEW vw_sys_emailed AS
 		sys_emailed.emailed, sys_emailed.narrative
 	FROM sys_emails RIGHT JOIN sys_emailed ON sys_emails.sys_email_id = sys_emailed.sys_email_id;
 
-CREATE VIEW vw_sys_countrys AS
+CREATE OR REPLACE VIEW vw_sys_countrys AS
 	SELECT sys_continents.sys_continent_id, sys_continents.sys_continent_name,
 		sys_countrys.sys_country_id, sys_countrys.sys_country_code, sys_countrys.sys_country_number,
-		sys_countrys.sys_phone_code, sys_countrys.sys_country_name
+		sys_countrys.sys_phone_code, sys_countrys.sys_country_name,sys_countrys.is_active
 	FROM sys_continents INNER JOIN sys_countrys ON sys_continents.sys_continent_id = sys_countrys.sys_continent_id;
 
 CREATE OR REPLACE VIEW vw_address AS

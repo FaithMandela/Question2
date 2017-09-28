@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="certificate_subreport1" language="groovy" pageWidth="595" pageHeight="842" columnWidth="541" leftMargin="27" rightMargin="27" topMargin="20" bottomMargin="5" uuid="1fa3ba50-c949-4a5d-9b2a-a8a239f9432a">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="104"/>
+	<property name="ireport.y" value="227"/>
 	<parameter name="filterid" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA["78"]]></defaultValueExpression>
 	</parameter>
@@ -97,7 +97,7 @@ WHERE vw_policy_members.passenger_id = '$P!{filterid}';]]>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{sys_country_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{departure_country}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="74" width="143" height="23" uuid="89aa2ab4-4571-4921-90dd-da8a071c0fca"/>
@@ -107,18 +107,18 @@ WHERE vw_policy_members.passenger_id = '$P!{filterid}';]]>
 				<text><![CDATA[Policy Number :]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="63" y="235" width="168" height="15" uuid="1db6794c-9e84-4802-aad1-ae4d679f4435"/>
+				<reportElement x="63" y="222" width="195" height="15" uuid="1db6794c-9e84-4802-aad1-ae4d679f4435"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
 				<text><![CDATA[Emergency dental expenses]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="63" y="205" width="100" height="15" uuid="02c28a88-49f3-40f7-b3c5-abaea0816e2d"/>
+				<reportElement x="63" y="205" width="158" height="15" uuid="02c28a88-49f3-40f7-b3c5-abaea0816e2d"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
-				<text><![CDATA[Medical emergency]]></text>
+				<text><![CDATA[Emergency Medical Expenses]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="302" y="280" width="100" height="15" uuid="481c50a8-b7f6-41c2-8387-2237e600561d"/>
@@ -128,7 +128,7 @@ WHERE vw_policy_members.passenger_id = '$P!{filterid}';]]>
 				<text><![CDATA[Missed departure]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="63" y="280" width="100" height="15" uuid="4481074f-d2e8-4c06-9029-b6bc3e560142"/>
+				<reportElement x="63" y="267" width="127" height="15" uuid="4481074f-d2e8-4c06-9029-b6bc3e560142"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
@@ -156,11 +156,11 @@ WHERE vw_policy_members.passenger_id = '$P!{filterid}';]]>
 				<text><![CDATA[Trip cancellation and curtailment]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="63" y="250" width="212" height="15" uuid="a42466bc-b508-4b8a-b6c6-17c19ca176dd"/>
+				<reportElement x="63" y="237" width="239" height="15" uuid="a42466bc-b508-4b8a-b6c6-17c19ca176dd"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
-				<text><![CDATA[Follow up treatment residence country]]></text>
+				<text><![CDATA[Follow up treatment in residence country]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="302" y="295" width="100" height="15" uuid="747babfc-f30b-47f7-979c-03ecb82f49e4"/>
@@ -174,7 +174,7 @@ WHERE vw_policy_members.passenger_id = '$P!{filterid}';]]>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
-				<text><![CDATA[Country of residence :]]></text>
+				<text><![CDATA[Country of departure :]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="302" y="205" width="215" height="15" uuid="2e61a9a3-761e-41d7-9c12-0a27e0f86ebe"/>
@@ -198,11 +198,11 @@ WHERE vw_policy_members.passenger_id = '$P!{filterid}';]]>
 				<textFieldExpression><![CDATA[$F{countries}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="63" y="265" width="100" height="15" uuid="7089b6b3-6d0d-4f08-9546-179819d1443b"/>
+				<reportElement x="63" y="252" width="127" height="15" uuid="7089b6b3-6d0d-4f08-9546-179819d1443b"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
-				<text><![CDATA[Body rapatriation]]></text>
+				<text><![CDATA[Repatriation]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="302" y="220" width="100" height="15" uuid="26fedc34-1035-4ee5-8b8a-45d7159da6de"/>
@@ -240,13 +240,6 @@ WHERE vw_policy_members.passenger_id = '$P!{filterid}';]]>
 				<text><![CDATA[Repatriation after treatment]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="63" y="220" width="100" height="15" uuid="71b6634d-7976-4263-be6e-0f1d04c10ef9"/>
-				<textElement>
-					<font fontName="Garamond-Normal" size="12"/>
-				</textElement>
-				<text><![CDATA[Medical evacuation]]></text>
-			</staticText>
-			<staticText>
 				<reportElement x="0" y="311" width="541" height="20" forecolor="#15150B" uuid="3079585b-d80b-4f1e-9528-19f3aba69c66"/>
 				<textElement textAlignment="Center">
 					<font fontName="Garamond-Normal" size="16" isBold="true"/>
@@ -254,11 +247,11 @@ WHERE vw_policy_members.passenger_id = '$P!{filterid}';]]>
 				<text><![CDATA[SPECIAL PROVISION]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="0" y="333" width="541" height="49" uuid="21c0dab1-793b-4e0f-a717-c16cf2853a08"/>
+				<reportElement positionType="Float" x="0" y="333" width="541" height="56" uuid="21c0dab1-793b-4e0f-a717-c16cf2853a08"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
-				<text><![CDATA[The insured recognizes and declares to be informed of the General Condition as well as the benefits and the exclusions. This certificate cannot be used as a letter of gurantee for payment into public or private medical organization. The insured declares to have not scheduled any travel for therapeutic treatment.]]></text>
+				<text><![CDATA[The insured recognizes and declares to be informed of the General Condition as well as the benefits and the exclusions. This certificate cannot be used as a letter of guarantee for payment into public or private medical organization. The insured declares to have not scheduled any travel for therapeutic treatment.]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="452" width="541" height="15" forecolor="#FA0505" uuid="5e82b2fe-e2dd-4271-abf2-59a126abd529"/>
@@ -286,10 +279,10 @@ WHERE vw_policy_members.passenger_id = '$P!{filterid}';]]>
 				<textElement textAlignment="Center">
 					<font fontName="Garamond-Normal" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[London, United Kindom +44(0)20 7902 7405]]></text>
+				<text><![CDATA[London, United Kingdom +44(0)20 7902 7405]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="386" width="541" height="18" forecolor="#1F0F0F" uuid="d81b3d05-523f-4b33-88c0-97e8795b59fd"/>
+				<reportElement x="0" y="389" width="541" height="18" forecolor="#1F0F0F" uuid="d81b3d05-523f-4b33-88c0-97e8795b59fd"/>
 				<textElement textAlignment="Center">
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>

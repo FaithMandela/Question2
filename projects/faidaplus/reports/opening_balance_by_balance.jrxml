@@ -83,7 +83,7 @@ ORDER BY sum(a.balance);]]>
 				<text><![CDATA[Segments]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="689" y="0" width="64" height="15" uuid="018dd29c-23d9-4b23-9ce7-631b9c620945"/>
+				<reportElement x="708" y="0" width="74" height="15" uuid="018dd29c-23d9-4b23-9ce7-631b9c620945"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="3"/>
@@ -108,14 +108,7 @@ ORDER BY sum(a.balance);]]>
 				<text><![CDATA[Earnings]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="753" y="0" width="32" height="15" uuid="ede73c28-d6ed-4dd5-88f0-6a7505b67136"/>
-				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Rate]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="594" y="0" width="95" height="15" uuid="46a1125a-20d9-4c52-997c-28f06b68d26d"/>
+				<reportElement x="594" y="0" width="114" height="15" uuid="46a1125a-20d9-4c52-997c-28f06b68d26d"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
@@ -164,7 +157,7 @@ ORDER BY sum(a.balance);]]>
 				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="689" y="0" width="64" height="15" isPrintWhenDetailOverflows="true" uuid="d9ccff8e-74a7-40f1-933a-9809bb151693"/>
+				<reportElement x="708" y="0" width="74" height="15" isPrintWhenDetailOverflows="true" uuid="d9ccff8e-74a7-40f1-933a-9809bb151693"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="3"/>
@@ -193,15 +186,8 @@ ORDER BY sum(a.balance);]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{points}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true">
-				<reportElement x="753" y="0" width="32" height="15" isPrintWhenDetailOverflows="true" uuid="e425bb09-400b-453e-88cb-f0e82c5ede98"/>
-				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{rates}]]></textFieldExpression>
-			</textField>
 			<textField>
-				<reportElement x="594" y="0" width="95" height="15" uuid="0048fdd1-80d6-4872-8c31-e5f0abc21071"/>
+				<reportElement x="594" y="0" width="114" height="15" uuid="0048fdd1-80d6-4872-8c31-e5f0abc21071"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
@@ -256,7 +242,7 @@ ORDER BY sum(a.balance);]]>
 				<textFieldExpression><![CDATA[$V{total_earnings}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="689" y="20" width="64" height="20" isPrintWhenDetailOverflows="true" uuid="083a2d92-51ca-481e-ab72-dedde0f6b709"/>
+				<reportElement x="689" y="20" width="93" height="20" isPrintWhenDetailOverflows="true" uuid="083a2d92-51ca-481e-ab72-dedde0f6b709"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10" isBold="true"/>
 				</textElement>
