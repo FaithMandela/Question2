@@ -214,8 +214,8 @@ public class BWebBody extends BQuery {
 						} else if(el.getName().equals("COMBOBOX")) {
 							String fieldValue = getString(el.getValue());
 							String defaultvalue = el.getAttribute("default", "");
-							String linkData = null;
-							if(el.getAttribute("linkfield") != null) linkData = rs.getString(keyField);
+							String linkData = rs.getString(keyField);
+							if(el.getAttribute("linksource") != null) linkData = rs.getString(el.getAttribute("linksource"));
 							myhtml.append("\n<td>");
 							myhtml.append(getComboBox(el, linkData, true, fieldValue, defaultvalue));
 						} else if(el.getName().equals("BROWSER")) {
@@ -841,6 +841,8 @@ public class BWebBody extends BQuery {
 		String orderBySql = el.getAttribute("orderby");
 		if(orderBySql == null) mysql += " ORDER BY " + lpfield;
 		else mysql += " ORDER BY " + orderBySql;
+		
+System.out.println("BASE COMBO : " + mysql);
 
 		if(nodefault != null) response.append("<option></option>");
 
