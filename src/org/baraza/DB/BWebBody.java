@@ -842,7 +842,7 @@ public class BWebBody extends BQuery {
 		if(orderBySql == null) mysql += " ORDER BY " + lpfield;
 		else mysql += " ORDER BY " + orderBySql;
 		
-System.out.println("BASE COMBO : " + mysql);
+//System.out.println("BASE COMBO : " + mysql);
 
 		if(nodefault != null) response.append("<option></option>");
 

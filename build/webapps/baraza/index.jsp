@@ -602,6 +602,12 @@
 </script>
 
 <script>
+	$('#btProcess').click(function(){
+console.log("TODO Bulk Save grid");
+	});
+
+	<%= web.getTableViewKeys() %>
+
    	function updateField(valueid, valuename) {
 		document.getElementsByName(valueid)[0].value = valuename;
 	}
@@ -733,10 +739,6 @@
             $('#jqlist').setGridParam({datatype:'json', page:1}).trigger('reloadGrid');
         });
     });
-
-	$('#btProcess').click(function(){
-console.log("TODO Bulk Save grid");
-	});
 
 	$('#btnAction').click(function(){
 	    var operation = $("#operation").val();
