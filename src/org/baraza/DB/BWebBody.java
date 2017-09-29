@@ -214,8 +214,10 @@ public class BWebBody extends BQuery {
 						} else if(el.getName().equals("COMBOBOX")) {
 							String fieldValue = getString(el.getValue());
 							String defaultvalue = el.getAttribute("default", "");
+							String linkData = null;
+							if(el.getAttribute("linkfield") != null) linkData = rs.getString(keyField);
 							myhtml.append("\n<td>");
-							myhtml.append(getComboBox(el, null, true, fieldValue, defaultvalue));
+							myhtml.append(getComboBox(el, linkData, true, fieldValue, defaultvalue));
 						} else if(el.getName().equals("BROWSER")) {
 							myhtml.append("\n<td>");
 							if(el.getAttribute("path") != null) myhtml.append("<a href='" + el.getAttribute("path"));
@@ -242,11 +244,13 @@ public class BWebBody extends BQuery {
 							if(el.getAttribute("hint") != null) myhtml.append(" title='" + el.getAttribute("hint") +  "'"); 
 
 							myhtml.append(">" + cellData + "</a>");
+						} else if(el.getAttribute("display", "show").equals("hide")){
 						} else {
 							myhtml.append("\n<td>");
 							myhtml.append(cellData);
 						}
-						myhtml.append("</td>");
+						
+						if(el.getAttribute("display", "show").equals("show")) myhtml.append("</td>");
 
 						if(view.getName().equals("FORMVIEW")) {
 							if(col != 0) myhtml.append("\n<tr>");
