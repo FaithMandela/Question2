@@ -1400,12 +1400,13 @@
 					<TEXTFIELD w="75" title="Survey status">status</TEXTFIELD>
 					<TEXTTIMESTAMP w="75" title="Referral Time">referral_time</TEXTTIMESTAMP>
 					<JASPER role="clinician" reportfile="vw_survey_100.jasper" name="CHV DSS - 100"></JASPER>
-					<GRID noorg="true" role="clinician" jumpview="40:0:0:2:2" updatetable="clinician_mpp" keyfield="clinician_mpp_id" name="Clinician's DSS" linkfield="survey_100_id" table="vw_clinician_mpp">
+					<TABLEVIEW noorg="true" role="clinician" jumpview="40:0:0:2:2" updatetable="clinician_mpp" keyfield="clinician_mpp_id" name="Clinician's DSS" linkfield="survey_100_id" table="vw_clinician_mpp">
 						<TEXTFIELD w="45" title="Registration ID">reg_id</TEXTFIELD>
+						<TEXTFIELD w="45" title="Question ID">mother_mpp_def_id</TEXTFIELD>
 						<TEXTFIELD w="75" title="Question">question</TEXTFIELD>
-						<EDITFIELD w="45" title="Options" editoptions="0:SELECT OPTION;1:YES;2:NO;3:N/A" edittype="select">response</EDITFIELD>
+						<COMBOBOX noorg="true" w="430" h="20" lpfield="response_option" x="10" y="30" lptable="mother_def_info_options" linkfield="mother_mpp_def_id" linksource="mother_mpp_def_id" title="Select Option">response</COMBOBOX>
 						<TEXTFIELD w="75" title="Clinician response">response_name</TEXTFIELD>
-					</GRID>
+					</TABLEVIEW>
 					<FORM role="clinician" jumpview="40:0:0:2:3" keyfield="survey_100_id" name="by clinician" linkfield="village_id" table="survey_100">
 						<TEXTFIELD w="430" h="20" x="10" y="330" title="Name of the clinician" required="true">receiving_officer_name</TEXTFIELD>
 						<TEXTFIELD w="430" h="20" x="10" y="330" title="Clinician's Profession" required="true">receiving_officer_profession</TEXTFIELD>
@@ -1693,7 +1694,7 @@
 	<DESK w="700" h="550" name="Reviewer Report" key="93">
 		<FILTER split="150" w="700" h="550" name="Reviewer Report" type="vert">
 			<FILTERFORM name="Reviewer Report">
-				<COMBOBOX noorg="true" w="430" h="20" lpfield="entity_name" x="10" y="30" lptable="entitys" where="(function_role='reviewer')" title="Name of the reviewer" user="entity_id">entity_id</COMBOBOX>
+				<COMBOBOX noorg="true" w="430" h="20" lpfield="entity_name" x="10" y="30" lptable="entitys" where="(function_role='reviewer')" title="Name of the reviewer">entity_id</COMBOBOX>
 				<TEXTDATE w="150" h="20" x="10" y="50" title="Start Date">start_date</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="10" y="50" title="End Date">end_date</TEXTDATE>
 			</FILTERFORM>
