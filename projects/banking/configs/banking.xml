@@ -866,7 +866,7 @@
 				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
 				<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 				<TEXTFIELD w="75" title="Account Number">account_number</TEXTFIELD>
-				<TEXTTIMESTAMP w="75" title="Created">application_date</TEXTTIMESTAMP>
+				<TEXTDATE w="75" title="Opened">opening_date</TEXTDATE>
 				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 				<ACTIONS>
@@ -883,6 +883,7 @@
 					<TEXTDECIMAL w="150" title="Interest Rate" y="90" h="20" x="10">interest_rate</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Lockin Period Frequency" y="90" h="20" x="290">lockin_period_frequency</TEXTDECIMAL>
 					<TEXTDATE w="150" title="Lockedin Until Date" y="110" h="20" x="10">lockedin_until_date</TEXTDATE>
+					<TEXTDATE w="150" title="Opening Date" default="now" y="110" h="20" x="290">opening_date</TEXTDATE>
 					<TEXTFIELD w="430" title="Narrative" y="130" h="20" x="10">narrative</TEXTFIELD>
 					<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
 				</FORM>
@@ -1075,7 +1076,7 @@
 				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
 				<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 				<TEXTFIELD w="75" title="Account Number">account_number</TEXTFIELD>
-				<TEXTTIMESTAMP w="75" title="Created">application_date</TEXTTIMESTAMP>
+				<TEXTDATE w="75" title="Opened">opening_date</TEXTDATE>
 				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 				<ACTIONS>
@@ -1092,6 +1093,7 @@
 					<TEXTDECIMAL w="150" title="Interest Rate" y="90" h="20" x="10">interest_rate</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Lockin Period Frequency" y="90" h="20" x="290">lockin_period_frequency</TEXTDECIMAL>
 					<TEXTDATE w="150" title="Lockedin Until Date" y="110" h="20" x="10">lockedin_until_date</TEXTDATE>
+					<TEXTDATE w="150" title="Opening Date" default="now" y="110" h="20" x="290">opening_date</TEXTDATE>
 					<TEXTFIELD w="430" title="Narrative" y="130" h="20" x="10">narrative</TEXTFIELD>
 					<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
 				</FORM>

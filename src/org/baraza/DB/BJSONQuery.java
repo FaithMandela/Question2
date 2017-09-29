@@ -32,7 +32,7 @@ public class BJSONQuery extends BQuery {
 	public BJSONQuery(BDB db, BElement view, String wheresql, String orderby, Integer pageStart, Integer pageSize) {
 		super(db, view, wheresql, orderby, false, pageStart, pageSize);
 	}
-	
+
 	public String getJSONData(String viewKey, boolean sfield) {
 		JsonArrayBuilder myja = Json.createArrayBuilder();
 
@@ -69,7 +69,7 @@ public class BJSONQuery extends BQuery {
 				JsonObjectBuilder myjo = Json.createObjectBuilder();
 				String mydn = "";
 				String mydv = "";
-				
+
 				row++;
 				int col = 0;
 
@@ -116,9 +116,9 @@ public class BJSONQuery extends BQuery {
 							myjo.add(mydn, mydv);
 						} else if(el.getAttribute("details", "false").equals("true")){
 							mydv = "<a href='?view=" + viewKey + ":" + getSelectKey() + "&data=" + rs.getString(keyField) + "' ";
-							if(el.getAttribute("hint") != null) mydv = " title='" + el.getAttribute("hint") +  "'"; 
+							if(el.getAttribute("hint") != null) mydv = " title='" + el.getAttribute("hint") +  "'";
 							mydv += ">" + cellData + "</a>";
-							
+
 							myjo.add(mydn, mydv);
 						} else if(el.getName().equals("BROWSER")) {
 							if(el.getAttribute("path") != null) mydv = "<a href='" + el.getAttribute("path");
@@ -126,12 +126,20 @@ public class BJSONQuery extends BQuery {
 							mydv += "?action=" +  el.getAttribute("action");
 							mydv += "&actionvalue=" + cellData;
 
-							if(el.getAttribute("disabled") != null) mydv += "&disabled=yes"; 
-							if(el.getAttribute("blankpage") != null) mydv += "&blankpage=yes' target='_blank'"; 
+							if(el.getAttribute("disabled") != null) mydv += "&disabled=yes";
+							if(el.getAttribute("blankpage") != null) mydv += "&blankpage=yes' target='_blank'";
 							else mydv += "'";
 
-							if(el.getAttribute("hint") != null) mydv += " title='" + getString(el.getAttribute("hint")) +  "'"; 
+							if(el.getAttribute("hint") != null) mydv += " title='" + getString(el.getAttribute("hint")) +  "'";
 							mydv += "><img src='assets/images/form.png'></a>";
+							myjo.add(mydn, mydv);
+						} else if(el.getName().equals("TEXTLINK")) {
+							String sk = getSelectKey();
+							mydv = cellData;
+							if(sk != null) {
+								mydv = "<a href='?view=" + viewKey + ":" + sk + "&data=" + rs.getString(keyField) + "'>";
+								mydv += cellData + "</a>";
+							}
 							myjo.add(mydn, mydv);
 						} else {
 							myjo.add(mydn, cellData);
@@ -139,18 +147,18 @@ public class BJSONQuery extends BQuery {
 						col++;
 					}
 				}
-				
+
 				if(keyField != null) {
 					String sk = getSelectKey();
-					
+
 					if(sk != null) {
 						mydv = "?view=" + viewKey + ":" + sk + "&data=" + rs.getString(keyField);
 						if(hasFilter) mydv += "&gridfilter=true";
-						mydn = "CL"; 
+						mydn = "CL";
 						myjo.add(mydn, mydv);
 					}
 				}
-				
+
 				if(keyField != null) {
 					myjo.add("KF", rs.getString(keyField));
 				}
@@ -162,7 +170,7 @@ public class BJSONQuery extends BQuery {
 						mydv += "' onclick=\"return confirm('Are you sure you want delete the file?');\"";
 						mydv += " target='_blank'>Delete</a>";
 						mydn = "C" + String.valueOf(col++);
-						myjo.add(mydn, mydv); 
+						myjo.add(mydn, mydv);
 					}
 					mydv += "\n<a href='barazafiles?view=" + viewKey + "&fileid=" + getString(keyField);
 					mydv += "' target='_blank'>View</a>";
@@ -177,9 +185,9 @@ public class BJSONQuery extends BQuery {
 		} catch(SQLException ex) {
 			log.severe("Web data body reading error : " + ex);
 		}
-		
+
 		JsonArray jsTb = myja.build();
-		
+
 		return jsTb.toString();
 	}
 
@@ -190,7 +198,7 @@ public class BJSONQuery extends BQuery {
 			String sviewName = sview.getName();
 			if(sviewName.equals("ACCORDION") || sviewName.equals("DIARY") || sviewName.equals("FILES") || sviewName.equals("FORM") || sviewName.equals("GRID") || sviewName.equals("JASPER") || sviewName.equals("FORMVIEW") || sviewName.equals("CROSSTAB")) {
 				String viewFilter = sview.getAttribute("viewfilter");
-				
+
 				if(viewFilter == null) {
 					return i.toString();
 				} else {
@@ -214,4 +222,3 @@ public class BJSONQuery extends BQuery {
 	}
 
 }
-

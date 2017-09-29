@@ -179,6 +179,7 @@ CREATE TABLE deposit_accounts (
 	is_active				boolean default false not null,
 	account_number			varchar(32) not null unique,
 	narrative				varchar(120),
+	opening_date			date default current_date not null,
 	last_closing_date		date,
 	
 	credit_limit			real,
@@ -373,7 +374,7 @@ CREATE VIEW vw_deposit_accounts AS
 		deposit_accounts.org_id, deposit_accounts.deposit_account_id, deposit_accounts.is_active, 
 		deposit_accounts.account_number, deposit_accounts.narrative, deposit_accounts.last_closing_date, 
 		deposit_accounts.credit_limit, deposit_accounts.minimum_balance, deposit_accounts.maximum_balance, 
-		deposit_accounts.interest_rate, deposit_accounts.lockin_period_frequency, 
+		deposit_accounts.interest_rate, deposit_accounts.lockin_period_frequency, deposit_accounts.opening_date,
 		deposit_accounts.lockedin_until_date, deposit_accounts.application_date, deposit_accounts.approve_status, 
 		deposit_accounts.workflow_table_id, deposit_accounts.action_date, deposit_accounts.details,
 		

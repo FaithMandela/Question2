@@ -43,6 +43,9 @@ public class BWebDashboard {
 				if(el.getAttribute("jumpview") != null) {
 					tileName = "<a href='?view=" + el.getAttribute("jumpview") + "'>";
 					tileName += ell.getAttribute("title", "Name") + "</a>";
+				} else if(el.getAttribute("url") != null) {
+					tileName = "<a href='" + el.getAttribute("url") + "'>";
+					tileName += ell.getAttribute("title", "Name") + "</a>";
 				}
 				
 				body += "		<div class='display'>\n";

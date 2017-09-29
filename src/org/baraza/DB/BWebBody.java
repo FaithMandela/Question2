@@ -47,7 +47,7 @@ public class BWebBody extends BQuery {
 		for(BElement el : view.getElements()) {
 			if(el.getName().equals("ACTIONS")) hasAction = true;
 			if(el.getName().equals("GRID") || el.getName().equals("FORM") || el.getName().equals("JASPER")) hasSubs = true;
-			if(el.getName().equals("FILES") || el.getName().equals("DIARY")) hasSubs = true;
+			if(el.getName().equals("TABLEVIEW") || el.getName().equals("FILES") || el.getName().equals("DIARY")) hasSubs = true;
 			if(el.getName().equals("COLFIELD") || el.getName().equals("TITLEFIELD")) hasTitle = true;
 			if(el.getName().equals("FILTERGRID")) hasFilter = true;
 		}
@@ -62,7 +62,7 @@ public class BWebBody extends BQuery {
 			addJSc = false;
 		} else {
 			myhtml.append("<div class='table-scrollable'>\n");
-			myhtml.append("<table class='table table-striped table-hover'>\n");
+			myhtml.append("<table class='table table-bordered table-hover'>\n");
 			myhtml.append("\n<thead>\n<tr>");
 			if(hasAction && (keyField != null)) {
 				myhtml.append("\n<th data-field='ID'>ID</th>");
@@ -211,13 +211,11 @@ public class BWebBody extends BQuery {
 								myhtml.append(el.getAttribute("pictures") + "?access=" + el.getAttribute("access"));
 								myhtml.append("&picture=" + mypic + "'></div>\n");
 							}
-						} else if(el.getAttribute("details", "false").equals("true")){
+						} else if(el.getName().equals("COMBOBOX")) {
+							String fieldValue = getString(el.getValue());
+							String defaultvalue = el.getAttribute("default", "");
 							myhtml.append("\n<td>");
-							myhtml.append("<a href='?view=" + viewKey + ":" + getSelectKey() + "&data=" + rs.getString(keyField) + "' ");
-
-							if(el.getAttribute("hint") != null) myhtml.append(" title='" + el.getAttribute("hint") +  "'"); 
-
-							myhtml.append(">" + cellData + "</a>");
+							myhtml.append(getComboBox(el, null, true, fieldValue, defaultvalue));
 						} else if(el.getName().equals("BROWSER")) {
 							myhtml.append("\n<td>");
 							if(el.getAttribute("path") != null) myhtml.append("<a href='" + el.getAttribute("path"));
@@ -237,6 +235,13 @@ public class BWebBody extends BQuery {
 								if(col != 0) myhtml.append("\n<tr>");
 							}
 							col++;
+						} else if(el.getAttribute("details", "false").equals("true")){
+							myhtml.append("\n<td>");
+							myhtml.append("<a href='?view=" + viewKey + ":" + getSelectKey() + "&data=" + rs.getString(keyField) + "' ");
+
+							if(el.getAttribute("hint") != null) myhtml.append(" title='" + el.getAttribute("hint") +  "'"); 
+
+							myhtml.append(">" + cellData + "</a>");
 						} else {
 							myhtml.append("\n<td>");
 							myhtml.append(cellData);
@@ -530,151 +535,13 @@ public class BWebBody extends BQuery {
 		} else if(el.getName().equals("PASSWORD")) {
 			response.append("<input type='password' name='" + el.getValue() + "' class='form-control' size='50'/>\n");
 		} else if(el.getName().equals("GRIDBOX")) {
-			response.append("<select name='" + el.getValue() + "'");
-			if(el.getAttribute("class") == null) response.append(" class='select2me form-control'");
-			else response.append(" class='" + el.getAttribute("class") + "'");
-			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
-			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
-			response.append(">");
-
-			String nodefault = el.getAttribute("nodefault");
-			String lptable = el.getAttribute("lptable");
-			String lpfield = el.getAttribute("lpfield");
-			String lpkey = el.getAttribute("lpkey");
-			String cmb_fnct = el.getAttribute("cmb_fnct");
-			if(lpkey == null) lpkey = el.getValue();
-
-			String mysql = "";
-			if(lpkey.equals(lpfield)) mysql = "SELECT " + lpfield + " FROM " + lptable;
-			else if (cmb_fnct == null) mysql = "SELECT " + lpkey + ", " + lpfield + " FROM " + lptable;
-			else mysql = "SELECT " + lpkey + ", (" + cmb_fnct + ") as " + lpfield + " FROM " + lptable;
-			
-			String cmbWhereSql = el.getAttribute("where");
-			if((el.getAttribute("noorg") == null) && (orgID != null) && (userOrg != null)) {
-				if(cmbWhereSql == null) cmbWhereSql = "(";
-				else cmbWhereSql += " AND (";
-				
-				if(el.getAttribute("org.id") == null) cmbWhereSql += orgID + "=" + userOrg + ")";
-				else cmbWhereSql += el.getAttribute("org.id") + "=" + userOrg + ")";
-			}
-
-			if(el.getAttribute("user") != null) {
-				String userFilter = "(" + el.getAttribute("user") + " = '" + db.getUserID() + "')";
-				if(cmbWhereSql == null) cmbWhereSql = userFilter;
-				else cmbWhereSql += " AND " + userFilter;
-			}
-
-			String tableFilter = null;
-			String linkField = el.getAttribute("linkfield");
-			if((linkField != null) && (formLinkData != null)) {
-				if(el.getAttribute("linkfnct") == null) tableFilter = linkField + " = '" + formLinkData + "'";
-				else tableFilter = linkField + " = " + el.getAttribute("linkfnct") + "('" + formLinkData + "')";
-
-				if(cmbWhereSql == null) cmbWhereSql = "(" + tableFilter + ")";
-				else cmbWhereSql += " AND (" + tableFilter + ")";
-			}
-
-			if(cmbWhereSql != null) mysql += " WHERE " + cmbWhereSql;
-
-			String orderBySql = el.getAttribute("orderby");
-			if(orderBySql == null) mysql += " ORDER BY " + lpfield;
-			else mysql += " ORDER BY " + orderBySql;
-
-			if(nodefault != null) response.append("<option></option>");
-
-			BQuery cmbrs = new BQuery(db, mysql);
-			while (cmbrs.moveNext()) {
-				response.append("<option");
-				if(eof) {
-					if(getString(el.getValue()) != null) {
-						if(getString(el.getValue()).equals(cmbrs.getString(lpkey)))
-							response.append(" selected='selected'");
-					}
-				} else if(cmbrs.getString(lpkey).equals(defaultvalue)) {
-					response.append(" selected='selected'");
-				}
-				response.append(" value='" + cmbrs.getString(lpkey));
-				response.append("'>" + cmbrs.getString(lpfield) + "</option>\n");
-			}
-			cmbrs.close();
-			response.append("</select>\n");
+			String fieldValue = null;
+			if(eof) fieldValue = getString(el.getValue());
+			response.append(getComboBox(el, formLinkData, eof, fieldValue, defaultvalue));
 		} else if(el.getName().equals("COMBOBOX")) {
-			response.append("<select name='" + el.getValue() + "'");
-			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
-			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
-			if(el.getAttribute("class") == null) response.append(" class='select2me form-control");
-			else response.append(" class='" + el.getAttribute("class"));
-			if(el.getAttribute("select.detail") != null) response.append(" detailed-select ");
-			response.append("'>\n"); // close the class tag and select
-
-			String selectDetail = el.getAttribute("select.detail");
-			String nodefault = el.getAttribute("nodefault");
-			String lptable = el.getAttribute("lptable");
-			String lpfield = el.getAttribute("lpfield");
-			String lpkey = el.getAttribute("lpkey");
-			String cmb_fnct = el.getAttribute("cmb_fnct");
-			if(lpkey == null) lpkey = el.getValue();
-
-			String mysql = "";
-			if(lpkey.equals(lpfield)) mysql = "SELECT " + lpfield;
-			else if (cmb_fnct == null) mysql = "SELECT " + lpkey + ", " + lpfield;
-			else mysql = "SELECT " + lpkey + ", (" + cmb_fnct + ") as " + lpfield;
-			if(selectDetail != null) mysql += ", " + selectDetail;
-			mysql += " FROM " + lptable;
-			
-			String cmbWhereSql = el.getAttribute("where");
-			if((el.getAttribute("noorg") == null) && (orgID != null) && (userOrg != null)) {
-				if(cmbWhereSql == null) cmbWhereSql = "(";
-				else cmbWhereSql += " AND (";
-				
-				if(el.getAttribute("org.id") == null) cmbWhereSql += orgID + "=" + userOrg + ")";
-				else cmbWhereSql += el.getAttribute("org.id") + "=" + userOrg + ")";
-			}
-
-			if(el.getAttribute("user") != null) {
-				String userFilter = "(" + el.getAttribute("user") + " = '" + db.getUserID() + "')";
-				if(cmbWhereSql == null) cmbWhereSql = userFilter;
-				else cmbWhereSql += " AND " + userFilter;
-			}
-
-			String tableFilter = null;
-			String linkField = el.getAttribute("linkfield");
-			if((linkField != null) && (formLinkData != null)) {
-				if(el.getAttribute("linkfnct") == null) tableFilter = linkField + " = '" + formLinkData + "'";
-				else tableFilter = linkField + " = " + el.getAttribute("linkfnct") + "('" + formLinkData + "')";
-
-				if(cmbWhereSql == null) cmbWhereSql = "(" + tableFilter + ")";
-				else cmbWhereSql += " AND (" + tableFilter + ")";
-			}
-
-			if(cmbWhereSql != null) mysql += " WHERE " + cmbWhereSql;
-
-			String orderBySql = el.getAttribute("orderby");
-			if(orderBySql == null) mysql += " ORDER BY " + lpfield;
-			else mysql += " ORDER BY " + orderBySql;
-
-			if(nodefault != null) response.append("<option></option>");
-
-			BQuery cmbrs = new BQuery(db, mysql);
-			while (cmbrs.moveNext()) {
-				response.append("<option");
-				if(eof) {
-					if(getString(el.getValue())!=null) {
-						if(getString(el.getValue()).equals(cmbrs.getString(lpkey)))
-							response.append(" selected='selected'");
-					}
-				} else if(cmbrs.getString(lpkey).equals(defaultvalue)) {
-					response.append(" selected='selected'");
-				}
-				if(selectDetail != null) {
-					String sdc = cmbrs.getString(selectDetail);
-					if(sdc != null) response.append(" data-detail='" + sdc.replaceAll("'", "&#39;") + "'");
-				}
-				response.append(" value='" + cmbrs.getString(lpkey));
-				response.append("'>" + cmbrs.getString(lpfield) + "</option>\n");
-			}
-			cmbrs.close();
-			response.append("</select>\n");
+			String fieldValue = null;
+			if(eof) fieldValue = getString(el.getValue());
+			response.append(getComboBox(el, formLinkData, eof, fieldValue, defaultvalue));
 		} else if(el.getName().equals("MULTISELECT")) {
 			response.append("<select name='" + el.getValue() + "' multiple='multiple' ");
 			if(el.getAttribute("class") == null) response.append(" class='multi-select form-control'");
@@ -913,7 +780,90 @@ public class BWebBody extends BQuery {
 		
 		return response.toString();
 	}
+	
+	public String getComboBox(BElement el, String formLinkData, boolean eof, String fieldValue, String defaultvalue) {
+		StringBuilder response = new StringBuilder();
+		
+		response.append("<select name='" + el.getValue() + "'");
+		if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
+		if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
+		if(el.getAttribute("class") == null) response.append(" class='select2me form-control");
+		else response.append(" class='" + el.getAttribute("class"));
+		if(el.getAttribute("select.detail") != null) response.append(" detailed-select ");
+		response.append("'>\n"); // close the class tag and select
 
+		String selectDetail = el.getAttribute("select.detail");
+		String nodefault = el.getAttribute("nodefault");
+		String lptable = el.getAttribute("lptable");
+		String lpfield = el.getAttribute("lpfield");
+		String lpkey = el.getAttribute("lpkey");
+		String cmb_fnct = el.getAttribute("cmb_fnct");
+		if(lpkey == null) lpkey = el.getValue();
+
+		String mysql = "";
+		if(lpkey.equals(lpfield)) mysql = "SELECT " + lpfield;
+		else if (cmb_fnct == null) mysql = "SELECT " + lpkey + ", " + lpfield;
+		else mysql = "SELECT " + lpkey + ", (" + cmb_fnct + ") as " + lpfield;
+		if(selectDetail != null) mysql += ", " + selectDetail;
+		mysql += " FROM " + lptable;
+		
+		String cmbWhereSql = el.getAttribute("where");
+		if((el.getAttribute("noorg") == null) && (orgID != null) && (userOrg != null)) {
+			if(cmbWhereSql == null) cmbWhereSql = "(";
+			else cmbWhereSql += " AND (";
+			
+			if(el.getAttribute("org.id") == null) cmbWhereSql += orgID + "=" + userOrg + ")";
+			else cmbWhereSql += el.getAttribute("org.id") + "=" + userOrg + ")";
+		}
+
+		if(el.getAttribute("user") != null) {
+			String userFilter = "(" + el.getAttribute("user") + " = '" + db.getUserID() + "')";
+			if(cmbWhereSql == null) cmbWhereSql = userFilter;
+			else cmbWhereSql += " AND " + userFilter;
+		}
+
+		String tableFilter = null;
+		String linkField = el.getAttribute("linkfield");
+		if((linkField != null) && (formLinkData != null)) {
+			if(el.getAttribute("linkfnct") == null) tableFilter = linkField + " = '" + formLinkData + "'";
+			else tableFilter = linkField + " = " + el.getAttribute("linkfnct") + "('" + formLinkData + "')";
+
+			if(cmbWhereSql == null) cmbWhereSql = "(" + tableFilter + ")";
+			else cmbWhereSql += " AND (" + tableFilter + ")";
+		}
+
+		if(cmbWhereSql != null) mysql += " WHERE " + cmbWhereSql;
+
+		String orderBySql = el.getAttribute("orderby");
+		if(orderBySql == null) mysql += " ORDER BY " + lpfield;
+		else mysql += " ORDER BY " + orderBySql;
+
+		if(nodefault != null) response.append("<option></option>");
+
+		BQuery cmbrs = new BQuery(db, mysql);
+		while (cmbrs.moveNext()) {
+			response.append("<option");
+			if(eof) {
+				if(fieldValue != null) {
+					if(fieldValue.equals(cmbrs.getString(lpkey)))
+						response.append(" selected='selected'");
+				}
+			} else if(cmbrs.getString(lpkey).equals(defaultvalue)) {
+				response.append(" selected='selected'");
+			}
+			if(selectDetail != null) {
+				String sdc = cmbrs.getString(selectDetail);
+				if(sdc != null) response.append(" data-detail='" + sdc.replaceAll("'", "&#39;") + "'");
+			}
+			response.append(" value='" + cmbrs.getString(lpkey));
+			response.append("'>" + cmbrs.getString(lpfield) + "</option>\n");
+		}
+		cmbrs.close();
+		response.append("</select>\n");
+		
+		return response.toString();
+	}
+	
 	public void setSelectAll() {
 		selectAll = true;
 	}

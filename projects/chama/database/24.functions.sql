@@ -36,7 +36,9 @@ BEGIN
 		SELECT interest_rate, activity_frequency_id, min_opening_balance, minimum_balance, maximum_balance INTO myrec
 		FROM products WHERE product_id = NEW.product_id;
 	
-		NEW.account_number := '4' || lpad(NEW.org_id::varchar, 2, '0')  || lpad(NEW.entity_id::varchar, 4, '0') || lpad(NEW.deposit_account_id::varchar, 2, '0');
+		IF(NEW.account_number is null)THEN
+			NEW.account_number := '4' || lpad(NEW.org_id::varchar, 2, '0')  || lpad(NEW.entity_id::varchar, 4, '0') || lpad(NEW.deposit_account_id::varchar, 2, '0');
+		END IF;
 		
 		NEW.minimum_balance := myrec.minimum_balance;
 		NEW.maximum_balance := myrec.maximum_balance;
@@ -50,13 +52,13 @@ BEGIN
 				activity_date, value_date, account_debit)
 			SELECT NEW.deposit_account_id, account_definations.activity_type_id, account_definations.activity_frequency_id,
 				1, products.currency_id, NEW.entity_id, NEW.org_id, account_definations.account_number,
-				current_date, current_date, account_definations.fee_amount
+				NEW.opening_date, NEW.opening_date, account_definations.fee_amount
 			FROM account_definations INNER JOIN activity_types ON account_definations.activity_type_id = activity_types.activity_type_id
 				INNER JOIN products ON account_definations.product_id = products.product_id
 			WHERE (account_definations.product_id = NEW.product_id) AND (account_definations.org_id = NEW.org_id)
 				AND (account_definations.activity_frequency_id = 1) AND (activity_types.use_key_id = 201) 
 				AND (account_definations.is_active = true)
-				AND (account_definations.start_date < current_date);
+				AND (account_definations.start_date < NEW.opening_date);
 		END IF;
 	END IF;
 	

@@ -1,9 +1,9 @@
 <APP password="change_password" color="purple" material="true" org="org_id" name="Travelport Apps">
 	<MENU name="Travelport Apps">
-		<MENU name="Service Desk">
+		<MENU name="My Transactions">
 			<MENU role="broker,admin,manager" name="New Insurance" page="bima">0</MENU>
-			<MENU role="individual" name="Buy Insurance" page="icealion">0</MENU>
-			<MENU role="individual" name="My Invoice" page="invoice">0</MENU>
+			<MENU role="individual" icon="fa fa-cart-plus" name="Buy Insurance" page="icealion">0</MENU>
+			<MENU role="individual" name="Unpaid Invoices" page="invoice">0</MENU>
 			<MENU role="individual" name="My Insurance">82</MENU>
 			<MENU role="manager,admin,agency,user,broker" name="My Certificate">83</MENU>
 			<MENU role="admin,manager" name="Quotationlogs">211</MENU>
@@ -15,12 +15,12 @@
 		</MENU>
 		<MENU role="admin,manager,agency" name="Transactions">
 			<MENU role="admin,manager" name="Insurance">80</MENU>
-			<MENU role="agency" name="Agency Insurance ">81</MENU>
+			<MENU role="agency" icon="fa fa-sitemap" name="Agency Insurance ">81</MENU>
 			<MENU role="admin,manager" name="Payments">85</MENU>
 			<MENU role="master" name="Insurance Sales">97</MENU>
 		</MENU>
 		<MENU role="individual,user,broker" name="Profile">
-			<MENU role="individual,user,broker" name="Entitys">16</MENU>
+			<MENU role="individual,user,broker" icon="fa fa-edit" name="Edit Profile">16</MENU>
 		</MENU>
 		<MENU role="admin,agency,manager" name="Configurations">
 			<MENU role="manager,admin" name="Rates">75</MENU>
@@ -42,13 +42,13 @@
 	</MENU>
 	<DESK w="700" h="500" name="Dashboard" key="1">
 		<DASHBOARD w="650" name="Dashboard">
-			<TILE noorg.query="false" role="user,individual" w="60" h="25" name="Today Sales" where="(DATE(approved_date)=CURRENT_DATE AND is_valid is true AND approved is true)" user="entity_id" table="vw_allpassengers">
+			<TILE noorg.query="false" role="user" w="60" h="25" name="Today Sales" where="(DATE(approved_date)=CURRENT_DATE AND is_valid is true AND approved is true)" groupby="entity_id" user="entity_id" table="vw_allpassengers">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id),0)" title="Total Sales">total_passengers</TEXTFIELD>
 			</TILE>
 			<TILE noorg.query="true" role="agency,broker" w="60" h="25" name="Today Sales" where="(DATE(approved_date)=CURRENT_DATE AND is_valid is true AND approved is true)" table="vw_allpassengers">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id),0)" title="Total Sales">total_passengers</TEXTFIELD>
 			</TILE>
-			<TILE noorg.query="true" role="user" name="Total Amount" where="(approved is true AND is_valid is true)" user="entity_id" table="vw_allpassengers">
+			<TILE noorg.query="true" role="user" name="Total Amount" where="(approved is true AND is_valid is true)" groupby="entity_id" user="entity_id" table="vw_allpassengers">
 				<TEXTFIELD w="75" fnct="ROUND(sum(totalamount_covered)::numeric,2)" title="Total Amount">Total_covered</TEXTFIELD>
 			</TILE>
 			<TILE noorg.query="true" role="agency" name="Total Amount" where="(approved is true AND is_valid is true)" table="vw_allpassengers">
@@ -57,8 +57,11 @@
 			<TILE noorg="true" noorg.query="true" role="admin,manager" w="60" h="25" name="Today Sales" where="(DATE(approved_date)=CURRENT_DATE AND is_valid is true AND approved is true)" table="vw_allpassengers">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id), 0)" title="Total Members">total_passengers</TEXTFIELD>
 			</TILE>
-			<TILE noorg="true" noorg.query="true" role="individual" w="60" h="25" name="Unpaid Invoice" where="(is_valid is true AND approved is false)" user="entity_id" table="vw_allpassengers">
+			<TILE noorg="true" noorg.query="true" role="individual" w="60" h="25" name="Unpaid Invoice" where="(is_valid is true AND approved is false)" groupby="entity_id" user="entity_id" table="vw_allpassengers" url="invoice">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id), 0)" title="Unpaid Invoice">total_invoices</TEXTFIELD>
+			</TILE>
+			<TILE noorg="true" noorg.query="true" role="individual" jumpview="82:0" w="60" h="25" name="Paid Invoices" where="(is_valid is true AND approved is true)" groupby="entity_id" user="entity_id" table="vw_allpassengers">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id), 0)" title="Paid Invoices">total_invoices</TEXTFIELD>
 			</TILE>
 			<TILE noorg="true" noorg.query="true" role="admin,manager" w="60" h="25" name="Monthly Sales" where="(extract(month from approved_date) = extract(month from CURRENT_DATE)  AND extract(year from approved_date) = extract(year from CURRENT_DATE) AND is_valid is true AND approved is true)" table="vw_allpassengers">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id), 0)" title="Total Members">total_passengers</TEXTFIELD>
@@ -138,7 +141,7 @@
 		<GRID noorg="true" keyfield="sys_continent_id" name="Continents" table="sys_continents">
 			<TEXTFIELD w="75" title="Continent ID">sys_continent_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Continent Name">sys_continent_name</TEXTFIELD>
-			<GRID noorg="true" keyfield="sys_country_id" name="Countrys" linkfield="sys_continent_id" table="vw_sys_countrys">
+			<GRID noorg="true" keyfield="sys_country_id" name="Countrys" where="is_active is true" linkfield="sys_continent_id" table="vw_sys_countrys">
 				<TEXTFIELD w="75" title="Country ID">sys_country_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Country Code">sys_country_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Country Number">sys_country_number</TEXTFIELD>
@@ -152,6 +155,11 @@
 						<TEXTFIELD w="150" h="20" x="290" y="10" title="Country">country</TEXTFIELD>
 					</FORM>
 				</GRID>
+				<FORM noorg="true" keyfield="sys_country_id" name="Country Codes" linkfield="sys_continent_id" table="sys_countrys">
+					<TEXTFIELD w="150" h="20" x="10" y="10" title="Country Code">sys_country_code</TEXTFIELD>
+					<TEXTFIELD w="150" h="20" x="290" y="10" title="Country Name">sys_country_name</TEXTFIELD>
+					<CHECKBOX w="150" h="20" x="290" y="10" title="Active">is_active</CHECKBOX>
+				</FORM>
 			</GRID>
 		</GRID>
 	</DESK>
@@ -405,6 +413,13 @@
 			<TEXTFIELD w="100" title="Type">entity_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Telephone">primary_telephone</TEXTFIELD>
+			<FORM new="false" keyfield="entity_id" name="Entitys" table="entitys">
+				<TEXTFIELD w="150" h="20" x="10" y="50" title="Entity Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="50" title="User Name">user_name</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="10" y="300" title="Son">son</TEXTFIELD>
+				<TEXTFIELD w="430" h="20" x="10" y="70" title="Primary Email">primary_email</TEXTFIELD>
+				<TEXTFIELD w="250" h="20" x="10" y="90" title="Primary Telephone">primary_telephone</TEXTFIELD>
+			</FORM>
 			<GRID keyfield="address_id" name="Address" where="table_name = 'entitys'" linkfield="table_id" table="vw_address">
 				<TEXTFIELD w="100" title="Country">sys_country_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="Postal Code">postal_code</TEXTFIELD>
@@ -430,13 +445,6 @@
 					<TEXTAREA w="430" h="70" x="10" y="230" title="Details">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM new="false" keyfield="entity_id" name="Entitys" table="entitys">
-				<TEXTFIELD w="150" h="20" x="10" y="50" title="Entity Name">entity_name</TEXTFIELD>
-				<TEXTFIELD w="150" h="20" x="290" y="50" title="User Name">user_name</TEXTFIELD>
-				<TEXTFIELD w="150" h="20" x="10" y="300" title="Son">son</TEXTFIELD>
-				<TEXTFIELD w="430" h="20" x="10" y="70" title="Primary Email">primary_email</TEXTFIELD>
-				<TEXTFIELD w="250" h="20" x="10" y="90" title="Primary Telephone">primary_telephone</TEXTFIELD>
-			</FORM>
 			<ACTIONS>
 				<ACTION fnct="change_password">Reset Password</ACTION>
 			</ACTIONS>
@@ -1292,27 +1300,9 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="My Insurance" key="82">
-		<GRID role="admin,manager,individual" keyfield="passenger_id" name="Unpaid Insurance" orderby="passenger_id,passenger_age DESC" where="(approved is false) AND (is_valid is true)" tab.count="count(passenger_id)" user="entity_id" table="vw_allpassengers">
-			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>
-			<TEXTFIELD w="75" title="Days To">days_to</TEXTFIELD>
-			<TEXTFIELD w="75" title="Passenger Name">passenger_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Passenger Mobile">passenger_mobile</TEXTFIELD>
-			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
-			<TEXTFIELD w="75" title="ID NO">id_no</TEXTFIELD>
-			<TEXTFIELD w="75" title="PIN NO">pin_no</TEXTFIELD>
-			<TEXTFIELD w="75" title="Date of Birth">passenger_dob</TEXTFIELD>
-			<TEXTFIELD w="75" title="Country of Residence">sys_country_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Passport No.">passport_number</TEXTFIELD>
-			<TEXTFIELD w="75" title="Country of Travel">destown</TEXTFIELD>
-			<TEXTFIELD w="75" title="Next Of Kin ">nok_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Next Of Kin Mobile ">nok_mobile</TEXTFIELD>
-			<TEXTFIELD w="75" title="Relationship ">relationship</TEXTFIELD>
-			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Basic Premium">cover_amount</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Total Amount">totalamount_covered</TEXTDECIMAL>
-		</GRID>
-		<GRID role="admin,manager,individual,user" keyfield="passenger_id" name="Insurance" orderby="passenger_id,passenger_age DESC" where="(approved is true) AND (is_valid is true)" tab.count="count(passenger_id)" user="entity_id" table="vw_allpassengers">
+		<GRID role="admin,manager,individual,user" jumpview="invoice" keyfield="passenger_id" name="My Insurance" orderby="passenger_id DESC" where="(approved is true) AND (is_valid is true)" tab.count="count(passenger_id)" user="entity_id" table="vw_allpassengers">
+			<TEXTLINK w="75" title="Policy Number">policy_number</TEXTLINK>
+			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>
 			<TEXTFIELD w="75" title="Days To">days_to</TEXTFIELD>
@@ -1323,12 +1313,11 @@
 			<TEXTFIELD w="75" title="Country of Residence">sys_country_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passport No.">passport_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Country of Travel">destown</TEXTFIELD>
-			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Basic Premium">cover_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Total Amount">totalamount_covered</TEXTDECIMAL>
 			<JASPER reportfile="/travelinsurance/certificate.jasper" name="Certificate"></JASPER>
-			<JASPER reportfile="travelinsurance/policy_document.jasper" name="Policy Document"></JASPER>
 			<JASPER reportfile="/travelinsurance/letterToEmbassy.jasper" name="Letter to Embassy"></JASPER>
+			<JASPER reportfile="travelinsurance/policy_document.jasper" name="Policy Document"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK role="admin,manager" w="700" h="550" name="Payments" key="85">

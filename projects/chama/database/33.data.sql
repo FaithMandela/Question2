@@ -1,7 +1,8 @@
 
 --- Create use key types
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES 
-(100, 'Customers', 0),
+(7, 'Sales Agents', 0),
+(100, 'Member', 0),
 (101, 'Receipts', 4),
 (102, 'Payments', 4),
 (103, 'Opening Account', 4),
@@ -15,7 +16,9 @@ INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES
 (201, 'Initial Charges', 4),
 (202, 'Transaction Charges', 4);
 
-INSERT INTO entity_types (org_id, use_key_id, entity_type_name, entity_role) VALUES (0, 100, 'Chama Member', 'client');
+INSERT INTO entity_types (entity_type_id, org_id, use_key_id, entity_type_name, entity_role) VALUES (7, 0, 7, 'Sales Agent', 'salesagent');
+INSERT INTO entity_types (entity_type_id, org_id, use_key_id, entity_type_name, entity_role) VALUES (10, 0, 100, 'Chama Member', 'member');
+SELECT pg_catalog.setval('entity_types_entity_type_id_seq', 10, true);
 
 INSERT INTO collateral_types (org_id, collateral_type_name) VALUES 
 (0, 'Land Title'),
@@ -67,11 +70,11 @@ VALUES (2, 15, 0, 'Account Penalty 15', 'get_penalty(1, deposit_account_id, peri
 SELECT pg_catalog.setval('penalty_methods_penalty_method_id_seq', 2, true);
 
 INSERT INTO products (product_id, activity_frequency_id, interest_method_id, penalty_method_id, currency_id, org_id, product_name, description, loan_account, is_active, interest_rate, min_opening_balance, minimum_balance, maximum_balance, minimum_day, maximum_day, minimum_trx, maximum_trx) VALUES
-(0, 4, 0, 0, 1, 0, 'Banking', 'Banking', false, false, 0, 0, 0, 0, 0, 0, 0, 0),
-(1, 4, 0, 0, 1, 0, 'Transaction account', 'Account to handle transactions', false, true, 0, 0, 0, 0, 0, 0, 0, 0),
-(2, 4, 1, 1, 1, 0, 'Basic loans', 'Basic loans', true, true, 12, 0, 0, 0, 0, 0, 0, 0),
-(3, 4, 3, 0, 1, 0, 'Savings account', 'Account to handle savings', false, true, 3, 0, 0, 0, 0, 0, 0, 0),
-(4, 4, 2, 1, 1, 0, 'Compound loans', 'Compound loans', true, true, 12, 0, 0, 0, 0, 0, 0, 0),
+(0, 4, 0, 0, 1, 0, 'Chama', 'Chama', false, false, 0, 0, 0, 0, 0, 0, 0, 0),
+(1, 4, 0, 0, 1, 0, 'Merry go round', 'Merry go round', false, true, 0, 0, 0, 0, 0, 0, 0, 0),
+(2, 4, 1, 1, 1, 0, 'Basic loans', 'Basic loans', true, true, 20, 0, 0, 0, 0, 0, 0, 0),
+(3, 4, 3, 0, 1, 0, 'Savings', 'To handle savings', false, true, 12, 0, 0, 0, 0, 0, 0, 0),
+(4, 4, 2, 1, 1, 0, 'Compound loans', 'Compound loans', true, true, 20, 0, 0, 0, 0, 0, 0, 0),
 (5, 4, 4, 1, 1, 0, 'Reducing balance loans', 'Reducing balance loans', true, true, 12, 0, 0, 0, 0, 0, 0, 0);
 SELECT pg_catalog.setval('products_product_id_seq', 5, true);
 
@@ -122,17 +125,15 @@ VALUES (10, 1, 1, 5, 0, 'Loan Payment', '2017-01-01', NULL, '400000001', true);
 
 
 --- Create Initial customer and customer account
-INSERT INTO members (entity_id, org_id, member_name, id_number, email, phone_number, date_of_birth, nationality, approve_status, member_type)
-VALUES (2, 0, 'OpenBaraza Chama', '0', 'info@openbaraza.org', '+254', current_date, 'KE', 'Approved', 0);
+INSERT INTO members (entity_id, org_id, member_name, id_number, email, phone_number, date_of_birth, nationality, approve_status, member_type, joining_date)
+VALUES (2, 0, 'OpenBaraza Chama', '0', 'info@openbaraza.org', '+254', '2017-01-01', 'KE', 'Approved', 0, '2017-01-01');
 
-INSERT INTO deposit_accounts (entity_id, product_id, org_id, is_active, approve_status, narrative)
-VALUES (2, 0, 0, true, 'Approved', 'Deposits');
-INSERT INTO deposit_accounts (entity_id, product_id, org_id, is_active, approve_status, narrative)
-VALUES (2, 0, 0, true, 'Approved', 'Charges');
-INSERT INTO deposit_accounts (entity_id, product_id, org_id, is_active, approve_status, narrative)
-VALUES (2, 0, 0, true, 'Approved', 'Interest');
-INSERT INTO deposit_accounts (entity_id, product_id, org_id, is_active, approve_status, narrative)
-VALUES (2, 0, 0, true, 'Approved', 'Penalty');
+INSERT INTO deposit_accounts (entity_id, product_id, org_id, is_active, approve_status, narrative, account_number) VALUES 
+(2, 0, 0, true, 'Approved', 'Deposits', '400000001'),
+(2, 0, 0, true, 'Approved', 'Charges', '400000002'),
+(2, 0, 0, true, 'Approved', 'Interest', '400000003'),
+(2, 0, 0, true, 'Approved', 'Penalty', '400000004');
+(2, 0, 0, true, 'Approved', 'Investment', '400000005');
 
 UPDATE deposit_accounts SET minimum_balance = -100000000000;
 SELECT pg_catalog.setval('entitys_entity_id_seq', 3, true);
@@ -140,9 +141,9 @@ SELECT pg_catalog.setval('entitys_entity_id_seq', 3, true);
 ---- Workflow setup
 
 INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES 
-(20, 0, 0, 'Member Application', 'members', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL),
-(21, 0, 0, 'Account opening', 'deposit_accounts', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL),
-(22, 0, 0, 'Loan Application', 'loans', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL),
+(20, 0, 10, 'Member Application', 'members', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL),
+(21, 0, 10, 'Account opening', 'deposit_accounts', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL),
+(22, 0, 10, 'Loan Application', 'loans', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL),
 (23, 0, 0, 'Guarantees Application', 'guarantees', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL),
 (24, 0, 0, 'Collaterals Application', 'collaterals', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
 SELECT pg_catalog.setval('workflows_workflow_id_seq', 30, true);

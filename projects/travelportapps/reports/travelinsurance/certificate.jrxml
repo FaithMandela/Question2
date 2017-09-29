@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="certificate" language="groovy" pageWidth="595" pageHeight="842" columnWidth="541" leftMargin="27" rightMargin="27" topMargin="20" bottomMargin="5" uuid="f68264b2-90bd-433b-a20d-19461dab01de">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="48"/>
+	<property name="ireport.y" value="177"/>
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["70"]]></defaultValueExpression>
 	</parameter>
@@ -94,7 +94,7 @@ WHERE passenger_id = '$P!{filterid}';]]>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
-				<text><![CDATA[Country of residence :]]></text>
+				<text><![CDATA[Country of departure :]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1" y="94" width="142" height="15" uuid="612a9d63-d4ff-45d1-a859-a1f0170527db"/>
@@ -136,7 +136,7 @@ WHERE passenger_id = '$P!{filterid}';]]>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{sys_country_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{departure_country}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="168" y="79" width="297" height="15" uuid="0d586dd7-91ed-41c6-b32a-b2057d3c62cb"/>
@@ -160,109 +160,102 @@ WHERE passenger_id = '$P!{filterid}';]]>
 				<text><![CDATA[MAIN BENEFITS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="68" y="146" width="100" height="15" uuid="458f0b9a-50d2-404f-b0bc-8d6de8150eee"/>
+				<reportElement x="68" y="145" width="167" height="15" uuid="458f0b9a-50d2-404f-b0bc-8d6de8150eee"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
-				<text><![CDATA[Medical emergency]]></text>
+				<text><![CDATA[Emergency Medical Expenses]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="68" y="161" width="100" height="15" uuid="c62321b6-56f5-454e-8974-468043d3b733"/>
-				<textElement>
-					<font fontName="Garamond-Normal" size="12"/>
-				</textElement>
-				<text><![CDATA[Medical evacuation]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="67" y="176" width="168" height="15" uuid="04fe1b11-ba79-43dd-aa51-d9a7bbcde175"/>
+				<reportElement x="67" y="162" width="184" height="15" uuid="04fe1b11-ba79-43dd-aa51-d9a7bbcde175"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
 				<text><![CDATA[Emergency dental expenses]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="67" y="191" width="212" height="15" uuid="6882b53d-1047-45d5-aec7-817413e8869a"/>
+				<reportElement x="67" y="177" width="228" height="15" uuid="6882b53d-1047-45d5-aec7-817413e8869a"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
-				<text><![CDATA[Follow up treatment residence country]]></text>
+				<text><![CDATA[Follow up treatment in residence country]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="307" y="146" width="215" height="15" uuid="7281e592-0dc9-43ff-9a39-bbc2afa9c615"/>
+				<reportElement x="307" y="145" width="215" height="15" uuid="7281e592-0dc9-43ff-9a39-bbc2afa9c615"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[Luggage loss or theft/delay]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="307" y="161" width="100" height="15" uuid="b756dd6b-7de9-41ab-85b7-f361888d50f9"/>
+				<reportElement x="307" y="160" width="100" height="15" uuid="b756dd6b-7de9-41ab-85b7-f361888d50f9"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
 				<text><![CDATA[Legal assistance]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="307" y="176" width="215" height="15" uuid="278fb419-261d-4945-9f5f-0cef726502b9"/>
+				<reportElement x="307" y="175" width="215" height="15" uuid="278fb419-261d-4945-9f5f-0cef726502b9"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
 				<text><![CDATA[Trip cancellation and curtailment]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="307" y="191" width="215" height="15" uuid="50b34f89-9184-44d1-9b12-9a3227bdffc5"/>
+				<reportElement x="307" y="190" width="215" height="15" uuid="50b34f89-9184-44d1-9b12-9a3227bdffc5"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
 				<text><![CDATA[Repatriation after treatment]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="307" y="206" width="100" height="15" uuid="5f786a20-3230-4ad1-8762-e491f9fbae6e"/>
+				<reportElement x="307" y="205" width="100" height="15" uuid="5f786a20-3230-4ad1-8762-e491f9fbae6e"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
 				<text><![CDATA[Travel delay]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="307" y="221" width="100" height="15" uuid="e6119503-26e2-455a-9984-f35098c86709"/>
+				<reportElement x="307" y="220" width="100" height="15" uuid="e6119503-26e2-455a-9984-f35098c86709"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
 				<text><![CDATA[Missed departure]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="307" y="236" width="100" height="15" uuid="07caf41c-dc3d-4b48-b8cb-a98c903c17e7"/>
+				<reportElement x="307" y="235" width="100" height="15" uuid="07caf41c-dc3d-4b48-b8cb-a98c903c17e7"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
 				<text><![CDATA[Personal liability]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="67" y="206" width="100" height="15" uuid="234b0095-f3e2-4283-9aea-018f88badcfb"/>
+				<reportElement x="67" y="192" width="116" height="15" uuid="234b0095-f3e2-4283-9aea-018f88badcfb"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
-				<text><![CDATA[Body rapatriation]]></text>
+				<text><![CDATA[Repatriation]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="68" y="221" width="100" height="15" uuid="5773541f-635a-42d7-8ded-58ca43cd5bc2"/>
+				<reportElement x="68" y="207" width="116" height="15" uuid="5773541f-635a-42d7-8ded-58ca43cd5bc2"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
 				<text><![CDATA[Personal accident]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="251" width="541" height="20" forecolor="#15150B" uuid="01d9f577-3837-4889-96c7-f2347e4cc617"/>
+				<reportElement x="1" y="250" width="541" height="20" forecolor="#15150B" uuid="01d9f577-3837-4889-96c7-f2347e4cc617"/>
 				<textElement textAlignment="Center">
 					<font fontName="Garamond-Normal" size="16" isBold="true"/>
 				</textElement>
 				<text><![CDATA[SPECIAL PROVISION]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="271" width="541" height="50" isPrintWhenDetailOverflows="true" uuid="2c7c56b4-6339-439f-adc9-b78c794bb849"/>
+				<reportElement x="0" y="270" width="541" height="54" isPrintWhenDetailOverflows="true" uuid="2c7c56b4-6339-439f-adc9-b78c794bb849"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
-				<text><![CDATA[The insured recognizes and declares to be informed of the General Condition as well as the benefits and the exclusions. This certificate cannot be used as a letter of gurantee for payment into public or private medical organization. The insured declares to have not scheduled any travel for therapeutic treatment.]]></text>
+				<text><![CDATA[The insured recognizes and declares to be informed of the General Condition as well as the benefits and the exclusions. This certificate cannot be used as a letter of guarantee for payment into public or private medical organization. The insured declares to have not scheduled any travel for therapeutic treatment.]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="399" width="541" height="15" forecolor="#FA0505" uuid="98bc02bd-4e62-4747-8d4d-c7f125190668"/>
@@ -272,7 +265,7 @@ WHERE passenger_id = '$P!{filterid}';]]>
 				<text><![CDATA[   	 Paris, France:- +33 130 62 11 22	]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="321" width="541" height="18" forecolor="#1F0F0F" uuid="365e8c37-0ac0-4fe4-9f7c-862cc8a9370b"/>
+				<reportElement x="0" y="324" width="541" height="15" forecolor="#1F0F0F" uuid="365e8c37-0ac0-4fe4-9f7c-862cc8a9370b"/>
 				<textElement textAlignment="Center">
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
@@ -283,7 +276,7 @@ WHERE passenger_id = '$P!{filterid}';]]>
 				<textElement textAlignment="Center">
 					<font fontName="Garamond-Normal" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[London, United Kindom +44(0)20 7902 7405]]></text>
+				<text><![CDATA[London, United Kingdom +44(0)20 7902 7405]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="354" width="541" height="15" forecolor="#FA0505" uuid="fdea0c4d-7b96-448d-8ed9-ca27c0fc3d25"/>

@@ -178,7 +178,8 @@ CREATE VIEW vw_bank_branch AS
 	SELECT sys_countrys.sys_country_id, sys_countrys.sys_country_code, sys_countrys.sys_country_name,
 		banks.bank_id, banks.bank_name, banks.bank_code, banks.swift_code,  banks.sort_code,
 		bank_branch.bank_branch_id, bank_branch.org_id, bank_branch.bank_branch_name, 
-		bank_branch.bank_branch_code, bank_branch.narrative
+		bank_branch.bank_branch_code, bank_branch.narrative,
+		(banks.bank_name || ', ' || bank_branch.bank_branch_name) as bank_branch_disp
 	FROM bank_branch INNER JOIN banks ON bank_branch.bank_id = banks.bank_id
 		LEFT JOIN sys_countrys ON banks.sys_country_id = sys_countrys.sys_country_id;
 		
