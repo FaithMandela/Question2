@@ -602,6 +602,18 @@
 </script>
 
 <script>
+	$('#btProcess').click(function(){
+console.log("TODO Bulk Save grid");
+	});
+
+	function readComboValue(keyid, selectObj) {
+		var selectIndex = selectObj.selectedIndex;
+		var selectValue = selectObj.options[selectIndex].value;
+console.log(selectObj.options[selectIndex]);
+console.log("TODO combo " + keyid);
+console.log("TODO combo " + selectValue);
+	}
+
    	function updateField(valueid, valuename) {
 		document.getElementsByName(valueid)[0].value = valuename;
 	}
@@ -733,10 +745,6 @@
             $('#jqlist').setGridParam({datatype:'json', page:1}).trigger('reloadGrid');
         });
     });
-
-	$('#btProcess').click(function(){
-console.log("TODO Bulk Save grid");
-	});
 
 	$('#btnAction').click(function(){
 	    var operation = $("#operation").val();

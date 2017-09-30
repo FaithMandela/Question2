@@ -1122,7 +1122,7 @@
 				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<TABLEVIEW name="Interest Methods" keyfield="interest_method_id" table="vw_interest_methods">
+		<TABLEVIEW name="Interest Methods" keyfield="interest_method_id" updatetable="interest_methods" table="vw_interest_methods">
 			<TEXTFIELD w="75" title="Interest Method ID">interest_method_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Interest Method">interest_method_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Activity Type">activity_type_name</TEXTFIELD>

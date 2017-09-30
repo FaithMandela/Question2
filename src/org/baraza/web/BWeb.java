@@ -593,8 +593,6 @@ public class BWeb {
 			if(view.getAttribute("grid.print", "false").equals("true"))
 				buttons += "<a class='btn green btn-sm' target='_blank' href='b_print.jsp?view=" + viewKey + did + "&action=print'><i class='fa fa-print'></i>   Print</a>\n";
 			
-			//if(isEditField()) buttons += "<button type='button' class='btn btn-success i_tick icon small' name='btProcess' id='btProcess' value='Submit'><i class='fa  fa-save'></i> &nbsp; Submit</button>\n";
-            
             buttons += "<a class='btn btn-circle btn-icon-only btn-default btn-sm fullscreen' href='javascript:;' data-original-title='' title=''></a>";
 		}
 		
@@ -607,6 +605,10 @@ public class BWeb {
 		
 		if(view.getName().equals("ACCORDION")) {
 			buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'> <i class='fa  fa-save'></i> &nbsp; Save </button>\n";
+		}
+		
+		if(view.getName().equals("TABLEVIEW") && (view.getAttribute("updatetable") != null)) {
+			buttons += "<button type='button' class='btn btn-success i_tick icon small' name='btProcess' id='btProcess' value='Submit'><i class='fa  fa-save'></i> &nbsp; Submit</button>\n";
 		}
 		
 		if(isForm()) {
