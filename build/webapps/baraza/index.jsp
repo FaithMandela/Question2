@@ -606,7 +606,13 @@
 console.log("TODO Bulk Save grid");
 	});
 
-	<%= web.getTableViewKeys() %>
+	function readComboValue(keyid, selectObj) {
+		var selectIndex = selectObj.selectedIndex;
+		var selectValue = selectObj.options[selectIndex].value;
+console.log(selectObj.options[selectIndex]);
+console.log("TODO combo " + keyid);
+console.log("TODO combo " + selectValue);
+	}
 
    	function updateField(valueid, valuename) {
 		document.getElementsByName(valueid)[0].value = valuename;

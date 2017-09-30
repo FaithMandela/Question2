@@ -215,9 +215,10 @@ public class BWebBody extends BQuery {
 							String fieldValue = getString(el.getValue());
 							String defaultvalue = el.getAttribute("default", "");
 							String linkData = rs.getString(keyField);
+							String jsFunction = " onchange=\"readComboValue('" + linkData + "', this);\" ";
 							if(el.getAttribute("linksource") != null) linkData = rs.getString(el.getAttribute("linksource"));
 							myhtml.append("\n<td>");
-							myhtml.append(getComboBox(el, linkData, true, fieldValue, defaultvalue));
+							myhtml.append(getComboBox(el, linkData, true, fieldValue, defaultvalue, jsFunction));
 						} else if(el.getName().equals("BROWSER")) {
 							myhtml.append("\n<td>");
 							if(el.getAttribute("path") != null) myhtml.append("<a href='" + el.getAttribute("path"));
@@ -541,11 +542,11 @@ public class BWebBody extends BQuery {
 		} else if(el.getName().equals("GRIDBOX")) {
 			String fieldValue = null;
 			if(eof) fieldValue = getString(el.getValue());
-			response.append(getComboBox(el, formLinkData, eof, fieldValue, defaultvalue));
+			response.append(getComboBox(el, formLinkData, eof, fieldValue, defaultvalue, null));
 		} else if(el.getName().equals("COMBOBOX")) {
 			String fieldValue = null;
 			if(eof) fieldValue = getString(el.getValue());
-			response.append(getComboBox(el, formLinkData, eof, fieldValue, defaultvalue));
+			response.append(getComboBox(el, formLinkData, eof, fieldValue, defaultvalue, null));
 		} else if(el.getName().equals("MULTISELECT")) {
 			response.append("<select name='" + el.getValue() + "' multiple='multiple' ");
 			if(el.getAttribute("class") == null) response.append(" class='multi-select form-control'");
@@ -785,12 +786,13 @@ public class BWebBody extends BQuery {
 		return response.toString();
 	}
 	
-	public String getComboBox(BElement el, String formLinkData, boolean eof, String fieldValue, String defaultvalue) {
+	public String getComboBox(BElement el, String formLinkData, boolean eof, String fieldValue, String defaultvalue, String jsFunction) {
 		StringBuilder response = new StringBuilder();
 		
 		response.append("<select name='" + el.getValue() + "'");
 		if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
 		if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
+		if(jsFunction != null) response.append(jsFunction);
 		if(el.getAttribute("class") == null) response.append(" class='select2me form-control");
 		else response.append(" class='" + el.getAttribute("class"));
 		if(el.getAttribute("select.detail") != null) response.append(" detailed-select ");

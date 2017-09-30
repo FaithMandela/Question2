@@ -80,7 +80,6 @@ public class BWeb {
 	String accordionJs = "";
 	String pictureURL = "";
 	String pictureField = "";
-	String tableViewKeys = "";
 
 	public BWeb(String dbconfig, String xmlfile) {
 		if(xmlfile == null) return;				// File error check
@@ -875,11 +874,6 @@ public class BWeb {
 			BWebBody webbody = new BWebBody(db, view, wheresql, sortby);
 			if(selectAll) webbody.setSelectAll();
 			body += webbody.getGrid(viewKeys, viewData, true, viewKey, false);
-			tableViewKeys = "var tabledata = '";
-			for(String keyFieldData : webbody.getKeyFieldData()) {
-				tableViewKeys += keyFieldData + ",";
-			}
-			tableViewKeys += "'";
 			webbody.close();
 		} else if(view.getName().equals("ACCORDION")) {
 			BAccordion accordion = new BAccordion(db, view);
@@ -2232,7 +2226,6 @@ log.severe("BASE : " + mysql);
 	public String getViewKey() { return viewKey; }
 	public List<String> getViewData() { return viewData; }
 	public String getDataItem() { return dataItem; }
-	public String getTableViewKeys() { return tableViewKeys; }
 
 	public void close() {
 		db.close();
