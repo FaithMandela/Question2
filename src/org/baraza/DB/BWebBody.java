@@ -62,7 +62,7 @@ public class BWebBody extends BQuery {
 			addJSc = false;
 		} else {
 			myhtml.append("<div class='table-scrollable'>\n");
-			myhtml.append("<table class='table table-bordered table-hover'>\n");
+			myhtml.append("<table class='table table-bordered table-striped table-condensed flip-content'>\n");
 			myhtml.append("\n<thead>\n<tr>");
 			if(hasAction && (keyField != null)) {
 				myhtml.append("\n<th data-field='ID'>ID</th>");

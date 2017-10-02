@@ -607,9 +607,10 @@
 	$('#btProcess').click(function(){
         $.post("ajax?fnct=tableviewupdate", {jsonfield: JSON.stringify(jsonFieldUpdates)}, function(data) {
             if(data.error == true){
-                toastr['error'](data.msg, "Error");
+                toastr['error'](data.message, "Error");
             }else if(data.error == false){
-                toastr['success'](data.msg, "Ok");
+				location.reload();
+                toastr['success'](data.message, "Ok");
             }
         }, "JSON");
 	});

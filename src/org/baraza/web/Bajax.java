@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.io.IOException;
 
 import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
 import javax.json.JsonReader;
 
 import javax.servlet.ServletContext;
@@ -424,14 +426,22 @@ System.out.println("BASE 2020 : " + bals);
 	}
 	
 	public String tableViewUpdate(HttpServletRequest request) {
-		String resp = "";
+		String resp = "{\"error\": false, \"message\": \"Updated records\"}";
 		
 		BElement view = web.getView();
 		String jsonField = request.getParameter("jsonfield");
-System.out.println("BASE 1020 : " + jsonField);
 
-		JsonReader jsonReader = Json.createReader(new StringReader("{}"));
-		
+		JsonReader jsonReader = Json.createReader(new StringReader(jsonField));
+		JsonArray jFields = jsonReader.readArray();
+		for (int i = 0; i < jFields.size(); i++) {
+			JsonObject jField = jFields.getJsonObject(i);
+
+			String upSql = "UPDATE " + view.getAttribute("updatetable") 
+			+ " SET " + jField.getString("field_name") + " = '" + jField.getString("field_value") 
+			+ "' WHERE " + view.getAttribute("keyfield") + " = '" + jField.getString("key_id") + "';";
+System.out.println("BASE 1025 : " + upSql);
+			web.executeQuery(upSql);
+		}
 		
 		return resp;
 	}
