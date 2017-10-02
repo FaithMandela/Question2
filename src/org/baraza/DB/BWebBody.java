@@ -215,7 +215,7 @@ public class BWebBody extends BQuery {
 							String fieldValue = getString(el.getValue());
 							String defaultvalue = el.getAttribute("default", "");
 							String linkData = rs.getString(keyField);
-							String jsFunction = " onchange=\"readComboValue('" + linkData + "', this);\" ";
+							String jsFunction = " onchange=\"readComboValue('" + el.getValue() + "','" + linkData + "', this);\" ";
 							if(el.getAttribute("linksource") != null) linkData = rs.getString(el.getAttribute("linksource"));
 							myhtml.append("\n<td>");
 							myhtml.append(getComboBox(el, linkData, true, fieldValue, defaultvalue, jsFunction));

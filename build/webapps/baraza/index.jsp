@@ -602,16 +602,23 @@
 </script>
 
 <script>
+	
+	var jsonFieldUpdates = [];
 	$('#btProcess').click(function(){
-console.log("TODO Bulk Save grid");
+        $.post("ajax?fnct=tableviewupdate", {jsonfield: JSON.stringify(jsonFieldUpdates)}, function(data) {
+            if(data.error == true){
+                toastr['error'](data.msg, "Error");
+            }else if(data.error == false){
+                toastr['success'](data.msg, "Ok");
+            }
+        }, "JSON");
 	});
 
-	function readComboValue(keyid, selectObj) {
+	function readComboValue(fieldName, keyid, selectObj) {
 		var selectIndex = selectObj.selectedIndex;
 		var selectValue = selectObj.options[selectIndex].value;
-console.log(selectObj.options[selectIndex]);
-console.log("TODO combo " + keyid);
-console.log("TODO combo " + selectValue);
+		var jsonField = {"field_name" : fieldName, "key_id" : keyid, "field_value" : selectValue};
+		jsonFieldUpdates.push(jsonField);
 	}
 
    	function updateField(valueid, valuename) {

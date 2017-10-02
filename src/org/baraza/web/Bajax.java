@@ -16,10 +16,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
+import java.io.StringReader;
 import java.io.PrintWriter;
 import java.io.OutputStream;
 import java.io.InputStream;
 import java.io.IOException;
+
+import javax.json.Json;
+import javax.json.JsonReader;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
@@ -115,6 +119,9 @@ public class Bajax extends HttpServlet {
 			response.setContentType("application/json;charset=\"utf-8\"");
 		} else if("renew_product".equals(fnct)) {
 			resp = renewProduct();
+			response.setContentType("application/json;charset=\"utf-8\"");
+		} else if("tableviewupdate".equals(fnct)) {
+			resp = tableViewUpdate(request);
 			response.setContentType("application/json;charset=\"utf-8\"");
 		} else if("jsinsert".equals(fnct)) {
 			resp = jsGrid(fnct, request);
@@ -412,6 +419,19 @@ System.out.println("BASE 2020 : " + bals);
 
 		rs.close();
 		rsa.close();
+		
+		return resp;
+	}
+	
+	public String tableViewUpdate(HttpServletRequest request) {
+		String resp = "";
+		
+		BElement view = web.getView();
+		String jsonField = request.getParameter("jsonfield");
+System.out.println("BASE 1020 : " + jsonField);
+
+		JsonReader jsonReader = Json.createReader(new StringReader("{}"));
+		
 		
 		return resp;
 	}
