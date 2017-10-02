@@ -800,6 +800,7 @@ public class BWebBody extends BQuery {
 
 		String selectDetail = el.getAttribute("select.detail");
 		String nodefault = el.getAttribute("nodefault");
+		String defaultSelect = el.getAttribute("default.select");
 		String lptable = el.getAttribute("lptable");
 		String lpfield = el.getAttribute("lpfield");
 		String lpkey = el.getAttribute("lpkey");
@@ -846,7 +847,14 @@ public class BWebBody extends BQuery {
 		
 //System.out.println("BASE COMBO : " + mysql);
 
-		if(nodefault != null) response.append("<option></option>");
+		if(nodefault != null && !eof) response.append("<option></option>");
+		if(defaultSelect != null) {
+			if(!eof)  response.append("<option>" + defaultSelect + "</option>");
+			if(eof && fieldValue == null) response.append("<option>" + defaultSelect + "</option>");
+			if(el.getAttribute("default.value") != null) {
+				if(el.getAttribute("default.value").equals(fieldValue)) response.append("<option>" + defaultSelect + "</option>");
+			}
+		}
 
 		BQuery cmbrs = new BQuery(db, mysql);
 		while (cmbrs.moveNext()) {
