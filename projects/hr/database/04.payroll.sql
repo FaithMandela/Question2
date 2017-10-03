@@ -1164,8 +1164,8 @@ BEGIN
 
 	IF(v_period_tax_type_id is null) AND (v_employee_month_id is null)THEN
 
-		INSERT INTO period_tax_types (period_id, org_id, tax_type_id, period_tax_type_name, formural, tax_relief, percentage, linear, employer, employer_ps, tax_type_order, in_tax, account_id, employer_formural, employer_relief)
-		SELECT v_period_id, org_id, tax_type_id, tax_type_name, formural, tax_relief, percentage, linear, employer, employer_ps, tax_type_order, in_tax, account_id, employer_formural, employer_relief
+		INSERT INTO period_tax_types (period_id, org_id, tax_type_id, period_tax_type_name, formural, tax_relief, percentage, linear, employer, employer_ps, tax_type_order, in_tax, account_id, employer_formural, employer_relief, limit_employee, limit_employer)
+		SELECT v_period_id, org_id, tax_type_id, tax_type_name, formural, tax_relief, percentage, linear, employer, employer_ps, tax_type_order, in_tax, account_id, employer_formural, employer_relief, limit_employee, limit_employer
 		FROM tax_types
 		WHERE (active = true) AND (org_id = v_org_id);
 
@@ -1312,8 +1312,9 @@ DECLARE
 	reca		RECORD;
 	tax			REAL;
 BEGIN
-	SELECT period_tax_type_id, formural, tax_relief, employer_relief, percentage, linear, in_tax, employer, employer_ps 
-		INTO reca
+	SELECT period_tax_type_id, formural, tax_relief, employer_relief, percentage, linear, in_tax, 
+		employer, employer_ps, limit_employee, limit_employer
+	INTO reca
 	FROM period_tax_types
 	WHERE (period_tax_type_id = $2);
 
@@ -1347,6 +1348,11 @@ BEGIN
 		ELSE
 			tax := 0;
 		END IF;
+		IF(reca.limit_employee is not null)THEN
+			IF(tax > reca.limit_employee)THEN
+				tax := reca.limit_employee;
+			END IF;
+		END IF;
 	END IF;
 	
 	---- Employee tax relief
@@ -1356,8 +1362,12 @@ BEGIN
 		ELSE
 			tax := 0;
 		END IF;
+		IF(reca.limit_employer is not null)THEN
+			IF(tax > reca.limit_employer)THEN
+				tax := reca.limit_employer;
+			END IF;
+		END IF;
 	END IF;
-
 
 	RETURN tax;
 END;
