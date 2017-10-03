@@ -112,14 +112,14 @@ DELETE FROM default_adjustments;
 DELETE FROM adjustments;
 DELETE FROM adjustment_effects WHERE adjustment_effect_id = 1;
 
-INSERT INTO tax_types (org_id, currency_id, tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account, employer_formural) 
-VALUES (0, 1, 1, 11, 'MPF', 'Get_Employee_Tax(employee_tax_type_id, 2)', 0, 1, false, true, true, 0, 0, true, '40045', '40045', 'Get_Employee_Tax(employee_tax_type_id, 5)');
+INSERT INTO tax_types (org_id, currency_id, tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account, employer_formural, limit_employee, limit_employer) 
+VALUES (0, 1, 1, 11, 'MPF', 'Get_Employee_Tax(employee_tax_type_id, 2)', 0, 1, false, false, true, 0, 0, true, '40045', '40045', 'Get_Employee_Tax(employee_tax_type_id, 5)', 1500, 1500);
 
 INSERT INTO tax_rates (org_id, tax_type_id, tax_range, tax_rate) VALUES (0, 1, 7100, 0);
 INSERT INTO tax_rates (org_id, tax_type_id, tax_range, tax_rate) VALUES (0, 1, 30000, 5);
-INSERT INTO tax_rates (org_id, tax_type_id, tax_range, tax_rate) VALUES (0, 1, 10000000, 0);
+INSERT INTO tax_rates (org_id, tax_type_id, tax_range, tax_rate) VALUES (0, 1, 10000000, 5);
 INSERT INTO tax_rates (org_id, tax_type_id, tax_range, tax_rate, employer_rate) VALUES (0, 1, 30000, 5, 1);
-INSERT INTO tax_rates (org_id, tax_type_id, tax_range, tax_rate, employer_rate) VALUES (0, 1, 10000000, 0, 1);
+INSERT INTO tax_rates (org_id, tax_type_id, tax_range, tax_rate, employer_rate) VALUES (0, 1, 10000000, 5, 1);
 
 INSERT INTO default_tax_types(entity_id, org_id, tax_type_id, active)
 SELECT entity_id, org_id, 1, true

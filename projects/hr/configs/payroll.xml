@@ -440,24 +440,27 @@
 					<TEXTFIELD w="430" title="Narrative" y="30" h="20" x="10">narrative</TEXTFIELD>
 				</FORM>
 			</GRID>
-			<FORM name="Deduction Type" keyfield="tax_type_id" table="tax_types">
-				<COMBOBOX w="150" title="Category" lptable="use_keys" noorg="true" where="(use_function = 1)" y="10" h="20" x="10" lpfield="use_key_name">use_key_id</COMBOBOX>
-				<TEXTFIELD w="150" title="Deduction Type" y="10" h="20" x="290">tax_type_name</TEXTFIELD>
-				<TEXTFIELD w="430" title="Formular" default="Get_Employee_Tax(employee_tax_type_id, 2)" y="30" h="20" x="10">formural</TEXTFIELD>
-				<TEXTDECIMAL w="150" title="Deduction Relief" y="50" h="20" x="10">tax_relief</TEXTDECIMAL>
-				<CHECKBOX w="150" title="Linear" y="50" h="20" x="290">linear</CHECKBOX>
-				<CHECKBOX w="150" title="Percentage" y="70" h="20" x="10">percentage</CHECKBOX>
-				<CHECKBOX w="150" title="Active" default="true" y="70" h="20" x="290">active</CHECKBOX>
-				<TEXTDECIMAL w="150" title="Employer" y="90" h="20" x="10">employer</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Employer %" y="90" h="20" x="290">employer_ps</TEXTDECIMAL>
-				<TEXTFIELD w="430" title="Employer Formural" y="110" h="20" x="10">employer_formural</TEXTFIELD>
-				<TEXTFIELD w="150" title="Order" default="0" y="130" h="20" x="10">Tax_Type_order</TEXTFIELD>
-				<CHECKBOX w="150" title="Tax" y="130" h="20" x="290">In_Tax</CHECKBOX>
-				<TEXTFIELD w="150" title="Registration Number" default="0" y="150" h="20" x="10">tax_type_number</TEXTFIELD>
-				<TEXTFIELD w="150" title="Account Number" default_org_fnct="get_default_account(30" y="150" h="290" x="10">account_number</TEXTFIELD>
-				<TEXTFIELD w="150" title="Employer Account" y="170" h="20" x="10">employer_account</TEXTFIELD>
-				<COMBOBOX w="430" title="Currency" lptable="currency" y="190" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<TEXTAREA w="430" title="Details" y="210" h="90" x="10">details</TEXTAREA>
+			<FORM cols="2" name="Deduction Type" keyfield="tax_type_id" table="tax_types">
+				<TEXTFIELD w="150" title="Deduction Type" y="10" h="20" x="10" span="true">tax_type_name</TEXTFIELD>
+				<COMBOBOX w="150" title="Category" lptable="use_keys" noorg="true" where="(use_function = 1)" y="10" h="20" x="290" lpfield="use_key_name">use_key_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Formular" default="Get_Employee_Tax(employee_tax_type_id, 2)" y="30" h="20" x="10" span="true">formural</TEXTFIELD>
+				<CHECKBOX w="150" title="Active" default="true" y="30" h="20" x="10">active</CHECKBOX>
+				<CHECKBOX w="150" title="Linear" y="50" h="20" x="10" span="true">linear</CHECKBOX>
+				<CHECKBOX w="150" title="Percentage" y="50" h="20" x="290">percentage</CHECKBOX>
+				<TEXTDECIMAL w="150" title="Deduction Relief" y="70" h="20" x="10" span="true">tax_relief</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Employee Limit" y="70" h="20" x="290">limit_employee</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Employer" y="110" h="20" x="10" span="true">employer</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Employer %" y="110" h="20" x="290">employer_ps</TEXTDECIMAL>
+				<TEXTFIELD w="150" title="Employer Formural" y="130" h="20" x="10" span="true">employer_formural</TEXTFIELD>
+				<TEXTFIELD w="150" title="Employer Limit" y="130" h="20" x="290">limit_employer</TEXTFIELD>
+				<TEXTFIELD w="150" title="Employer Relief" y="150" h="20" x="10" span="true">employer_relief</TEXTFIELD>
+				<TEXTFIELD w="150" title="Employer Account" y="150" h="20" x="290">employer_account</TEXTFIELD>
+				<TEXTFIELD w="150" title="Order" default="0" y="170" h="20" x="10" span="true">Tax_Type_order</TEXTFIELD>
+				<CHECKBOX w="150" title="In Tax" y="170" h="20" x="290">In_Tax</CHECKBOX>
+				<TEXTFIELD w="150" title="Registration Number" default="0" y="190" h="20" x="10" span="true">tax_type_number</TEXTFIELD>
+				<TEXTFIELD w="150" title="Account Number" default_org_fnct="get_default_account(30" y="190" h="20" x="10">account_number</TEXTFIELD>
+				<COMBOBOX w="150" title="Currency" lptable="currency" y="210" h="20" x="10" span="true" lpfield="currency_name">currency_id</COMBOBOX>
+				<TEXTAREA w="150" title="Details" y="210" h="90" x="290" rows="5">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>
@@ -1066,21 +1069,25 @@
 						<TEXTFIELD w="430" title="Narrative" y="30" h="20" x="10">narrative</TEXTFIELD>
 					</FORM>
 				</GRID>
-				<FORM name="Tax Type" keyfield="period_tax_type_id" linkfield="period_id" table="period_tax_types">
-					<COMBOBOX w="430" title="Type Name Type" lptable="vw_tax_types" where="(use_function = 1)" y="10" h="20" x="10" lpfield="tax_type_name">tax_type_id</COMBOBOX>
-					<TEXTFIELD w="150" title="Tax Type" y="30" h="20" x="10">period_tax_type_name</TEXTFIELD>
-					<TEXTFIELD w="150" title="Formural" y="30" h="20" x="290">formural</TEXTFIELD>
-					<TEXTDECIMAL w="150" title="Tax Relief" y="50" h="20" x="10">tax_relief</TEXTDECIMAL>
+				<FORM cols="2" name="Tax Type" keyfield="period_tax_type_id" linkfield="period_id" table="period_tax_types">
+					<COMBOBOX w="150" title="Type Name Type" lptable="vw_tax_types" where="(use_function = 1)" y="10" h="20" x="10" span="true" lpfield="tax_type_name">tax_type_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Deduction Type" y="10" h="20" x="10">period_tax_type_name</TEXTFIELD>
+					<TEXTFIELD w="150" title="Formular" default="Get_Employee_Tax(employee_tax_type_id, 2)" y="30" h="20" x="10" span="true">formural</TEXTFIELD>
+					<TEXTFIELD w="150" title="Account Number" default_org_fnct="get_default_account(30" y="30" h="20" x="10">account_number</TEXTFIELD>
+					<CHECKBOX w="150" title="Linear" y="50" h="20" x="10" span="true">linear</CHECKBOX>
 					<CHECKBOX w="150" title="Percentage" y="50" h="20" x="290">percentage</CHECKBOX>
-					<CHECKBOX w="150" title="Linear" y="70" h="20" x="10">linear</CHECKBOX>
-					<TEXTDECIMAL w="150" title="Employer" y="90" h="20" x="10">Employer</TEXTDECIMAL>
-					<TEXTDECIMAL w="150" title="Employer %" y="90" h="20" x="290">Employer_ps</TEXTDECIMAL>
-					<TEXTFIELD w="430" title="Employer Formural" y="110" h="20" x="10">employer_formural</TEXTFIELD>
-					<TEXTFIELD w="150" title="Order" default="0" y="130" h="20" x="10">Tax_Type_order</TEXTFIELD>
-					<CHECKBOX w="150" title="Tax" y="130" h="20" x="290">In_Tax</CHECKBOX>
-					<TEXTDATE w="150" title="Pay Date" y="150" h="20" x="10">pay_date</TEXTDATE>
-					<TEXTFIELD w="150" title="Account Number" default="0" y="150" h="20" x="290">account_number</TEXTFIELD>
-					<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
+					<TEXTDECIMAL w="150" title="Deduction Relief" y="70" h="20" x="10" span="true">tax_relief</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Employee Limit" y="70" h="20" x="290">limit_employee</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Employer" y="110" h="20" x="10" span="true">employer</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Employer %" y="110" h="20" x="290">employer_ps</TEXTDECIMAL>
+					<TEXTFIELD w="150" title="Employer Formural" y="130" h="20" x="10" span="true">employer_formural</TEXTFIELD>
+					<TEXTFIELD w="150" title="Employer Limit" y="130" h="20" x="290">limit_employer</TEXTFIELD>
+					<TEXTFIELD w="150" title="Employer Relief" y="150" h="20" x="10" span="true">employer_relief</TEXTFIELD>
+					<TEXTFIELD w="150" title="Employer Account" y="150" h="20" x="290">employer_account</TEXTFIELD>
+					<TEXTFIELD w="150" title="Order" default="0" y="170" h="20" x="10" span="true">Tax_Type_order</TEXTFIELD>
+					<CHECKBOX w="150" title="In Tax" y="170" h="20" x="290">In_Tax</CHECKBOX>
+					<TEXTDATE w="150" title="Pay Date" y="190" h="20" x="10" span="true">pay_date</TEXTDATE>
+					<TEXTAREA w="150" title="Details" y="190" h="90" x="290" rows="5">details</TEXTAREA>
 				</FORM>
 			</GRID>
 			<GRID name="Employee Pay" keyfield="entity_id" linkfield="period_id" table="vw_employee_month">
