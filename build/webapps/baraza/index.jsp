@@ -602,6 +602,26 @@
 </script>
 
 <script>
+	
+	var jsonFieldUpdates = [];
+	$('#btProcess').click(function(){
+        $.post("ajax?fnct=tableviewupdate", {jsonfield: JSON.stringify(jsonFieldUpdates)}, function(data) {
+            if(data.error == true){
+                toastr['error'](data.message, "Error");
+            }else if(data.error == false){
+				location.reload();
+                toastr['success'](data.message, "Ok");
+            }
+        }, "JSON");
+	});
+
+	function readComboValue(fieldName, keyid, selectObj) {
+		var selectIndex = selectObj.selectedIndex;
+		var selectValue = selectObj.options[selectIndex].value;
+		var jsonField = {"field_name" : fieldName, "key_id" : keyid, "field_value" : selectValue};
+		jsonFieldUpdates.push(jsonField);
+	}
+
    	function updateField(valueid, valuename) {
 		document.getElementsByName(valueid)[0].value = valuename;
 	}
@@ -733,10 +753,6 @@
             $('#jqlist').setGridParam({datatype:'json', page:1}).trigger('reloadGrid');
         });
     });
-
-	$('#btProcess').click(function(){
-console.log("TODO Bulk Save grid");
-	});
 
 	$('#btnAction').click(function(){
 	    var operation = $("#operation").val();

@@ -20,11 +20,9 @@ Changes that need to be done on new deployment
 
 10. Credit purchase changes clients/credit_purchase_step_1.jsp
 
-11. Statement balance addition clients/statement.jsp
+11. Change Statement of activities label clients/activity/_recent_statement.jsp
 
-12. Change Statement of activities label clients/activity/_recent_statement.jsp
-
-13. Credit adjustment and limit change clients/credit_adjust.jsp abd clients/credit_save.jsp
+12. Credit adjustment and limit change clients/credit_adjust.jsp abd clients/credit_save.jsp
 
 
 

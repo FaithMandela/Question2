@@ -1,0 +1,1142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CHV_Performance_b" language="groovy" pageWidth="1100" pageHeight="800" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="1060" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="0a9c37fb-cae8-4f58-ac99-d15629992178">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="122"/>
+	<property name="ireport.y" value="206"/>
+	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="filterid" class="java.lang.String">
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="start_date" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2015-08-01"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end_date" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2015-08-01"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT health_workers.health_worker_id,health_workers.worker_name,
+
+---Total No. of Referrals of pregnant women ( with Danger signs)
+(SELECT count(health_worker_id) FROM vw_survey_100
+    WHERE category= 2 AND form_serial LIKE 'DSS%' AND
+    health_worker_id = health_workers.health_worker_id
+    AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date) AS pregnant_with_Danger_signs,
+
+---Total No. of Referrals of postpartum women( with Danger signs)
+(SELECT count(health_worker_id) FROM vw_survey_100
+    WHERE category= 1 AND form_serial LIKE 'DSS%' AND
+    health_worker_id = health_workers.health_worker_id
+    AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date) AS postpartaum_with_Danger_signs,
+
+---Total  of postpartum women referred for family planning
+(SELECT count(health_worker_id) FROM vw_survey_100
+    WHERE referral_reason LIKE 'Postpartum family services%' AND
+    health_worker_id = health_workers.health_worker_id
+    AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date) AS postpartum_family_planning,
+
+---Total number of  pregnant women identified with at least 2 danger signs
+(SELECT count(decision_survey.mother_info_def_id) FROM decision_survey
+    INNER JOIN mother_mpp_info_def ON mother_mpp_info_def.mother_mpp_def_id = decision_survey.mother_info_def_id
+    INNER JOIN vw_surveys ON vw_surveys.survey_id = decision_survey.survey_id
+    WHERE decision_survey.mother_info_def_id::int BETWEEN 1::int AND 17::int
+    AND (SELECT count(decision_survey.response) FROM decision_survey WHERE decision_survey.response=1)>1
+    AND vw_surveys.health_worker_id = health_workers.health_worker_id
+    AND survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date)AS pregnant_2_danger_signs,
+
+---Total number of newborn identified with at least 4 danger signs
+(SELECT count(decision_survey.mother_info_def_id) FROM decision_survey
+    INNER JOIN mother_mpp_info_def ON mother_mpp_info_def.mother_mpp_def_id = decision_survey.mother_info_def_id
+    INNER JOIN vw_surveys ON vw_surveys.survey_id = decision_survey.survey_id
+    WHERE decision_survey.mother_info_def_id::int BETWEEN 44::int AND 52::int
+    AND (SELECT count(decision_survey.response) FROM decision_survey WHERE decision_survey.response=1)>4
+    AND vw_surveys.health_worker_id = health_workers.health_worker_id
+    AND survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date)AS newborn_4_danger_signs,
+
+---Total number of postpartum women identified with at least 4 danger signs
+(SELECT count(decision_survey.mother_info_def_id) FROM decision_survey
+    INNER JOIN mother_mpp_info_def ON mother_mpp_info_def.mother_mpp_def_id = decision_survey.mother_info_def_id
+    INNER JOIN vw_surveys ON vw_surveys.survey_id = decision_survey.survey_id
+    WHERE decision_survey.mother_info_def_id::int BETWEEN 18::int AND 33::int
+    AND (SELECT count(decision_survey.response) FROM decision_survey WHERE decision_survey.response=1)>4
+    AND vw_surveys.health_worker_id = health_workers.health_worker_id
+    AND survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date)AS postpartum_4_danger_signs,
+
+---Total number of  correctly at least 2 identified danger signs among pregnant women
+(SELECT count(survey_100.health_worker_id) FROM survey_100
+    WHERE survey_100.category = 2 AND survey_100.form_serial LIKE 'DSS%' AND survey_100.correct = 1
+    AND (SELECT count(decision_survey.response) FROM decision_survey WHERE decision_survey.response=1)>2
+    AND survey_100.health_worker_id = health_workers.health_worker_id
+    AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date)AS pregnant_2_correctly_danger_signs,
+
+---Total no. of correctly at least 2 identified danger signs among pregnant women
+
+---Total no. of correctly at least 4 identified danger signs among newborn
+(SELECT count(survey_100.health_worker_id) FROM survey_100
+    WHERE survey_100.category = 4 AND survey_100.form_serial LIKE 'DSS%' AND survey_100.correct = 1
+    AND (SELECT count(decision_survey.response) FROM decision_survey WHERE decision_survey.response=1)>4
+    AND survey_100.health_worker_id = health_workers.health_worker_id
+    AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date)AS newborn_4_correctly_danger_signs,
+
+---Total no. of correctly at least 2 identified danger signs among postpartum women
+(SELECT count(survey_100.health_worker_id) FROM survey_100
+    WHERE survey_100.category = 1 AND survey_100.form_serial LIKE 'DSS%' AND survey_100.correct = 1
+    AND (SELECT count(decision_survey.response) FROM decision_survey WHERE decision_survey.response=1)>2
+    AND survey_100.health_worker_id = health_workers.health_worker_id
+    AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date)AS postpartum_2_correctly_danger_signs,
+
+---Referral to the 5  facilities
+(SELECT count(survey_100.link_health_facility_id) FROM survey_100
+    INNER JOIN link_health_facilities ON link_health_facilities.link_health_facility_id = survey_100.link_health_facility_id
+    WHERE survey_100.link_health_facility_id != 6
+    AND survey_100.health_worker_id = health_workers.health_worker_id
+    AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date)AS Referral_to_5_facilities,
+
+---Total No. of effective referrals ( pregnant women -ANC)
+(SELECT count(survey_100.survey_100_id) FROM survey_100
+    INNER JOIN link_health_facilities ON link_health_facilities.link_health_facility_id = survey_100.link_health_facility_id
+    WHERE survey_100.category = 2 AND survey_100.form_serial LIKE 'DSSXPG%'
+    AND survey_100.health_worker_id = health_workers.health_worker_id
+    AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date)AS effective_referrals_pregnant_women_ANC,
+
+---Total No. of effective referrals ( newborn)
+(SELECT count(survey_100.survey_100_id) FROM survey_100
+    INNER JOIN link_health_facilities ON link_health_facilities.link_health_facility_id = survey_100.link_health_facility_id
+    WHERE survey_100.category = 2 AND survey_100.form_serial LIKE 'DSSXAB%'
+    AND survey_100.health_worker_id = health_workers.health_worker_id
+    AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date)AS effective_referrals_newborn,
+
+---Total No. of effective referrals ( postpartum)
+(SELECT count(survey_100.survey_100_id) FROM survey_100
+    INNER JOIN link_health_facilities ON link_health_facilities.link_health_facility_id = survey_100.link_health_facility_id
+    WHERE survey_100.category = 2 AND survey_100.form_serial LIKE 'DSSXPM%'
+    AND survey_100.health_worker_id = health_workers.health_worker_id
+    AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date)AS effective_referrals_postpartum,
+
+---Total No. of tracked pregnant women
+(SELECT count(survey_100.health_worker_id) FROM survey_100
+    WHERE survey_100.category = 2 AND survey_100.track_id = 1 AND survey_100.track_status LIKE 'Tracked%'
+    AND survey_100.health_worker_id = health_workers.health_worker_id
+    AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date)AS tracked_pregnant_women,
+
+---Total No. of tracked newborn
+(SELECT count(survey_100.health_worker_id) FROM survey_100
+    WHERE survey_100.category = 4 AND survey_100.track_id = 1 AND survey_100.track_status LIKE 'Tracked%'
+    AND survey_100.health_worker_id = health_workers.health_worker_id
+    AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date)AS tracked_newborn,
+
+---Total No. of tracked postpartum
+(SELECT count(survey_100.health_worker_id) FROM survey_100
+    WHERE survey_100.category = 1 AND survey_100.track_id = 1 AND survey_100.track_status LIKE 'Tracked%'
+    AND survey_100.health_worker_id = health_workers.health_worker_id
+    AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date)AS tracked_postpartum,
+
+---Referral to the alternative  facilities
+(SELECT count(survey_100.link_health_facility_id) FROM survey_100
+    INNER JOIN link_health_facilities ON link_health_facilities.link_health_facility_id = survey_100.link_health_facility_id
+    WHERE survey_100.link_health_facility_id = 6
+    AND survey_100.health_worker_id = health_workers.health_worker_id
+    AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date)AS Referral_to_alternative_facilities,
+
+---Total No. of  pregnant women who visited the facility
+(SELECT count(survey_100.health_worker_id) FROM survey_100
+    WHERE survey_100.category = 2 AND survey_100.visit_id = 1 AND survey_100.visit_status LIKE 'Visited other health facility%'
+    AND survey_100.health_worker_id = health_workers.health_worker_id
+    AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date)AS pregnant_women_visited_facility,
+
+---Total No. of newborn who visited the facility
+(SELECT count(survey_100.health_worker_id) FROM survey_100
+    WHERE survey_100.category = 4 AND survey_100.visit_id = 1 AND survey_100.visit_status LIKE 'Visited other health facility%'
+    AND survey_100.health_worker_id = health_workers.health_worker_id
+    AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date)AS newborn_visited_facility,
+
+---Total No. of postpartum who visited the facility
+(SELECT count(survey_100.health_worker_id) FROM survey_100
+    WHERE survey_100.category = 1 AND survey_100.visit_id = 1 AND survey_100.visit_status LIKE 'Visited other health facility%'
+    AND survey_100.health_worker_id = health_workers.health_worker_id
+    AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date)AS postpartum_visited_facility,
+
+---ANC defaulter referred
+(SELECT count(surveys.survey_id) FROM surveys
+    INNER JOIN survey_defaulters ON survey_defaulters.survey_id = surveys.survey_id
+    WHERE survey_defaulters.defaulters_info_def_id = 1 AND survey_defaulters.response = 1
+    AND surveys.health_worker_id = health_workers.health_worker_id
+    AND survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date)AS ANC_defaulter_referred,
+
+---Immunization defaulter referred
+(SELECT count(surveys.survey_id) FROM surveys
+    INNER JOIN survey_defaulters ON survey_defaulters.survey_id = surveys.survey_id
+    WHERE survey_defaulters.defaulters_info_def_id = 2 AND survey_defaulters.response = 1
+    AND surveys.health_worker_id = health_workers.health_worker_id
+    AND survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date)AS Immunization_defaulter_referred,
+
+---TB treatment defaulter traced and referred
+(SELECT count(surveys.survey_id) FROM surveys
+    INNER JOIN survey_defaulters ON survey_defaulters.survey_id = surveys.survey_id
+    WHERE survey_defaulters.defaulters_info_def_id = 3 AND survey_defaulters.response = 1
+    AND surveys.health_worker_id = health_workers.health_worker_id
+    AND survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date)AS TB_treatment_defaulter_traced_referred,
+
+---ART defaulter traced and referred
+(SELECT count(surveys.survey_id) FROM surveys
+    INNER JOIN survey_defaulters ON survey_defaulters.survey_id = surveys.survey_id
+    WHERE survey_defaulters.defaulters_info_def_id = 4 AND survey_defaulters.response = 1
+    AND surveys.health_worker_id = health_workers.health_worker_id
+    AND survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date)AS ART_defaulter_traced_referred,
+
+---HIV exposed infant (HEI) defaulters traced and referred
+(SELECT count(surveys.survey_id) FROM surveys
+    INNER JOIN survey_defaulters ON survey_defaulters.survey_id = surveys.survey_id
+    WHERE survey_defaulters.defaulters_info_def_id = 5 AND survey_defaulters.response = 1
+    AND surveys.health_worker_id = health_workers.health_worker_id
+    AND survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date)AS HEI_defaulters_traced_referred
+
+FROM health_workers
+INNER JOIN surveys ON surveys.health_worker_id = health_workers.health_worker_id
+WHERE survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date
+GROUP BY health_workers.health_worker_id,health_workers.worker_name
+ORDER BY health_workers.health_worker_id ASC]]>
+	</queryString>
+	<field name="health_worker_id" class="java.lang.Integer"/>
+	<field name="worker_name" class="java.lang.String"/>
+	<field name="pregnant_with_danger_signs" class="java.lang.Long"/>
+	<field name="postpartaum_with_danger_signs" class="java.lang.Long"/>
+	<field name="postpartum_family_planning" class="java.lang.Long"/>
+	<field name="pregnant_2_danger_signs" class="java.lang.Long"/>
+	<field name="newborn_4_danger_signs" class="java.lang.Long"/>
+	<field name="postpartum_4_danger_signs" class="java.lang.Long"/>
+	<field name="pregnant_2_correctly_danger_signs" class="java.lang.Long"/>
+	<field name="newborn_4_correctly_danger_signs" class="java.lang.Long"/>
+	<field name="postpartum_2_correctly_danger_signs" class="java.lang.Long"/>
+	<field name="referral_to_5_facilities" class="java.lang.Long"/>
+	<field name="effective_referrals_pregnant_women_anc" class="java.lang.Long"/>
+	<field name="effective_referrals_newborn" class="java.lang.Long"/>
+	<field name="effective_referrals_postpartum" class="java.lang.Long"/>
+	<field name="tracked_pregnant_women" class="java.lang.Long"/>
+	<field name="tracked_newborn" class="java.lang.Long"/>
+	<field name="tracked_postpartum" class="java.lang.Long"/>
+	<field name="referral_to_alternative_facilities" class="java.lang.Long"/>
+	<field name="pregnant_women_visited_facility" class="java.lang.Long"/>
+	<field name="newborn_visited_facility" class="java.lang.Long"/>
+	<field name="postpartum_visited_facility" class="java.lang.Long"/>
+	<field name="anc_defaulter_referred" class="java.lang.Long"/>
+	<field name="immunization_defaulter_referred" class="java.lang.Long"/>
+	<field name="tb_treatment_defaulter_traced_referred" class="java.lang.Long"/>
+	<field name="art_defaulter_traced_referred" class="java.lang.Long"/>
+	<field name="hei_defaulters_traced_referred" class="java.lang.Long"/>
+	<variable name="survey_count" class="java.lang.Integer" calculation="Count">
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="207" splitType="Stretch">
+			<staticText>
+				<reportElement style="Title" x="31" y="129" width="691" height="35" uuid="6c4a99bb-b0b8-4119-9023-80f97f831697"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="18" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ CHV Performance (Part B)]]></text>
+			</staticText>
+			<image>
+				<reportElement isPrintRepeatedValues="false" x="66" y="10" width="113" height="102" uuid="827ff226-f276-411d-925e-6a47512d9986"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} +  "theirlogo.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement isPrintRepeatedValues="false" x="185" y="14" width="310" height="89" uuid="1b54a9d5-2d97-4a3a-aab0-0bd32e381d18"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} +  "county_innovations.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement isPrintRepeatedValues="false" x="595" y="11" width="127" height="99" uuid="220817c9-b561-4453-8fc8-e1b6fc88b26e"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} +  "aphrc.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="479" y="11" width="112" height="101" uuid="8d5820f0-cc1b-4f0d-8af4-9e8d1da49a4d"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "aphrc_uk_aid.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="81" y="174" width="58" height="20" uuid="8af446b2-3af8-47f2-b138-1341ca6f2faa"/>
+				<textElement>
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Period :]]></text>
+			</staticText>
+			<line>
+				<reportElement x="139" y="190" width="366" height="1" uuid="fa047af3-d461-48a2-ae4f-0b12369c01e6"/>
+			</line>
+			<staticText>
+				<reportElement mode="Transparent" x="169" y="174" width="51" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="a808d71f-6bcf-479e-b85f-64cd1d796174"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[From :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="355" y="174" width="33" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="3674aefa-211d-43d2-ae82-5e78d0c6b1c2"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[To:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="221" y="175" width="134" height="20" uuid="1e93112c-4c00-411c-ada2-ee8d78fb14a0"/>
+				<textElement>
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{start_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="388" y="175" width="117" height="20" uuid="345063be-376b-4754-8ac3-85bccba5d2a6"/>
+				<textElement>
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{end_date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="205" splitType="Stretch">
+			<staticText>
+				<reportElement style="Column header" x="1" y="0" width="30" height="205" forecolor="#000000" uuid="8c2c96f7-7c9e-4fec-81e1-c23f67711520"/>
+				<box bottomPadding="5">
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[#]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="227" y="0" width="28" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="48a7b7c5-b808-4173-8759-83b105fde44f"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Total No. of Referrals of postpartum women( with Danger signs)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="196" y="0" width="31" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="5e76cdd9-c33c-45bb-8af4-4a744361f6d6"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Total No. of Referrals of pregnant women ( with Danger signs)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="289" y="0" width="42" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="6c53ff05-cebd-4260-bc64-09d6607bc071"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Total number of  pregnant women identified with at least 2 danger signs]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="31" y="0" width="165" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="bb18bff4-d504-46b9-90a9-866fbbe661be"/>
+				<box rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Name of CHV]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="255" y="0" width="34" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="9bbab7bb-3b77-4a24-aca8-4b973a557a96"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Total  of postpartum women referred for family planning]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="331" y="0" width="33" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="6c2ec1e7-76c1-4899-b4ae-23aa0c182203"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Total number of newborn identified with at least 4 danger signs]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="364" y="0" width="35" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="2163f999-d172-435a-98d1-189412b8355b"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Total number of postpartum women identified with at least 4 danger signs]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="399" y="0" width="45" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="95a3d792-70f2-48ab-bc67-07d9692beef9"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Total number of  correctly at least 2 identified danger signs among pregnant women]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="501" y="0" width="46" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="c1f01525-6340-45d0-86f6-6606f3ee1f89"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Total no. of correctly at least 4 identified danger signs among newborn]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="547" y="0" width="55" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="e9b0fd3c-9e16-4a01-8c47-228215e2be2b"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Total no. of correctly at least 2 identified danger signs among postpartum women]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="602" y="0" width="28" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="1cc477e6-9e9d-49f6-b946-7eac26960a60"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Referral to the 5  facilities]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="630" y="0" width="32" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="963a0761-51b9-4d45-9083-f19ebbc3d0b6"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Total No. of effective referrals ( pregnant women -ANC)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="444" y="0" width="57" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="24912d6b-33dc-4948-b4ed-77ae7df3af62"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Total no. of correctly at least 2 identified danger signs among pregnant women]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="662" y="0" width="36" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="c11fc329-35a8-42f2-9b69-186dfa1e23cb"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Total No. of effective referrals ( newborn)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="698" y="0" width="35" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="e5946362-3c22-4ab9-82c9-ff6dd65d431e"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Total No. of effective referrals ( postpartum)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="733" y="0" width="31" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="a695e57c-a2cf-4e3e-94e9-89dbbb612890"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Total No. of tracked pregnant women]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="764" y="0" width="27" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="dba0988c-d1d9-48a6-8af2-4c363517608d"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Total No. of tracked newborn
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="791" y="0" width="27" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="3cd7a250-9bfb-4136-809b-2c504b6a84ff"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Total No. of tracked postpartum
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="818" y="0" width="28" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="23801bc1-ada8-4566-a855-887fcd4d3df5"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Referral to the alternative  facilities
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="846" y="0" width="37" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="9a9d2362-b7c9-4fe4-87b5-71d61f9ae311"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Total No. of  pregnant women who visited the facility
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="883" y="0" width="36" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="edfc1108-baf0-4904-91d1-c2b0309bddfb"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Total No. of newborn who visited the facility
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="919" y="0" width="38" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="b51779bc-9af4-4ede-9815-a00951e9b400"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Total No. of postpartum who visited the facility
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="957" y="0" width="27" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="14cef4dc-b3dc-4c8f-98e9-0d44aed56094"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Immunization defaulter referred
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="984" y="0" width="27" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="f2ca3bbc-20ee-4ab6-9f82-022e38d87d37"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[TB treatment defaulter traced and referred
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="1011" y="0" width="25" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="6cf65b1e-b7ce-4234-b12d-d59923c24a73"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[ART defaulter traced and referred
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="1036" y="0" width="35" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="98e14369-e272-40ec-8dd0-a5e2bd9dd27f"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[HIV exposed infant (HEI) defaulters traced and referred]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="33" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="1" y="0" width="30" height="33" uuid="18419193-0aaf-4c3a-89eb-0b6d21734bcc"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="31" y="0" width="165" height="33" uuid="fbf772fa-b521-4a8d-915b-c8f02fda38db"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{worker_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="196" y="0" width="31" height="33" uuid="d5f96c20-79e3-4db4-820b-5b6927999cd0"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pregnant_with_danger_signs}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="227" y="0" width="28" height="33" uuid="d46df841-c8ee-41d9-be04-7ebb587fbafa"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{postpartaum_with_danger_signs}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="255" y="0" width="34" height="33" uuid="9548de6a-66fc-44ef-980b-32c426961bef"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{postpartum_family_planning}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="289" y="0" width="42" height="33" uuid="b868c444-8b5b-4bd0-9bd1-37024808c9e8"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pregnant_2_danger_signs}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="331" y="0" width="33" height="33" uuid="90ee1bcd-e8d1-47b5-90b1-3fa1aab31477"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{newborn_4_danger_signs}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="364" y="0" width="35" height="33" uuid="a53e3be5-e2b6-4019-bd4f-b540f3b3310b"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{postpartum_4_danger_signs}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="399" y="0" width="45" height="33" uuid="97f8e4c6-5ee7-4cb3-ab96-af2d57617437"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pregnant_2_correctly_danger_signs}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="444" y="0" width="57" height="33" uuid="ce00f383-8f78-480c-9a95-be79f4f03674"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pregnant_2_correctly_danger_signs}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="501" y="0" width="46" height="33" uuid="bf761426-5ded-421e-b1af-506a67b81757"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{newborn_4_correctly_danger_signs}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="547" y="0" width="55" height="33" uuid="a4da56b8-c3a8-4776-98ed-74b854b95665"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{postpartum_2_correctly_danger_signs}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="602" y="0" width="28" height="33" uuid="6029d16f-ad53-4b01-ae29-4c86df537d05"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{referral_to_5_facilities}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="630" y="0" width="32" height="33" uuid="59caf483-dc5f-40a6-9047-3684bacc53ea"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{effective_referrals_pregnant_women_anc}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="662" y="0" width="36" height="33" uuid="8cc87787-30bb-4dd9-80b0-1623d4eec61b"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{effective_referrals_newborn}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="698" y="0" width="35" height="33" uuid="5ee4cf44-3ced-4647-b8df-22455ec76da5"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{effective_referrals_postpartum}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="733" y="0" width="31" height="33" uuid="2e992977-8e88-4132-a2ee-f9ef5cb05217"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tracked_pregnant_women}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="764" y="0" width="27" height="33" uuid="491bea02-c909-4513-8716-7638d4decb99"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tracked_newborn}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="791" y="0" width="27" height="33" uuid="2c21e1ac-ba45-413b-869d-0ebaf4c2a6b3"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tracked_postpartum}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="818" y="0" width="28" height="33" uuid="c67a13e8-3da0-47c7-838c-73b983746daa"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{referral_to_alternative_facilities}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="846" y="0" width="37" height="33" uuid="f1143be2-7bcf-433b-bba5-7fb4aaf823cf"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pregnant_women_visited_facility}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="883" y="0" width="36" height="33" uuid="98e14ec2-bca5-4275-82a1-167cbe5d5f14"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{newborn_visited_facility}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="919" y="0" width="38" height="33" uuid="35a6c40e-b778-4c1e-951e-cb3434d63599"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{postpartum_visited_facility}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="957" y="0" width="27" height="33" uuid="31107322-b62e-4fde-b866-dbbee57824d4"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{immunization_defaulter_referred}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="984" y="0" width="27" height="33" uuid="ab9b66f0-20f9-4131-a731-e5cd1fb7d8f9"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tb_treatment_defaulter_traced_referred}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1011" y="0" width="25" height="33" uuid="fba59ca5-634d-41ca-babd-5dfc28766319"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{art_defaulter_traced_referred}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1036" y="0" width="35" height="33" uuid="e9173a9d-cfb6-4a15-8247-9e28f3880cf5"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hei_defaulters_traced_referred}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="23"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="1" width="1060" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="b3a7d4ef-0e22-47fa-9eff-5b0416c07901"/>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="929" y="2" width="56" height="20" forecolor="#736343" uuid="9850d206-00d1-42a2-94f0-b0652032880a"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="844" y="2" width="80" height="20" forecolor="#736343" uuid="764d780e-8341-4a3b-860b-600897048a39"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE, d MMMMM yyyy HH:mm:ss Z">
+					<reportElement style="Column header" x="22" y="1" width="316" height="20" forecolor="#736343" uuid="e7f729f1-fdb8-4e4f-bde5-132a35153932"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+</jasperReport>
