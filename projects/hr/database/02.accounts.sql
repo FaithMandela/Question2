@@ -92,6 +92,7 @@ CREATE TABLE tax_types (
 	tax_type_number			varchar(50),
 	formural				varchar(320),
 	tax_relief				real default 0 not null,
+	employer_relief			real default 0 not null,
 	tax_type_order			integer default 0 not null,
 	in_tax					boolean not null default false,
 	tax_rate				real default 0 not null,
@@ -136,6 +137,7 @@ CREATE TABLE period_tax_types (
 	pay_date				date default current_date not null,
 	formural				varchar(320),
 	tax_relief				real default 0 not null,
+	employer_relief			real default 0 not null,
 	percentage				boolean default true not null,
 	linear					boolean default true not null,
 	tax_type_order			integer default 0 not null,
@@ -301,7 +303,8 @@ CREATE VIEW vw_tax_types AS
 		tax_types.org_id, tax_types.tax_type_id, tax_types.tax_type_name, tax_types.formural, tax_types.tax_relief, 
 		tax_types.tax_type_order, tax_types.in_tax, tax_types.tax_rate, tax_types.tax_inclusive, tax_types.linear, 
 		tax_types.percentage, tax_types.employer, tax_types.employer_ps, tax_types.account_number, 
-		tax_types.employer_account, tax_types.active, tax_types.tax_type_number, tax_types.details
+		tax_types.employer_account, tax_types.active, tax_types.tax_type_number, 
+		tax_types.employer_formural, tax_types.employer_relief, tax_types.details
 	FROM tax_types INNER JOIN currency ON tax_types.currency_id = currency.currency_id
 		INNER JOIN use_keys ON tax_types.use_key_id = use_keys.use_key_id
 		LEFT JOIN vw_accounts ON tax_types.account_id = vw_accounts.account_id;
@@ -319,8 +322,9 @@ CREATE VIEW vw_period_tax_types AS
 		tax_types.tax_type_id, tax_types.tax_type_name, period_tax_types.period_tax_type_id, tax_types.tax_type_number,
 		use_keys.use_key_id, use_keys.use_key_name, use_keys.use_function,
 		period_tax_types.period_tax_type_name, 
-		period_tax_types.org_id, period_tax_types.Pay_Date, period_tax_types.tax_relief, period_tax_types.linear, period_tax_types.percentage, 
-		period_tax_types.formural, period_tax_types.details
+		period_tax_types.org_id, period_tax_types.Pay_Date, period_tax_types.tax_relief, period_tax_types.linear, 
+		period_tax_types.percentage, period_tax_types.formural, period_tax_types.employer_formural, 
+		period_tax_types.employer_relief, period_tax_types.details
 	FROM period_tax_types INNER JOIN vw_periods ON period_tax_types.period_id = vw_periods.period_id
 		INNER JOIN tax_types ON period_tax_types.tax_type_id = tax_types.tax_type_id
 		INNER JOIN use_keys ON tax_types.use_key_id = use_keys.use_key_id;

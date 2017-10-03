@@ -89,7 +89,7 @@
 			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
-			<GRID name="Semester Students" keyfield="qstudentid" updatetable="qstudents" linkfield="quarterid" table="vwqstudentbalances" where="(finaceapproval = true) AND (printed = true)" key="2">
+			<GRID name="Semester Students" keyfield="qstudentid" updatetable="qstudents" linkfield="quarterid" table="vwqstudentbalances" where="(finaceapproval = true) AND (printed = true)">
 				<TEXTFIELD w="10" title="Matrix Num">studentid</TEXTFIELD>
 				<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
 				<TEXTFIELD w="20" title="Account Number">accountnumber</TEXTFIELD>
@@ -148,7 +148,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="800" name="Printed List" type="vert" key="565" h="500">
-		<GRID name="Student List" keyfield="qstudentid" updatetable="qstudents" table="printedstudentview" key="1">
+		<GRID name="Student List" keyfield="qstudentid" updatetable="qstudents" table="printedstudentview">
 			<TEXTFIELD w="75" title="Matrix Num">studentid</TEXTFIELD>
 			<TEXTFIELD w="135" title="Student Name">studentname</TEXTFIELD>
 			<TEXTFIELD w="135" title="Degree">degreename</TEXTFIELD>
