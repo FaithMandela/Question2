@@ -61,7 +61,7 @@ $P!{organd}]]>
 	<title>
 		<band height="71" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="3" y="0" width="723" height="62" uuid="bf41bb5d-6767-4476-a2a9-5a74e1d39b06"/>
+				<reportElement style="Title" x="3" y="0" width="734" height="62" uuid="bf41bb5d-6767-4476-a2a9-5a74e1d39b06"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
@@ -144,11 +144,11 @@ $P!{organd}]]>
 				<text><![CDATA[Zip Code]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="605" y="0" width="63" height="15" forecolor="#000000" uuid="b88d73aa-3e45-4973-8b40-b088e1d628e5"/>
+				<reportElement style="Column header" x="605" y="-9" width="63" height="24" forecolor="#000000" uuid="b88d73aa-3e45-4973-8b40-b088e1d628e5"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<text><![CDATA[Date Of Birth]]></text>
+				<text><![CDATA[Registration date]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="684" y="0" width="53" height="15" forecolor="#000000" uuid="16073089-36ff-4a98-8882-020e9beb7afe"/>

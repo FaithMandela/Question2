@@ -44,8 +44,8 @@ ORDER BY vw_penalty_methods.penalty_method_id]]>
 	<title>
 		<band height="71" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="66" y="0" width="446" height="62" uuid="11a4a024-af7e-40e2-bf92-9664ea89ebb3"/>
-				<textElement verticalAlignment="Middle">
+				<reportElement style="Title" x="1" y="0" width="524" height="62" uuid="11a4a024-af7e-40e2-bf92-9664ea89ebb3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
 				<text><![CDATA[Penalty Methods Report]]></text>
