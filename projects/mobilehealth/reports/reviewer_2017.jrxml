@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Reviewers Report" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2923a684-4940-484d-b121-df7b84902ddb">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="141"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="reviewer" uuid="2b3a45c1-7407-41e8-a326-bcbaa38ffbda">
+		<parameter name="entity_id" class="java.lang.String">
+			<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="start_date" class="java.lang.String">
+			<defaultValueExpression><![CDATA["2017-01-01"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="end_date" class="java.lang.String">
+			<defaultValueExpression><![CDATA["2017-01-31"]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT 1 AS morder,'Number of correctly identified danger signs among pregnant women'AS Indicator,
+count(decision_survey.mother_info_def_id) AS Indicator_Number
+FROM decision_survey
+INNER JOIN survey_100 on survey_100.survey_100_id = decision_survey.survey_100_id
+WHERE
+---status reviewed
+survey_100.survey_status = 3
+---CHV is correct
+AND (survey_100.correct = 1)
+---clinician is correct
+AND (survey_100.correct = 2)
+---pregnant
+AND survey_100.category = 3
+---reviewer
+AND survey_100.entity_id = '$P!{entity_id}'
+ AND survey_100.referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date
+
+UNION
+
+SELECT 2 AS morder,'Number of correctly identified danger signs among pregnant women'AS Indicator,
+count(decision_survey.mother_info_def_id) AS Indicator_Number
+FROM decision_survey
+INNER JOIN survey_100 ON survey_100.survey_100_id = decision_survey.survey_100_id
+WHERE
+---status reviewed
+survey_100.survey_status = 3
+---CHV is correct
+AND (survey_100.correct = 1)
+---clinician is correct
+AND (survey_100.correct = 2)
+---postpartum
+AND survey_100.category = 2
+---reviewer
+AND survey_100.entity_id = '$P!{entity_id}'
+ AND survey_100.referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date
+
+UNION
+
+SELECT 3 AS morder,'Number of correctly identified danger signs among newborns'AS Indicator,
+count(decision_survey.mother_info_def_id) AS Indicator_Number
+FROM decision_survey
+INNER JOIN survey_100 ON survey_100.survey_100_id = decision_survey.survey_100_id
+WHERE
+---status reviewed
+survey_100.survey_status = 3
+---CHV is correct
+AND (survey_100.correct = 1)
+---clinician is correct
+AND (survey_100.correct = 2)
+---Newborn
+AND survey_100.category = 5
+---reviewer
+AND survey_100.entity_id = '$P!{entity_id}'
+ AND survey_100.referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date
+
+UNION
+SELECT 4 AS morder,'Number of CHVs able to correctly identify at least 2 danger signs among pregnant women'AS Indicator,
+count(survey_100.health_worker_id) AS Indicator_Number
+FROM survey_100
+--INNER JOIN decision_survey ON survey_100.survey_100_id = decision_survey.survey_100_id
+WHERE
+---status reviewed
+survey_100.survey_status = 3
+---CHV is correct
+AND (survey_100.correct = 1)
+---pregnant
+AND survey_100.category = 3
+---reviewer
+AND survey_100.entity_id = '$P!{entity_id}'
+ AND survey_100.referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date
+
+UNION
+SELECT 5 AS morder,'Number of CHVs able to correctly identify at least 2 danger signs among postpartum women'AS Indicator,
+count(survey_100.health_worker_id) AS Indicator_Number
+FROM survey_100
+--INNER JOIN decision_survey ON survey_100.survey_100_id = decision_survey.survey_100_id
+WHERE
+---status reviewed
+survey_100.survey_status = 3
+---CHV is correct
+AND (survey_100.correct = 1)
+---postpartum
+AND survey_100.category = 2
+---reviewer
+AND survey_100.entity_id = '$P!{entity_id}'
+ AND survey_100.referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date
+
+UNION
+SELECT 6 AS morder,'Number of CHVs able to correctly identify at least 4 danger signs among newborns'AS Indicator,
+count(survey_100.health_worker_id) AS Indicator_Number
+FROM survey_100
+--INNER JOIN decision_survey ON survey_100.survey_100_id = decision_survey.survey_100_id
+WHERE
+---status reviewed
+survey_100.survey_status = 3
+---CHV is correct
+AND (survey_100.correct = 1)
+---newborn
+AND survey_100.category = 5
+---reviewer
+AND survey_100.entity_id = '$P!{entity_id}'
+ AND survey_100.referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date
+
+ORDER BY morder ASC]]>
+		</queryString>
+		<field name="morder" class="java.lang.Integer"/>
+		<field name="indicator" class="java.lang.String"/>
+		<field name="indicator_number" class="java.lang.Long"/>
+	</subDataset>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="survey_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="start_date" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2017-01-01"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end_date" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2017-01-31"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="entity_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT entity_id, entity_name, function_role
+	FROM entitys
+	WHERE function_role = 'reviewer'
+AND entity_id = '$P!{entity_id}']]>
+	</queryString>
+	<field name="entity_id" class="java.lang.Integer"/>
+	<field name="entity_name" class="java.lang.String"/>
+	<field name="function_role" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="216" splitType="Stretch">
+			<image>
+				<reportElement isPrintRepeatedValues="false" x="148" y="14" width="310" height="89" uuid="ab36fd8b-ae2e-4bc6-bfe6-74241bd7ca5d"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} +  "county_innovations.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="10" y="10" width="112" height="112" uuid="4d73b1c2-4c23-4d5a-b946-160df0c969ab"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "aphrc_uk_aid.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement isPrintRepeatedValues="false" x="438" y="11" width="127" height="99" uuid="e5118643-8467-4ee9-8645-bd984a52ffcd"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} +  "aphrc.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="0" y="134" width="555" height="20" uuid="85a1e173-2594-4751-a48d-e22be84c8031"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reviewers Report]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="10" y="190" width="54" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="0194c824-07ea-4b0f-b41c-ba1e49374cdf"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Period:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="108" y="190" width="100" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="18160a51-d91e-49e9-a8a6-e0f3e67c804a"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{start_date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="10" y="163" width="128" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="60ce9c18-1794-4e2a-99ac-51e9bb2ae921"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Name of the Reviewer :]]></text>
+			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement x="138" y="163" width="179" height="20" uuid="48774981-3750-4563-84d4-960ca380f291"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="64" y="190" width="44" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="fdfc5336-7ccc-44fd-8227-e2879c606d71"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[From :-]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="208" y="190" width="30" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="0aac7cf4-41cc-4521-916f-13438461696e"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[To :-]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="238" y="190" width="116" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="12be3fe5-d735-4405-8a4d-b3f045f5502e"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{end_date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="33" splitType="Stretch">
+			<componentElement>
+				<reportElement key="table 3" style="table 3" x="10" y="4" width="511" height="19" uuid="99db1874-9009-480b-b8eb-772b732748c0"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="reviewer" uuid="af4a329f-2d1f-446e-a713-2e3ec3692125">
+						<datasetParameter name="entity_id">
+							<datasetParameterExpression><![CDATA[$P{entity_id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="end_date">
+							<datasetParameterExpression><![CDATA[$P{end_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="start_date">
+							<datasetParameterExpression><![CDATA[$P{start_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="401" uuid="c6324ff0-fbcd-427a-8744-70b6ba69be2d">
+						<jr:columnHeader style="table 3_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="401" height="30" uuid="400578b0-0a96-4bc7-9b20-bfa03c7c5333"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Indicator]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 3_TD" height="29" rowSpan="1">
+							<textField isStretchWithOverflow="true">
+								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="401" height="29" uuid="626a79de-8f2b-4ec9-8ba0-11d0a7140ea6"/>
+								<textElement>
+									<font fontName="Times New Roman" size="12"/>
+									<paragraph leftIndent="10"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{indicator}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="109" uuid="38e5536c-33de-45b7-99bd-aa5aa8c2a47a">
+						<jr:columnHeader style="table 3_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="2" y="0" width="105" height="30" uuid="ae0beb49-51dc-47d0-a309-84eb507b6dbb"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Indicator Number]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 3_TD" height="29" rowSpan="1">
+							<textField>
+								<reportElement x="2" y="0" width="105" height="29" uuid="c750f1f3-1db8-45d9-aa36-ede13696feae"/>
+								<textElement textAlignment="Center">
+									<font fontName="Times New Roman" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{indicator_number}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="17" splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>

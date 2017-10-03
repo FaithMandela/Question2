@@ -1,0 +1,939 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="referral_comparison_facilities" language="groovy" pageWidth="800" pageHeight="1190" whenNoDataType="BlankPage" columnWidth="760" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="0a9c37fb-cae8-4f58-ac99-d15629992178">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="filterid" class="java.lang.String">
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="start_date" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2015-08-01"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end_date" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2015-08-01"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    link_health_facilities.link_health_facility_id,link_health_facilities.link_health_facility_name,
+    ---- Number of CHVs referring to the facility
+    (SELECT count(DISTINCT vw_survey_100 .health_worker_id) FROM vw_survey_100
+        WHERE
+         vw_survey_100 .link_health_facility_id = link_health_facilities.link_health_facility_id
+        AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date) as indicator1,
+
+    ----Number of referrals to the facility
+    (SELECT count(vw_survey_100 .link_health_facility_id) FROM vw_survey_100
+        WHERE vw_survey_100 .link_health_facility_id = link_health_facilities.link_health_facility_id
+        AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date) as indicator2,
+
+    ---Number of effective referral
+    (SELECT count(vw_survey_100 .link_health_facility_id) FROM vw_survey_100
+        WHERE vw_survey_100 .survey_status = '1'
+        AND vw_survey_100 .link_health_facility_id = link_health_facilities.link_health_facility_id
+        AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date) as indicator3,
+
+    ---Number of effective referral (ANC Visits)
+    (SELECT count(vw_survey_100 .link_health_facility_id) FROM vw_survey_100
+        WHERE  vw_survey_100.category = 2
+        AND vw_survey_100 .link_health_facility_id = link_health_facilities.link_health_facility_id
+        AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date) as indicator4,
+
+    --Number of effective referrals (postpartaum mothers)
+    (SELECT count(vw_survey_100 .link_health_facility_id) FROM vw_survey_100
+        WHERE vw_survey_100.category = 1
+        AND vw_survey_100 .link_health_facility_id = link_health_facilities.link_health_facility_id
+        AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date) as indicator5,
+
+    --Number of effective referrals (Newborn)
+    (SELECT count(vw_survey_100 .link_health_facility_id) FROM vw_survey_100
+        WHERE vw_survey_100.category = 4
+        AND vw_survey_100 .link_health_facility_id = link_health_facilities.link_health_facility_id
+        AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date) as indicator6,
+
+    --Number of effective referrals (ANC Visits for women in the 1st trimeser)
+    (SELECT count(vw_survey_100 .link_health_facility_id) FROM vw_survey_100
+        WHERE vw_survey_100.category = 2
+        AND vw_survey_100 .link_health_facility_id = link_health_facilities.link_health_facility_id
+        AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date) as indicator7,
+
+    --Number of clients referred with danger signs
+    (SELECT count(vw_survey_100 .link_health_facility_id) FROM vw_survey_100
+        WHERE vw_survey_100.form_serial LIKE 'DSS%'
+        AND vw_survey_100 .link_health_facility_id = link_health_facilities.link_health_facility_id
+        AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date) as indicator8,
+
+    --Number of effective referrals for clients with danger signs
+    (SELECT count(vw_survey_100 .link_health_facility_id) FROM vw_survey_100
+        WHERE vw_survey_100.form_serial LIKE 'DSS%'
+        AND vw_survey_100.survey_status = '1'
+        AND vw_survey_100 .link_health_facility_id = link_health_facilities.link_health_facility_id
+        AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date) as indicator9,
+
+    --Number of pregnant women  with danger signs referred to the facility
+    (SELECT count(vw_survey_100 .link_health_facility_id) FROM vw_survey_100
+        WHERE vw_survey_100.form_serial LIKE 'DSS%'
+        AND vw_survey_100.category = 2
+        AND vw_survey_100 .link_health_facility_id = link_health_facilities.link_health_facility_id
+        AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date) as indicator10,
+
+    --Number of newborns  with danger signs referred to the facility
+    (SELECT count(vw_survey_100 .link_health_facility_id) FROM vw_survey_100
+        WHERE vw_survey_100.form_serial LIKE 'DSS%'
+        AND vw_survey_100.category = 4
+        AND vw_survey_100 .link_health_facility_id = link_health_facilities.link_health_facility_id
+        AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date) as indicator11,
+
+    --Number of newborns  with danger signs referred to the facility
+    (SELECT count(vw_survey_100 .link_health_facility_id) FROM vw_survey_100
+        WHERE vw_survey_100.form_serial LIKE 'DSS%'
+        AND vw_survey_100.category = 1
+        AND vw_survey_100 .link_health_facility_id = link_health_facilities.link_health_facility_id
+        AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date) as indicator12,
+
+    --Defaulters
+    (SELECT count(vw_survey_100 .link_health_facility_id) FROM vw_survey_100
+        --INNER JOIN survey_defaulters ON survey_defaulters.survey_id = vw_survey_100.survey_id
+        WHERE vw_survey_100 .link_health_facility_id = link_health_facilities.link_health_facility_id
+        AND referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date) as indicator13
+
+        FROM link_health_facilities
+        INNER JOIN vw_survey_100 ON link_health_facilities.link_health_facility_id = vw_survey_100.link_health_facility_id
+WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date
+        GROUP BY link_health_facilities.link_health_facility_id,link_health_facilities.link_health_facility_name
+        ORDER BY link_health_facilities.link_health_facility_id ASC]]>
+	</queryString>
+	<field name="link_health_facility_id" class="java.lang.Integer"/>
+	<field name="link_health_facility_name" class="java.lang.String"/>
+	<field name="indicator1" class="java.lang.Long"/>
+	<field name="indicator2" class="java.lang.Long"/>
+	<field name="indicator3" class="java.lang.Long"/>
+	<field name="indicator4" class="java.lang.Long"/>
+	<field name="indicator5" class="java.lang.Long"/>
+	<field name="indicator6" class="java.lang.Long"/>
+	<field name="indicator7" class="java.lang.Long"/>
+	<field name="indicator8" class="java.lang.Long"/>
+	<field name="indicator9" class="java.lang.Long"/>
+	<field name="indicator10" class="java.lang.Long"/>
+	<field name="indicator11" class="java.lang.Long"/>
+	<field name="indicator12" class="java.lang.Long"/>
+	<field name="indicator13" class="java.lang.Long"/>
+	<variable name="survey_count" class="java.lang.Integer" calculation="Count">
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="indicator1_count" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{indicator1}]]></variableExpression>
+	</variable>
+	<variable name="indicator2_count" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{indicator2}]]></variableExpression>
+	</variable>
+	<variable name="indicator3_count" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{indicator3}]]></variableExpression>
+	</variable>
+	<variable name="indicator4_count" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{indicator4}]]></variableExpression>
+	</variable>
+	<variable name="indicator5_count" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{indicator5}]]></variableExpression>
+	</variable>
+	<variable name="indicator6_count" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{indicator6}]]></variableExpression>
+	</variable>
+	<variable name="indicator7_count" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{indicator7}]]></variableExpression>
+	</variable>
+	<variable name="indicator8_count" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{indicator8}]]></variableExpression>
+	</variable>
+	<variable name="indicator9_count" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{indicator9}]]></variableExpression>
+	</variable>
+	<variable name="indicator10_count" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{indicator10}]]></variableExpression>
+	</variable>
+	<variable name="indicator11_count" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{indicator11}]]></variableExpression>
+	</variable>
+	<variable name="indicator12_count" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{indicator12}]]></variableExpression>
+	</variable>
+	<variable name="indicator13_count" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{indicator13}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="207" splitType="Stretch">
+			<staticText>
+				<reportElement style="Title" x="31" y="129" width="691" height="35" uuid="6c4a99bb-b0b8-4119-9023-80f97f831697"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="18" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Comparison of Referrals in all Facilities Report]]></text>
+			</staticText>
+			<image>
+				<reportElement isPrintRepeatedValues="false" x="66" y="10" width="113" height="102" uuid="827ff226-f276-411d-925e-6a47512d9986"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} +  "theirlogo.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement isPrintRepeatedValues="false" x="185" y="14" width="310" height="89" uuid="1b54a9d5-2d97-4a3a-aab0-0bd32e381d18"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} +  "county_innovations.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement isPrintRepeatedValues="false" x="595" y="11" width="127" height="99" uuid="220817c9-b561-4453-8fc8-e1b6fc88b26e"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} +  "aphrc.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="479" y="11" width="112" height="101" uuid="8d5820f0-cc1b-4f0d-8af4-9e8d1da49a4d"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "aphrc_uk_aid.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="81" y="174" width="58" height="20" uuid="8af446b2-3af8-47f2-b138-1341ca6f2faa"/>
+				<textElement>
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Period :]]></text>
+			</staticText>
+			<line>
+				<reportElement x="139" y="190" width="366" height="1" uuid="fa047af3-d461-48a2-ae4f-0b12369c01e6"/>
+			</line>
+			<staticText>
+				<reportElement mode="Transparent" x="169" y="174" width="51" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="a808d71f-6bcf-479e-b85f-64cd1d796174"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[From :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="355" y="174" width="33" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="3674aefa-211d-43d2-ae82-5e78d0c6b1c2"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[To:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="221" y="175" width="134" height="20" uuid="1e93112c-4c00-411c-ada2-ee8d78fb14a0"/>
+				<textElement>
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{start_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="388" y="175" width="117" height="20" uuid="345063be-376b-4754-8ac3-85bccba5d2a6"/>
+				<textElement>
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{end_date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="205" splitType="Stretch">
+			<staticText>
+				<reportElement style="Column header" x="1" y="0" width="30" height="205" forecolor="#000000" uuid="8c2c96f7-7c9e-4fec-81e1-c23f67711520"/>
+				<box bottomPadding="5">
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[#]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="251" y="0" width="28" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="48a7b7c5-b808-4173-8759-83b105fde44f"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Number of referrals to facility]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="220" y="0" width="31" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="5e76cdd9-c33c-45bb-8af4-4a744361f6d6"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Number of CHVs referring to Facility]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="304" y="0" width="27" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="6c53ff05-cebd-4260-bc64-09d6607bc071"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Number of Effective referral ( ANC visits)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="31" y="0" width="188" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="bb18bff4-d504-46b9-90a9-866fbbe661be"/>
+				<box rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Name of facility]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="279" y="0" width="25" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="9bbab7bb-3b77-4a24-aca8-4b973a557a96"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Number of Effective referrals]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="331" y="0" width="42" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="6c2ec1e7-76c1-4899-b4ae-23aa0c182203"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Number of Effective referral (Postpartum mothers)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="373" y="0" width="26" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="2163f999-d172-435a-98d1-189412b8355b"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Number of Effective referral (Newborn)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="399" y="0" width="45" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="95a3d792-70f2-48ab-bc67-07d9692beef9"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Number of Effective referral ( ANC visits for women in the 1st trimester)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="469" y="0" width="46" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="c1f01525-6340-45d0-86f6-6606f3ee1f89"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Number of Effective referrals for clients with danger signs]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="515" y="0" width="55" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="e9b0fd3c-9e16-4a01-8c47-228215e2be2b"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Number of pregnant women with Danger signs referred to the facility]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="570" y="0" width="41" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="1cc477e6-9e9d-49f6-b946-7eac26960a60"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Number of newborns with danger signs referred to the facility]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="611" y="0" width="27" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="963a0761-51b9-4d45-9083-f19ebbc3d0b6"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Number of postpartum women with danger signs referred to the facility]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="638" y="0" width="25" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="d94c6d6a-5f4e-4cae-9f2d-78a4ab2b816b"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Defaulters]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="444" y="0" width="25" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="24912d6b-33dc-4948-b4ed-77ae7df3af62"/>
+				<box bottomPadding="5" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Number of clients referred with danger signs]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="32" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="1" y="0" width="30" height="32" uuid="18419193-0aaf-4c3a-89eb-0b6d21734bcc"/>
+				<box>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="220" y="0" width="31" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="2691c94c-e7c2-4b24-af26-7f9d17955e1c"/>
+				<box rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="251" y="0" width="28" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="619ce8a8-2db0-4c38-b438-567247e55b4e"/>
+				<box rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="304" y="0" width="27" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="c8b4ae5d-5749-4bd0-b1e7-6f551b916cf3"/>
+				<box rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator4}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="331" y="0" width="42" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="f47b28b8-928e-4fb5-8f47-ea71b18a74f7"/>
+				<box rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator5}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="373" y="0" width="26" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="99514503-bbfa-450a-bb0c-59aabe752ff8"/>
+				<box rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator6}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="399" y="0" width="45" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="3ce9b26b-3d2a-49a4-931c-30a865cb4e0b"/>
+				<box rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator7}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="444" y="0" width="25" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="cb1cfaf1-4f23-40c8-8f97-7ba28cc0b396"/>
+				<box rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator8}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="469" y="0" width="46" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="22312248-80b9-41b5-b88b-3d65d4fd8e9a"/>
+				<box rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator9}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="515" y="0" width="55" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="6e201ab9-d274-4fcd-b96a-90c2e6bd565e"/>
+				<box rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator10}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="570" y="0" width="41" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="06efb85d-34c8-4414-855d-36af200e9857"/>
+				<box rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator11}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="611" y="0" width="27" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="88061448-d40d-4444-89e8-278664f14695"/>
+				<box rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator12}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="638" y="0" width="25" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="3346c718-bc62-4112-ba84-f1d91cf7c563"/>
+				<box rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator13}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="31" y="0" width="188" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="9b75082c-db15-4ce5-8036-e2dda12e7b96"/>
+				<box rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{link_health_facility_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="279" y="0" width="25" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="0cf19db8-b855-4a4b-bb9a-81d9edd06c65"/>
+				<box rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator3}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="23">
+			<textField pattern="###0">
+				<reportElement positionType="Float" x="220" y="0" width="31" height="20" uuid="e82a543c-d754-4802-b65f-13302b140a55"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{indicator1_count}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="251" y="0" width="28" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="9a70f1f4-6245-4452-90b0-6b1efde0cdad"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{indicator2_count}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="304" y="0" width="27" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="218060db-5267-4e22-a83f-fcfb442391cd"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{indicator4_count}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="331" y="0" width="42" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="d951d1bc-55ec-432e-90ca-0ea85502e0c7"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{indicator5_count}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="373" y="0" width="26" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="68edadb4-64e8-4a5f-a13d-248ace32df5b"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{indicator6_count}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="399" y="0" width="45" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="520dc3da-ee1a-490d-8fd2-7795b25159e8"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{indicator7_count}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="444" y="0" width="25" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="0fabc19b-0fcb-4c92-94d4-8ef140e90e9d"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{indicator8_count}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="469" y="0" width="46" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="ec1421bf-99e8-4afe-a099-eabcb10ede11"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{indicator9_count}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="515" y="0" width="55" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="7bf74616-055f-4826-b6d8-56a4dead2b00"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{indicator10_count}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="570" y="0" width="41" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="39110c76-8a06-412e-892e-a3ad8c0d1c02"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{indicator11_count}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="611" y="0" width="27" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="906b1fef-1adb-4ccf-b329-43a463c2b8b2"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{indicator12_count}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="638" y="0" width="25" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="8c30526c-c815-4f4f-baba-d371a40b047a"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{indicator13_count}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="0" width="218" height="20" uuid="05d2844f-36e9-4672-905d-44fc00ac7ab4"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField pattern="###0" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="279" y="0" width="25" height="19" forecolor="#000000" backcolor="#FFFFFF" uuid="7a92b831-dabd-4d86-9e3d-aa4772a8a570"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{indicator3_count}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="1" width="1150" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="b3a7d4ef-0e22-47fa-9eff-5b0416c07901"/>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="1105" y="2" width="40" height="20" forecolor="#736343" uuid="9850d206-00d1-42a2-94f0-b0652032880a"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="1025" y="2" width="80" height="20" forecolor="#736343" uuid="764d780e-8341-4a3b-860b-600897048a39"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE, d MMMMM yyyy HH:mm:ss Z">
+					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343" uuid="e7f729f1-fdb8-4e4f-bde5-132a35153932"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+</jasperReport>

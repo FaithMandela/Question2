@@ -1400,11 +1400,11 @@
 					<TEXTFIELD w="75" title="Survey status">status</TEXTFIELD>
 					<TEXTTIMESTAMP w="75" title="Referral Time">referral_time</TEXTTIMESTAMP>
 					<JASPER role="clinician" reportfile="vw_survey_100.jasper" name="CHV DSS - 100"></JASPER>
-					<TABLEVIEW noorg="true" role="clinician" jumpview="40:0:0:2:2" updatetable="clinician_mpp" keyfield="clinician_mpp_id" name="Clinician's DSS" linkfield="survey_100_id" table="vw_clinician_mpp">
+					<TABLEVIEW  noorg="true" role="clinician" jumpview="40:0:0:2:2" updatetable="clinician_mpp" keyfield="clinician_mpp_id" name="Clinician's DSS" linkfield="survey_100_id" table="vw_clinician_mpp">
 						<TEXTFIELD w="45" title="Registration ID">reg_id</TEXTFIELD>
 						<TEXTFIELD w="45" title="Question ID">mother_mpp_def_id</TEXTFIELD>
 						<TEXTFIELD w="75" title="Question">question</TEXTFIELD>
-						<COMBOBOX noorg="true" w="430" h="20" lpfield="response_option" x="10" y="30" lptable="mother_def_info_options" linkfield="mother_mpp_def_id" linksource="mother_mpp_def_id" title="Select Option">response</COMBOBOX>
+						<COMBOBOX noorg="true" w="430" h="20" lpfield="response_option" x="10" y="30" lptable="mother_def_info_options" linkfield="mother_mpp_def_id" linksource="mother_mpp_def_id" default.select="SELECT OPTION" default.value="0" title="Select Option">response</COMBOBOX>
 						<TEXTFIELD w="75" title="Clinician response">response_name</TEXTFIELD>
 					</TABLEVIEW>
 					<FORM role="clinician" jumpview="40:0:0:2:3" keyfield="survey_100_id" name="by clinician" linkfield="village_id" table="survey_100">
@@ -1702,3 +1702,4 @@
 		</FILTER>
 	</DESK>
 </APP>
+
