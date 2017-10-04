@@ -21,9 +21,9 @@ public class BReportMaker {
 		myReport += "	<property name=\"ireport.x\" value=\"0\"/>\n";
 		myReport += "	<property name=\"ireport.y\" value=\"0\"/>\n";
 		myReport += "	<style name=\"Title\" fontName=\"Times New Roman\" fontSize=\"50\" isBold=\"true\" pdfFontName=\"Times-Bold\"/>\n";
-		myReport += "	<style name=\"SubTitle\" forecolor=\"#736343\" fontName=\"Arial\" fontSize=\"18\"/>\n";
-		myReport += "	<style name=\"Column header\" forecolor=\"#666666\" fontName=\"Arial\" fontSize=\"12\" isBold=\"true\"/>\n";
-		myReport += "	<style name=\"Detail\" fontName=\"Arial\" fontSize=\"12\"/>\n";
+		myReport += "	<style name=\"SubTitle\" forecolor=\"#736343\" fontName=\"Times New Roman\" fontSize=\"18\"/>\n";
+		myReport += "	<style name=\"Column header\" forecolor=\"#666666\" fontName=\"Times New Roman\" fontSize=\"12\" isBold=\"true\"/>\n";
+		myReport += "	<style name=\"Detail\" fontName=\"Times New Roman\" fontSize=\"12\"/>\n";
 		myReport += "	<style name=\"Row\" mode=\"Transparent\">\n";
 		myReport += "		<conditionalStyle>\n";
 		myReport += "			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>\n";
@@ -169,9 +169,9 @@ public class BReportMaker {
 		myReport += "	<property name=\"ireport.x\" value=\"0\"/>\n";
 		myReport += "	<property name=\"ireport.y\" value=\"0\"/>\n";
 		myReport += "	<style name=\"Title\" fontName=\"Times New Roman\" fontSize=\"50\" isBold=\"true\" pdfFontName=\"Times-Bold\"/>\n";
-		myReport += "	<style name=\"SubTitle\" forecolor=\"#736343\" fontName=\"Arial\" fontSize=\"18\"/>\n";
-		myReport += "	<style name=\"Column header\" forecolor=\"#666666\" fontName=\"Arial\" fontSize=\"12\" isBold=\"true\"/>\n";
-		myReport += "	<style name=\"Detail\" fontName=\"Arial\" fontSize=\"12\"/>\n";
+		myReport += "	<style name=\"SubTitle\" forecolor=\"#736343\" fontName=\"Times New Roman\" fontSize=\"18\"/>\n";
+		myReport += "	<style name=\"Column header\" forecolor=\"#666666\" fontName=\"Times New Roman\" fontSize=\"12\" isBold=\"true\"/>\n";
+		myReport += "	<style name=\"Detail\" fontName=\"Times New Roman\" fontSize=\"12\"/>\n";
 		myReport += "	<style name=\"Row\" mode=\"Transparent\">\n";
 		myReport += "		<conditionalStyle>\n";
 		myReport += "			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>\n";
@@ -233,7 +233,7 @@ public class BReportMaker {
 			myReport += "				<reportElement style=\"Column header\" x=\"" + Integer.toString(x) + "\"";
 			myReport += " y=\"0\" width=\"" + Integer.toString(w) + "\" height=\"15\" forecolor=\"#000000\"/>\n";
 			myReport += "				<textElement>\n";
-			myReport += "					<font fontName=\"Times New Roman\"/>\n";
+			myReport += "					<font size=\"10\" fontName=\"Times New Roman\"/>\n";
 			myReport += "				</textElement>\n";
 			myReport += "				<text><![CDATA[" + query.initCap(query.getFieldName(i)) + "]]></text>\n";
 			myReport += "			</staticText>\n";
@@ -252,7 +252,7 @@ public class BReportMaker {
 			myReport += "					<reportElement style=\"Detail\" x=\"" + Integer.toString(x) + "\" y=\"0\"";
 			myReport += " width=\"" + Integer.toString(w) + "\" height=\"15\"/>\n";
 			myReport += "					<textElement>\n";
-			myReport += "						<font fontName=\"Times New Roman\"/>\n";
+			myReport += "						<font size=\"10\" fontName=\"Times New Roman\"/>\n";
 			myReport += "					</textElement>\n";
 			myReport += "					<textFieldExpression class=\"";
 			myReport +=  query.getColumnClass(i).toString().replace("class ", "").replace("java.sql.Date", "java.util.Date") + "\">";
@@ -366,7 +366,7 @@ public class BReportMaker {
 			myReport += "				<reportElement style=\"Column header\" x=\"" + Integer.toString(x) + "\"";
 			myReport += " y=\"0\" width=\"" + Integer.toString(w) + "\" height=\"15\" forecolor=\"#000000\"/>\n";
 			myReport += "				<textElement>\n";
-			myReport += "					<font fontName=\"Times New Roman\"/>\n";
+			myReport += "					<font size=\"10\" fontName=\"Times New Roman\"/>\n";
 			myReport += "				</textElement>\n";
 			myReport += "				<text><![CDATA[" + query.initCap(query.getFieldName(i)) + "]]></text>\n";
 			myReport += "			</staticText>\n";
@@ -383,7 +383,7 @@ public class BReportMaker {
 			myReport += "					<reportElement style=\"Detail\" x=\"" + Integer.toString(x) + "\" y=\"0\"";
 			myReport += " width=\"" + Integer.toString(w) + "\" height=\"15\"/>\n";
 			myReport += "					<textElement>\n";
-			myReport += "						<font fontName=\"Times New Roman\"/>\n";
+			myReport += "						<font size=\"10\" fontName=\"Times New Roman\"/>\n";
 			myReport += "					</textElement>\n";
 			myReport += "					<textFieldExpression class=\"";
  			myReport +=  query.getColumnClass(i).toString().replace("class ", "").replace("java.sql.Date", "java.util.Date") + "\">";
