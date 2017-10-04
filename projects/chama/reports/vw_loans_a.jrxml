@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_loans" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fc1ddf4e-fa42-4827-80c7-a05c8387e26a">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_loans_a" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fc1ddf4e-fa42-4827-80c7-a05c8387e26a">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -26,11 +26,15 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_loans.account_number, vw_loans.member_name, vw_loans.product_name, vw_loans.currency_symbol, vw_loans.principal_amount, vw_loans.interest_rate, vw_loans.repayment_amount, vw_loans.disbursed_date, vw_loans.repayment_period, vw_loans.loan_balance, vw_loans.actual_balance, vw_loans.committed_balance
+		<![CDATA[SELECT vw_loans.account_number, vw_loans.member_name, vw_loans.product_name,
+ vw_loans.currency_symbol, vw_loans.principal_amount, vw_loans.interest_rate,
+ vw_loans.repayment_amount, vw_loans.application_date,
+ vw_loans.repayment_period, vw_loans.loan_balance, vw_loans.actual_balance,
+ vw_loans.committed_balance
 
 FROM vw_loans
 
-WHERE (vw_loans.approve_status = 'Approved')
+WHERE (vw_loans.approve_status = 'Completed')
 $P!{organd}]]>
 	</queryString>
 	<field name="account_number" class="java.lang.String"/>
@@ -40,7 +44,7 @@ $P!{organd}]]>
 	<field name="principal_amount" class="java.lang.Float"/>
 	<field name="interest_rate" class="java.lang.Float"/>
 	<field name="repayment_amount" class="java.lang.Float"/>
-	<field name="disbursed_date" class="java.sql.Date"/>
+	<field name="application_date" class="java.sql.Timestamp"/>
 	<field name="repayment_period" class="java.lang.Integer"/>
 	<field name="loan_balance" class="java.lang.Float"/>
 	<field name="actual_balance" class="java.lang.Float"/>
@@ -55,7 +59,7 @@ $P!{organd}]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
-				<text><![CDATA[Approved Loans Report]]></text>
+				<text><![CDATA[Loans Pending Approval]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -124,7 +128,7 @@ $P!{organd}]]>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 				</textElement>
-				<text><![CDATA[Disbursed Date]]></text>
+				<text><![CDATA[Application Date]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="446" y="0" width="59" height="26" forecolor="#000000" uuid="3fdda9fc-9f9a-46c1-bb0f-b3544c19da9f"/>
@@ -242,7 +246,7 @@ $P!{organd}]]>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{disbursed_date}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{application_date}]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>

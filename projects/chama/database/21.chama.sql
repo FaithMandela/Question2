@@ -451,6 +451,21 @@ CREATE VIEW vw_deposit_accounts AS
 		INNER JOIN vw_products ON deposit_accounts.product_id = vw_products.product_id
 		INNER JOIN activity_frequency ON deposit_accounts.activity_frequency_id = activity_frequency.activity_frequency_id
 		LEFT JOIN vw_deposit_balance ON deposit_accounts.deposit_account_id = vw_deposit_balance.deposit_account_id;
+		
+CREATE VIEW sv_deposit_accounts AS
+	SELECT orgs.org_id, orgs.org_name, aa.approved_accounts, bb.pending_approval
+	
+	FROM orgs LEFT JOIN
+		(SELECT org_id, count(deposit_account_id) as approved_accounts 
+			FROM deposit_accounts WHERE approve_status = 'Approved'
+			GROUP BY org_id) as aa
+		ON orgs.org_id = aa.org_id
+	LEFT JOIN
+		(SELECT org_id, count(deposit_account_id) as pending_approval
+			FROM deposit_accounts WHERE approve_status = 'Completed'
+			GROUP BY org_id) as bb
+		ON orgs.org_id = bb.org_id;
+		
 
 CREATE VIEW vw_account_notes AS
 	SELECT vw_deposit_accounts.entity_id, vw_deposit_accounts.member_name, 

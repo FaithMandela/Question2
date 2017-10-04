@@ -63,9 +63,18 @@
 			<TILE name="Members" groupby="org_id" table="members" where="(member_type = 1) AND (approve_status = 'Approved') AND (is_active = true)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(entity_id), 0)" title="Customers">members_count</TEXTFIELD>
 			</TILE>
-			<TILE name="Loans" groupby="org_id" table="loans" where="(approve_status = 'Approved')">
-				<TEXTFIELD w="75" fnct="COALESCE(count(loan_id), 0)" title="Loans">loans_count</TEXTFIELD>
+			<TILE name="Accounts" groupby="org_id" table="sv_deposit_accounts">
+				<TEXTFIELD w="75" fnct="COALESCE(count(approved_accounts), 0)" title="Approved Account">approve_count</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="COALESCE(count(pending_approval), 0)" title="Pedning Approval">pending_count</TEXTFIELD>
 			</TILE>
+			<TILE name="Loans" groupby="org_id" table="sv_loans">
+				<TEXTFIELD w="75" fnct="COALESCE(count(approved_loans), 0)" title="Loans">approved_count</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="COALESCE(count(pending_loans), 0)" title="Loans">pending_count</TEXTFIELD>
+			</TILE>
+			<TILELIST name="News" keyfield="sys_news_id" role="staff" table="sys_news" where="(publish = true)">
+				<TEXTFIELD w="75" title="News Title">sys_news_title</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+			</TILELIST>
 		</DASHBOARD>
 	</DESK>
 	<DESK w="700" name="Countrys" key="7" h="500">
@@ -1306,8 +1315,8 @@
 	</DESK>
 	<DESK w="700" name="Sales Agents" key="18" h="500">
 		<GRID name="Sales Agents" keyfield="entity_id" table="entitys" where="(use_key_id = 7)">
-			<TEXTFIELD w="75" title="Client ID">entity_id</TEXTFIELD>
-			<TEXTFIELD w="140" title="Client Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Agent ID">entity_id</TEXTFIELD>
+			<TEXTFIELD w="140" title="Agent Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Attention">attention</TEXTFIELD>
 			<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
@@ -1345,7 +1354,7 @@
 				<DEFAULT default="7">use_key_id</DEFAULT>
 				<COMBOBOX w="430" title="Type" lptable="entity_types" where="(use_key_id = 2)" y="10" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
 				<COMBOBOX w="430" title="Account" lptable="vw_accounts" webgrid="90" default_org_fnct="get_default_account_id(51" y="10" h="20" x="10" lpfield="account_description">account_id</COMBOBOX>
-				<TEXTFIELD w="430" title="Client Name" y="30" h="20" x="10">entity_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Agent Name" y="30" h="20" x="10">entity_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="User Name" y="50" h="20" x="10">user_name</TEXTFIELD>
 				<TEXTFIELD w="350" title="Attention" y="70" h="20" x="10">attention</TEXTFIELD>
 				<TEXTFIELD w="430" title="Primary Email" y="90" h="20" x="10">primary_email</TEXTFIELD>
@@ -3023,10 +3032,14 @@
 		<JASPER name="Deposit Accounts" reportfile="vw_deposit_accounts.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Loans" key="235" h="550">
-		<JASPER name="Loans" reportfile="vw_loans.jasper"></JASPER>
+		<JASPER name="Approved Loans" reportfile="vw_loans.jasper"></JASPER>
+		<JASPER name="Upapproved Loans" reportfile="vw_loans_a.jasper"></JASPER>
+		<JASPER name="Loans in Default" reportfile="vw_loans_d.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Members" key="250" h="550">
-		<JASPER name="Members" reportfile="vw_members.jasper"></JASPER>
+		<JASPER name="Active Members" reportfile="vw_members.jasper"></JASPER>
+		<JASPER name="Pending Approval" reportfile="vw_members_b.jasper"></JASPER>
+		<JASPER name="All Members" reportfile="vw_members_a.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Configuration" key="255" h="550">
 		<JASPER name="Products" reportfile="vw_products.jasper"></JASPER>
