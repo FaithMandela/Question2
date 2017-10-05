@@ -356,12 +356,15 @@ BEGIN
 	
 	--- Computer the work hours
 	FOR reca IN SELECT b.employee_month_id, 
+		sum(a.t_worked_hours - a.t_overtime) as worked_hours,
 		(sum(a.t_worked_hours - a.t_overtime) * a.normal_time_hr) as month_pay
 		FROM vw_attendance_summary a INNER JOIN employee_month b ON (a.entity_id = b.entity_id) AND (a.period_id = b.period_id)
 		WHERE (a.per_day_earning = true) AND (a.holiday_id is null) AND (a.period_id = v_period_id)
 		GROUP BY b.employee_month_id, a.normal_time_hr
 	LOOP
-		UPDATE employee_month SET basic_pay = reca.month_pay WHERE employee_month_id = reca.employee_month_id;
+		UPDATE employee_month SET basic_pay = reca.month_pay, 
+			hour_pay = reca.month_pay, worked_hours = rec.worked_hours
+		WHERE employee_month_id = reca.employee_month_id;
 	END LOOP;
 	
 	DELETE FROM employee_overtime WHERE (auto_computed = true)

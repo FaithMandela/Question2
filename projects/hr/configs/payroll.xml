@@ -663,13 +663,15 @@
 				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 				<TEXTDATE w="75" title="Final Date">final_date</TEXTDATE>
 				<CHECKBOX w="75" title="Active">active</CHECKBOX>
+				<CHECKBOX w="75" title="Cheque">cheque</CHECKBOX>
 				<FORM name="Extra Banking" keyfield="default_banking_id" linkfield="entity_id" table="default_banking">
 					<COMBOBOX w="430" title="Bank Branch" lptable="vw_bank_branch" cmb_fnct="(bank_name || ', ' || bank_branch_name)" orderby="bank_name" y="10" h="20" x="10" lpfield="bank_branch">bank_branch_id</COMBOBOX>
 					<COMBOBOX w="430" title="Currency" lptable="currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="10">amount</TEXTDECIMAL>
 					<TEXTDATE w="150" title="Final Date" y="70" h="20" x="10">final_date</TEXTDATE>
 					<CHECKBOX w="150" title="Active" default="true" y="70" h="20" x="290">active</CHECKBOX>
-					<TEXTFIELD w="430" title="Bank Account" y="90" h="20" x="10">bank_account</TEXTFIELD>
+					<TEXTFIELD w="150" title="Bank Account" y="90" h="20" x="10">bank_account</TEXTFIELD>
+					<CHECKBOX w="150" title="Cheque" default="false" y="90" h="20" x="290">cheque</CHECKBOX>
 					<TEXTFIELD w="430" title="Narrative" y="110" h="20" x="10">narrative</TEXTFIELD>
 				</FORM>
 			</GRID>
@@ -1014,15 +1016,15 @@
 					<TEXTFIELD w="75" title="Currency Name">currency_name</TEXTFIELD>
 					<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 					<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
-					<CHECKBOX w="75" title="Active">active</CHECKBOX>
+					<CHECKBOX w="75" title="Cheque">cheque</CHECKBOX>
 					<FORM name="Extra Banking" keyfield="employee_banking_id" linkfield="employee_month_id" table="employee_banking">
 						<COMBOBOX w="430" title="Bank Branch" lptable="vw_bank_branch" cmb_fnct="(bank_name || ', ' || bank_branch_name)" orderby="bank_name" y="10" h="20" x="10" lpfield="bank_branch">bank_branch_id</COMBOBOX>
 						<COMBOBOX w="430" title="Currency" lptable="currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 						<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="10">amount</TEXTDECIMAL>
 						<TEXTFIELD w="150" title="Exchange Rate" y="50" h="20" x="290">exchange_rate</TEXTFIELD>
-						<CHECKBOX w="150" title="Active" y="70" h="20" x="10">active</CHECKBOX>
-						<TEXTFIELD w="430" title="Bank Account" y="90" h="20" x="10">bank_account</TEXTFIELD>
-						<TEXTFIELD w="430" title="Narrative" y="110" h="20" x="10">narrative</TEXTFIELD>
+						<TEXTFIELD w="150" title="Bank Account" y="70" h="20" x="10">bank_account</TEXTFIELD>
+						<CHECKBOX w="150" title="Cheque" default="false" y="70" h="20" x="290">cheque</CHECKBOX>
+						<TEXTFIELD w="430" title="Narrative" y="90" h="20" x="10">narrative</TEXTFIELD>
 					</FORM>
 				</GRID>
 				<GRID name="Projects" keyfield="project_staff_cost_id" linkfield="employee_month_id" table="vw_project_staff_costs">
@@ -1285,7 +1287,7 @@
 					<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 					<TEXTDECIMAL w="75" title="Ps Amount">ps_amount</TEXTDECIMAL>
 					<TEXTDATE w="75" title="Final Date">final_date</TEXTDATE>
-					<CHECKBOX w="75" title="Active">active</CHECKBOX>
+					<CHECKBOX w="75" title="Cheque">cheque</CHECKBOX>
 				</GRID>
 			</GRID>
 			<GRID name="Tax Types" keyfield="period_tax_type_id" linkfield="period_id" table="vw_period_tax_types" where="(use_function = 1)">
@@ -1913,7 +1915,7 @@
 				<TEXTDECIMAL w="75" title="Expense">payroll_expense</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Net Pay">net_pay</TEXTDECIMAL>
 				<JASPER name="Payslip" linkfield="filterid" reportfile="payslipa.jasper"></JASPER>
-				<JASPER name="HK Payslip" linkfield="filterid" reportfile="payslip_hk.jasper"></JASPER>
+				<JASPER name="HK Payslip" org.table="vw_employee_month" reportfile="payslip_hk.jasper"></JASPER>
 				<JASPER name="SC Payslip" linkfield="filterid" reportfile="payslipd.jasper"></JASPER>
 				<JASPER name="Summary Payslip" linkfield="filterid" reportfile="payslipc.jasper"></JASPER>
 			</GRID>
