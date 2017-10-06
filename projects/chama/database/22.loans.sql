@@ -140,6 +140,20 @@ CREATE VIEW vw_loans AS
 		INNER JOIN activity_frequency ON loans.activity_frequency_id = activity_frequency.activity_frequency_id
 		LEFT JOIN vw_loan_balance ON loans.loan_id = vw_loan_balance.loan_id;
 		
+CREATE VIEW sv_loans AS
+	SELECT orgs.org_id, orgs.org_name, aa.approved_loans, bb.pending_loans
+	
+	FROM orgs LEFT JOIN
+		(SELECT org_id, count(loan_id) as approved_loans
+			FROM vw_loans WHERE approve_status = 'Approved'
+			GROUP BY org_id) as aa
+		ON orgs.org_id = aa.org_id
+	LEFT JOIN
+		(SELECT org_id, count(loan_id) as pending_loans
+			FROM vw_loans WHERE approve_status = 'Completed'
+			GROUP BY org_id) as bb
+		ON orgs.org_id = bb.org_id;
+		
 CREATE VIEW vw_guarantees AS
 	SELECT vw_loans.entity_id, vw_loans.member_name, vw_loans.product_id, vw_loans.product_name, 
 		vw_loans.loan_id, vw_loans.principal_amount, vw_loans.interest_rate, 

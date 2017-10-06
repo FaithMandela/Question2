@@ -76,7 +76,8 @@ CREATE TABLE default_banking (
 	amount					float default 0 not null,
 	ps_amount				float default 0 not null,
 	final_date				date,
-	active					boolean default true,
+	cheque					boolean default false not null,
+	active					boolean default true not null,
 	
 	bank_account			varchar(64),
 
@@ -125,6 +126,9 @@ CREATE TABLE employee_month (
 	exchange_rate			real default 1 not null,
 	bank_account			varchar(32),
 	basic_pay				float default 0 not null,
+	hour_pay				float default 0 not null,
+	worked_hours			float default 0 not null,
+	
 	part_time				boolean default false not null,
 	details					text,
 	unique (entity_id, period_id)
@@ -322,8 +326,7 @@ CREATE TABLE employee_banking (
 	
 	amount					float default 0 not null,
 	exchange_rate			real default 1 not null,
-	active					boolean default true,
-	
+	cheque					boolean default false not null,
 	bank_account			varchar(64),
 
 	Narrative				varchar(240)
@@ -527,6 +530,10 @@ BEGIN
 		SELECT SUM(exchange_rate * amount) INTO adjustment
 		FROM employee_banking
 		WHERE (employee_month_id = $1);
+	ELSIF ($3 = 42) THEN
+		SELECT SUM(exchange_rate * amount) INTO adjustment
+		FROM employee_banking
+		WHERE (employee_month_id = $1) AND (cheque = true);
 	ELSE
 		adjustment := 0;
 	END IF;
@@ -616,6 +623,7 @@ CREATE VIEW vw_employee_month AS
 		currency.currency_id, currency.currency_name, currency.currency_symbol, employee_month.exchange_rate,
 		
 		employee_month.org_id, employee_month.employee_month_id, employee_month.bank_account, employee_month.basic_pay, 
+		employee_month.hour_pay, employee_month.worked_hours,
 		employee_month.part_time, employee_month.details,
 		getAdjustment(employee_month.employee_month_id, 4, 31) as overtime,
 		getAdjustment(employee_month.employee_month_id, 1, 1) as full_allowance,
@@ -634,6 +642,7 @@ CREATE VIEW vw_employee_month AS
 		getAdjustment(employee_month.employee_month_id, 4, 34) as advance,
 		getAdjustment(employee_month.employee_month_id, 4, 35) as advance_deduction,
 		getAdjustment(employee_month.employee_month_id, 4, 41) as other_banks,
+		getAdjustment(employee_month.employee_month_id, 4, 42) as bank_cheques,
 		(employee_month.Basic_Pay + getAdjustment(employee_month.employee_month_id, 4, 31)) as basic_salary,
 		(employee_month.Basic_Pay + getAdjustment(employee_month.employee_month_id, 4, 31)
 		+ getAdjustment(employee_month.employee_month_id, 1, 2)) as gross_salary,
@@ -832,7 +841,20 @@ CREATE VIEW vw_employee_overtime AS
 		employee_overtime.overtime_rate, employee_overtime.narrative, employee_overtime.approve_status, 
 		employee_overtime.Action_date, employee_overtime.details
 	FROM employee_overtime INNER JOIN vw_employee_month_list as eml ON employee_overtime.employee_month_id = eml.employee_month_id;
-
+	
+CREATE VIEW sv_employee_overtime AS
+	SELECT eml.employee_month_id, eml.period_id, eml.start_date, 
+		eml.month_id, eml.period_year, eml.period_month,
+		eml.entity_id, eml.entity_name, eml.employee_id,
+		employee_overtime.org_id, 
+		sum(employee_overtime.overtime) as overtime_hours, 
+		sum(employee_overtime.overtime * employee_overtime.overtime_rate) as overtime_amount
+	FROM employee_overtime INNER JOIN vw_employee_month_list as eml ON employee_overtime.employee_month_id = eml.employee_month_id
+	GROUP BY eml.employee_month_id, eml.period_id, eml.start_date, 
+		eml.month_id, eml.period_year, eml.period_month,
+		eml.entity_id, eml.entity_name, eml.employee_id,
+		employee_overtime.org_id;
+	
 CREATE VIEW vw_employee_per_diem AS
 	SELECT eml.employee_month_id, eml.period_id, eml.start_date, 
 		eml.month_id, eml.period_year, eml.period_month,
@@ -858,7 +880,7 @@ CREATE VIEW vw_employee_banking AS
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		
 		employee_banking.org_id, employee_banking.employee_banking_id, employee_banking.amount, 
-		employee_banking.exchange_rate, employee_banking.active, employee_banking.bank_account,
+		employee_banking.exchange_rate, employee_banking.cheque, employee_banking.bank_account,
 		employee_banking.narrative,
 		
 		(employee_banking.exchange_rate * employee_banking.amount) as base_amount,
@@ -1291,10 +1313,10 @@ BEGIN
 	WHERE (project_staff.entity_id = NEW.entity_id) AND (project_staff.monthly_cost = true);
 	
 	INSERT INTO employee_banking (org_id, employee_month_id, bank_branch_id, currency_id, 
-		bank_account, amount, 
+		bank_account, amount, cheque,
 		exchange_rate)
 	SELECT NEW.org_id, NEW.employee_month_id, bank_branch_id, currency_id,
-		bank_account, amount,
+		bank_account, amount, cheque,
 		(CASE WHEN default_banking.currency_id = NEW.currency_id THEN 1 ELSE 1 / NEW.exchange_rate END)
 	FROM default_banking 
 	WHERE (default_banking.entity_id = NEW.entity_id) AND (default_banking.active = true)

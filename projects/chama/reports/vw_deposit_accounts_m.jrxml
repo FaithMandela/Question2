@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_deposit_accounts" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9f1d50f4-69df-4738-b97d-290916ccdfae">
-	<property name="ireport.zoom" value="3.0"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_deposit_accounts_m" language="groovy" pageWidth="802" pageHeight="555" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="9f1d50f4-69df-4738-b97d-290916ccdfae">
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
@@ -25,12 +25,20 @@
 	<parameter name="organd" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
+	<parameter name="entity_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_deposit_accounts.account_number, vw_deposit_accounts.member_name, vw_deposit_accounts.product_name, vw_deposit_accounts.currency_symbol, vw_deposit_accounts.current_balance, vw_deposit_accounts.cleared_balance, vw_deposit_accounts.unprocessed_credit, vw_deposit_accounts.available_balance
+		<![CDATA[SELECT vw_deposit_accounts.account_number, vw_deposit_accounts.member_name,
+ vw_deposit_accounts.product_name, vw_deposit_accounts.currency_symbol,
+ vw_deposit_accounts.approve_status, vw_deposit_accounts.application_date,
+ vw_deposit_accounts.current_balance, vw_deposit_accounts.cleared_balance,
+ vw_deposit_accounts.unprocessed_credit, vw_deposit_accounts.available_balance
 
 FROM vw_deposit_accounts
 
-$P!{orgwhere}
+WHERE (vw_deposit_accounts.entity_id = $P{entity_id})
+$P!{organd}
 
 ORDER BY vw_deposit_accounts.account_number]]>
 	</queryString>
@@ -38,6 +46,8 @@ ORDER BY vw_deposit_accounts.account_number]]>
 	<field name="member_name" class="java.lang.String"/>
 	<field name="product_name" class="java.lang.String"/>
 	<field name="currency_symbol" class="java.lang.String"/>
+	<field name="approve_status" class="java.lang.String"/>
+	<field name="application_date" class="java.sql.Timestamp"/>
 	<field name="current_balance" class="java.lang.Float"/>
 	<field name="cleared_balance" class="java.lang.Float"/>
 	<field name="unprocessed_credit" class="java.lang.Float"/>
@@ -46,13 +56,13 @@ ORDER BY vw_deposit_accounts.account_number]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="71" splitType="Stretch">
+		<band height="33" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="66" y="0" width="446" height="62" uuid="97e28ffa-b37f-49b6-b1d5-95ed3a7c0e8b"/>
+				<reportElement style="Title" x="0" y="0" width="446" height="32" uuid="97e28ffa-b37f-49b6-b1d5-95ed3a7c0e8b"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
-				<text><![CDATA[Deposit Accounts Report]]></text>
+				<text><![CDATA[Deposit Accounts]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -75,11 +85,11 @@ ORDER BY vw_deposit_accounts.account_number]]>
 				<text><![CDATA[Account Number]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="56" y="0" width="145" height="25" forecolor="#000000" uuid="a3ce0247-4400-438b-b521-a3fc1db1c4d8"/>
+				<reportElement style="Column header" x="56" y="0" width="68" height="25" forecolor="#000000" uuid="a3ce0247-4400-438b-b521-a3fc1db1c4d8"/>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<text><![CDATA[Member Name]]></text>
+				<text><![CDATA[Status]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="201" y="0" width="65" height="25" forecolor="#000000" uuid="2568f5fd-4211-4451-9f13-6c5c14441c16"/>
@@ -123,10 +133,17 @@ ORDER BY vw_deposit_accounts.account_number]]>
 				</textElement>
 				<text><![CDATA[Available Balance]]></text>
 			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="124" y="0" width="77" height="25" forecolor="#000000" uuid="fbe2d6f5-75fd-4dbe-9f81-f146522577c1"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Application Date]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="15" splitType="Stretch">
+		<band height="16" splitType="Stretch">
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="15" uuid="d0448d18-483d-40e9-b8e1-8a3a9b328c58"/>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -137,11 +154,11 @@ ORDER BY vw_deposit_accounts.account_number]]>
 					<textFieldExpression><![CDATA[$F{account_number}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="56" y="0" width="145" height="15" uuid="4880281d-3325-4f3d-956d-c15aca0b48ee"/>
+					<reportElement style="Detail" x="56" y="0" width="68" height="15" uuid="4880281d-3325-4f3d-956d-c15aca0b48ee"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{member_name}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{approve_status}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Detail" x="201" y="0" width="65" height="15" uuid="c70432bb-e0f0-4205-a604-8436797ed969"/>
@@ -185,11 +202,18 @@ ORDER BY vw_deposit_accounts.account_number]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{available_balance}]]></textFieldExpression>
 				</textField>
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+					<reportElement style="Detail" x="124" y="0" width="77" height="15" uuid="115306fa-2435-4350-91f0-405d23dda289"/>
+					<textElement>
+						<font fontName="Times New Roman" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{application_date}]]></textFieldExpression>
+				</textField>
 			</frame>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="15" splitType="Stretch">
+		<band height="5" splitType="Stretch">
 			<line>
 				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="5f4e0835-4a69-462e-a78a-2289d15dd9f3"/>
 				<graphicElement>
@@ -199,32 +223,7 @@ ORDER BY vw_deposit_accounts.account_number]]>
 		</band>
 	</columnFooter>
 	<pageFooter>
-		<band height="25" splitType="Stretch">
-			<frame>
-				<reportElement mode="Opaque" x="-21" y="1" width="597" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="f69d7fa4-f469-4901-bddd-d17218d45507"/>
-				<textField evaluationTime="Report">
-					<reportElement style="Column header" x="533" y="0" width="40" height="20" forecolor="#736343" uuid="f86a0403-a4f6-4166-8aa3-8a5c6f7cb14f"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="10" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement style="Column header" x="453" y="0" width="80" height="20" forecolor="#736343" uuid="337cf0ef-66ea-46db-a76f-ed56182495c3"/>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="10" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
-				</textField>
-				<textField pattern="EEEEE, d MMMMM yyyy HH:mm:ss Z">
-					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343" uuid="4384bdf7-e217-4437-b0fa-21f4c90ae03a"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="10" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-				</textField>
-			</frame>
-		</band>
+		<band splitType="Stretch"/>
 	</pageFooter>
 	<summary>
 		<band splitType="Stretch"/>

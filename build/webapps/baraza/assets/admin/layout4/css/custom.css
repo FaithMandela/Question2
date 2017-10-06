@@ -259,6 +259,11 @@ ui-widget-content {
 	width: 650px;
 }
 
+input.jsgrid-button.jsgrid-insert-button{
+        background-image: url("../img/floppy-disk.png");
+        background-repeat:initial;
+}
+
 
 /*  begin total ui widget overwrite */
 
@@ -299,22 +304,3 @@ ui-widget-content {
     color: #8e5fa2;
     text-decoration: none
 }*/
-
-.table-striped > tbody > tr:nth-of-type(2n+1) {
-    background-color: #e9ecf3;
-}
-
-.form-control .select2-choice {
-    border: 1px solid #e5e5e5;
-    background-color: #fff;
-    background-image: none;
-    filter: none;
-    height: 25px;
-    padding: 0px 0 0px 9px;
-}
-th {
-	border: 1px solid #FFF;
-	background-color: #167F92;
-	color: #FFF;
-	padding: 1em;
-}
