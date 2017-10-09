@@ -16,6 +16,8 @@ INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (202, 'Tran
 
 INSERT INTO entity_types (org_id, use_key_id, entity_type_name, entity_role) VALUES (0, 100, 'Bank Customers', 'client');
 
+INSERT INTO locations (org_id, location_name) VALUES (0, 'Head Office');
+
 INSERT INTO collateral_types (org_id, collateral_type_name) VALUES (0, 'Land Title');
 INSERT INTO collateral_types (org_id, collateral_type_name) VALUES (0, 'Car Log book');
 
@@ -141,7 +143,6 @@ UPDATE deposit_accounts SET minimum_balance = -100000000000;
 
 
 ---- Workflow setup
-
 INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
 VALUES (20, 0, 0, 'Customer Application', 'customers', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
 INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
