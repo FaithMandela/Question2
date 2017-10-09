@@ -8,6 +8,7 @@ CREATE TABLE shifts (
 	break_hours				real not null default 1,
 	
 	include_holiday 		boolean default false not null,
+	paid_lunch_hour			boolean default true not null,
 
 	include_mon				boolean default true not null,
 	include_tue				boolean default true not null,

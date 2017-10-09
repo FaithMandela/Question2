@@ -625,31 +625,33 @@
 			<TEXTFIELD w="75" title="Project Name">project_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Shift Name">shift_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Shift Hours">shift_hours</TEXTFIELD>
+			<CHECKBOX w="75" title="Monday">include_mon</CHECKBOX>
+			<CHECKBOX w="75" title="Tuesday">include_tue</CHECKBOX>
+			<CHECKBOX w="75" title="Wednesday">include_wed</CHECKBOX>
+			<CHECKBOX w="75" title="Thursday">include_thu</CHECKBOX>
+			<CHECKBOX w="75" title="Friday">include_fri</CHECKBOX>
+			<CHECKBOX w="75" title="Saturday">include_sat</CHECKBOX>
+			<CHECKBOX w="75" title="Sunday">include_sun</CHECKBOX>
 			<CHECKBOX w="75" title="Include Holiday">include_holiday</CHECKBOX>
-			<CHECKBOX w="75" title="Include Mon">include_mon</CHECKBOX>
-			<CHECKBOX w="75" title="Include Tue">include_tue</CHECKBOX>
-			<CHECKBOX w="75" title="Include Wed">include_wed</CHECKBOX>
-			<CHECKBOX w="75" title="Include Thu">include_thu</CHECKBOX>
-			<CHECKBOX w="75" title="Include Fri">include_fri</CHECKBOX>
-			<CHECKBOX w="75" title="Include Sat">include_sat</CHECKBOX>
-			<CHECKBOX w="75" title="Include Sun">include_sun</CHECKBOX>
 			<SPINTIME w="75" title="Time In">time_in</SPINTIME>
 			<SPINTIME w="75" title="Time Out">time_out</SPINTIME>
-			<FORM name="Shifts" keyfield="shift_id" table="shifts">
-				<TEXTFIELD w="150" title="Shift Name" y="30" h="20" x="10">shift_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="Shift Hours" y="30" h="20" x="290">shift_hours</TEXTFIELD>
-				<CHECKBOX w="150" title="Include Holiday" y="50" h="20" x="10">include_holiday</CHECKBOX>
-				<CHECKBOX w="150" title="Include Mon" default="true" y="50" h="20" x="290">include_mon</CHECKBOX>
-				<CHECKBOX w="150" title="Include Tue" default="true" y="70" h="20" x="10">include_tue</CHECKBOX>
-				<CHECKBOX w="150" title="Include Wed" default="true" y="70" h="20" x="290">include_wed</CHECKBOX>
-				<CHECKBOX w="150" title="Include Thu" default="true" y="90" h="20" x="10">include_thu</CHECKBOX>
-				<CHECKBOX w="150" title="Include Fri" default="true" y="90" h="20" x="290">include_fri</CHECKBOX>
-				<CHECKBOX w="150" title="Include Sat" y="110" h="20" x="10">include_sat</CHECKBOX>
-				<CHECKBOX w="150" title="Include Sun" y="110" h="20" x="290">include_sun</CHECKBOX>
-				<SPINTIME w="150" title="Time In" default="08:00 am" y="130" h="20" x="10">time_in</SPINTIME>
-				<SPINTIME w="150" title="Time Out" default="05:00 pm" y="130" h="20" x="290">time_out</SPINTIME>
-				<SPINTIME w="150" title="Weekend In" default="08:00 am" y="150" h="20" x="10">weekend_in</SPINTIME>
-				<SPINTIME w="150" title="Weekend Out" default="01:00 pm" y="150" h="20" x="290">weekend_out</SPINTIME>
+			<FORM cols="2" name="Shifts" keyfield="shift_id" table="shifts">
+				<TEXTFIELD w="150" title="Shift Name" required="true" y="10" h="20" x="10" span="true">shift_name</TEXTFIELD>
+				<TEXTDECIMAL w="150" title="Shift Hours" default="9" y="10" h="20" x="290">shift_hours</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Break Hours" default="1" y="30" h="20" x="10" span="true">break_hours</TEXTDECIMAL>
+				<CHECKBOX w="150" title="Paid Lunch Hour" default="true" y="30" h="20" x="290">paid_lunch_hour</CHECKBOX>
+				<CHECKBOX w="150" title="Monday" default="true" y="50" h="20" x="10" span="true">include_mon</CHECKBOX>
+				<CHECKBOX w="150" title="Tuesday" default="true" y="50" h="20" x="290">include_tue</CHECKBOX>
+				<CHECKBOX w="150" title="Wednesday" default="true" y="70" h="20" x="10" span="true">include_wed</CHECKBOX>
+				<CHECKBOX w="150" title="Thursday" default="true" y="70" h="20" x="290">include_thu</CHECKBOX>
+				<CHECKBOX w="150" title="Friday" default="true" y="90" h="20" x="10" span="true">include_fri</CHECKBOX>
+				<CHECKBOX w="150" title="Saturday" y="90" h="20" x="290">include_sat</CHECKBOX>
+				<CHECKBOX w="150" title="Sunday" y="110" h="20" x="10" span="true">include_sun</CHECKBOX>
+				<CHECKBOX w="150" title="Include Holiday" y="110" h="20" x="290">include_holiday</CHECKBOX>
+				<SPINTIME w="150" title="Time In" default="08:00" y="130" h="20" x="10" span="true">time_in</SPINTIME>
+				<SPINTIME w="150" title="Time Out" default="05:00 PM" y="130" h="20" x="290">time_out</SPINTIME>
+				<SPINTIME w="150" title="Weekend In" default="09:00" y="150" h="20" x="10" span="true">weekend_in</SPINTIME>
+				<SPINTIME w="150" title="Weekend Out" default="01:00 PM" y="150" h="20" x="290">weekend_out</SPINTIME>
 				<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<GRID name="Shift Schedule" keyfield="shift_schedule_id" linkfield="shift_id" table="vw_shift_schedule">
