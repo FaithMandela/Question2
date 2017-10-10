@@ -203,3 +203,6 @@ Your OpenBaraza SaaS Platform application has been approved<br><br>
 Welcome to OpenBaraza SaaS Platform<br><br>
 Regards,<br>
 OpenBaraza<br>');
+
+SELECT pg_catalog.setval('sys_emails_sys_email_id_seq', 5, true);
+UPDATE sys_emails SET use_type = sys_email_id;
