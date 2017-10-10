@@ -2,7 +2,7 @@
 
 --- Data
 INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (5, 'Kenya Shillings', 'KES');
-INSERT INTO orgs (org_id, org_name, org_sufix, currency_id, logo) VALUES (1, 'Open Baraza', 'df', 5, 'logo.png');
+INSERT INTO orgs (org_id, org_name, org_sufix, currency_id, logo) VALUES (1, 'Open Baraza', 'ob', 5, 'logo.png');
 UPDATE currency SET org_id = 1 WHERE currency_id = 5;
 SELECT pg_catalog.setval('orgs_org_id_seq', 1, true);
 SELECT pg_catalog.setval('currency_currency_id_seq', 5, true);
@@ -13,19 +13,21 @@ INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id) VAL
 INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id) VALUES (1, 'Staff', 'staff', 1);
 INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id) VALUES (1, 'Client', 'client', 2);
 INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id) VALUES (1, 'Supplier', 'supplier', 3);
-INSERT INTO entity_types (org_id, entity_type_name, entity_role, start_view, use_key_id) VALUES (1, 'Applicant', 'applicant', '10:0', 4);
+INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id) VALUES (1, 'Applicant', 'applicant', 4);
+INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id) VALUES (1, 'Bank Customers', 'client', 100);
 
 INSERT INTO subscription_levels (org_id, subscription_level_name) VALUES (1, 'Basic');
 INSERT INTO subscription_levels (org_id, subscription_level_name) VALUES (1, 'Manager');
 INSERT INTO subscription_levels (org_id, subscription_level_name) VALUES (1, 'Consumer');
 
-
---- Copy over data
 INSERT INTO locations (org_id, location_name) VALUES (1, 'Head Office');
 
-INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, tax_rate, account_id) VALUES (11, 15, 'Exempt', 0, '42000');
-INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, tax_rate, account_id) VALUES (12, 15, 'VAT', 16, '42000');
+INSERT INTO tax_types (org_id, tax_type_id, use_key_id, tax_type_name, tax_rate, account_id) VALUES (1, 11, 15, 'Exempt', 0, '42000');
+INSERT INTO tax_types (org_id, tax_type_id, use_key_id, tax_type_name, tax_rate, account_id) VALUES (1, 12, 15, 'VAT', 16, '42000');
 SELECT pg_catalog.setval('tax_types_tax_type_id_seq', 12, true);
+
+INSERT INTO collateral_types (org_id, collateral_type_name) VALUES (1, 'Land Title');
+INSERT INTO collateral_types (org_id, collateral_type_name) VALUES (1, 'Car Log book');
 
 INSERT INTO sys_emails (org_id, use_type,  sys_email_name, title, details) 
 SELECT 1, use_type, sys_email_name, title, details
