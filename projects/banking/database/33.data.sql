@@ -14,10 +14,6 @@ INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (110, 'Acco
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (201, 'Initial Charges', 4);
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (202, 'Transaction Charges', 4);
 
-INSERT INTO entity_types (org_id, use_key_id, entity_type_name, entity_role) VALUES (0, 100, 'Bank Customers', 'client');
-
-INSERT INTO collateral_types (org_id, collateral_type_name) VALUES (0, 'Land Title');
-INSERT INTO collateral_types (org_id, collateral_type_name) VALUES (0, 'Car Log book');
 
 INSERT INTO activity_frequency (activity_frequency_id, activity_frequency_name) 
 VALUES (1, 'Once'), (4, 'Monthly');
@@ -28,6 +24,12 @@ INSERT INTO activity_status (activity_status_id, activity_status_name) VALUES (2
 INSERT INTO activity_status (activity_status_id, activity_status_name) VALUES (3, 'Processing');
 INSERT INTO activity_status (activity_status_id, activity_status_name) VALUES (4, 'Commited');
 
+INSERT INTO entity_types (org_id, use_key_id, entity_type_name, entity_role) VALUES (0, 100, 'Bank Customers', 'client');
+
+INSERT INTO locations (org_id, location_name) VALUES (0, 'Head Office');
+
+INSERT INTO collateral_types (org_id, collateral_type_name) VALUES (0, 'Land Title');
+INSERT INTO collateral_types (org_id, collateral_type_name) VALUES (0, 'Car Log book');
 
 INSERT INTO activity_types (activity_type_id, cr_account_id, dr_account_id, use_key_id, org_id, activity_type_name, is_active) VALUES (1, 34005, 34005, 202, 0, 'No Charges', true);
 INSERT INTO activity_types (activity_type_id, cr_account_id, dr_account_id, use_key_id, org_id, activity_type_name, is_active) VALUES (2, 34005, 34005, 101, 0, 'Cash Deposits', true);
@@ -141,7 +143,6 @@ UPDATE deposit_accounts SET minimum_balance = -100000000000;
 
 
 ---- Workflow setup
-
 INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
 VALUES (20, 0, 0, 'Customer Application', 'customers', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
 INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
@@ -166,3 +167,39 @@ INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_en
 VALUES (24, 0, 24, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
 SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 30, true);
 
+
+------ emails
+
+INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
+VALUES (1, 0, 'Application', 'Thank you for your Application', 'Thank you {{name}} for your application.<br><br>
+Your user name is {{username}}<br> 
+Your password is {{password}}<br><br>
+Regards<br>
+Human Resources Manager<br>');
+INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
+VALUES (2, 0, 'New Customer', 'Your credentials ', 'Hello {{name}},<br><br>
+Your credentials to the banking system have been created.<br>
+Your user name is {{username}}<br>
+Regards<br>
+Human Resources Manager<br>');
+INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
+VALUES (3, 0, 'Password reset', 'Password reset', 'Hello {{name}},<br><br>
+Your password has been reset to:<br><br>
+Your user name is {{username}}<br> 
+Your password is {{password}}<br><br>
+Regards<br>
+Human Resources Manager<br>');
+INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
+VALUES (4, 0, 'Subscription', 'Subscription', 'Hello {{name}},<br><br>
+Welcome to OpenBaraza SaaS Platform<br><br>
+Your password is:<br><br>
+Your user name is {{username}}<br> 
+Your password is {{password}}<br><br>
+Regards,<br>
+OpenBaraza<br>');
+INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
+VALUES (5, 0, 'Subscription', 'Subscription', 'Hello {{name}},<br><br>
+Your OpenBaraza SaaS Platform application has been approved<br><br>
+Welcome to OpenBaraza SaaS Platform<br><br>
+Regards,<br>
+OpenBaraza<br>');

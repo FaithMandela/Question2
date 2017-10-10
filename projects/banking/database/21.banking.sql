@@ -1,4 +1,12 @@
 ---Project Database File
+CREATE TABLE locations ( 
+	location_id				serial primary key,
+	org_id					integer references orgs,
+	location_name			varchar(50),
+	details					text
+);
+CREATE INDEX locations_org_id ON locations(org_id);
+
 CREATE TABLE customers (
 	customer_id				serial primary key,
 	entity_id 				integer references entitys,

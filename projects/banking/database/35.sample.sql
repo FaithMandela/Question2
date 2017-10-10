@@ -15,4 +15,4 @@ INSERT INTO customers (customer_id, entity_id, org_id, business_account, person_
 
 SELECT pg_catalog.setval('customers_customer_id_seq', 3, true);
 
-DELETE FROM currency WHERE currency_id > 1;
+DELETE FROM currency WHERE currency_id IN (2, 3, 4);
