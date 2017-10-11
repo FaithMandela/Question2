@@ -139,14 +139,14 @@ Rate]]></text>
 				<text><![CDATA[Currency Symbol]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="631" y="0" width="70" height="34" forecolor="#000000" uuid="397338ec-6970-4c33-b8a8-f14f15f3652b"/>
+				<reportElement style="Column header" x="631" y="0" width="84" height="34" forecolor="#000000" uuid="397338ec-6970-4c33-b8a8-f14f15f3652b"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Interest Method Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="701" y="0" width="70" height="34" forecolor="#000000" uuid="5e07e446-7f90-41b9-8198-3c662e701582"/>
+				<reportElement style="Column header" x="724" y="0" width="70" height="34" forecolor="#000000" uuid="5e07e446-7f90-41b9-8198-3c662e701582"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -155,12 +155,9 @@ Rate]]></text>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="132" splitType="Stretch">
-			<frame>
-				<reportElement style="Row" mode="Opaque" x="0" y="0" width="802" height="15" uuid="167517e9-af4b-427a-8173-4be8981c51e6"/>
-			</frame>
+		<band height="80" splitType="Stretch">
 			<subreport>
-				<reportElement x="1" y="34" width="802" height="28" uuid="fabe1331-3fcb-49cf-85d4-8045a6541184"/>
+				<reportElement x="-7" y="46" width="778" height="28" uuid="fabe1331-3fcb-49cf-85d4-8045a6541184"/>
 				<subreportParameter name="p_product_id">
 					<subreportParameterExpression><![CDATA[$F{product_id}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -168,14 +165,14 @@ Rate]]></text>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_account_definations.jasper"]]></subreportExpression>
 			</subreport>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="701" y="5" width="70" height="15" uuid="3258d5fe-ee53-44b9-9009-2c1b721cccbd"/>
+				<reportElement style="Detail" x="724" y="5" width="70" height="15" uuid="3258d5fe-ee53-44b9-9009-2c1b721cccbd"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{penalty_method_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="631" y="5" width="70" height="15" uuid="f3573302-6ed9-4a57-b9f8-bb352ed136bb"/>
+				<reportElement style="Detail" x="631" y="5" width="84" height="15" uuid="f3573302-6ed9-4a57-b9f8-bb352ed136bb"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -247,7 +244,7 @@ Rate]]></text>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="5" splitType="Stretch">
+		<band height="6" splitType="Stretch">
 			<line>
 				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="802" height="1" uuid="8e38a644-67e3-4707-a9a6-f5c09a721e9e"/>
 				<graphicElement>

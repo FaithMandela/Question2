@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_deposit_accounts" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9f1d50f4-69df-4738-b97d-290916ccdfae">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_deposit_accounts" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9f1d50f4-69df-4738-b97d-290916ccdfae">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -73,7 +73,7 @@ $P!{orgwhere}]]>
 				<text><![CDATA[Account Number]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="71" y="0" width="90" height="15" forecolor="#000000" uuid="a3ce0247-4400-438b-b521-a3fc1db1c4d8"/>
+				<reportElement style="Column header" x="71" y="2" width="90" height="15" forecolor="#000000" uuid="a3ce0247-4400-438b-b521-a3fc1db1c4d8"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12"/>
 				</textElement>
@@ -199,7 +199,7 @@ $P!{orgwhere}]]>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="-21" y="1" width="597" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="f69d7fa4-f469-4901-bddd-d17218d45507"/>
+				<reportElement mode="Opaque" x="-21" y="1" width="576" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="f69d7fa4-f469-4901-bddd-d17218d45507"/>
 				<textField evaluationTime="Report">
 					<reportElement style="Column header" x="533" y="0" width="40" height="20" forecolor="#736343" uuid="f86a0403-a4f6-4166-8aa3-8a5c6f7cb14f"/>
 					<textElement verticalAlignment="Middle">

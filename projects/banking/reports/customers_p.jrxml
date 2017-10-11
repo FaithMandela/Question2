@@ -73,9 +73,9 @@ $P!{organd}]]>
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="16" splitType="Stretch">
+		<band height="26" splitType="Stretch">
 			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="802" height="1" uuid="1d8c833a-aca5-4a3c-991b-dce5742e7994"/>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="22" width="802" height="1" uuid="1d8c833a-aca5-4a3c-991b-dce5742e7994"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineColor="#999999"/>
 				</graphicElement>

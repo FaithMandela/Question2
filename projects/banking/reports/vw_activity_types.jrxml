@@ -189,7 +189,7 @@ ORDER BY vw_activity_types.activity_type_id]]>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="15" splitType="Stretch">
+		<band height="7" splitType="Stretch">
 			<line>
 				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="3cc4792e-076e-47d3-9ea5-5e488c6c0de2"/>
 				<graphicElement>
