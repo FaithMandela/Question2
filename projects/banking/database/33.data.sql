@@ -64,18 +64,13 @@ INSERT INTO penalty_methods (penalty_method_id, activity_type_id, org_id, penalt
 VALUES (2, 15, 0, 'Account Penalty 15', 'get_penalty(1, deposit_account_id, period_id, 15)', '400000004');
 SELECT pg_catalog.setval('penalty_methods_penalty_method_id_seq', 2, true);
 
-INSERT INTO products (product_id, activity_frequency_id, interest_method_id, penalty_method_id, currency_id, org_id, product_name, description, loan_account, is_active, interest_rate, min_opening_balance, lockin_period_frequency, minimum_balance, maximum_balance, minimum_day, maximum_day, minimum_trx, maximum_trx)
-VALUES (0, 4, 0, 0, 1, 0, 'Banking', 'Banking', false, false, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO products (product_id, activity_frequency_id, interest_method_id, penalty_method_id, currency_id, org_id, product_name, description, loan_account, is_active, interest_rate, min_opening_balance, lockin_period_frequency, minimum_balance, maximum_balance, minimum_day, maximum_day, minimum_trx, maximum_trx) 
-VALUES (1, 4, 0, 0, 1, 0, 'Transaction account', 'Account to handle transactions', false, true, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO products (product_id, activity_frequency_id, interest_method_id, penalty_method_id, currency_id, org_id, product_name, description, loan_account, is_active, interest_rate, min_opening_balance, lockin_period_frequency, minimum_balance, maximum_balance, minimum_day, maximum_day, minimum_trx, maximum_trx) 
-VALUES (2, 4, 1, 1, 1, 0, 'Basic loans', 'Basic loans', true, true, 12, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO products (product_id, activity_frequency_id, interest_method_id, penalty_method_id, currency_id, org_id, product_name, description, loan_account, is_active, interest_rate, min_opening_balance, lockin_period_frequency, minimum_balance, maximum_balance, minimum_day, maximum_day, minimum_trx, maximum_trx) 
-VALUES (3, 4, 3, 0, 1, 0, 'Savings account', 'Account to handle savings', false, true, 3, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO products (product_id, activity_frequency_id, interest_method_id, penalty_method_id, currency_id, org_id, product_name, description, loan_account, is_active, interest_rate, min_opening_balance, lockin_period_frequency, minimum_balance, maximum_balance, minimum_day, maximum_day, minimum_trx, maximum_trx) 
-VALUES (4, 4, 2, 1, 1, 0, 'Compound loans', 'Compound loans', true, true, 12, 0, 0, 0, 0, 0, 0, 0, 0);
-INSERT INTO products (product_id, activity_frequency_id, interest_method_id, penalty_method_id, currency_id, org_id, product_name, description, loan_account, is_active, interest_rate, min_opening_balance, lockin_period_frequency, minimum_balance, maximum_balance, minimum_day, maximum_day, minimum_trx, maximum_trx) 
-VALUES (5, 4, 4, 1, 1, 0, 'Reducing balance loans', 'Reducing balance loans', true, true, 12, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO products (product_id, activity_frequency_id, interest_method_id, penalty_method_id, currency_id, org_id, product_name, description, loan_account, is_active, interest_rate, min_opening_balance, lockin_period_frequency, minimum_balance, maximum_balance, minimum_day, maximum_day, minimum_trx, maximum_trx) VALUES
+(0, 4, 0, 0, 1, 0, 'Banking', 'Banking', false, false, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(1, 4, 0, 0, 1, 0, 'Transaction account', 'Account to handle transactions', false, true, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(2, 4, 1, 1, 1, 0, 'Basic loans', 'Basic loans', true, true, 12, 0, 0, 0, 0, 0, 0, 0, 0),
+(3, 4, 3, 0, 1, 0, 'Savings account', 'Account to handle savings', false, true, 3, 0, 0, 0, 0, 0, 0, 0, 0),
+(4, 4, 2, 1, 1, 0, 'Compound loans', 'Compound loans', true, true, 12, 0, 0, 0, 0, 0, 0, 0, 0),
+(5, 4, 4, 1, 1, 0, 'Reducing balance loans', 'Reducing balance loans', true, true, 12, 0, 0, 0, 0, 0, 0, 0, 0);
 SELECT pg_catalog.setval('products_product_id_seq', 5, true);
 
 
@@ -98,10 +93,9 @@ VALUES (12, 22, 1, 1, 0, 'Transfer', '2017-01-01', NULL, 1, '400000002', true, t
 INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, fee_amount, account_number, is_active, has_charge) 
 VALUES (21, 1, 1, 1, 0, 'Opening account', '2017-01-01', NULL, 1000, '400000002', true, true);
 
-INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, account_number, is_active) 
-VALUES (11, 1, 1, 2, 0, 'Loan Disbursement', '2017-01-01', NULL, '400000001', true);
-INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, account_number, is_active) 
-VALUES (10, 1, 1, 2, 0, 'Loan Payment', '2017-01-01', NULL, '400000001', true);
+INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, account_number, is_active) VALUES
+(11, 1, 1, 2, 0, 'Loan Disbursement', '2017-01-01', NULL, '400000001', true),
+(10, 1, 1, 2, 0, 'Loan Payment', '2017-01-01', NULL, '400000001', true);
 
 INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, account_number, is_active) VALUES 
 (2, 1, 1, 3, 0, 'Cash Deposit', '2017-01-01', NULL, '400000001', true),
@@ -128,43 +122,31 @@ VALUES (10, 1, 1, 5, 0, 'Loan Payment', '2017-01-01', NULL, '400000001', true);
 INSERT INTO customers (customer_id, org_id, business_account, customer_name, identification_number, identification_type, client_email, telephone_number, date_of_birth, nationality, approve_status)
 VALUES (0, 0, 2, 'OpenBaraza Bank', '0', 'Org', 'info@openbaraza.org', '+254', current_date, 'KE', 'Approved');
 
-INSERT INTO deposit_accounts (customer_id, product_id, org_id, is_active, approve_status, narrative)
-VALUES (0, 0, 0, true, 'Approved', 'Deposits');
-INSERT INTO deposit_accounts (customer_id, product_id, org_id, is_active, approve_status, narrative)
-VALUES (0, 0, 0, true, 'Approved', 'Charges');
-INSERT INTO deposit_accounts (customer_id, product_id, org_id, is_active, approve_status, narrative)
-VALUES (0, 0, 0, true, 'Approved', 'Interest');
-INSERT INTO deposit_accounts (customer_id, product_id, org_id, is_active, approve_status, narrative)
-VALUES (0, 0, 0, true, 'Approved', 'Penalty');
-INSERT INTO deposit_accounts (customer_id, product_id, org_id, is_active, approve_status, narrative)
-VALUES (0, 0, 0, true, 'Approved', 'Loan');
-
-UPDATE deposit_accounts SET minimum_balance = -100000000000;
+INSERT INTO deposit_accounts (customer_id, product_id, org_id, is_active, approve_status, narrative, minimum_balance) VALUES 
+(0, 0, 0, true, 'Approved', 'Deposits', -100000000000),
+(0, 0, 0, true, 'Approved', 'Charges', -100000000000),
+(0, 0, 0, true, 'Approved', 'Interest', -100000000000),
+(0, 0, 0, true, 'Approved', 'Penalty', -100000000000),
+(0, 0, 0, true, 'Approved', 'Loan', -100000000000);
 
 
 ---- Workflow setup
-INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
-VALUES (20, 0, 0, 'Customer Application', 'customers', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
-INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
-VALUES (21, 0, 0, 'Account opening', 'deposit_accounts', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
-INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
-VALUES (22, 0, 0, 'Loan Application', 'loans', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
-INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
-VALUES (23, 0, 0, 'Guarantees Application', 'guarantees', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
-INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
-VALUES (24, 0, 0, 'Collaterals Application', 'collaterals', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES
+(20, 0, 0, 'Customer Application', 'customers', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL),
+(21, 0, 0, 'Account opening', 'deposit_accounts', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL),
+(22, 0, 0, 'Loan Application', 'loans', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL),
+(23, 0, 0, 'Guarantees Application', 'guarantees', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL),
+(24, 0, 0, 'Collaterals Application', 'collaterals', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL),
+(25, 0, 0, 'Customer Application', 'applicants', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
 SELECT pg_catalog.setval('workflows_workflow_id_seq', 30, true);
 
-INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
-VALUES (20, 0, 20, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
-INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
-VALUES (21, 0, 21, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
-INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
-VALUES (22, 0, 22, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
-INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
-VALUES (23, 0, 23, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
-INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
-VALUES (24, 0, 24, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES
+(20, 0, 20, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL),
+(21, 0, 21, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL),
+(22, 0, 22, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL),
+(23, 0, 23, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL),
+(24, 0, 24, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL),
+(25, 0, 25, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
 SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 30, true);
 
 

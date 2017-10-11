@@ -43,7 +43,7 @@ CREATE TABLE applicants (
 	business_account		integer default 0 not null,
 	
 	person_title			varchar(7),
-	customer_name			varchar(150) not null,
+	applicant_name			varchar(150) not null,
 	identification_number	varchar(50) not null,
 	identification_type		varchar(50) not null,
 	
@@ -73,6 +73,7 @@ CREATE TABLE applicants (
 	employer_address		text,
 	introduced_by			varchar(100),
 	
+	entity_id				integer references entitys,
 	application_date		timestamp default now() not null,
 	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
@@ -83,6 +84,7 @@ CREATE TABLE applicants (
 	UNIQUE (org_id, identification_number)
 );
 CREATE INDEX applicants_customer_id ON applicants(customer_id);
+CREATE INDEX applicants_entity_id ON applicants(entity_id);
 CREATE INDEX applicants_org_id ON applicants(org_id);
 
 
@@ -105,6 +107,9 @@ CREATE VIEW vw_subscriptions AS
 
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON subscriptions
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
+    
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON applicants
+    FOR EACH ROW EXECUTE PROCEDURE upd_action();    
 
 CREATE OR REPLACE FUNCTION ins_subscriptions() RETURNS trigger AS $$
 DECLARE
@@ -259,6 +264,42 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_subscriptions BEFORE INSERT OR UPDATE ON subscriptions
     FOR EACH ROW EXECUTE PROCEDURE ins_subscriptions();
+    
+    
+CREATE OR REPLACE FUNCTION ins_applicants() RETURNS trigger AS $$
+DECLARE
+	v_customer_id			integer;
+BEGIN
+
+	IF (TG_OP = 'INSERT') THEN
+		NEW.approve_status := 'Completed';
+	ELSIF(NEW.approve_status = 'Approved')THEN
+		SELECT customer_id INTO v_customer_id
+		FROM customers WHERE (identification_number = NEW.identification_number);
+		
+		IF(v_customer_id is null)THEN
+			v_customer_id := nextval('customers_customer_id_seq');
+			INSERT INTO customers(customer_id, org_id, business_account, person_title, 
+				customer_name, identification_number, identification_type, client_email, 
+				telephone_number, telephone_number2, address, town, zip_code, 
+				date_of_birth, gender, nationality, marital_status, picture_file, 
+				employed, self_employed, employer_name, employer_address, introduced_by,
+				details)
+			VALUES (v_customer_id, NEW.org_id, NEW.business_account, NEW.person_title, 
+				NEW.customer_name, NEW.identification_number, NEW.identification_type, NEW.client_email, 
+				NEW.telephone_number, NEW.telephone_number2, NEW.address, NEW.town, NEW.zip_code, 
+				NEW.date_of_birth, NEW.gender, NEW.nationality, NEW.marital_status, NEW.picture_file, 
+				NEW.employed, NEW.self_employed, NEW.employer_name, NEW.employer_address, NEW.introduced_by,
+				NEW.details);
+		END IF;
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_applicants BEFORE INSERT OR UPDATE ON applicants
+    FOR EACH ROW EXECUTE PROCEDURE ins_applicants();
 
 
 CREATE OR REPLACE FUNCTION ins_accounts_limit() RETURNS trigger AS $$

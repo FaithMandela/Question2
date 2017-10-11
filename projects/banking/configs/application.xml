@@ -4,6 +4,7 @@
 	</MENU>
 	<DESK w="700" name="Registration" key="1" h="500">
 		<FORM cols="2" new="true" name="Personal Account" keyfield="entity_id" edit="false" delete="false" audit="false" table="applicants" fornew="true" save.button="Apply">
+			<DEFAULT default="0">org_id</DEFAULT>
 			<DEFAULT default="0">business_account</DEFAULT>
 			<DEFAULT default="ID">identification_type</DEFAULT>
 			<COMBOLIST w="70" title="" y="10" h="20" x="70" span="true">person_title
@@ -13,14 +14,14 @@
 				<DATA>Dr</DATA>
 				<DATA>Prof</DATA>
 			</COMBOLIST>
-			<TEXTFIELD w="150" title="Customer Name" required="true" y="10" h="20" x="290">customer_name</TEXTFIELD>
+			<TEXTFIELD w="150" title="Customer Name" required="true" y="10" h="20" x="290">applicant_name</TEXTFIELD>
 			<TEXTFIELD w="150" title="ID Number" required="true" y="30" h="20" x="10" span="true">identification_number</TEXTFIELD>
-			<TEXTFIELD w="150" title="Email" required="true" y="30" h="20" x="290">client_email</TEXTFIELD>
+			<TEXTFIELD w="150" title="Email" required="true" y="30" h="20" x="290" id="applicant_email">client_email</TEXTFIELD>
 			<TEXTFIELD w="150" title="Telephone Number" required="true" y="70" h="20" x="10" span="true">telephone_number</TEXTFIELD>
 			<TEXTFIELD w="150" title="Altenative Telephone" y="70" h="20" x="290">telephone_number2</TEXTFIELD>
-			<TEXTFIELD w="150" title="Address" required="true" y="90" h="20" x="10">address</TEXTFIELD>
-			<TEXTFIELD w="150" title="Town" required="true" y="110" h="20" x="10" span="true">town</TEXTFIELD>
-			<TEXTFIELD w="150" title="Zip Code" y="110" h="20" x="290">zip_code</TEXTFIELD>
+			<TEXTFIELD w="150" title="Address" required="true" y="90" h="20" x="10" span="true">address</TEXTFIELD>
+			<TEXTFIELD w="150" title="Zip Code" y="90" h="20" x="290">zip_code</TEXTFIELD>
+			<TEXTFIELD w="150" title="Town" required="true" y="110" h="20" x="10">town</TEXTFIELD>
 			<TEXTDATE w="150" title="Date Of Birth" required="true" y="130" h="20" x="10" span="true">date_of_birth</TEXTDATE>
 			<COMBOBOX w="150" title="Nationality" lptable="sys_countrys" default_org_fnct="get_default_country" noorg="true" lpkey="sys_country_id" y="150" h="20" x="10" lpfield="sys_country_name">nationality</COMBOBOX>
 			<COMBOLIST w="150" title="Gender" y="150" h="20" x="10" span="true">gender
@@ -37,11 +38,11 @@
 			<CHECKBOX w="150" title="Employed" y="170" h="20" x="10" span="true">employed</CHECKBOX>
 			<CHECKBOX w="150" title="Self Employed" y="170" h="20" x="290">self_employed</CHECKBOX>
 			<TEXTFIELD w="150" title="Employer Name" y="190" h="20" x="10">employer_name</TEXTFIELD>
-			<TEXTAREA w="430" tab="Details" y="340" h="70" x="10">details</TEXTAREA>
+			<TEXTAREA w="430" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
 			<FORMVIEW name="Applicant" keyfield="entity_id" linkfield="entity_id" table="applicants">
-				<TEXTFIELD w="430" fnct="'Data submited check your email for details'::text" title="Submit" y="110" h="20" x="10">disp</TEXTFIELD>
+				<TEXTFIELD w="430" fnct="'Details submited for approval, details will be sent to your email'::text" title="Submit" y="110" h="20" x="10">disp</TEXTFIELD>
 				<TEXTFIELD w="75" title="Person Title">person_title</TEXTFIELD>
-				<TEXTFIELD w="75" title="Customer Name">customer_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Customer Name">applicant_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Identification Number">identification_number</TEXTFIELD>
 				<TEXTFIELD w="75" title="Identification Type">identification_type</TEXTFIELD>
 				<TEXTFIELD w="75" title="Email">client_email</TEXTFIELD>
@@ -50,25 +51,24 @@
 			</FORMVIEW>
 		</FORM>
 		<FORM cols="2" new="true" name="Business Account" keyfield="entity_id" edit="false" delete="false" audit="false" table="applicants" fornew="true" save.button="Apply">
+			<DEFAULT default="0">org_id</DEFAULT>
 			<DEFAULT default="1">business_account</DEFAULT>
-			<TEXTFIELD w="430" title="Customer Name" required="true" y="10" h="20" x="10">customer_name</TEXTFIELD>
-			<TEXTFIELD w="150" title="Identification Number" required="true" y="30" h="20" x="10">identification_number</TEXTFIELD>
+			<TEXTFIELD w="150" title="Customer Name" required="true" y="10" h="20" x="10">applicant_name</TEXTFIELD>
+			<TEXTFIELD w="150" title="Identification Number" required="true" y="30" h="20" x="10" span="true">identification_number</TEXTFIELD>
 			<TEXTFIELD w="150" title="Identification Type" required="true" y="30" h="20" x="290">identification_type</TEXTFIELD>
-			<TEXTFIELD w="150" title="Applicant Email" required="true" y="50" h="20" x="10">client_email</TEXTFIELD>
-			<TEXTFIELD w="150" title="Telephone Number" required="true" y="70" h="20" x="10">telephone_number</TEXTFIELD>
-			<TEXTFIELD w="150" title="Telephone Number2" y="70" h="20" x="290">telephone_number2</TEXTFIELD>
-			<TEXTFIELD w="150" title="Address" required="true" y="90" h="20" x="10">address</TEXTFIELD>
+			<TEXTFIELD w="150" title="Applicant Email" required="true" y="50" h="20" x="10" id="applicant_email">client_email</TEXTFIELD>
+			<TEXTFIELD w="150" title="Telephone Number" required="true" y="70" h="20" x="10" span="true">telephone_number</TEXTFIELD>
+			<TEXTFIELD w="150" title="Alternative Telephone" y="70" h="20" x="290">telephone_number2</TEXTFIELD>
+			<TEXTFIELD w="150" title="Address" required="true" y="90" h="20" x="10" span="true">address</TEXTFIELD>
+			<TEXTFIELD w="150" title="Zip Code" required="true" y="90" h="20" x="290">zip_code</TEXTFIELD>
 			<TEXTFIELD w="150" title="Town" required="true" y="110" h="20" x="10">town</TEXTFIELD>
-			<TEXTFIELD w="150" title="Zip Code" required="true" y="110" h="20" x="290">zip_code</TEXTFIELD>
 			<TEXTDATE w="150" title="Date Of Registration" y="130" h="20" x="10" span="true">date_of_birth</TEXTDATE>
-			<COMBOBOX w="150" title="Nationality" lptable="sys_countrys" default_org_fnct="get_default_country" noorg="true" lpkey="sys_country_id" y="150" h="20" x="10" lpfield="sys_country_name">nationality</COMBOBOX>
-			<TEXTDECIMAL w="150" title="Annual Turnover" y="170" h="20" x="10">annual_turnover</TEXTDECIMAL>
-			<TEXTDECIMAL w="150" title="Annual Net Income" y="170" h="20" x="290">annual_net_income</TEXTDECIMAL>
+			<COMBOBOX w="150" title="Country" lptable="sys_countrys" default_org_fnct="get_default_country" noorg="true" lpkey="sys_country_id" y="130" h="20" x="290" lpfield="sys_country_name">nationality</COMBOBOX>
 			<TEXTFIELD w="150" title="Introduced By" y="190" h="20" x="10">introduced_by</TEXTFIELD>
 			<TEXTAREA w="430" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
 			<FORMVIEW name="Applicant" keyfield="entity_id" linkfield="entity_id" table="applicants">
-				<TEXTFIELD w="430" fnct="'Data submited check your email for details'::text" title="Submit" y="110" h="20" x="10">disp</TEXTFIELD>
-				<TEXTFIELD w="75" title="Customer Name">customer_name</TEXTFIELD>
+				<TEXTFIELD w="430" fnct="'Details submited for approval, details will be sent to your email'::text" title="Submit" y="110" h="20" x="10">disp</TEXTFIELD>
+				<TEXTFIELD w="75" title="Customer Name">applicant_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Identification Number">identification_number</TEXTFIELD>
 				<TEXTFIELD w="75" title="Identification Type">identification_type</TEXTFIELD>
 				<TEXTFIELD w="75" title="Applicant Email">client_email</TEXTFIELD>
