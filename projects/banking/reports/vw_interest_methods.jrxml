@@ -65,39 +65,47 @@ ORDER BY vw_interest_methods.interest_method_id]]>
 				</graphicElement>
 			</line>
 			<staticText>
+<<<<<<< HEAD
 				<reportElement style="Column header" x="1" y="0" width="86" height="15" forecolor="#000000" uuid="7d271de6-4782-45ee-bbf3-cd717dfd0f63"/>
+=======
+				<reportElement style="Column header" x="1" y="0" width="26" height="15" forecolor="#000000" uuid="7d271de6-4782-45ee-bbf3-cd717dfd0f63"/>
+>>>>>>> 0a938eade4ef6f82f09feaa33b0fb59bc6dada90
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<text><![CDATA[Interest Method ID]]></text>
+				<text><![CDATA[ID]]></text>
 			</staticText>
 			<staticText>
+<<<<<<< HEAD
 				<reportElement style="Column header" x="94" y="0" width="105" height="15" forecolor="#000000" uuid="b2c318da-b606-4471-ac92-f1125ec86b9f"/>
+=======
+				<reportElement style="Column header" x="27" y="0" width="184" height="15" forecolor="#000000" uuid="b2c318da-b606-4471-ac92-f1125ec86b9f"/>
+>>>>>>> 0a938eade4ef6f82f09feaa33b0fb59bc6dada90
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<text><![CDATA[Interest Method Name]]></text>
+				<text><![CDATA[Interest Method]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="211" y="0" width="105" height="15" forecolor="#000000" uuid="323af012-4a6d-47fa-8450-b9b76557cbe2"/>
+				<reportElement style="Column header" x="211" y="0" width="85" height="15" forecolor="#000000" uuid="323af012-4a6d-47fa-8450-b9b76557cbe2"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Reducing Balance]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="316" y="0" width="105" height="15" forecolor="#000000" uuid="bbb623ab-7fea-4df0-9f62-35030949f81a"/>
+				<reportElement style="Column header" x="296" y="0" width="85" height="15" forecolor="#000000" uuid="bbb623ab-7fea-4df0-9f62-35030949f81a"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Account Number]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="421" y="0" width="105" height="15" forecolor="#000000" uuid="503a0dba-e7b6-4e5a-9e3d-995175ba8fc6"/>
+				<reportElement style="Column header" x="381" y="0" width="131" height="15" forecolor="#000000" uuid="503a0dba-e7b6-4e5a-9e3d-995175ba8fc6"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<text><![CDATA[Activity Type Name]]></text>
+				<text><![CDATA[Activity Type]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -106,35 +114,43 @@ ORDER BY vw_interest_methods.interest_method_id]]>
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="15" uuid="987eaa23-5cae-4e8b-a4cb-ede2f9b4205a"/>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+<<<<<<< HEAD
 					<reportElement style="Detail" x="1" y="0" width="86" height="15" uuid="adbc9b39-4a0b-4c39-832a-74f93fd2874d"/>
+=======
+					<reportElement style="Detail" x="1" y="0" width="26" height="15" uuid="adbc9b39-4a0b-4c39-832a-74f93fd2874d"/>
+>>>>>>> 0a938eade4ef6f82f09feaa33b0fb59bc6dada90
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{interest_method_id}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+<<<<<<< HEAD
 					<reportElement style="Detail" x="94" y="0" width="105" height="15" uuid="13572d65-dc31-4ae1-ae52-56c937e8925a"/>
+=======
+					<reportElement style="Detail" x="27" y="0" width="184" height="15" uuid="13572d65-dc31-4ae1-ae52-56c937e8925a"/>
+>>>>>>> 0a938eade4ef6f82f09feaa33b0fb59bc6dada90
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{interest_method_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="211" y="0" width="105" height="15" uuid="9e992d88-a27a-40f4-9f2c-2c2ca4539782"/>
+					<reportElement style="Detail" x="211" y="0" width="85" height="15" uuid="9e992d88-a27a-40f4-9f2c-2c2ca4539782"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{reducing_balance}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="316" y="0" width="105" height="15" uuid="530617d6-d59b-4044-960d-fd1bbbcc3bc1"/>
+					<reportElement style="Detail" x="296" y="0" width="85" height="15" uuid="530617d6-d59b-4044-960d-fd1bbbcc3bc1"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{account_number}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="421" y="0" width="105" height="15" uuid="75fda6ca-cac3-495e-a5f6-72a853a176fa"/>
+					<reportElement style="Detail" x="381" y="0" width="131" height="15" uuid="75fda6ca-cac3-495e-a5f6-72a853a176fa"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>

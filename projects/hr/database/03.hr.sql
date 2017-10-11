@@ -18,8 +18,8 @@ CREATE TABLE pay_scales (
 	max_pay					real,
 	details					text
 );
-CREATE INDEX pay_scales_org_id ON pay_scales(org_id);
 CREATE INDEX pay_scales_currency_id ON pay_scales(currency_id);
+CREATE INDEX pay_scales_org_id ON pay_scales(org_id);
 
 CREATE TABLE pay_scale_steps (
 	pay_scale_step_id		serial primary key,
