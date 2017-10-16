@@ -4,7 +4,7 @@
 		<MENU name="Loans">120</MENU>
 		<MENU name="Customers">105</MENU>
 		<MENU name="Processing">125</MENU>
-		<MENU name="Service Desk">
+		<MENU name="Service">
 			<MENU name="Client Forms">22</MENU>
 			<MENU name="Applicants">265</MENU>
 			<MENU name="Approvals">83</MENU>
@@ -217,7 +217,7 @@
 			<TEXTFIELD w="75" title="Job Title">job_title</TEXTFIELD>
 			<TEXTFIELD w="75" title="Primary Email">primary_email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
-			<FORMVIEW name="Subscriptions" keyfield="subscription_id" table="vw_subscriptions" noorg="true">
+			<FORMVIEW name="Subscriptions" keyfield="subscription_id" linkfield="subscription_id" table="vw_subscriptions" noorg="true">
 				<TEXTFIELD w="75" title="Subscription ID">subscription_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
@@ -1342,71 +1342,85 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Applicants" key="265" h="550">
-		<GRID name="Applicants" keyfield="applicant_id" table="applicants">
+		<GRID name="Personal Applicants" keyfield="applicant_id" table="applicants" where="(business_account = 0)">
 			<TEXTFIELD w="75" title="Applicant ID">applicant_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Business Account">business_account</TEXTFIELD>
 			<TEXTFIELD w="75" title="Person Title">person_title</TEXTFIELD>
 			<TEXTFIELD w="75" title="Applicant Name">applicant_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Identification Number">identification_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Identification Type">identification_type</TEXTFIELD>
 			<TEXTFIELD w="75" title="Client Email">client_email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Telephone Number">telephone_number</TEXTFIELD>
-			<TEXTFIELD w="75" title="Telephone Number2">telephone_number2</TEXTFIELD>
-			<TEXTFIELD w="75" title="Address">address</TEXTFIELD>
 			<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
-			<TEXTFIELD w="75" title="Zip Code">zip_code</TEXTFIELD>
 			<TEXTDATE w="75" title="Date Of Birth">date_of_birth</TEXTDATE>
 			<CHECKBOX w="75" title="Gender">gender</CHECKBOX>
 			<TEXTFIELD w="75" title="Nationality">nationality</TEXTFIELD>
 			<TEXTFIELD w="75" title="Marital Status">marital_status</TEXTFIELD>
-			<TEXTFIELD w="75" title="Picture File">picture_file</TEXTFIELD>
 			<CHECKBOX w="75" title="Employed">employed</CHECKBOX>
 			<CHECKBOX w="75" title="Self Employed">self_employed</CHECKBOX>
 			<TEXTFIELD w="75" title="Employer Name">employer_name</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Monthly Salary">monthly_salary</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Monthly Net Income">monthly_net_income</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Annual Turnover">annual_turnover</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Annual Net Income">annual_net_income</TEXTDECIMAL>
-			<TEXTFIELD w="75" title="Introduced By">introduced_by</TEXTFIELD>
-			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+			<FORMVIEW name="Applicants" keyfield="applicant_id" linkfield="applicant_id" table="applicants">
+				<TEXTFIELD w="75" title="Applicant ID">applicant_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Person Title">person_title</TEXTFIELD>
+				<TEXTFIELD w="75" title="Applicant Name">applicant_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Identification Number">identification_number</TEXTFIELD>
+				<TEXTFIELD w="75" title="Identification Type">identification_type</TEXTFIELD>
+				<TEXTFIELD w="75" title="Client Email">client_email</TEXTFIELD>
+				<TEXTFIELD w="75" title="Telephone Number">telephone_number</TEXTFIELD>
+				<TEXTFIELD w="75" title="Alternative Telephone">telephone_number2</TEXTFIELD>
+				<TEXTFIELD w="75" title="Address">address</TEXTFIELD>
+				<TEXTFIELD w="75" title="Zip Code">zip_code</TEXTFIELD>
+				<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
+				<TEXTDATE w="75" title="Date Of Birth">date_of_birth</TEXTDATE>
+				<CHECKBOX w="75" title="Gender">gender</CHECKBOX>
+				<TEXTFIELD w="75" title="Nationality">nationality</TEXTFIELD>
+				<TEXTFIELD w="75" title="Marital Status">marital_status</TEXTFIELD>
+				<CHECKBOX w="75" title="Employed">employed</CHECKBOX>
+				<CHECKBOX w="75" title="Self Employed">self_employed</CHECKBOX>
+				<TEXTFIELD w="75" title="Employer Name">employer_name</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Monthly Salary">monthly_salary</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Monthly Net Income">monthly_net_income</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="Introduced By">introduced_by</TEXTFIELD>
+				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+				<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
+				<TEXTAREA w="430" title="Details" y="440" h="70" x="10">details</TEXTAREA>
+			</FORMVIEW>
+		</GRID>
+		<GRID name="Business Applicants" keyfield="applicant_id" table="applicants" where="(business_account = 1)">
+			<TEXTFIELD w="75" title="Applicant ID">applicant_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Applicant Name">applicant_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Identification Number">identification_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Identification Type">identification_type</TEXTFIELD>
+			<TEXTFIELD w="75" title="Client Email">client_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Telephone Number">telephone_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
+			<TEXTFIELD w="75" title="Zip Code">zip_code</TEXTFIELD>
+			<TEXTDATE w="75" title="Date Of Registration">date_of_birth</TEXTDATE>
+			<TEXTFIELD w="75" title="Country">nationality</TEXTFIELD>
 			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
 			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
-			<TEXTFIELD w="75" title="Workflow Table ID">workflow_table_id</TEXTFIELD>
-			<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
-			<FORM name="Applicants" keyfield="applicant_id" table="applicants">
-				<COMBOBOX w="430" title="Customer ID" lptable="customers" y="10" h="20" x="10" lpfield="customer_name">customer_id</COMBOBOX>
-				<TEXTFIELD w="150" title="Business Account" y="30" h="20" x="10">business_account</TEXTFIELD>
-				<TEXTFIELD w="150" title="Person Title" y="30" h="20" x="290">person_title</TEXTFIELD>
-				<TEXTFIELD w="430" title="Applicant Name" y="50" h="20" x="10">applicant_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="Identification Number" y="70" h="20" x="10">identification_number</TEXTFIELD>
-				<TEXTFIELD w="150" title="Identification Type" y="70" h="20" x="290">identification_type</TEXTFIELD>
-				<TEXTFIELD w="150" title="Client Email" y="90" h="20" x="10">client_email</TEXTFIELD>
-				<TEXTFIELD w="150" title="Telephone Number" y="90" h="20" x="290">telephone_number</TEXTFIELD>
-				<TEXTFIELD w="150" title="Telephone Number2" y="110" h="20" x="10">telephone_number2</TEXTFIELD>
-				<TEXTFIELD w="150" title="Address" y="110" h="20" x="290">address</TEXTFIELD>
-				<TEXTFIELD w="150" title="Town" y="130" h="20" x="10">town</TEXTFIELD>
-				<TEXTFIELD w="150" title="Zip Code" y="130" h="20" x="290">zip_code</TEXTFIELD>
-				<TEXTDATE w="150" title="Date Of Birth" y="150" h="20" x="10">date_of_birth</TEXTDATE>
-				<CHECKBOX w="150" title="Gender" y="150" ischar="true" h="20" x="290">gender</CHECKBOX>
-				<COMBOBOX w="430" title="Nationality" lptable="sys_countrys" lpkey="sys_country_id" y="170" h="20" x="10" lpfield="sys_country_name">nationality</COMBOBOX>
-				<TEXTFIELD w="150" title="Marital Status" y="190" h="20" x="10">marital_status</TEXTFIELD>
-				<TEXTFIELD w="150" title="Picture File" y="190" h="20" x="290">picture_file</TEXTFIELD>
-				<CHECKBOX w="150" title="Employed" y="210" h="20" x="10">employed</CHECKBOX>
-				<CHECKBOX w="150" title="Self Employed" y="210" h="20" x="290">self_employed</CHECKBOX>
-				<TEXTFIELD w="430" title="Employer Name" y="230" h="20" x="10">employer_name</TEXTFIELD>
-				<TEXTDECIMAL w="150" title="Monthly Salary" y="250" h="20" x="10">monthly_salary</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Monthly Net Income" y="250" h="20" x="290">monthly_net_income</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Annual Turnover" y="270" h="20" x="10">annual_turnover</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Annual Net Income" y="270" h="20" x="290">annual_net_income</TEXTDECIMAL>
-				<TEXTAREA w="430" title="Employer Address" y="290" h="70" x="10">employer_address</TEXTAREA>
-				<TEXTFIELD w="150" title="Introduced By" y="360" h="20" x="10">introduced_by</TEXTFIELD>
-				<COMBOBOX w="430" title="Entity ID" lptable="entitys" y="380" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
-				<TEXTTIMESTAMP w="150" title="Application Date" y="400" h="20" x="10">application_date</TEXTTIMESTAMP>
-				<TEXTFIELD w="150" title="Approve Status" y="400" h="20" x="290">approve_status</TEXTFIELD>
-				<TEXTFIELD w="150" title="Workflow Table ID" y="420" h="20" x="10">workflow_table_id</TEXTFIELD>
-				<TEXTTIMESTAMP w="150" title="Action Date" y="420" h="20" x="290">action_date</TEXTTIMESTAMP>
+			<FORMVIEW name="Applicants" keyfield="applicant_id" linkfield="applicant_id" table="applicants">
+				<TEXTFIELD w="75" title="Applicant ID">applicant_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Applicant Name">applicant_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Identification Number">identification_number</TEXTFIELD>
+				<TEXTFIELD w="75" title="Identification Type">identification_type</TEXTFIELD>
+				<TEXTFIELD w="75" title="Client Email">client_email</TEXTFIELD>
+				<TEXTFIELD w="75" title="Telephone Number">telephone_number</TEXTFIELD>
+				<TEXTFIELD w="75" title="Alternative Telephone">telephone_number2</TEXTFIELD>
+				<TEXTFIELD w="75" title="Address">address</TEXTFIELD>
+				<TEXTFIELD w="75" title="Zip Code">zip_code</TEXTFIELD>
+				<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
+				<TEXTDATE w="75" title="Date Of Registration">date_of_birth</TEXTDATE>
+				<TEXTFIELD w="75" title="Country">nationality</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Annual Turnover">annual_turnover</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Annual Net Income">annual_net_income</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="Introduced By">introduced_by</TEXTFIELD>
+				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+				<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
 				<TEXTAREA w="430" title="Details" y="440" h="70" x="10">details</TEXTAREA>
-			</FORM>
+			</FORMVIEW>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Products" key="110" h="550">

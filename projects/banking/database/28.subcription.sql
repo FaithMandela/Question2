@@ -164,6 +164,9 @@ BEGIN
 		SELECT NEW.org_id, subscription_level_name
 		FROM subscription_levels WHERE org_id = 1;
 		
+		INSERT INTO locations (org_id, location_name) VALUES (NEW.org_id, 'Head Office');
+		INSERT INTO departments (org_id, department_name) VALUES (NEW.org_id, 'Board of Directors');
+		
 		FOR myrec IN SELECT tax_type_id, use_key_id, tax_type_name, formural, tax_relief, 
 			tax_type_order, in_tax, linear, percentage, employer, employer_ps, active,
 			account_number, employer_account
@@ -219,8 +222,6 @@ BEGIN
 
 		INSERT INTO item_units (org_id, item_unit_name) VALUES (NEW.org_id, 'Each');
 		
-		INSERT INTO stores (org_id, store_name) VALUES (NEW.org_id, 'Main Store');
-		
 		SELECT entity_type_id INTO v_entity_type_id
 		FROM entity_types 
 		WHERE (org_id = NEW.org_id) AND (use_key_id = 0);
@@ -230,6 +231,34 @@ BEGIN
 		
 		UPDATE entity_subscriptions SET org_id = NEW.org_id, entity_type_id = v_entity_type_id
 		WHERE entity_id = NEW.entity_id;
+		
+		INSERT INTO collateral_types (org_id, collateral_type_name) VALUES (NEW.org_id, 'Land Title');
+		INSERT INTO collateral_types (org_id, collateral_type_name) VALUES (NEW.org_id, 'Car Log book');
+		
+		INSERT INTO activity_types (cr_account_id, dr_account_id, use_key_id, org_id, activity_type_name, is_active)
+		SELECT dra.account_id, cra.account_id, vw_activity_types.use_key_id, NEW.org_id, 
+			vw_activity_types.activity_type_name, vw_activity_types.is_active
+		FROM vw_activity_types
+			INNER JOIN accounts dra ON vw_activity_types.dr_account_no = dra.account_no
+			INNER JOIN accounts cra ON vw_activity_types.cr_account_no = cra.account_no
+		WHERE (dra.org_id = NEW.org_id) AND (cra.org_id = NEW.org_id) AND (vw_activity_types.org_id = 1)
+		ORDER BY vw_activity_types.activity_type_id;
+
+		INSERT INTO interest_methods (activity_type_id, org_id, interest_method_name, reducing_balance, reducing_payments, formural, account_number)
+		SELECT oa.activity_type_id, oa.org_id, interest_methods.interest_method_name, 
+			interest_methods.reducing_balance, interest_methods.reducing_payments, 
+			interest_methods.formural, interest_methods.account_number
+		FROM interest_methods INNER JOIN activity_types ON interest_methods.activity_type_id = activity_types.activity_type_id
+			INNER JOIN activity_types oa ON activity_types.use_key_id = oa.use_key_id
+		WHERE (activity_types.org_id = 1) AND (oa.org_id = NEW.org_id)
+		ORDER BY interest_methods.interest_method_id;
+		
+		INSERT INTO penalty_methods(activity_type_id, org_id, penalty_method_name, formural, account_number)
+		SELECT oa.activity_type_id, oa.org_id, penalty_methods.penalty_method_name, penalty_methods.formural, penalty_methods.account_number
+		FROM penalty_methods INNER JOIN activity_types ON penalty_methods.activity_type_id = activity_types.activity_type_id
+			INNER JOIN activity_types oa ON activity_types.use_key_id = oa.use_key_id
+		WHERE (activity_types.org_id = 1) AND (oa.org_id = NEW.org_id)
+		ORDER BY penalty_methods.penalty_method_id;
 		
 		INSERT INTO workflows (link_copy, org_id, source_entity_id, workflow_name, table_name, approve_email, reject_email) 
 		SELECT aa.workflow_id, cc.org_id, cc.entity_type_id, aa.workflow_name, aa.table_name, aa.approve_email, aa.reject_email

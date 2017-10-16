@@ -356,3 +356,13 @@ ui-widget-content {
 .width-100{
     width:100%;
 }
+
+/**
+*Portlets Starts Dashboard
+**/
+.dashboard-stat2 {
+    padding: 15px 15px 1px 15px;
+}
+.dashboard-stat2 .display {
+    margin-bottom: 10px;
+}

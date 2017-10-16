@@ -2,7 +2,7 @@
 
 --- Data
 INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (5, 'Kenya Shillings', 'KES');
-INSERT INTO orgs (org_id, org_name, org_sufix, currency_id, logo) VALUES (1, 'Open Baraza', 'ob', 5, 'logo.png');
+INSERT INTO orgs (org_id, org_name, org_sufix, currency_id, default_country_id, logo) VALUES (1, 'Open Baraza', 'ob', 5, 'KE', 'logo.png');
 UPDATE currency SET org_id = 1 WHERE currency_id = 5;
 SELECT pg_catalog.setval('orgs_org_id_seq', 1, true);
 SELECT pg_catalog.setval('currency_currency_id_seq', 5, true);
@@ -21,10 +21,31 @@ INSERT INTO subscription_levels (org_id, subscription_level_name) VALUES (1, 'Ma
 INSERT INTO subscription_levels (org_id, subscription_level_name) VALUES (1, 'Consumer');
 
 INSERT INTO locations (org_id, location_name) VALUES (1, 'Head Office');
+INSERT INTO departments (org_id, department_name) VALUES (1, 'Board of Directors');
 
 INSERT INTO tax_types (org_id, tax_type_id, use_key_id, tax_type_name, tax_rate, account_id) VALUES (1, 11, 15, 'Exempt', 0, '42000');
 INSERT INTO tax_types (org_id, tax_type_id, use_key_id, tax_type_name, tax_rate, account_id) VALUES (1, 12, 15, 'VAT', 16, '42000');
 SELECT pg_catalog.setval('tax_types_tax_type_id_seq', 12, true);
+
+INSERT INTO account_class (org_id, account_class_no, chat_type_id, chat_type_name, account_class_name)
+SELECT 1, account_class_no, chat_type_id, chat_type_name, account_class_name
+FROM account_class
+WHERE org_id = 0;
+
+INSERT INTO account_types (org_id, account_class_id, account_type_no, account_type_name)
+SELECT a.org_id, a.account_class_id, b.account_type_no, b.account_type_name
+FROM account_class a INNER JOIN account_types b ON a.account_class_no = b.account_class_id
+WHERE (a.org_id = 1) AND (b.org_id = 0);
+
+INSERT INTO accounts (org_id, account_type_id, account_no, account_name)
+SELECT a.org_id, a.account_type_id, b.account_no, b.account_name
+FROM account_types a INNER JOIN accounts b ON a.account_type_no = b.account_type_id
+WHERE (a.org_id = 1) AND (b.org_id = 0);
+
+INSERT INTO default_accounts (org_id, use_key_id, account_id)
+SELECT b.org_id, a.use_key_id, b.account_id
+FROM default_accounts a INNER JOIN accounts b ON a.account_id = b.account_no
+WHERE (a.org_id = 0) AND (b.org_id = 1);
 
 INSERT INTO collateral_types (org_id, collateral_type_name) VALUES (1, 'Land Title');
 INSERT INTO collateral_types (org_id, collateral_type_name) VALUES (1, 'Car Log book');
@@ -81,26 +102,6 @@ INSERT INTO sys_emails (org_id, use_type,  sys_email_name, title, details)
 SELECT 1, use_type, sys_email_name, title, details
 FROM sys_emails
 WHERE org_id = 0;
-
-INSERT INTO account_class (org_id, account_class_no, chat_type_id, chat_type_name, account_class_name)
-SELECT 1, account_class_no, chat_type_id, chat_type_name, account_class_name
-FROM account_class
-WHERE org_id = 0;
-
-INSERT INTO account_types (org_id, account_class_id, account_type_no, account_type_name)
-SELECT a.org_id, a.account_class_id, b.account_type_no, b.account_type_name
-FROM account_class a INNER JOIN account_types b ON a.account_class_no = b.account_class_id
-WHERE (a.org_id = 1) AND (b.org_id = 0);
-
-INSERT INTO accounts (org_id, account_type_id, account_no, account_name)
-SELECT a.org_id, a.account_type_id, b.account_no, b.account_name
-FROM account_types a INNER JOIN accounts b ON a.account_type_no = b.account_type_id
-WHERE (a.org_id = 1) AND (b.org_id = 0);
-
-INSERT INTO default_accounts (org_id, use_key_id, account_id)
-SELECT b.org_id, a.use_key_id, b.account_id
-FROM default_accounts a INNER JOIN accounts b ON a.account_id = b.account_no
-WHERE (a.org_id = 0) AND (b.org_id = 1);
 
 INSERT INTO workflows (link_copy, org_id, source_entity_id, workflow_name, table_name, approve_email, reject_email) 
 SELECT aa.workflow_id, bb.org_id, bb.entity_type_id, aa.workflow_name, aa.table_name, aa.approve_email, aa.reject_email

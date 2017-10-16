@@ -24,6 +24,13 @@ CREATE VIEW departmentview AS
 		departments.org_id, departments.is_active
 	FROM schools INNER JOIN departments ON schools.schoolid = departments.schoolid
 	ORDER BY departments.schoolid;
+	
+CREATE VIEW vw_school_officers AS
+	SELECT schools.schoolid, schools.schoolname,
+		entitys.entity_id, entitys.entity_name, entitys.user_name,
+		school_officers.org_id, school_officers.school_officer_id, school_officers.details
+	FROM school_officers INNER JOIN schools ON school_officers.schoolid = schools.schoolid
+		INNER JOIN entitys ON school_officers.entity_id = entitys.entity_id;
 
 CREATE VIEW sublevelview AS
 	SELECT degreelevels.degreelevelid, degreelevels.degreelevelname,
@@ -425,8 +432,10 @@ CREATE VIEW studentfirstquarterview AS
 		INNER JOIN degrees ON studentdegrees.degreeid = degrees.degreeid;
 
 CREATE VIEW qstudentdegreeview AS
-	SELECT students.studentid, students.departmentid, students.studentname, students.Sex, students.Nationality, students.MaritalStatus,
-		students.birthdate, students.email, studentdegrees.studentdegreeid, studentdegrees.degreeid,
+	SELECT students.studentid, students.studentname, students.Sex, students.Nationality, students.MaritalStatus,
+		students.birthdate, students.email, 
+		departments.schoolid, departments.departmentid, departments.departmentname,
+		studentdegrees.studentdegreeid, studentdegrees.degreeid,
 		sublevels.sublevelid, sublevels.degreelevelid, sublevels.levellocationid, sublevels.sublevelname,
         qstudents.qstudentid, qstudents.quarterid, qstudents.charges, 
 		qstudents.probation, qstudents.roomnumber, qstudents.currbalance, qstudents.applicationtime, qstudents.studylevel,
@@ -438,11 +447,13 @@ CREATE VIEW qstudentdegreeview AS
 		qresidenceview.qresidenceid, qresidenceview.residenceoption, (qresidenceview.qresidenceid || 'R' || qstudents.roomnumber) as roomid  
 	FROM (((students INNER JOIN (studentdegrees INNER JOIN sublevels ON studentdegrees.sublevelid = sublevels.sublevelid) ON students.studentid = studentdegrees.studentid)
 		INNER JOIN qstudents ON studentdegrees.studentdegreeid = qstudents.studentdegreeid)
+		INNER JOIN departments ON students.departmentid = departments.departmentid
 		LEFT JOIN qresidenceview ON qstudents.qresidenceid = qresidenceview.qresidenceid);
 		
 CREATE VIEW qcurrstudentdegreeview AS 
-	SELECT qstudentdegreeview.studentid, qstudentdegreeview.departmentid, qstudentdegreeview.studentname, qstudentdegreeview.sex, 
+	SELECT qstudentdegreeview.studentid, qstudentdegreeview.studentname, qstudentdegreeview.sex, 
 		qstudentdegreeview.nationality, qstudentdegreeview.maritalstatus, qstudentdegreeview.birthdate, qstudentdegreeview.email, 
+		qstudentdegreeview.schoolid, qstudentdegreeview.departmentid, qstudentdegreeview.departmentname,
 		qstudentdegreeview.studentdegreeid, qstudentdegreeview.degreeid, qstudentdegreeview.sublevelid, qstudentdegreeview.qstudentid, 
 		qstudentdegreeview.quarterid, qstudentdegreeview.charges, qstudentdegreeview.probation, qstudentdegreeview.roomnumber, 
 		qstudentdegreeview.currbalance, qstudentdegreeview.finaceapproval, qstudentdegreeview.studylevel, 

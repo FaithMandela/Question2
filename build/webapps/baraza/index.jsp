@@ -278,7 +278,14 @@
 
 <% if(web.getViewType().equals("DASHBOARD")) { %>
 
-		<%= web.getDashboard() %>
+	<%= web.getDashboard() %>
+
+	<% if(web.hasDashboardItem("ATTENDANCE")) {%>
+		<%@ include file="./assets/include/attendance.jsp" %>
+	<% } %>
+	<% if(web.hasDashboardItem("TASK")) {%>
+		<%@ include file="./assets/include/task.jsp" %>
+	<% } %>
 
 <% } else { %>
 

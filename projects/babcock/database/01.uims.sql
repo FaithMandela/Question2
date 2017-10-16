@@ -62,6 +62,18 @@ CREATE TABLE departments (
 CREATE INDEX departments_schoolid ON departments (schoolid);
 CREATE INDEX departments_org_id ON departments (org_id);
 
+CREATE TABLE school_officers (
+	school_officer_id	serial primary key,
+	schoolid			varchar(12) references schools,
+	entity_id			integer references entitys,
+	org_id				integer references orgs,
+	details				text,
+	UNIQUE(entity_id)
+);
+CREATE INDEX school_officers_schoolid ON school_officers (schoolid);
+CREATE INDEX school_officers_entity_id ON school_officers (entity_id);
+CREATE INDEX school_officers_org_id ON school_officers (org_id);
+
 CREATE TABLE grades (
 	gradeid				varchar(2) primary key,
 	org_id				integer references orgs,

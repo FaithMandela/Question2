@@ -1983,6 +1983,12 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER aft_instructors AFTER INSERT OR UPDATE ON instructors
   FOR EACH ROW EXECUTE PROCEDURE aft_instructors();
+  
+CREATE OR REPLACE FUNCTION get_officer_school(integer) RETURNS varchar(16) AS $$
+	SELECT school_officers.schoolid
+	FROM school_officers
+	WHERE (school_officers.entity_id = $1);
+$$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION get_school(varchar(16)) RETURNS varchar(16) AS $$
 	SELECT departments.schoolid

@@ -27,6 +27,7 @@ INSERT INTO activity_status (activity_status_id, activity_status_name) VALUES (4
 INSERT INTO entity_types (org_id, use_key_id, entity_type_name, entity_role) VALUES (0, 100, 'Bank Customers', 'client');
 
 INSERT INTO locations (org_id, location_name) VALUES (0, 'Head Office');
+INSERT INTO departments (org_id, department_name) VALUES (0, 'Board of Directors');
 
 INSERT INTO collateral_types (org_id, collateral_type_name) VALUES (0, 'Land Title');
 INSERT INTO collateral_types (org_id, collateral_type_name) VALUES (0, 'Car Log book');

@@ -1,3 +1,5 @@
+	<div class="col-md-6 col-sm-12">
+	<!-- BEGIN PORTLET-->
 <div class="portlet light tasks-widget">
         <div class="portlet-title" style="display:none;">
         <div class="caption caption-md">
@@ -39,4 +41,6 @@
         </div>
         </div>
         </div>
-</div>
+        </div>
+		        </div>
+

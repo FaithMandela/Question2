@@ -63,6 +63,7 @@ public class BWeb {
 	List<BElement> views;
 	List<String> viewKeys;
 	List<String> viewData;
+	List<String> dashboardItems;
 	Map<String, String> params;
 
 	boolean selectAll = false;
@@ -688,6 +689,7 @@ public class BWeb {
 		String body = "";
 		
 		BWebDashboard webDashboard = new BWebDashboard(db);
+		dashboardItems = new ArrayList<String>();
 		
 		body += "<div class='row margin-top-5'>\n";
 		for(BElement el : view.getElements()) {
@@ -706,8 +708,8 @@ public class BWeb {
 		for(BElement el : view.getElements()) {
 			boolean hasAccess  = checkAccess(el.getAttribute("role"));
 			if(hasAccess) {
-				if(el.getName().equals("ATTENDANCE")) body += "\n<%@ include file=\"./assets/include/attendance.jsp\" %>\n";
-				else if(el.getName().equals("TASK")) body += "\n<%@ include file=\"./assets/include/task.jsp\" %>\n";
+				if(el.getName().equals("ATTENDANCE")) dashboardItems.add("ATTENDANCE");
+				else if(el.getName().equals("TASK")) dashboardItems.add("TASK");
 			}
 		}
 		
@@ -2228,6 +2230,7 @@ log.severe("BASE : " + mysql);
 	public String executeQuery(String mysql) { return db.executeQuery(mysql); }
 	
 	public BQuery getQuery(String mysql) { return new BQuery(db, mysql); }
+	public boolean hasDashboardItem(String dashboardItem) {return dashboardItems.contains(dashboardItem); }
 
 	public BElement getRoot() { return root; }
 	public BElement getView() { return view; }

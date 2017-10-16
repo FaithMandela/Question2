@@ -1,6 +1,6 @@
 -- This is how you import
 --- Laptop
-INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2017-01-26', 1232, 0, 1, 39, 144, '');
+INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2017-10-10', 1332, 0, 1, 39, 139, '');
 
 --- CPU
 INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2017-06-14', 1223, 0, 1, 49, 139, '');
@@ -12,7 +12,7 @@ INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, mode
 INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-04-22', 1223, 0, 1, 48, 139, '');
 
 --- UPS 
-INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2017-01-16', 115, 0, 1, 59, 144, '');
+INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2017-10-11', 115, 0, 1, 59, 139, '');
 
 --- Epson Printer
 INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-09-28', 287, 0, 1, 4, 138, '');

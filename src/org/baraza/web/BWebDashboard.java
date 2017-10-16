@@ -83,12 +83,6 @@ public class BWebDashboard {
 		body += "<div class='col-md-6 col-sm-12'>\n";
 		body += "	<!-- BEGIN PORTLET-->\n";
 		body += "	<div class='portlet light tasks-widget'>\n";
-		body += "		<div class='portlet-title'>\n";
-		body += "			<div class='caption caption-md'>\n";
-		body += "				<i class='icon-bar-chart theme-font-color hide'></i>\n";
-		body += "				<span class='caption-subject theme-font-color bold uppercase'>" + el.getAttribute("name", "Name") + "</span>\n";
-		body += "			</div>\n";
-		body += "		</div>\n";
 		
 		body += "		<div class='portlet-body'>\n";
 		body += "			<div class='table-scrollable'>\n";

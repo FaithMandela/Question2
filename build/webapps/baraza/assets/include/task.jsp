@@ -1,4 +1,3 @@
-    <div class="row">
         <div class="col-md-6 col-sm-12">
             <!-- BEGIN PORTLET-->
             <div class="portlet light tasks-widget">
@@ -43,4 +42,4 @@
                 </div>
             </div>
         </div>
-    </div>
+
