@@ -493,6 +493,9 @@
 <script type="text/javascript" src="./assets/global/plugins/moment.min.js"></script>
 <script type="text/javascript" src="./assets/global/plugins/fullcalendar/fullcalendar.min.js"></script>
 
+<!-- openbaraza js-->
+<script type="text/javascript" src="./assets/js/attendance-task.js"></script>
+
 <script>
     jQuery(document).ready(function() {
         Metronic.init(); // init metronic core componets

@@ -703,6 +703,14 @@ public class BWeb {
 		}
 		body += "</div>\n";
 		
+		for(BElement el : view.getElements()) {
+			boolean hasAccess  = checkAccess(el.getAttribute("role"));
+			if(hasAccess) {
+				if(el.getName().equals("ATTENDANCE")) body += "\n<%@ include file=\"./assets/include/attendance.jsp\" %>\n";
+				else if(el.getName().equals("TASK")) body += "\n<%@ include file=\"./assets/include/task.jsp\" %>\n";
+			}
+		}
+		
 		return body;
 	}
 	
