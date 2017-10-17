@@ -24,13 +24,13 @@ public class BWebDashboard {
 	}
 
 	public String getTile(BElement el) {
-		String body = "";
+		StringBuffer body = new StringBuffer();
 		
 		BQuery rs = new BQuery(db, el, null, null, false);
 		boolean neof = rs.moveFirst();
 				
-		body += "<div class='col-lg-3 col-md-3 col-sm-6 col-xs-12'>\n";
-		body += "	<div class='dashboard-stat2'>\n";
+		body.append("<div class='col-lg-3 col-md-3 col-sm-6 col-xs-12'>\n");
+		body.append("	<div class='dashboard-stat2'>\n");
 		for(BElement ell : el.getElements()) {
 			String val = null;
 			if(neof) val = rs.readField(ell.getValue());
@@ -48,52 +48,61 @@ public class BWebDashboard {
 					tileName += ell.getAttribute("title", "Name") + "</a>";
 				}
 				
-				body += "		<div class='display'>\n";
-				body += "			<div class='number'>\n";
-				body += "				<h4 class='" + ell.getAttribute("color", "font-green-sharp") + "'>" + val + "</h4>\n";
-				body += "				<small>" + tileName + "</small>\n";
-				body += "			</div>\n";
-				body += "			<div class='icon'>\n";
-				body += "				<i class='" + ell.getAttribute("icon", "icon-pie-chart") + "'></i>\n";
-				body += "			</div>\n";
-				body += "		</div>\n";
+				body.append("		<div class='display'>\n");
+				body.append("			<div class='number'>\n");
+				body.append("				<h4 class='" + ell.getAttribute("color", "font-green-sharp") + "'>" + val + "</h4>\n");
+				body.append("				<small>" + tileName + "</small>\n");
+				body.append("			</div>\n");
+				body.append("			<div class='icon'>\n");
+				body.append("				<i class='" + ell.getAttribute("icon", "icon-pie-chart") + "'></i>\n");
+				body.append("			</div>\n");
+				body.append("		</div>\n");
 			} else if(ell.getAttribute("type", "display").equals("progress")) {
-				body += "		<div class='progress-info'>\n";
-				body += "			<div class='progress'>\n";
-				body += "				<span style='width: " + val + "%;' class='progress-bar progress-bar-success green-sharp'>\n";
-				body += "				<span class='sr-only'>" + val + "% progress</span>\n";
-				body += "				</span>\n";
-				body += "			</div>\n";
-				body += "			<div class='status'>\n";
-				body += "				<div class='status-title'>progress</div>\n";
-				body += "				<div class='status-number'>" + val + "%</div>\n";
-				body += "			</div>\n";
-				body += "		</div>\n";
+				body.append("		<div class='progress-info'>\n");
+				body.append("			<div class='progress'>\n");
+				body.append("				<span style='width: " + val + "%;' class='progress-bar progress-bar-success green-sharp'>\n");
+				body.append("				<span class='sr-only'>" + val + "% progress</span>\n");
+				body.append("				</span>\n");
+				body.append("			</div>\n");
+				body.append("			<div class='status'>\n");
+				body.append("				<div class='status-title'>progress</div>\n");
+				body.append("				<div class='status-number'>" + val + "%</div>\n");
+				body.append("			</div>\n");
+				body.append("		</div>\n");
 			}
 		}
-		body += "	</div>\n";
-		body += "</div>\n";
+		body.append("	</div>\n");
+		body.append("</div>\n");
 		
-		return body;
+		return body.toString();
 	}
 	
 	public String getTileList(BElement el) {
-		String body = "";
+		StringBuffer body = new StringBuffer();
 		
-		body += "<div class='col-md-6 col-sm-12'>\n";
-		body += "	<!-- BEGIN PORTLET-->\n";
-		body += "	<div class='portlet light tasks-widget'>\n";
+		body.append("<div class='col-md-6 col-sm-12'>\n");
+		body.append("	<!-- BEGIN PORTLET-->\n");
+		body.append("	<div class='portlet light tasks-widget'>\n");
 		
-		body += "		<div class='portlet-body'>\n";
-		body += "			<div class='table-scrollable'>\n";
+		if(el.getAttribute("title") != null) {
+			body.append("		<div class='portlet-title'>\n");
+			body.append("			<div class='caption caption-md'>\n");
+			body.append("				<i class='icon-bar-chart theme-font-color hide'></i>\n");
+			body.append("				<span class='caption-subject theme-font-color bold uppercase'>" + el.getAttribute("title") + "</span>\n");
+			body.append("			</div>\n");
+			body.append("		</div>\n");
+		}
+		
+		body.append("		<div class='portlet-body'>\n");
+		body.append("			<div class='table-scrollable'>\n");
 		BQuery rs = new BQuery(db, el, null, null, false);
-		body += rs.readDocument(true, false);
-		body += "			</div>\n";
-		body += "		</div>\n";
+		body.append(rs.readDocument(true, false));
+		body.append("			</div>\n");
+		body.append("		</div>\n");
 
-		body += "	</div>\n";
-		body += "</div>\n";
+		body.append("	</div>\n");
+		body.append("</div>\n");
 		
-		return body;
+		return body.toString();
 	}
 }

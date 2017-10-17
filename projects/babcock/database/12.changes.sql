@@ -76,4 +76,7 @@ CREATE VIEW qstudentsummary AS
 		quarters.publishgrades
 	FROM qstudentdegreeview as qsd INNER JOIN quarters ON qsd.quarterid = quarters.quarterid;
 	
-	
+
+grant all privileges on database babcock to postgres;
+grant all privileges on database babcock to root;
+
