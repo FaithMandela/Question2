@@ -240,7 +240,7 @@ CREATE OR REPLACE VIEW vw_bookings AS
 CREATE OR REPLACE VIEW vw_residents AS
 	SELECT entitys.entity_id, entitys.entity_name,
 		residents.org_id, residents.resident_id, residents.resident_name, residents.email,
-		residents.identification, residents.date_of_birth, residents.details
+		residents.identification, residents.date_of_birth, residents.details,residents.booking_id
 	FROM residents INNER JOIN entitys ON residents.entity_id = entitys.entity_id;
 
 CREATE OR REPLACE VIEW vw_stay AS

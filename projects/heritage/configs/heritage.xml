@@ -389,6 +389,17 @@
 			<TEXTDECIMAL w="75" title="Rates">rate</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Is Adult">is_adult</CHECKBOX>
 			<TEXTAREA w="75" title="Rates">description</TEXTAREA>
+			<GRID noorg="true" keyfield="benefit_id" name="Group Benefits" tab.count="count(benefit_id)" linkfield="group_rate_id" table="vw_group_benefits">
+				<TEXTFIELD w="75" title="Benefit Type">benefit_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Rate Plan">rate_plan_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="individual">individual</TEXTFIELD>
+				<TEXTFIELD w="75" title="Others">others</TEXTFIELD>
+				<FORM noorg="true" keyfield="benefit_id" name="Benefits" linkfield="group_rate_id" table="group_benefits">
+					<COMBOBOX w="430" h="20" lpfield="benefit_type_name" x="10" y="10" lptable="benefit_types" title="Benefit Type ID">benefit_type_id</COMBOBOX>
+					<TEXTAREA w="430" h="70" x="10" y="30" title="Individual">individual</TEXTAREA>
+					<TEXTAREA w="430" h="70" x="10" y="100" title="Others">others</TEXTAREA>
+				</FORM>
+			</GRID>
 			<FORM keyfield="group_rate_id" name="Group Rates" table="group_rates">
 				<COMBOBOX noorg="true" w="150" h="20" lpfield="rate_plan_name" x="10" y="30" lptable="rate_plan" title="Rate Plan">rate_plan_id</COMBOBOX>
 				<TEXTDECIMAL w="150" h="20" x="10" y="10" title="Daily Rates">rate</TEXTDECIMAL>
@@ -535,6 +546,27 @@
 			<JASPER reportfile="corporate_certificate.jasper" name="Emergency Card" linkfield="passenger_id"></JASPER>
 			<JASPER reportfile="corporate_letterToEmbassy.jasper" name="Letter To Embassy" linkfield="passenger_id"></JASPER>
 			<JASPER role="finance,director" reportfile="cop_invoice.jasper" name="Invoice" linkfield="passenger_id"></JASPER>
+		</GRID>
+		<GRID noorg="true" role="admin,director" keyfield="passenger_id" name="Group Insurance Sold" orderby="passenger_id DESC" where="approved is true AND incountry is false " tab.count="count(passenger_id)" table="vw_group_passengers">
+			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Consultant Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Date From">days_from</TEXTFIELD>
+			<TEXTFIELD w="75" title="Date To">days_to</TEXTFIELD>
+			<TEXTFIELD w="75" title="Name">passenger_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Mobile Number">passenger_mobile</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passport Number">passport_num</TEXTFIELD>
+			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Created On">approved_date</TEXTFIELD>
+			<ACTIONS>
+				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
+			</ACTIONS>
+			<JASPER reportfile="group_certificate.jasper" name="Emergency Card" linkfield="passenger_id"></JASPER>
+			<JASPER reportfile="group_letterToEmbassy.jasper" name="Letter To Embassy" linkfield="passenger_id"></JASPER>
+			<JASPER role="finance,director" reportfile="group_invoice.jasper" name="Invoice" linkfield="passenger_id"></JASPER>
 		</GRID>
 		<GRID noorg="true" role="admin,director" keyfield="passenger_id" name="In Country Insurance Sold" orderby="passenger_id DESC" where="approved is true AND customer_code is  null AND incountry is true " tab.count="count(passenger_id)" table="vw_passengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>

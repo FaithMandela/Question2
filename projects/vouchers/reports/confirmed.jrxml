@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="booked" language="groovy" pageWidth="690" pageHeight="842" columnWidth="650" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c0af2499-283a-4845-afc3-10d25ebe88ae">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="maxDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2017-10-30"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="minDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2017-10-01"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from vw_vouchers where confirmation='BOOKING'
+AND bookdate::date >= '$P!{minDate}'::date AND bookdate::date <= '$P!{maxDate}'::date;]]>
+	</queryString>
+	<field name="voucher_id" class="java.lang.Integer"/>
+	<field name="entity_id" class="java.lang.Integer"/>
+	<field name="asset_id" class="java.lang.Integer"/>
+	<field name="rate_id" class="java.lang.Integer"/>
+	<field name="org_id" class="java.lang.Integer"/>
+	<field name="ipaddress" class="java.lang.String"/>
+	<field name="vendor_id" class="java.lang.Integer"/>
+	<field name="instructions" class="java.lang.String"/>
+	<field name="client_id" class="java.lang.Integer"/>
+	<field name="client2" class="java.lang.String"/>
+	<field name="client3" class="java.lang.String"/>
+	<field name="client4" class="java.lang.String"/>
+	<field name="client5" class="java.lang.String"/>
+	<field name="client6" class="java.lang.String"/>
+	<field name="children" class="java.lang.String"/>
+	<field name="m_id" class="java.lang.Integer"/>
+	<field name="extra_night" class="java.lang.String"/>
+	<field name="no_of_night" class="java.lang.Integer"/>
+	<field name="clientname" class="java.lang.String"/>
+	<field name="currency" class="java.lang.String"/>
+	<field name="pax_num" class="java.lang.Integer"/>
+	<field name="confirmation" class="java.lang.String"/>
+	<field name="tripple" class="java.lang.Integer"/>
+	<field name="atselect" class="java.lang.String"/>
+	<field name="infants" class="java.lang.Integer"/>
+	<field name="attention" class="java.lang.String"/>
+	<field name="transtype" class="java.lang.String"/>
+	<field name="infantsage" class="java.lang.Integer"/>
+	<field name="voucherno" class="java.lang.String"/>
+	<field name="extra_bed" class="java.lang.Integer"/>
+	<field name="ababycot" class="java.lang.String"/>
+	<field name="single" class="java.lang.Integer"/>
+	<field name="no_adults" class="java.lang.String"/>
+	<field name="room_type_id" class="java.lang.Integer"/>
+	<field name="adouble" class="java.lang.Integer"/>
+	<field name="children_age" class="java.lang.Integer"/>
+	<field name="confirmationref" class="java.lang.String"/>
+	<field name="charge_tour" class="java.lang.Boolean"/>
+	<field name="extra_tour" class="java.lang.Boolean"/>
+	<field name="residents" class="java.lang.Boolean"/>
+	<field name="voucher_link" class="java.lang.String"/>
+	<field name="datein" class="java.sql.Date"/>
+	<field name="dateout" class="java.sql.Date"/>
+	<field name="bookdate" class="java.sql.Date"/>
+	<field name="mark_up" class="java.lang.Integer"/>
+	<field name="created_by" class="java.lang.Integer"/>
+	<field name="client1" class="java.lang.String"/>
+	<field name="room_type_name" class="java.lang.String"/>
+	<field name="entity_name" class="java.lang.String"/>
+	<field name="client_name" class="java.lang.String"/>
+	<field name="rates" class="java.lang.Float"/>
+	<field name="sell_amount" class="java.lang.Float"/>
+	<field name="asset_name" class="java.lang.String"/>
+	<field name="vendor_name" class="java.lang.String"/>
+	<field name="s_name" class="java.lang.String"/>
+	<field name="org_name" class="java.lang.String"/>
+	<field name="voucherid" class="java.lang.Integer"/>
+	<field name="service_type_name" class="java.lang.String"/>
+	<field name="service_type_id" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="42" splitType="Stretch">
+			<staticText>
+				<reportElement x="123" y="0" width="284" height="30" uuid="48468d9b-4a26-4511-aaaf-5ee618c0b27d"/>
+				<textElement textAlignment="Center">
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Confirmed Vouchers]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="12" height="20" uuid="35f93bb9-ddb2-46a7-b4e6-3f810fc08770"/>
+				<text><![CDATA[#]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="21" width="650" height="1" uuid="3cdfe06f-ff85-4aaf-bfa6-53ff83411fa3"/>
+			</line>
+			<staticText>
+				<reportElement x="12" y="0" width="79" height="18" uuid="472d2f66-e4ff-46e7-acfc-ad94dee27b46"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Hotel Grp]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="191" y="0" width="75" height="18" uuid="84431f54-f7e9-419a-aca9-a9d5e4fa1468"/>
+				<text><![CDATA[Client Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="266" y="0" width="29" height="18" uuid="4cb18723-f702-4e54-aa81-d4c70adb7b29"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[pax]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="410" y="0" width="45" height="18" uuid="aeb6f52c-80d4-40a4-92b9-36454b392c92"/>
+				<text><![CDATA[Check in]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="91" y="0" width="100" height="18" uuid="fcc80c89-cffe-4036-8beb-cb1bef14d917"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Hotel]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="295" y="0" width="29" height="18" uuid="708b32b1-b33d-4e16-a901-dbdc1936ad5c"/>
+				<text><![CDATA[Adults]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="324" y="0" width="43" height="18" uuid="1afb3e08-3981-48c0-afaa-77ab71e734e2"/>
+				<text><![CDATA[Children]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="367" y="0" width="43" height="18" uuid="cb79b66a-5a88-414b-a41c-19dfe8894eab"/>
+				<text><![CDATA[Infants]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="457" y="0" width="54" height="18" uuid="7d604f70-a9f3-409b-9b10-582ad62efb8d"/>
+				<text><![CDATA[Check Out]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="514" y="0" width="54" height="18" uuid="99b21a51-898c-4a33-bc22-b01bffadf92c"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Buying]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="579" y="0" width="54" height="18" uuid="d1b4d9a0-aa46-40d4-bcc9-dc0fde936f0a"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Selling]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="12" height="15" uuid="a9cdfa2b-5748-44db-8bbe-2dab63c2cfaa"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="12" y="0" width="79" height="15" uuid="14f4f791-0708-4a32-8de0-7cd3612a998a"/>
+				<textFieldExpression><![CDATA[$F{vendor_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="91" y="0" width="100" height="15" uuid="96aedc95-c891-4719-ab9d-06b4a23caf91"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{asset_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="191" y="0" width="75" height="15" uuid="33b52a9b-8089-427a-8532-b4ceae4b22eb"/>
+				<textFieldExpression><![CDATA[$F{clientname}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="266" y="0" width="29" height="15" uuid="16273798-36fe-4fa2-9aa5-84790dee9c7e"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pax_num}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="295" y="0" width="29" height="15" uuid="7d5b4899-99c1-4dd1-92ab-db5f321ded7f"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{no_adults}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="324" y="0" width="43" height="15" uuid="b72b4cce-3016-4394-9f28-2db8dd8ecb54"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{children}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="367" y="0" width="43" height="15" uuid="af555ba8-28ae-4065-9b47-52a107131aca"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{infants}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="410" y="0" width="45" height="15" uuid="f3fc4a0a-1ff7-4bfa-b2f9-ed8cb6ef7ff5"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{datein}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="457" y="0" width="54" height="15" uuid="3a2e9b2a-89b2-4f6c-84be-a3d049345aec"/>
+				<textFieldExpression><![CDATA[$F{dateout}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="514" y="0" width="54" height="15" uuid="0d1a53a5-446c-45be-b497-5c98f18b0b27"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rates}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="579" y="0" width="54" height="15" uuid="4ec04dc4-d052-4698-a85c-15a18767032a"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{sell_amount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="233" splitType="Stretch"/>
+	</summary>
+</jasperReport>

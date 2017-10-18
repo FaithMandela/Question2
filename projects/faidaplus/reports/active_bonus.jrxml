@@ -3,13 +3,19 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<parameter name="minDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2017-01-01"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="maxDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2017-02-28"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT 	bonus_id, 	period_id, entity_id,bonus_org_name,
  	org_id,son, pcc, start_date, end_date, 	percentage ,
  	amount, is_active,	approve_status, workflow_table_id,
  	application_date, action_date, details,org_name,bonus_name,market_name,entity_pcc
 FROM vw_bonus
-WHERE is_active = true;]]>
+WHERE is_active = true AND start_date::date >= '$P!{minDate}' AND  end_date::date <= '$P!{maxDate}']]>
 	</queryString>
 	<field name="bonus_id" class="java.lang.Integer"/>
 	<field name="period_id" class="java.lang.Integer"/>

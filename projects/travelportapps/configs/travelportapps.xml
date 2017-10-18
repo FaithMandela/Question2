@@ -57,7 +57,7 @@
 			<TILE noorg="true" noorg.query="true" role="admin,manager" w="60" h="25" name="Today Sales" where="(DATE(approved_date)=CURRENT_DATE AND is_valid is true AND approved is true)" table="vw_allpassengers">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id), 0)" title="Total Members">total_passengers</TEXTFIELD>
 			</TILE>
-			<TILE noorg="true" noorg.query="true" role="individual" w="60" h="25" name="Unpaid Invoice" where="(is_valid is true AND approved is false)" groupby="entity_id" user="entity_id" table="vw_allpassengers" url="invoice">
+			<TILE noorg="true" noorg.query="true" role="individual" w="60" h="25" name="Unpaid Invoice" where="(is_valid is true AND approved is false)" groupby="entity_id" user="entity_id" table="passengers" url="invoice">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id), 0)" title="Unpaid Invoice">total_invoices</TEXTFIELD>
 			</TILE>
 			<TILE noorg="true" noorg.query="true" role="individual" jumpview="82:0" w="60" h="25" name="Paid Invoices" where="(is_valid is true AND approved is true)" groupby="entity_id" user="entity_id" table="vw_allpassengers">
@@ -1182,7 +1182,8 @@
 	</DESK>
 	<DESK w="700" h="550" name="Insurance" key="80">
 		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name=" All Insurance Sold" orderby="passenger_id DESC" where="(approved is true AND is_valid is true)" tab.count="count(passenger_id)" table="vw_allpassengers">
-			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
+			<TEXTLINK w="75" title="Policy Number">policy_number</TEXTLINK>
+			<TEXTFIELD w="75" title="Order ID">passenger_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
 			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
@@ -1202,12 +1203,14 @@
 			<JASPER reportfile="travelinsurance/certificate.jasper" name="Certificate"></JASPER>
 			<JASPER reportfile="travelinsurance/letterToEmbassy.jasper" name="Letter to Embassy"></JASPER>
 			<JASPER reportfile="travelinsurance/policy_document.jasper" name="Policy Document"></JASPER>
+			<JASPER reportfile="travelinsurance/receipt.jasper" name="Receipt"></JASPER>
 			<ACTIONS>
 				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
 			</ACTIONS>
 		</GRID>
 		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name="Broker Sales" orderby="passenger_id DESC " where="portal_id = 2 AND is_valid is true AND approved is true" tab.count="count(passenger_id)" table="vw_allpassengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Order ID">passenger_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
 			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
@@ -1225,6 +1228,7 @@
 		</GRID>
 		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name="Consultant Sales" orderby="passenger_id DESC " where="portal_id = 1 AND is_valid is true AND approved is true" tab.count="count(passenger_id)" table="vw_allpassengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Order ID">passenger_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
 			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
@@ -1242,6 +1246,7 @@
 		</GRID>
 		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name="Direct Sales" orderby="passenger_id DESC " where="portal_id = 3 AND is_valid is true AND approved is true" tab.count="count(passenger_id)" table="vw_allpassengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Order ID">passenger_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
 			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
@@ -1258,6 +1263,7 @@
 			</ACTIONS>
 		</GRID>
 		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name="UnPaid Invoices" orderby="passenger_id DESC " where="portal_id = 3 AND is_valid is true AND approved is false" tab.count="count(passenger_id)" table="vw_allpassengers">
+			<TEXTFIELD w="75" title="Order ID">passenger_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
 			<CHECKBOX w="75" title="Approved">approved</CHECKBOX>
@@ -1300,8 +1306,9 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="My Insurance" key="82">
-		<GRID role="admin,manager,individual,user" jumpview="invoice" keyfield="passenger_id" name="My Insurance" orderby="passenger_id DESC" where="(approved is true) AND (is_valid is true)" tab.count="count(passenger_id)" user="entity_id" table="vw_allpassengers">
+		<GRID role="admin,manager,individual,user" keyfield="passenger_id" name="My Insurance" orderby="passenger_id DESC" where="(approved is true) AND (is_valid is true)" tab.count="count(passenger_id)" user="entity_id" table="vw_allpassengers">
 			<TEXTLINK w="75" title="Policy Number">policy_number</TEXTLINK>
+			<TEXTFIELD w="75" title="Order ID">passenger_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>
@@ -1318,32 +1325,16 @@
 			<JASPER reportfile="/travelinsurance/certificate.jasper" name="Certificate"></JASPER>
 			<JASPER reportfile="/travelinsurance/letterToEmbassy.jasper" name="Letter to Embassy"></JASPER>
 			<JASPER reportfile="travelinsurance/policy_document.jasper" name="Policy Document"></JASPER>
+			<JASPER reportfile="travelinsurance/receipt.jasper" name="Receipt"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK role="admin,manager" w="700" h="550" name="Payments" key="85">
-		<GRID noorg="true" keyfield="payment_id" name="Pending Payments" where="(approved = false )" table="vw_payments">
-			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Payment Type">payment_type_name</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Payment Amount">payment_amount</TEXTDECIMAL>
-			<TEXTFIELD w="75" title="Transaction Reference">transaction_reference</TEXTFIELD>
-			<TEXTDATE w="75" title="Payment Date">payment_date</TEXTDATE>
-			<CHECKBOX w="75" title="Approved">approved</CHECKBOX>
-			<FORM keyfield="payment_id" name="Payments" table="payments">
-				<COMBOBOX noorg="true" w="430" h="20" lpfield="payment_type_name" x="10" y="10" lptable="payment_types" title="Payment Type ID">payment_type_id</COMBOBOX>
-				<COMBOBOX noorg="true" w="430" h="20" lpfield="org_name" x="10" y="10" lptable="orgs" title="Agency Name">org_id</COMBOBOX>
-				<TEXTDECIMAL w="150" h="20" x="10" y="30" title="Payment Amount">payment_amount</TEXTDECIMAL>
-				<TEXTFIELD w="150" h="20" x="290" y="30" title="Transaction Reference">transaction_reference</TEXTFIELD>
-				<TEXTDATE w="150" h="20" x="10" y="50" title="Payment Date">payment_date</TEXTDATE>
-				<CHECKBOX w="150" h="20" x="290" y="50" title="Approved">approved</CHECKBOX>
-				<TEXTAREA w="430" h="70" x="10" y="70" title="Details">details</TEXTAREA>
-			</FORM>
-		</GRID>
-		<GRID noorg="true" keyfield="jp_id" name="Payments" table="vw_jp_pay">
-			<TEXTFIELD w="75" title="Passenger Name">entity_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Tranid">jp_tranid</TEXTFIELD>
-			<TEXTFIELD w="75" title="Currency">jp_currency</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Payment Amount">jp_amount</TEXTDECIMAL>
-			<TEXTFIELD w="75" title="Transaction Reference">jp_merchant_orderid</TEXTFIELD>
+		<GRID noorg="true" keyfield="pesapal_trans_id" name="Payments" table="vw_pesapal_trans">
+			<TEXTFIELD w="75" title="Passenger Name">passenger_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Pesapal Transaction Id">pesapal_transaction_tracking_id</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Paid Amount">kesamount</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Transaction Reference">merchant_orderid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Transaction Method">trans_method</TEXTFIELD>
 			<TEXTDATE w="75" title="Payment Date">jp_timestamp</TEXTDATE>
 		</GRID>
 		<GRID noorg="true" keyfield="payment_type_id" name="Payment Types" table="payment_types">
@@ -1620,7 +1611,7 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" h="550" name="Logs" key="206">
-		<GRID noorg="true" keyfield="logsid" name="Logs" table="vw_logs">
+		<GRID noorg="true" keyfield="logsid" name="Logs" orderby="logsid DESC" table="vw_logs">
 			<TEXTFIELD w="75" title="Logsid">logsid</TEXTFIELD>
 			<TEXTFIELD w="75" title="Transaction Id">transid</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>

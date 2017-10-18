@@ -12,6 +12,7 @@
 			<TEXTFIELD w="150" required="true" title="Pseudo Code *" placeholder="PCC" h="20" y="30" x="290" span="true" fnct="upper(pseudo_code)">pseudo_code</TEXTFIELD>
 			<TEXTFIELD w="100" required="true" title="Sign On Code initials.* *" placeholder="Input initials without prefix Z" y="10" h="20" x="490" fnct="upper(son)" span="true">son</TEXTFIELD>
 			<TEXTDATE w="75" title="Date Of Birth" placeholder="Date Of Birth">consultant_dob</TEXTDATE>
+			<CHECKBOX w="75" title="Has Agency signed the Faidaplus acknowledgement letter?" >acknowledgement</CHECKBOX>
 
 			<FORMVIEW name="Applicant" keyfield="applicant_id" linkfield="applicant_id" table="applicants">
 				<TEXTFIELD w="430" fnct="'Data submited, Email will be send once your data is approved'::text" title="Submit" y="110" h="20" x="10">disp</TEXTFIELD>
@@ -20,7 +21,7 @@
 				<TEXTFIELD w="430" required="true" title="Mobile Number *" y="50" h="20" x="10">phone_no</TEXTFIELD>
 				<TEXTFIELD w="150" required="true" title="Pseudo Code *" h="20" y="30" x="290" span="true">pseudo_code</TEXTFIELD>
 				<TEXTFIELD w="100" required="true" title="Sign On Code initials.* *" y="10" h="20" x="490" span="true">son</TEXTFIELD>
-
+				<CHECKBOX w="100" required="true" title="Has Agency signed the Faidaplus acknowledgement letter?" y="10" h="20" x="490" span="true">son</CHECKBOX>
 			</FORMVIEW>
 		</FORM>
 	</DESK>

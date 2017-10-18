@@ -12,6 +12,13 @@ CREATE OR REPLACE FUNCTION get_cop_benefit_section_b(integer) RETURNS text AS $$
     SELECT individual AS result from vw_corporate_benefits WHERE rate_type_id =  $1 AND corporate_section IN('1C');
 $$LANGUAGE SQL;
 
+CREATE OR REPLACE FUNCTION get_group_benefit_section_a(integer) RETURNS text AS $$
+    SELECT individual AS result from vw_group_benefits WHERE group_rate_id = $1 AND benefit_section IN('1A');
+$$LANGUAGE SQL;
+CREATE OR REPLACE FUNCTION get_group_benefit_section_b(integer) RETURNS text AS $$
+    SELECT individual AS result from vw_group_benefits WHERE group_rate_id =  $1 AND benefit_section IN('1C');
+$$LANGUAGE SQL;
+
 CREATE OR REPLACE FUNCTION ins_policy_number()  RETURNS trigger AS $$
 DECLARE
   base_val          char(50);
@@ -135,7 +142,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER ins_sys_reset AFTER INSERT ON sys_reset
     FOR EACH ROW EXECUTE PROCEDURE ins_sys_reset();
 
-    
+
     CREATE OR REPLACE FUNCTION update_levy(integer) RETURNS character varying(20) AS $$
     DECLARE
     rec	RECORD;

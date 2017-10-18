@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="booked" language="groovy" pageWidth="690" pageHeight="842" columnWidth="650" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c0af2499-283a-4845-afc3-10d25ebe88ae">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="maxDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2017-10-01"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="minDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2017-10-01"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from vw_vouchers where confirmation='BOOKING'
+AND bookdate::date >= '$P!{minDate}'::date AND bookdate::date <= '$P!{maxDate}'::date;]]>
+	</queryString>
+	<field name="voucher_id" class="java.lang.Integer"/>
+	<field name="entity_id" class="java.lang.Integer"/>
+	<field name="asset_id" class="java.lang.Integer"/>
+	<field name="rate_id" class="java.lang.Integer"/>
+	<field name="org_id" class="java.lang.Integer"/>
+	<field name="ipaddress" class="java.lang.String"/>
+	<field name="vendor_id" class="java.lang.Integer"/>
+	<field name="instructions" class="java.lang.String"/>
+	<field name="client_id" class="java.lang.Integer"/>
+	<field name="client2" class="java.lang.String"/>
+	<field name="client3" class="java.lang.String"/>
+	<field name="client4" class="java.lang.String"/>
+	<field name="client5" class="java.lang.String"/>
+	<field name="client6" class="java.lang.String"/>
+	<field name="children" class="java.lang.String"/>
+	<field name="m_id" class="java.lang.Integer"/>
+	<field name="extra_night" class="java.lang.String"/>
+	<field name="no_of_night" class="java.lang.Integer"/>
+	<field name="clientname" class="java.lang.String"/>
+	<field name="currency" class="java.lang.String"/>
+	<field name="pax_num" class="java.lang.Integer"/>
+	<field name="confirmation" class="java.lang.String"/>
+	<field name="tripple" class="java.lang.Integer"/>
+	<field name="atselect" class="java.lang.String"/>
+	<field name="infants" class="java.lang.Integer"/>
+	<field name="attention" class="java.lang.String"/>
+	<field name="transtype" class="java.lang.String"/>
+	<field name="infantsage" class="java.lang.Integer"/>
+	<field name="voucherno" class="java.lang.String"/>
+	<field name="extra_bed" class="java.lang.Integer"/>
+	<field name="ababycot" class="java.lang.String"/>
+	<field name="single" class="java.lang.Integer"/>
+	<field name="no_adults" class="java.lang.String"/>
+	<field name="room_type_id" class="java.lang.Integer"/>
+	<field name="adouble" class="java.lang.Integer"/>
+	<field name="children_age" class="java.lang.Integer"/>
+	<field name="confirmationref" class="java.lang.String"/>
+	<field name="charge_tour" class="java.lang.Boolean"/>
+	<field name="extra_tour" class="java.lang.Boolean"/>
+	<field name="residents" class="java.lang.Boolean"/>
+	<field name="voucher_link" class="java.lang.String"/>
+	<field name="datein" class="java.sql.Date"/>
+	<field name="dateout" class="java.sql.Date"/>
+	<field name="bookdate" class="java.sql.Date"/>
+	<field name="mark_up" class="java.lang.Integer"/>
+	<field name="created_by" class="java.lang.Integer"/>
+	<field name="client1" class="java.lang.String"/>
+	<field name="room_type_name" class="java.lang.String"/>
+	<field name="entity_name" class="java.lang.String"/>
+	<field name="client_name" class="java.lang.String"/>
+	<field name="rates" class="java.lang.Float"/>
+	<field name="sell_amount" class="java.lang.Float"/>
+	<field name="asset_name" class="java.lang.String"/>
+	<field name="vendor_name" class="java.lang.String"/>
+	<field name="s_name" class="java.lang.String"/>
+	<field name="org_name" class="java.lang.String"/>
+	<field name="voucherid" class="java.lang.Integer"/>
+	<field name="service_type_name" class="java.lang.String"/>
+	<field name="service_type_id" class="java.lang.Integer"/>
+	<variable name="profit" class="java.lang.Double" calculation="Sum"/>
+	<variable name="selling_rate" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{sell_amount}]]></variableExpression>
+	</variable>
+	<variable name="buying_rate" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{rates}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="42" splitType="Stretch">
+			<staticText>
+				<reportElement x="123" y="0" width="284" height="30" uuid="48468d9b-4a26-4511-aaaf-5ee618c0b27d"/>
+				<textElement textAlignment="Center">
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Financial Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="12" height="20" uuid="35f93bb9-ddb2-46a7-b4e6-3f810fc08770"/>
+				<text><![CDATA[#]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="21" width="650" height="1" uuid="3cdfe06f-ff85-4aaf-bfa6-53ff83411fa3"/>
+			</line>
+			<staticText>
+				<reportElement x="12" y="0" width="79" height="18" uuid="472d2f66-e4ff-46e7-acfc-ad94dee27b46"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Hotel Grp]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="0" width="60" height="18" uuid="fcc80c89-cffe-4036-8beb-cb1bef14d917"/>
+				<text><![CDATA[Voucher No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="0" width="54" height="18" uuid="99b21a51-898c-4a33-bc22-b01bffadf92c"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Buying]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="457" y="0" width="54" height="18" uuid="d1b4d9a0-aa46-40d4-bcc9-dc0fde936f0a"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Selling]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="91" y="0" width="249" height="18" uuid="c6ca2350-0a14-45b6-a0e3-029d221b0f05"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Hotel]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="514" y="0" width="54" height="18" uuid="c1af5c1f-826d-423c-9ef3-062fac955cd6"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Profit]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="12" height="15" uuid="a9cdfa2b-5748-44db-8bbe-2dab63c2cfaa"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="12" y="0" width="79" height="15" uuid="14f4f791-0708-4a32-8de0-7cd3612a998a"/>
+				<textFieldExpression><![CDATA[$F{vendor_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="340" y="0" width="60" height="15" uuid="96aedc95-c891-4719-ab9d-06b4a23caf91"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{voucher_id}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="457" y="0" width="54" height="15" uuid="4ec04dc4-d052-4698-a85c-15a18767032a"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sell_amount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="400" y="0" width="54" height="15" uuid="0d1a53a5-446c-45be-b497-5c98f18b0b27"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rates}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="91" y="0" width="249" height="15" uuid="e092510e-cf01-4660-b135-3fec94d2852c"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{asset_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="514" y="0" width="54" height="15" uuid="421e404e-d393-4410-815d-2b62a454f82a"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sell_amount}-$F{rates}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="7"/>
+	</pageFooter>
+	<summary>
+		<band height="84" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="394" y="57" width="127" height="25" uuid="9d6572d6-099e-4eec-84f9-374f1a5959c8"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{selling_rate}-$V{buying_rate}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="394" y="32" width="127" height="25" uuid="b5944560-5464-4408-8d01-2b7ad2a0f6d1"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{buying_rate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="205" y="32" width="145" height="25" uuid="8cebbd8d-bc51-4a57-b7f2-7e717cd08ea3"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total buying rate]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="394" y="7" width="127" height="25" uuid="4e88a825-13a9-4eb2-9fbe-5388d4e9dbc9"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{selling_rate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="205" y="7" width="145" height="25" uuid="a9a31656-cfa9-4912-8749-19a303480b60"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total selling rate]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="205" y="57" width="145" height="25" uuid="e25da4dd-7541-48ad-a4b7-1897421ca8c5"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Net Rate]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

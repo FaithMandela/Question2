@@ -274,11 +274,12 @@
 	</DESK>
 	<DESK w="700" h="650" name="Consultants" key="9">
 		<GRID noorg="true" keyfield="applicant_id" name="Pending Consultants" orderby="applicant_id" where="approve_status='Pending' OR approve_status='Pendding' " tab.count="count(applicant_id)" table="vw_applicants">
-			<TEXTFIELD w="50" title="ID">applicant_id</TEXTFIELD>
+			<TEXTFIELD w="30" title="ID">applicant_id</TEXTFIELD>
 			<TEXTFIELD w="120" title="Email">applicant_email</TEXTFIELD>
 			<TEXTFIELD w="50" title="Pseudo Code">pseudo_code</TEXTFIELD>
 			<TEXTFIELD w="50" title="SON">son</TEXTFIELD>
-			<TEXTFIELD w="120" title="Status">status</TEXTFIELD>
+			<TEXTFIELD w="30" title="Status">status</TEXTFIELD>
+			<CHECKBOX w="100" title="Acknowledgement signed">acknowledgement</CHECKBOX>
 			<TEXTFIELD w="75" title="Date">application_date</TEXTFIELD>
 			<FORM new="false" keyfield="applicant_id" name="Details" linkfield="applicant_id" table="applicants">
 				<TEXTAREA w="50" title="Details">details</TEXTAREA>
@@ -993,7 +994,13 @@
 			</FILTERFORM>
 			<JASPER reportfile="agency_bonus.jasper" name=" Agency Bonus"></JASPER>
 		</FILTER>
-		<JASPER reportfile="active_bonus.jasper" name="Active Bonus"></JASPER>
+		<FILTER split="150" w="700" h="550" name="Active Bonus" type="vert" key="order_date">
+			<FILTERFORM name="Active Bonus">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="active_bonus.jasper" name="Active Bonus"></JASPER>
+		</FILTER>
 		<FILTER role="staff" split="150" w="700" h="550" name="Agency Bonus per KAM " type="vert" key="order_date">
 			<FILTERFORM name="Agency Bonus per KAM  ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
@@ -1001,10 +1008,11 @@
 			</FILTERFORM>
 			<JASPER reportfile="agency_bonus_KAM.jasper" name=" Agency Bonus per KAM "></JASPER>
 		</FILTER>
-		<FILTER role="admin,staff" split="150" w="700" h="550" name="Bonus per KAM" type="vert" key="order_date">
+		<FILTER role="admin,staff" split="150" w="700" h="550" name="Bonus per KAM" type="vert" key="org_id">
 			<FILTERFORM name="Bonus per KAM ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+				<COMBOBOX noorg="true" w="30" h="20" lpfield="entity_name" x="10" y="10" lptable="entitys" where="entity_type_id in (1,4)" title="Account Manager" lpkey="entity_id">id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="bonus.jasper" name=" Bonus per KAM"></JASPER>
 		</FILTER>
@@ -1218,24 +1226,12 @@
 			<JASPER reportfile="total_upload_seg.jasper" name="Total Upload Segments"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="700" h="550" name="Closing Balance" key="129">
-		<FILTER split="150" w="700" h="550" name="Agency Closing Balance" type="vert" key="order_date">
-			<FILTERFORM name="Agency Closing Balance ">
-				<TEXTDATE w="150" h="20" x="290" y="50" title="Closing Date" key="maxdate">maxDate</TEXTDATE>
-			</FILTERFORM>
-			<JASPER reportfile="opening_balance_by_agency.jasper" name="Agency Closing Balance"></JASPER>
-		</FILTER>
+	<DESK w="700" h="550" name="Consultant Closing Balance" key="129">
 		<FILTER split="150" w="700" h="550" name="Consultant Closing Balance" type="vert" key="order_date">
-			<FILTERFORM name="Consultant Closing Balance">
+			<FILTERFORM name="Consultant Closing Balance ">
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Closing Date" key="maxdate">maxDate</TEXTDATE>
 			</FILTERFORM>
-			<JASPER reportfile="opening_balance_by_consultant.jasper" name="Consultant Closing Balance"></JASPER>
-		</FILTER>
-		<FILTER split="150" w="700" h="550" name="Closing Balance" type="vert" key="order_date">
-			<FILTERFORM name="Closing Balance">
-				<TEXTDATE w="150" h="20" x="290" y="50" title="Closing Date" key="maxdate">maxDate</TEXTDATE>
-			</FILTERFORM>
-			<JASPER reportfile="opening_balance_by_balance.jasper" name="Closing Balance"></JASPER>
+			<JASPER reportfile="opening_balance_by_agency.jasper" name="Consultant Closing Balance"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" h="550" name="Total Redemptions" key="128">

@@ -457,13 +457,14 @@ CREATE TABLE jp_pay (
 CREATE INDEX jp_pay_entity_id ON jp_pay (entity_id);
 CREATE INDEX jp_pay_org_id ON jp_pay (org_id);
 CREATE TABLE pesapal_trans(
-  pesapal_trans_id serial NOT NULL,
-  merchant_orderid integer references passengers,
-  pesapal_transaction_tracking_id character varying(200),
-  status character varying(30),
-  jp_timestamp timestamp without time zone DEFAULT now(),
-  details text
-
+  pesapal_trans_id                  serial PRIMARY key,
+  merchant_orderid                  integer references passengers,
+  pesapal_transaction_tracking_id   character varying(200),
+  status                            character varying(30),
+  trans_method                      character varying(30),
+  jp_timestamp                      timestamp without time zone DEFAULT now(),
+  details                           text,
+	UNIQUE(pesapal_transaction_tracking_id,merchant_orderid)
 );
 CREATE INDEX pesapal_trans_passenger_id ON pesapal_trans (merchant_orderid);
 
@@ -1602,8 +1603,8 @@ CREATE TABLE portal(
 		log_date timestamp default now() not null
 	);
 
-    CREATE  OR REPLACE VIEW vw_logs AS
-    SELECT logs.logsid, logs.transid, logs.entity_id, logs.userip, logs.amount_1, logs.amount_2, logs.transdate,
+	CREATE  OR REPLACE VIEW vw_logs AS
+    SELECT logs.logsid, logs.transid, logs.entity_id, logs.userip, passengers.kesamount as amount_1, passengers.totalamount_covered as amount_2, logs.transdate,
        logs.portal, logs.status,passengers.passenger_name, passengers.passenger_email,entitys.primary_email,entitys.entity_name
     FROM logs
     INNER JOIN passengers ON passengers.passenger_id = logs.transid
@@ -1668,7 +1669,7 @@ SELECT corporate_rate_types.rate_type_id,  corporate_rate_types.rate_type_name, 
   	passengers.policy_number,  vw_entitys.entity_name,  passengers.destown,  sys_countrys.sys_country_name,
   	passengers.approved_date,  passengers.corporate_id,  passengers.pin_no, passengers.reason_for_travel,
   	passengers.departure_country, vw_entitys.entity_role, vw_entitys.function_role, vw_entitys.is_active,passengers.physical_address,
-  	passengers.is_valid,passengers.is_individual, portal.portal_id,portal.portal_name,passengers.id_no,passengers.relationship
+  	passengers.is_valid,passengers.is_individual, portal.portal_id,portal.portal_name,passengers.id_no,passengers.relationship,passengers.status,passengers.kesamount,vw_entitys.user_name
   	FROM passengers
   	 JOIN vw_rates ON passengers.rate_id = vw_rates.rate_id
   	 JOIN vw_entitys ON passengers.entity_id = vw_entitys.entity_id
@@ -1684,7 +1685,7 @@ SELECT
     a.departure_country, a.entity_name, a.days_from, a.days_to,
     a.rate_type_id, a.approved_date, a.rate_plan_id, a.rate_category_name,a.approved,
     a.rate_plan_name, a.standard_rate, a.north_america_rate,a.org_name,a.function_role,a.entity_role,a.is_active,
-	a.is_valid, a.is_individual, a.portal_id, a.portal_name
+	a.is_valid, a.is_individual, a.portal_id, a.portal_name,p.kesamount
     FROM  policy_members p
     JOIN vw_passengers a ON p.passenger_id = a.passenger_id ;
 
@@ -1696,14 +1697,14 @@ SELECT
 	a.passport_number,  round(a.cover_amount::DECIMAL,2)::real as cover_amount,  round(a.totalAmount_covered::DECIMAL,2)::real as totalAmount_covered,  a.is_north_america,  a.details,  a.passenger_dob,
 	a.policy_number,  a.entity_name,  a.destown,  a.sys_country_name, a.approved_date,  a.corporate_id,
 	a.pin_no, a.reason_for_travel,  a.departure_country, a.entity_role, a.function_role, a.is_active,a.is_valid,a.is_individual,
-	a.portal_id,a.portal_name,  a.id_no, a.relationship
+	a.portal_id,a.portal_name,  a.id_no, a.relationship,a.kesamount
 	FROM ((
 	SELECT org_id,org_name,rate_type_id, rate_plan_id, rate_category_name,rate_id, rate_plan_name, standard_rate, north_america_rate,
 	    days_from,  days_to,  corporate_rate_id,   approved,  entity_id,  countries,  passenger_id,  passenger_name,  passenger_mobile,
 	    passenger_email,  passenger_age,  days_covered,  nok_name,  nok_mobile,  passenger_id_no,  nok_national_id as passport_number,  cover_amount,
 	    totalAmount_covered,  is_north_america,  details,  passenger_dob,  policy_number,  entity_name,  destown,  sys_country_name,
 	    approved_date,  corporate_id,  pin_no, reason_for_travel,  departure_country, entity_role, function_role, is_active,is_valid,is_individual,
-	    portal_id, portal_name,id_no,relationship
+	    portal_id, portal_name,id_no,relationship,kesamount
 	FROM vw_passengers  )
 	UNION ALL
 	(SELECT org_id,org_name, rate_type_id,  rate_plan_id,  rate_category_name, rate_id,    rate_plan_name,  standard_rate,
@@ -1714,7 +1715,7 @@ SELECT
 	    totalamount_covered,  null::boolean as is_north_america, ''::text as details, passenger_dob::text,policy_number,
 	    entity_name, destown, sys_country_name, approved_date, null::integer as corporate_id, pin_number as pin_no,
 	    reason_for_travel,     departure_country,   entity_role, function_role ,
-	    is_active,  is_valid,is_individual,portal_id, portal_name, ''::text as id_no,''::text as relationship
+	    is_active,  is_valid,is_individual,portal_id, portal_name, ''::text as id_no,''::text as relationship,kesamount
 	FROM  vw_policy_members )
 	)a order by passenger_id DESC;
 
@@ -1767,6 +1768,12 @@ CREATE OR REPLACE VIEW vw_app_users AS
      FROM jp_pay
        JOIN vw_entitys ON jp_pay.entity_id = vw_entitys.entity_id;
 
+	   CREATE OR REPLACE VIEW vw_pesapal_trans AS
+	    SELECT pesapal_trans.pesapal_trans_id, pesapal_trans.merchant_orderid, pesapal_trans.pesapal_transaction_tracking_id,
+	        pesapal_trans.status, pesapal_trans.jp_timestamp, pesapal_trans.details,
+	        passengers.kesamount,  passengers.passenger_name,pesap.trans_method
+	      FROM pesapal_trans
+	        JOIN passengers ON pesapal_trans.merchant_orderid = passengers.passenger_id;
 
  CREATE OR REPLACE VIEW vw_app_list AS
  SELECT vw_orgs.org_id, apps_list.apps_list_id,

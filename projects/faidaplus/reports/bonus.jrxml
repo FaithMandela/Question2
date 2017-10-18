@@ -10,7 +10,7 @@
 	<parameter name="maxDate" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2016-01-30"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="entity_id" class="java.lang.Integer">
+	<parameter name="id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<parameter name="entityname" class="java.lang.String">
@@ -21,15 +21,15 @@
     periods.start_date AS period,
     vw_entitys.pcc, vw_entitys.son, sum(points.segments)as segments,sum(points.points)as points,
     sum(points.bonus)as bonus, vw_entitys.org_name, vw_entitys.entity_name,vw_entitys.user_name,
-    vw_entitys.is_active,  vw_entitys.entity_id
+    vw_entitys.is_active,  vw_entitys.entity_id,vw_entitys.account_manager_name
    FROM points
      JOIN vw_entitys ON points.entity_id = vw_entitys.entity_id
      JOIN periods ON points.period_id = periods.period_id
   WHERE periods.start_date >= '$P!{minDate}'
   AND periods.start_date <= '$P!{maxDate}'
-  AND vw_entitys.account_manager_id = '$P!{entity_id}' AND vw_entitys.is_active = true
+  AND vw_entitys.account_manager_id = '$P!{id}' AND points.bonus >0
   GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,vw_entitys.entity_name,
-    vw_entitys.user_name,  vw_entitys.is_active,  vw_entitys.entity_id ;]]>
+    vw_entitys.user_name,  vw_entitys.is_active,  vw_entitys.entity_id,vw_entitys.account_manager_name ;]]>
 	</queryString>
 	<field name="period" class="java.sql.Date"/>
 	<field name="pcc" class="java.lang.String"/>
@@ -42,6 +42,7 @@
 	<field name="user_name" class="java.lang.String"/>
 	<field name="is_active" class="java.lang.Boolean"/>
 	<field name="entity_id" class="java.lang.Integer"/>
+	<field name="account_manager_name" class="java.lang.String"/>
 	<variable name="total_bonus" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{bonus}]]></variableExpression>
 	</variable>
@@ -73,7 +74,7 @@
 				<textElement>
 					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{entityname}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{account_manager_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>

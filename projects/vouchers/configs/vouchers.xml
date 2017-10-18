@@ -1,8 +1,8 @@
 <APP password="change_password" color="green" org="org_id" name="Vouchers">
 	<MENU name="Vouchers">
-		<MENU role="staff" name="Vouchers">
+		<MENU role="staff,corporate" name="Vouchers">
+			<MENU name="New Voucher" page="voucher.jsp">0</MENU>
 			<MENU name="Vouchers">27</MENU>
-			<MENU name="New Voucher" page="newvoucher.jsp">0</MENU>
 			<MENU name="Travel Requests">3</MENU>
 			<MENU name="Requests Responce">4</MENU>
 			<MENU name="Asset Vendors">6</MENU>
@@ -19,25 +19,25 @@
 	</MENU>
 	<DESK access="open" w="700" h="500" name="Dashboard" key="1">
 		<DASHBOARD w="700" name="Dashboard">
-			<TILE noorg.query="true" role="staff" w="60" h="25" table="vw_vouchers">
+			<TILE noorg.query="true" role="staff,corporate" w="60" h="25" table="vw_vouchers">
 				<TEXTFIELD w="75" fnct="COALESCE(count(voucher_id), 0)" title="Vouchers">voucher_id</TEXTFIELD>
 			</TILE>
-			<TILE noorg.query="true" role="staff" w="60" h="25" where="confirmation ='CONFIRMED'" table="vw_vouchers">
+			<TILE noorg.query="true" role="staff,corporate" w="60" h="25" where="confirmation ='CONFIRMED'" table="vw_vouchers">
 				<TEXTFIELD w="75" fnct="COALESCE(count(voucher_id), 0)" title="Confirmed Vouchers">voucher_id</TEXTFIELD>
 			</TILE>
-			<TILE noorg.query="true" role="staff" w="60" h="25" where="transtype ='CANCEL'" table="vw_vouchers">
+			<TILE noorg.query="true" role="staff,corporate" w="60" h="25" where="transtype ='CANCEL'" table="vw_vouchers">
 				<TEXTFIELD w="75" fnct="COALESCE(count(voucher_id), 0)" title="Cancelled Vouchers">voucher_id</TEXTFIELD>
 			</TILE>
-			<TILE noorg.query="true" role="staff" w="60" h="25" where="transtype ='AMEND'" table="vw_vouchers">
+			<TILE noorg.query="true" role="staff,corporate" w="60" h="25" where="transtype ='AMEND'" table="vw_vouchers">
 				<TEXTFIELD w="75" fnct="COALESCE(count(voucher_id), 0)" title="Amended Vouchers">voucher_id</TEXTFIELD>
 			</TILE>
-			<TILE noorg.query="true" role="staff" w="60" h="25" table="vw_vouchers">
+			<TILE noorg.query="true" role="staff,corporate" w="60" h="25" table="vw_vouchers">
 				<TEXTFIELD w="75" fnct="COALESCE(sum(rates), 0)" title="Total Buying Rate">voucher_id</TEXTFIELD>
 			</TILE>
-			<TILE noorg.query="true" role="staff" w="60" h="25" table="vw_vouchers">
+			<TILE noorg.query="true" role="staff,corporate" w="60" h="25" table="vw_vouchers">
 				<TEXTFIELD w="75" fnct="COALESCE(sum(sell_amount), 0)" title="Total Sales">voucher_id</TEXTFIELD>
 			</TILE>
-			<TILE noorg.query="true" role="staff" w="60" h="25" table="vw_vouchers">
+			<TILE noorg.query="true" role="staff,corporate" w="60" h="25" table="vw_vouchers">
 				<TEXTFIELD w="75" fnct="COALESCE(sum(sell_amount-rates), 0)" title="Total Profit">voucher_id</TEXTFIELD>
 			</TILE>
 		</DASHBOARD>
@@ -598,7 +598,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="500" name="vouchers" key="27">
-		<GRID keyfield="voucher_id" limit="250" name="Vouchers" orderby="voucher_id desc" where="(transtype != 'CANCEL')" table="vw_vouchers">
+		<GRID keyfield="voucher_id" limit="250" name="Vouchers" orderby="voucher_id desc" where="(transtype != 'CANCEL' AND voucher_id not in(select voucher_link::integer from vw_vouchers where voucher_link !=''))" table="vw_vouchers">
 			<BROWSER path="getVoucher" w="75" title="">voucherid</BROWSER>
 			<TEXTFIELD w="75" title="Voucher No">voucher_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Amended From">voucher_link</TEXTFIELD>
@@ -617,7 +617,7 @@
 			<TEXTFIELD w="75" title="Selling Rate">sell_amount</TEXTFIELD>
 			<JASPER reportfile="vw_vouchers.jasper" name="Voucher"></JASPER>
 		</GRID>
-		<GRID keyfield="voucher_id" limit="250" name="Agent Voucher Report" orderby="voucher_id desc" where="(transtype != 'CANCEL')" table="vw_vouchers">
+		<GRID keyfield="voucher_id" limit="250" name="Agent Voucher Report" orderby="voucher_id desc" where="(transtype != 'CANCEL' AND voucher_id not in(select voucher_link::integer from vw_vouchers where voucher_link !=''))" table="vw_vouchers">
 			<TEXTFIELD w="75" title="Voucher No">voucher_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Amended From">voucher_link</TEXTFIELD>
 			<TEXTFIELD w="75" title="Vendor Name">vendor_name</TEXTFIELD>
@@ -633,7 +633,7 @@
 			<TEXTFIELD w="75" title="Booked By">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Buying Rate">rates</TEXTFIELD>
 			<TEXTFIELD w="75" title="Selling Rate">sell_amount</TEXTFIELD>
-			<JASPER reportfile="vwvouchers2.jasper" name="Voucher"></JASPER>
+			<JASPER reportfile="vw_agency_vouchers.jasper" name="Voucher"></JASPER>
 		</GRID>
 		<GRID keyfield="voucher_id" limit="250" name="Cancelled Vouchers" orderby="voucher_id desc" where="(transtype = 'CANCEL')" table="vw_vouchers">
 			<TEXTFIELD w="75" title="Voucher No">voucher_id</TEXTFIELD>
@@ -651,7 +651,7 @@
 			<TEXTFIELD w="75" title="Booked By">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Buying Rate">rates</TEXTFIELD>
 			<TEXTFIELD w="75" title="Selling Rate">sell_amount</TEXTFIELD>
-			<JASPER reportfile="vwvouchers.jasper" name="Voucher"></JASPER>
+			<JASPER reportfile="vw_vouchers.jasper" name="Voucher"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK w="700" h="500" name="Client Search" key="51">
@@ -680,9 +680,27 @@
 			</GRID>
 		</GRID>
 	</DESK>
-	<DESK h="500" name="Vouchers" key="90">
-		<JASPER reportfile="booked.jasper" name="booked vouchers"></JASPER>
-		<JASPER reportfile="confirmed.jasper" name="confirmed vouchers"></JASPER>
-		<JASPER reportfile="financial.jasper" name="Financial Report"></JASPER>
+	<DESK h="500" name="Vouchers Report" key="90">
+		<FILTER split="150" w="700" h="550" name="Booked Vouchers" type="vert" key="batch">
+			<FILTERFORM name="Booked Vouchers ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Date From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Date To" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="booked.jasper" name="Booked Vouchers"></JASPER>
+		</FILTER>
+		<FILTER split="150" w="700" h="550" name="Confirmed Vouchers" type="vert" key="batch">
+			<FILTERFORM name="Confirmed Vouchers ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Date From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Date To" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="confirmed.jasper" name="Confirmed Vouchers"></JASPER>
+		</FILTER>
+		<FILTER split="150" w="700" h="550" name="Financial Report" type="vert" key="batch">
+			<FILTERFORM name="Financial Report ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Date From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Date To" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="financial.jasper" name="Financial Report"></JASPER>
+		</FILTER>
 	</DESK>
 </APP>

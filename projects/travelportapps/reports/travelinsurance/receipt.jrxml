@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="receipt" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="82db194f-22af-414e-9f41-9181e7bd811a">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="filterid" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT sum(kesamount)  as kesamount ,pesapal_trans_id, merchant_orderid, pesapal_transaction_tracking_id, status, jp_timestamp,trans_method
+FROM vw_pesapal_trans  WHERE merchant_orderid = '$P!{filterid}' GROUP BY pesapal_trans_id, merchant_orderid, pesapal_transaction_tracking_id,status, jp_timestamp,
+trans_method;]]>
+	</queryString>
+	<field name="kesamount" class="java.lang.Float"/>
+	<field name="pesapal_trans_id" class="java.lang.Integer"/>
+	<field name="merchant_orderid" class="java.lang.Integer"/>
+	<field name="pesapal_transaction_tracking_id" class="java.lang.String"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="jp_timestamp" class="java.sql.Timestamp"/>
+	<field name="trans_method" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="84" splitType="Stretch">
+			<staticText>
+				<reportElement x="40" y="37" width="466" height="42" uuid="6bd4c136-e38e-469b-ad95-466786d940d6"/>
+				<textElement textAlignment="Center">
+					<font fontName="Garamond-Normal" size="18"/>
+				</textElement>
+				<text><![CDATA[ICEA LION GENERAL INSURANCE COMPANY LIMITED]]></text>
+			</staticText>
+			<line>
+				<reportElement x="40" y="83" width="466" height="1" uuid="5b7fd433-3aa5-4aab-86d3-d407cd11c9ce"/>
+				<graphicElement>
+					<pen lineStyle="Dotted"/>
+				</graphicElement>
+			</line>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="72" splitType="Stretch">
+			<textField>
+				<reportElement x="131" y="0" width="294" height="31" uuid="974a2df5-ec6c-4f41-8783-3f2156380346"/>
+				<textElement textAlignment="Center">
+					<font fontName="Garamond-Normal"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{jp_timestamp}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="131" y="31" width="294" height="41" uuid="6de2e1d9-4381-4c8f-8475-e04b8d5ba73d"/>
+				<textElement textAlignment="Center">
+					<font fontName="Garamond-Normal" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["KES "+$F{kesamount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<textField>
+				<reportElement x="40" y="0" width="466" height="36" uuid="86dab1f5-61e7-4380-b895-6cbc2e0c682e"/>
+				<textElement>
+					<font fontName="Garamond-Normal"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Your payment of KES. "+$F{kesamount}+" to ICEA LION General Insurance Company Limited has "+$F{status}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="40" y="36" width="244" height="20" uuid="8a13b4a9-acd3-4592-a3c1-644942bc25d3"/>
+				<textElement>
+					<font fontName="Garamond-Normal" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reference No]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="40" y="56" width="244" height="20" uuid="d3ab0ae3-5d63-4498-aab1-0b87894c01cd"/>
+				<textElement>
+					<font fontName="Garamond-Normal"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{merchant_orderid}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="301" y="36" width="205" height="20" uuid="69aad999-fc70-487f-b6ec-33869550ac98"/>
+				<textElement>
+					<font fontName="Garamond-Normal" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Payment Method]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="301" y="56" width="205" height="20" uuid="63234e9d-8658-4d7f-80a6-dc5e45eaa6e6"/>
+				<textElement>
+					<font fontName="Garamond-Normal"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{trans_method}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="40" y="76" width="244" height="20" uuid="f7bc4992-1c82-4a8f-b526-feae5467050c"/>
+				<textElement>
+					<font fontName="Garamond-Normal" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Payment No]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="40" y="96" width="244" height="20" uuid="b0a78d9c-0a7d-4c70-bc1a-b0e954c4c3c8"/>
+				<textElement>
+					<font fontName="Garamond-Normal"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pesapal_transaction_tracking_id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="301" y="76" width="205" height="20" uuid="2bc704c1-ab88-49d9-8f54-56bdf98de844"/>
+				<textElement>
+					<font fontName="Garamond-Normal" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Description]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="301" y="96" width="205" height="20" isPrintWhenDetailOverflows="true" uuid="b9b05435-3f12-44b0-a9a3-9d1b3255eeb9"/>
+				<textElement>
+					<font fontName="Garamond-Normal"/>
+				</textElement>
+				<text><![CDATA[ICEALION Travel Insurance]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

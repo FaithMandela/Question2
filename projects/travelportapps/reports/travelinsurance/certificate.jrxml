@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="certificate" language="groovy" pageWidth="595" pageHeight="842" columnWidth="541" leftMargin="27" rightMargin="27" topMargin="20" bottomMargin="5" uuid="f68264b2-90bd-433b-a20d-19461dab01de">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="177"/>
+	<property name="ireport.y" value="197"/>
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["70"]]></defaultValueExpression>
 	</parameter>
@@ -304,14 +304,14 @@ WHERE passenger_id = '$P!{filterid}';]]>
 				<textElement textAlignment="Center">
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
-				<text><![CDATA[Tel: +254(0) 20 2750000 | Mobile: +254 719071000 | +254 730151000]]></text>
+				<text><![CDATA[Tel: +254(0) 719 071999 | +254 (0) 730 151000 | +254 (0) 20 2750000]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1" y="460" width="541" height="15" uuid="d29c7f1f-6cc2-4fd1-9378-14a4bba093e9"/>
 				<textElement textAlignment="Center">
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
-				<text><![CDATA[	Email: info@icealion.com]]></text>
+				<text><![CDATA[Email: contactcentre@icealion.com]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1" y="414" width="541" height="15" uuid="6d2e9da2-1042-4ed0-9692-8c90414b9de9"/>

@@ -144,7 +144,7 @@ CREATE TABLE applicants (
 	son 					varchar(7),
 	consultant_dob			date not null,
 	status					varchar(20) default 'Pending',
-
+	acknowledgement 		boolean,
  	approve_status			varchar(16) default 'Pending' not null,
  	workflow_table_id		integer,
  	application_date		timestamp default now(),
@@ -284,10 +284,10 @@ CREATE OR REPLACE VIEW vw_order_details AS
 	FROM order_details JOIN vw_orders ON order_details.order_id = vw_orders.order_id
 		JOIN vw_products ON vw_products.product_id = order_details.product_id;
 
-CREATE VIEW vw_applicants AS
+CREATE OR REPLACE VIEW vw_applicants AS
 	SELECT applicants.applicant_id, applicants.applicant_email, cast(applicants.application_date as date),
 		applicants.pseudo_code, applicants.son, applicants.approve_status,
-		applicants.status, applicants.consultant_dob, applicants.details
+		applicants.status, applicants.consultant_dob, applicants.details,applicants.acknowledgement
 	FROM applicants;
 
 CREATE OR REPLACE VIEW vw_consultant AS
@@ -451,7 +451,7 @@ FROM ((SELECT COALESCE(vw_son_points.points, 0::real) + COALESCE(vw_son_points.b
 		   vw_son_points.org_name, vw_son_points.entity_id, vw_son_points.entity_name, vw_son_points.segments,
 		   vw_son_points.amount, vw_son_points.points, vw_son_points.period,vw_son_points.is_active
 		  FROM vw_son_points)
-	   UNION
+	   UNION ALL
 		(SELECT 0::real AS float4,
 		   vw_orders.grand_total AS order_total_amount, vw_orders.order_date, vw_orders.son, vw_orders.pcc,
 		   vw_orders.org_name, vw_orders.entity_id, vw_orders.entity_name, 0::real as segments, 0::real as amount,

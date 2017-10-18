@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ESCALATION title="Travelport Apps Mail" processdelay="2"
+<ESCALATION title="Travelport Apps Mail" processdelay="1"
 	host="mail.travelport.co.ke" mailuser="icea.travelinsurance@travelport.co.ke" mailpassword="QGPKv)6s29oq" mailfrom="icea.travelinsurance@travelport.co.ke"
 	inbox="INBOX" sentbox="INBOX.Sent" smtppauth="true"
 	reportpath="/opt/baraza/projects/travelportapps/reports/travelinsurance/">
