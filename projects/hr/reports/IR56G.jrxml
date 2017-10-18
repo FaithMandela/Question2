@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2017-08-18T09:42:46 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="IR56B" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9c38f6be-f816-4cfd-a23b-e0a7c990db68">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Hr Data Adapter "/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -49,26 +50,26 @@
     vw_employee_year.currency_name, vw_employee_year.currency_symbol, vw_employee_year.employee_year_id,
     vw_employee_year.ms_code, vw_employee_year.spouse_name, vw_employee_year.spouse_id,
     vw_employee_year.passport_num, vw_employee_year.postal_code, vw_employee_year.residential_address,
-    vw_employee_year.postal_address, vw_employee_year.capacity, 
-    
+    vw_employee_year.postal_address, vw_employee_year.capacity,
+
     to_char(vw_employee_year.submission_date, 'FMDDth FMMonth YYYY')as submit_year,
     to_char(vw_employee_year.fiscal_year_start, 'FMDDth FMMonth YYYY')as start_year,
     to_char(vw_employee_year.fiscal_year_end, 'FMDDth FMMonth YYYY')as end_year,
 
-   round( date_part('day',vw_employee_year.fiscal_year_start::date) )::integer as start_date_day,   
+   round( date_part('day',vw_employee_year.fiscal_year_start::date) )::integer as start_date_day,
     round(date_part('month', vw_employee_year.fiscal_year_start::date))::integer as start_date_month,
     round(date_part('year', vw_employee_year.fiscal_year_start::date))::integer as start_date_year,
-        
-    
-    round(date_part('day', vw_employee_year.fiscal_year_end::date))::integer as end_date_day, 
-    round(date_part('month', vw_employee_year.fiscal_year_end::date))::integer as end_date_month, 
-    
-    round(date_part('year', vw_employee_year.fiscal_year_end::date))::integer as end_date_year, 
+
+
+    round(date_part('day', vw_employee_year.fiscal_year_end::date))::integer as end_date_day,
+    round(date_part('month', vw_employee_year.fiscal_year_end::date))::integer as end_date_month,
+
+    round(date_part('year', vw_employee_year.fiscal_year_end::date))::integer as end_date_year,
 
 
     vw_employee_year.period_of_salary, vw_employee_year.y_basic_salary,
     vw_employee_year.y_gross_salary, vw_employee_year.y_net_pay,
-   
+
     get_year_allowance(vw_employee_year.entity_id, vw_employee_year.fiscal_year_id, 11) as LeavePay,
     get_year_allowance(vw_employee_year.entity_id, vw_employee_year.fiscal_year_id, 12) as DirectorFee,
     get_year_allowance(vw_employee_year.entity_id, vw_employee_year.fiscal_year_id, 13) as CommFee,
@@ -82,11 +83,11 @@
     get_year_allowance(vw_employee_year.entity_id, vw_employee_year.fiscal_year_id, 21) +
     get_year_allowance(vw_employee_year.entity_id, vw_employee_year.fiscal_year_id, 22)) as OtherRAP,
     get_year_allowance(vw_employee_year.entity_id, vw_employee_year.fiscal_year_id, 23) as Pension,
-      
+
     vw_employee_year.alternate_employment,
     (CASE WHEN vw_employee_year.alternate_employment is null THEN '0' ELSE '1' END) as full_time,
     employment.employers_name, employment.position_held, employment.alternative_address, employment.alternative_salary
-  
+
 FROM vw_employee_year LEFT JOIN employment ON vw_employee_year.alternate_employment = employment.employment_id
 
 WHERE (vw_employee_year.fiscal_year_id = '$P!{fiscal_year_id}')

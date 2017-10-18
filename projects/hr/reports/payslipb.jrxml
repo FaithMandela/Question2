@@ -30,6 +30,7 @@
 		<![CDATA[SELECT vw_employee_month.employee_month_id, vw_employee_month.period_year, vw_employee_month.period_month, vw_employee_month.employee_id, vw_employee_month.entity_id, vw_employee_month.entity_name, vw_employee_month.identity_card, vw_employee_month.start_date, vw_employee_month.bank_name,  vw_employee_month.bank_branch_name, vw_employee_month.bank_account, vw_employee_month.basic_pay, vw_employee_month.net_pay, vw_employee_month.advance, vw_employee_month.advance_deduction, vw_employee_month.banked,
 vw_employee_month.currency_symbol,
 
+get_org_logo(vw_employee_month.org_id) as org_logo,
 true as is_inpayoll, false as not_inpayroll
 
 FROM vw_employee_month
@@ -55,6 +56,7 @@ $P!{organd};]]>
 	<field name="advance_deduction" class="java.lang.Double"/>
 	<field name="banked" class="java.lang.Double"/>
 	<field name="currency_symbol" class="java.lang.String"/>
+	<field name="org_logo" class="java.lang.String"/>
 	<field name="is_inpayoll" class="java.lang.Boolean"/>
 	<field name="not_inpayroll" class="java.lang.Boolean"/>
 	<background>
@@ -77,7 +79,7 @@ $P!{organd};]]>
 			</staticText>
 			<image>
 				<reportElement x="1" y="1" width="303" height="102" uuid="1185cd75-5810-4dc6-ac4d-bfa8810879b3"/>
-				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "logo.png"]]></imageExpression>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + $F{org_logo}]]></imageExpression>
 			</image>
 		</band>
 	</title>

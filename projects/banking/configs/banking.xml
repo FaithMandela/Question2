@@ -4,8 +4,9 @@
 		<MENU name="Loans">120</MENU>
 		<MENU name="Customers">105</MENU>
 		<MENU name="Processing">125</MENU>
-		<MENU name="Service Desk">
+		<MENU name="Service">
 			<MENU name="Client Forms">22</MENU>
+			<MENU name="Applicants">265</MENU>
 			<MENU name="Approvals">83</MENU>
 		</MENU>
 		<MENU name="Operations">
@@ -22,6 +23,7 @@
 		<MENU name="Configurations" role="admin">
 			<MENU name="Products">110</MENU>
 			<MENU name="Organisation" role="admin">12</MENU>
+			<MENU name="Subscriptions">260</MENU>
 			<MENU name="Banks">25</MENU>
 			<MENU name="Items">30</MENU>
 			<MENU name="Chat of Accounts">5</MENU>
@@ -115,6 +117,52 @@
 				<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
+		<GRID name="All Organisation" keyfield="org_id" table="orgs" noorg="true" superuser="true">
+			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
+			<TEXTFIELD w="275" title="Org Name">org_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Default">is_default</CHECKBOX>
+			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+			<FORM name="Organisation" keyfield="org_id" table="orgs" noorg="true">
+				<TEXTFIELD w="350" title="Organisation" placeholder="Organisation Name" y="10" h="20" x="10">org_name</TEXTFIELD>
+				<CHECKBOX w="150" title="Default" y="30" h="20" x="10">is_default</CHECKBOX>
+				<CHECKBOX w="150" title="Active" y="30" h="20" x="290">is_active</CHECKBOX>
+				<TEXTFIELD w="350" title="Logo" placeholder="Logo" y="50" h="20" x="10">logo</TEXTFIELD>
+				<COMBOBOX w="430" title="Base Currency" lptable="currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<COMBOBOX w="350" title="Default Country" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="90" h="20" x="10" lpfield="sys_country_name">default_country_id</COMBOBOX>
+				<COMBOBOX w="430" title="Parent Org" lptable="orgs" noorg="true" lpkey="org_id" y="110" h="20" x="10" lpfield="org_name">parent_org_id</COMBOBOX>
+				<TEXTFIELD w="50" title="Sufix" placeholder="Organisation Sufix" y="130" h="20" x="10">org_sufix</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" placeholder="Details" y="150" h="70" x="10">details</TEXTAREA>
+			</FORM>
+			<GRID name="Entitys" keyfield="entity_id" linkfield="org_id" table="vw_entitys" noorg="true">
+				<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
+				<TEXTFIELD w="140" title="Entity Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="Role">function_role</TEXTFIELD>
+				<CHECKBOX w="100" title="Super User" format="boolean">super_user</CHECKBOX>
+				<CHECKBOX w="75" title="Active" format="boolean">is_active</CHECKBOX>
+				<TEXTFIELD w="100" title="Type">entity_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
+				<TEXTFIELD w="75" title="Telephone">primary_telephone</TEXTFIELD>
+				<FORM name="Entitys" keyfield="entity_id" linkfield="org_id" table="entitys" noorg="true">
+					<TEXTFIELD w="150" title="Entity Name" y="10" h="20" x="10">entity_name</TEXTFIELD>
+					<TEXTFIELD w="150" title="User Name" y="10" h="20" x="290">user_name</TEXTFIELD>
+					<TEXTFIELD w="430" title="Primary Email" y="30" h="20" x="10">primary_email</TEXTFIELD>
+					<TEXTFIELD w="250" title="Primary Telephone" y="50" h="20" x="10">primary_telephone</TEXTFIELD>
+					<CHECKBOX w="150" title="Entity Leader" y="70" h="20" x="290">entity_leader</CHECKBOX>
+					<TEXTFIELD w="150" title="Function Role" y="90" h="20" x="290">function_role</TEXTFIELD>
+					<CHECKBOX w="150" title="Active" y="110" h="20" x="10">is_active</CHECKBOX>
+					<TEXTFIELD w="150" title="First Password" y="110" h="20" x="290">first_password</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
+				</FORM>
+				<GRID name="Subscriptions" keyfield="entity_subscription_id" linkfield="entity_id" table="vw_entity_subscriptions" noorg="true">
+					<TEXTFIELD w="75" title="Entity Type Name">entity_type_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Subscription Level Name">subscription_level_name</TEXTFIELD>
+				</GRID>
+				<ACTIONS>
+					<ACTION fnct="change_password">Reset Password</ACTION>
+				</ACTIONS>
+			</GRID>
+		</GRID>
 		<GRID name="Currency" keyfield="currency_id" table="currency" noorg="true">
 			<TEXTFIELD w="75" title="Currency ID">currency_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Currency Name">currency_name</TEXTFIELD>
@@ -145,6 +193,53 @@
 				<TEXTAREA w="530" tab="Reports" y="2" h="170" x="10">reports</TEXTAREA>
 				<TEXTAREA w="530" tab="Details" y="2" h="170" x="10">details</TEXTAREA>
 			</FORM>
+		</GRID>
+		<GRID name="Locations" keyfield="location_id" table="locations">
+			<TEXTFIELD w="75" title="Location ID">location_id</TEXTFIELD>
+			<TEXTFIELD w="175" title="Location Name">location_name</TEXTFIELD>
+			<FORM name="Locations" keyfield="location_id" table="locations">
+				<TEXTFIELD w="150" title="Location Name" y="10" h="20" x="10">location_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Subscriptions" key="260" h="550">
+		<GRID name="Subscriptions" keyfield="subscription_id" table="vw_subscriptions" noorg="true">
+			<TEXTFIELD w="75" title="Subscription ID">subscription_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Country">sys_country_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Business Name">business_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="City">city</TEXTFIELD>
+			<TEXTFIELD w="75" title="Telephone">telephone</TEXTFIELD>
+			<TEXTFIELD w="75" title="Website">website</TEXTFIELD>
+			<TEXTFIELD w="75" title="Primary Contact">primary_contact</TEXTFIELD>
+			<TEXTFIELD w="75" title="Job Title">job_title</TEXTFIELD>
+			<TEXTFIELD w="75" title="Primary Email">primary_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+			<FORMVIEW name="Subscriptions" keyfield="subscription_id" linkfield="subscription_id" table="vw_subscriptions" noorg="true">
+				<TEXTFIELD w="75" title="Subscription ID">subscription_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Business Name">business_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Business Address">business_address</TEXTFIELD>
+				<TEXTFIELD w="75" title="City">city</TEXTFIELD>
+				<TEXTFIELD w="75" title="State">state</TEXTFIELD>
+				<TEXTFIELD w="75" title="Country">sys_country_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Telephone">telephone</TEXTFIELD>
+				<TEXTFIELD w="75" title="Website">website</TEXTFIELD>
+				<TEXTFIELD w="75" title="Primary Contact">primary_contact</TEXTFIELD>
+				<TEXTFIELD w="75" title="Job Title">job_title</TEXTFIELD>
+				<TEXTFIELD w="75" title="Primary Email">primary_email</TEXTFIELD>
+				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+				<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
+				<TEXTFIELD w="75" title="System Key">system_key</TEXTFIELD>
+				<CHECKBOX w="75" title="Subscribed">subscribed</CHECKBOX>
+				<TEXTTIMESTAMP w="75" title="Subscribed Date">subscribed_date</TEXTTIMESTAMP>
+				<TEXTAREA w="430" title="Details" y="290" h="70" x="10">details</TEXTAREA>
+			</FORMVIEW>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Entitys" key="15" h="500">
@@ -1025,7 +1120,7 @@
 					<DATA>Dr</DATA>
 					<DATA>Prof</DATA>
 				</COMBOLIST>
-				<TEXTFIELD w="350" title="Customer Name" required="true" y="10" h="20" x="290">customer_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Customer Name" required="true" y="10" h="20" x="290">customer_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Identification Number" required="true" y="30" h="20" x="10" span="true">identification_number</TEXTFIELD>
 				<TEXTFIELD w="150" title="Identification Type" required="true" y="30" h="20" x="290">identification_type</TEXTFIELD>
 				<TEXTFIELD w="150" title="Email" required="true" y="50" h="20" x="10">client_email</TEXTFIELD>
@@ -1225,25 +1320,107 @@
 					<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM name="Clients" keyfield="customer_id" table="customers">
+			<FORM cols="2" name="Clients" keyfield="customer_id" table="customers">
 				<USERFIELD>entity_id</USERFIELD>
 				<DEFAULT default="1">business_account</DEFAULT>
-				<TEXTFIELD w="430" title="Customer Name" required="true" y="10" h="20" x="10">customer_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="Identification Number" required="true" y="30" h="20" x="10">identification_number</TEXTFIELD>
+				<TEXTFIELD w="150" title="Customer Name" required="true" y="10" h="20" x="10">customer_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Identification Number" required="true" y="30" h="20" x="10" span="true">identification_number</TEXTFIELD>
 				<TEXTFIELD w="150" title="Identification Type" required="true" y="30" h="20" x="290">identification_type</TEXTFIELD>
 				<TEXTFIELD w="150" title="Applicant Email" required="true" y="50" h="20" x="10">client_email</TEXTFIELD>
-				<TEXTFIELD w="150" title="Telephone Number" required="true" y="70" h="20" x="10">telephone_number</TEXTFIELD>
-				<TEXTFIELD w="150" title="Telephone Number2" y="70" h="20" x="290">telephone_number2</TEXTFIELD>
+				<TEXTFIELD w="150" title="Telephone Number" required="true" y="70" h="20" x="10" span="true">telephone_number</TEXTFIELD>
+				<TEXTFIELD w="150" title="Alternative Telephone" y="70" h="20" x="290">telephone_number2</TEXTFIELD>
 				<TEXTFIELD w="150" title="Address" required="true" y="90" h="20" x="10">address</TEXTFIELD>
-				<TEXTFIELD w="150" title="Town" required="true" y="110" h="20" x="10">town</TEXTFIELD>
+				<TEXTFIELD w="150" title="Town" required="true" y="110" h="20" x="10" span="true">town</TEXTFIELD>
 				<TEXTFIELD w="150" title="Zip Code" required="true" y="110" h="20" x="290">zip_code</TEXTFIELD>
 				<TEXTDATE w="150" title="Date Of Registration" y="130" h="20" x="10" span="true">date_of_birth</TEXTDATE>
-				<COMBOBOX w="150" title="Nationality" lptable="sys_countrys" default_org_fnct="get_default_country" noorg="true" lpkey="sys_country_id" y="150" h="20" x="10" lpfield="sys_country_name">nationality</COMBOBOX>
-				<TEXTDECIMAL w="150" title="Annual Turnover" y="170" h="20" x="10">annual_turnover</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Annual Net Income" y="170" h="20" x="290">annual_net_income</TEXTDECIMAL>
+				<COMBOBOX w="150" title="Country" lptable="sys_countrys" default_org_fnct="get_default_country" noorg="true" lpkey="sys_country_id" y="130" h="20" x="290" lpfield="sys_country_name">nationality</COMBOBOX>
+				<TEXTDECIMAL w="150" title="Annual Turnover" y="150" h="20" x="10" span="true">annual_turnover</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Annual Net Income" y="150" h="20" x="290">annual_net_income</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Introduced By" y="190" h="20" x="10">introduced_by</TEXTFIELD>
 				<TEXTAREA w="430" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
 			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Applicants" key="265" h="550">
+		<GRID name="Personal Applicants" keyfield="applicant_id" table="applicants" where="(business_account = 0)">
+			<TEXTFIELD w="75" title="Applicant ID">applicant_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Person Title">person_title</TEXTFIELD>
+			<TEXTFIELD w="75" title="Applicant Name">applicant_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Identification Number">identification_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Identification Type">identification_type</TEXTFIELD>
+			<TEXTFIELD w="75" title="Client Email">client_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Telephone Number">telephone_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
+			<TEXTDATE w="75" title="Date Of Birth">date_of_birth</TEXTDATE>
+			<CHECKBOX w="75" title="Gender">gender</CHECKBOX>
+			<TEXTFIELD w="75" title="Nationality">nationality</TEXTFIELD>
+			<TEXTFIELD w="75" title="Marital Status">marital_status</TEXTFIELD>
+			<CHECKBOX w="75" title="Employed">employed</CHECKBOX>
+			<CHECKBOX w="75" title="Self Employed">self_employed</CHECKBOX>
+			<TEXTFIELD w="75" title="Employer Name">employer_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+			<FORMVIEW name="Applicants" keyfield="applicant_id" linkfield="applicant_id" table="applicants">
+				<TEXTFIELD w="75" title="Applicant ID">applicant_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Person Title">person_title</TEXTFIELD>
+				<TEXTFIELD w="75" title="Applicant Name">applicant_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Identification Number">identification_number</TEXTFIELD>
+				<TEXTFIELD w="75" title="Identification Type">identification_type</TEXTFIELD>
+				<TEXTFIELD w="75" title="Client Email">client_email</TEXTFIELD>
+				<TEXTFIELD w="75" title="Telephone Number">telephone_number</TEXTFIELD>
+				<TEXTFIELD w="75" title="Alternative Telephone">telephone_number2</TEXTFIELD>
+				<TEXTFIELD w="75" title="Address">address</TEXTFIELD>
+				<TEXTFIELD w="75" title="Zip Code">zip_code</TEXTFIELD>
+				<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
+				<TEXTDATE w="75" title="Date Of Birth">date_of_birth</TEXTDATE>
+				<CHECKBOX w="75" title="Gender">gender</CHECKBOX>
+				<TEXTFIELD w="75" title="Nationality">nationality</TEXTFIELD>
+				<TEXTFIELD w="75" title="Marital Status">marital_status</TEXTFIELD>
+				<CHECKBOX w="75" title="Employed">employed</CHECKBOX>
+				<CHECKBOX w="75" title="Self Employed">self_employed</CHECKBOX>
+				<TEXTFIELD w="75" title="Employer Name">employer_name</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Monthly Salary">monthly_salary</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Monthly Net Income">monthly_net_income</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="Introduced By">introduced_by</TEXTFIELD>
+				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+				<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
+				<TEXTAREA w="430" title="Details" y="440" h="70" x="10">details</TEXTAREA>
+			</FORMVIEW>
+		</GRID>
+		<GRID name="Business Applicants" keyfield="applicant_id" table="applicants" where="(business_account = 1)">
+			<TEXTFIELD w="75" title="Applicant ID">applicant_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Applicant Name">applicant_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Identification Number">identification_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Identification Type">identification_type</TEXTFIELD>
+			<TEXTFIELD w="75" title="Client Email">client_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Telephone Number">telephone_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
+			<TEXTFIELD w="75" title="Zip Code">zip_code</TEXTFIELD>
+			<TEXTDATE w="75" title="Date Of Registration">date_of_birth</TEXTDATE>
+			<TEXTFIELD w="75" title="Country">nationality</TEXTFIELD>
+			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+			<FORMVIEW name="Applicants" keyfield="applicant_id" linkfield="applicant_id" table="applicants">
+				<TEXTFIELD w="75" title="Applicant ID">applicant_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Applicant Name">applicant_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Identification Number">identification_number</TEXTFIELD>
+				<TEXTFIELD w="75" title="Identification Type">identification_type</TEXTFIELD>
+				<TEXTFIELD w="75" title="Client Email">client_email</TEXTFIELD>
+				<TEXTFIELD w="75" title="Telephone Number">telephone_number</TEXTFIELD>
+				<TEXTFIELD w="75" title="Alternative Telephone">telephone_number2</TEXTFIELD>
+				<TEXTFIELD w="75" title="Address">address</TEXTFIELD>
+				<TEXTFIELD w="75" title="Zip Code">zip_code</TEXTFIELD>
+				<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
+				<TEXTDATE w="75" title="Date Of Registration">date_of_birth</TEXTDATE>
+				<TEXTFIELD w="75" title="Country">nationality</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Annual Turnover">annual_turnover</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Annual Net Income">annual_net_income</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="Introduced By">introduced_by</TEXTFIELD>
+				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+				<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
+				<TEXTAREA w="430" title="Details" y="440" h="70" x="10">details</TEXTAREA>
+			</FORMVIEW>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Products" key="110" h="550">
@@ -1365,7 +1542,7 @@
 	</DESK>
 	<DESK w="700" name="Deposit Accounts" key="115" h="550">
 		<GRID name="Deposit Accounts" keyfield="deposit_account_id" table="vw_deposit_accounts" where="(approve_status = 'Approved')">
-			<TEXTFIELD w="75" title="Account Number">account_number</TEXTFIELD>
+			<TEXTLINK w="75" title="Account Number">account_number</TEXTLINK>
 			<TEXTFIELD w="75" title="Customer">customer_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
@@ -1452,7 +1629,7 @@
 	</DESK>
 	<DESK w="700" name="Loans" key="120" h="550">
 		<GRID name="Loans" keyfield="loan_id" table="vw_loans" where="(approve_status = 'Approved')">
-			<TEXTFIELD w="75" title="Loan Account">account_number</TEXTFIELD>
+			<TEXTLINK w="75" title="Loan Account">account_number</TEXTLINK>
 			<TEXTFIELD w="75" title="Customer">customer_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>

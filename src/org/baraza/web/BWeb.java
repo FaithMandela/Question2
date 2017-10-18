@@ -63,12 +63,13 @@ public class BWeb {
 	List<BElement> views;
 	List<String> viewKeys;
 	List<String> viewData;
+	List<String> dashboardItems;
 	Map<String, String> params;
 
 	boolean selectAll = false;
 	boolean isLicense = true;
 	boolean isExpired = false;
-	String[] deskTypes = {"ACCORDION", "CROSSTAB", "DASHBOARD", "DIARY",  "FILES", "FILTER", "FORM", "FORMVIEW", "GRID", "JASPER"};	// The search data  has to be ordered alphabetically
+	String[] deskTypes = {"ACCORDION", "CROSSTAB", "DASHBOARD", "DIARY",  "FILES", "FILTER", "FORM", "FORMVIEW", "GRID", "JASPER", "TABLEVIEW"};	// The search data  has to be ordered alphabetically
 	String viewKey = null;
 	String dataItem = null;
 	String userID = null;
@@ -593,8 +594,6 @@ public class BWeb {
 			if(view.getAttribute("grid.print", "false").equals("true"))
 				buttons += "<a class='btn green btn-sm' target='_blank' href='b_print.jsp?view=" + viewKey + did + "&action=print'><i class='fa fa-print'></i>   Print</a>\n";
 			
-			//if(isEditField()) buttons += "<button type='button' class='btn btn-success i_tick icon small' name='btProcess' id='btProcess' value='Submit'><i class='fa  fa-save'></i> &nbsp; Submit</button>\n";
-            
             buttons += "<a class='btn btn-circle btn-icon-only btn-default btn-sm fullscreen' href='javascript:;' data-original-title='' title=''></a>";
 		}
 		
@@ -607,6 +606,10 @@ public class BWeb {
 		
 		if(view.getName().equals("ACCORDION")) {
 			buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'> <i class='fa  fa-save'></i> &nbsp; Save </button>\n";
+		}
+		
+		if(view.getName().equals("TABLEVIEW") && (view.getAttribute("updatetable") != null)) {
+			buttons += "<button type='button' class='btn btn-success i_tick icon small' name='btProcess' id='btProcess' value='Submit'><i class='fa  fa-save'></i> &nbsp; Submit</button>\n";
 		}
 		
 		if(isForm()) {
@@ -686,6 +689,7 @@ public class BWeb {
 		String body = "";
 		
 		BWebDashboard webDashboard = new BWebDashboard(db);
+		dashboardItems = new ArrayList<String>();
 		
 		body += "<div class='row margin-top-5'>\n";
 		for(BElement el : view.getElements()) {
@@ -700,6 +704,14 @@ public class BWeb {
 			if(hasAccess && el.getName().equals("TILELIST")) body += webDashboard.getTileList(el);
 		}
 		body += "</div>\n";
+		
+		for(BElement el : view.getElements()) {
+			boolean hasAccess  = checkAccess(el.getAttribute("role"));
+			if(hasAccess) {
+				if(el.getName().equals("ATTENDANCE")) dashboardItems.add("ATTENDANCE");
+				else if(el.getName().equals("TASK")) dashboardItems.add("TASK");
+			}
+		}
 		
 		return body;
 	}
@@ -864,6 +876,11 @@ public class BWeb {
 			body += webbody.getGrid(viewKeys, viewData, true, viewKey, false);
 			webbody.close();
 		} else if(view.getName().equals("FORMVIEW")) {
+			BWebBody webbody = new BWebBody(db, view, wheresql, sortby);
+			if(selectAll) webbody.setSelectAll();
+			body += webbody.getGrid(viewKeys, viewData, true, viewKey, false);
+			webbody.close();
+		} else if(view.getName().equals("TABLEVIEW")) {
 			BWebBody webbody = new BWebBody(db, view, wheresql, sortby);
 			if(selectAll) webbody.setSelectAll();
 			body += webbody.getGrid(viewKeys, viewData, true, viewKey, false);
@@ -2213,6 +2230,7 @@ log.severe("BASE : " + mysql);
 	public String executeQuery(String mysql) { return db.executeQuery(mysql); }
 	
 	public BQuery getQuery(String mysql) { return new BQuery(db, mysql); }
+	public boolean hasDashboardItem(String dashboardItem) {return dashboardItems.contains(dashboardItem); }
 
 	public BElement getRoot() { return root; }
 	public BElement getView() { return view; }

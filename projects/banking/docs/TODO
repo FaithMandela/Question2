@@ -1,17 +1,16 @@
 TODO
 
-Make org have first customer account
+- Mechant account
+- Subscription; Default products, account_definations, accounts
 
 - Loan payments without availability of funds : to test
 - Separate how I make transactions on web : to test
 - Check on minimums for accounts transactions : to test on new transactions
 - desposit account, loan and activity change logs : to test
-- Compute annual compound intrest
+- Compute annual compound intrest : to test
+- Summary reports : to test
 
-- Summary reports
 - Accounts posting
-- Chama migration
-
 - Making standing orders
 
 - Online purchase would need API

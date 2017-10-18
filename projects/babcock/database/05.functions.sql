@@ -1983,6 +1983,12 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER aft_instructors AFTER INSERT OR UPDATE ON instructors
   FOR EACH ROW EXECUTE PROCEDURE aft_instructors();
+  
+CREATE OR REPLACE FUNCTION get_officer_school(integer) RETURNS varchar(16) AS $$
+	SELECT school_officers.schoolid
+	FROM school_officers
+	WHERE (school_officers.entity_id = $1);
+$$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION get_school(varchar(16)) RETURNS varchar(16) AS $$
 	SELECT departments.schoolid
@@ -2102,7 +2108,8 @@ DECLARE
 	mystr VARCHAR(120);
 BEGIN
 	IF($3 = '3')THEN
-		UPDATE qstudents SET so_approval = true WHERE (qstudentid = $1::integer);
+		UPDATE qstudents SET so_approval = true, approved = true
+		WHERE (qstudentid = $1::integer);
 		mystr := 'School officers approval';
 	ELSIF($3 = '4')THEN
 		UPDATE qstudents SET majorapproval = false WHERE (qstudentid = $1::integer);

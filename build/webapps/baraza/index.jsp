@@ -278,7 +278,14 @@
 
 <% if(web.getViewType().equals("DASHBOARD")) { %>
 
-		<%= web.getDashboard() %>
+	<%= web.getDashboard() %>
+
+	<% if(web.hasDashboardItem("ATTENDANCE")) {%>
+		<%@ include file="./assets/include/attendance.jsp" %>
+	<% } %>
+	<% if(web.hasDashboardItem("TASK")) {%>
+		<%@ include file="./assets/include/task.jsp" %>
+	<% } %>
 
 <% } else { %>
 
@@ -394,7 +401,7 @@
 <!-- BEGIN FOOTER -->
 <div class="page-footer">
 	<div class="page-footer-inner">
-		2015 &copy; Open Baraza. <a href="http://dewcis.com">Dew Cis Solutions Ltd.</a> All Rights Reserved
+		2017 &copy; Open Baraza. <a href="http://dewcis.com">Dew Cis Solutions Ltd.</a> All Rights Reserved
 	</div>
 	<div class="scroll-to-top">
 		<i class="icon-arrow-up"></i>
@@ -492,6 +499,9 @@
 <!-- IMPORTANT! fullcalendar depends on jquery-ui.min.js for drag & drop support -->
 <script type="text/javascript" src="./assets/global/plugins/moment.min.js"></script>
 <script type="text/javascript" src="./assets/global/plugins/fullcalendar/fullcalendar.min.js"></script>
+
+<!-- openbaraza js-->
+<script type="text/javascript" src="./assets/js/attendance-task.js"></script>
 
 <script>
     jQuery(document).ready(function() {
@@ -602,6 +612,26 @@
 </script>
 
 <script>
+	
+	var jsonFieldUpdates = [];
+	$('#btProcess').click(function(){
+        $.post("ajax?fnct=tableviewupdate", {jsonfield: JSON.stringify(jsonFieldUpdates)}, function(data) {
+            if(data.error == true){
+                toastr['error'](data.message, "Error");
+            }else if(data.error == false){
+				location.reload();
+                toastr['success'](data.message, "Ok");
+            }
+        }, "JSON");
+	});
+
+	function readComboValue(fieldName, keyid, selectObj) {
+		var selectIndex = selectObj.selectedIndex;
+		var selectValue = selectObj.options[selectIndex].value;
+		var jsonField = {"field_name" : fieldName, "key_id" : keyid, "field_value" : selectValue};
+		jsonFieldUpdates.push(jsonField);
+	}
+
    	function updateField(valueid, valuename) {
 		document.getElementsByName(valueid)[0].value = valuename;
 	}
@@ -733,10 +763,6 @@
             $('#jqlist').setGridParam({datatype:'json', page:1}).trigger('reloadGrid');
         });
     });
-
-	$('#btProcess').click(function(){
-console.log("TODO Bulk Save grid");
-	});
 
 	$('#btnAction').click(function(){
 	    var operation = $("#operation").val();

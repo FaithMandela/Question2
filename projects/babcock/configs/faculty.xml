@@ -89,7 +89,7 @@
 			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
-			<GRID name="Semester Students" keyfield="qstudentid" updatetable="qstudents" linkfield="quarterid" table="vwqstudentbalances" where="(finaceapproval = true) AND (printed = true)" key="2">
+			<GRID name="Semester Students" keyfield="qstudentid" updatetable="qstudents" linkfield="quarterid" table="vwqstudentbalances" where="(finaceapproval = true) AND (printed = true)">
 				<TEXTFIELD w="10" title="Matrix Num">studentid</TEXTFIELD>
 				<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
 				<TEXTFIELD w="20" title="Account Number">accountnumber</TEXTFIELD>
@@ -110,23 +110,24 @@
 		</GRID>
 	</DESK>
 	<DESK w="800" name="Registration Form" type="vert" key="562" h="500">
-		<GRID name="Student List" keyfield="qstudentid" table="qcurrstudentdegreeview" where="(finalised = true) AND (so_approval = false) ">
+		<GRID user_field="schoolid" name="Student List" keyfield="qstudentid" user_fnct="get_officer_school" table="qcurrstudentdegreeview" where="(finalised = true) AND (so_approval = false) AND (majorapproval = true)">
 			<TEXTFIELD w="75" title="Matrix Num">studentid</TEXTFIELD>
 			<TEXTFIELD w="135" title="Student Name">studentname</TEXTFIELD>
 			<TEXTFIELD w="50" title="Advisor Approval">majorapproval</TEXTFIELD>
 			<TEXTFIELD w="50" title="Finance Approval">finaceapproval</TEXTFIELD>
 			<TEXTFIELD w="50" title="Submited Course">finalised</TEXTFIELD>
-			<JASPER name="Student Details" reportfile="studentdetailsa.jasper"></JASPER>
+			<JASPER name="Student Details" reportfile="studentdetailsc.jasper"></JASPER>
 			<ACTIONS>
 				<ACTION fnct="approve_so" approval="3">School Officer Approval</ACTION>
 			</ACTIONS>
 		</GRID>
 		<FILTER w="700" name="Registration Forms" split="250" type="vert" h="750">
-			<FILTERGRID update="updprinted" name="Student List" keyfield="qstudentid" updatetable="qstudents" table="vwqstudentcharges" where="(printed = false) AND (finalised = true) AND (active = true)">
+			<FILTERGRID update="updprinted" user_field="schoolid" name="Student List" keyfield="qstudentid" updatetable="qstudents" user_fnct="get_officer_school" table="vwqstudentcharges" where="(printed = false) AND (finalised = true) AND (active = true)">
 				<TEXTFIELD w="125" title="School">schoolname</TEXTFIELD>
 				<TEXTFIELD w="50" title="Matrix Num">studentid</TEXTFIELD>
 				<TEXTFIELD w="135" title="Student Name">studentname</TEXTFIELD>
 				<TEXTFIELD w="75" title="Finance Approval">finaceapproval</TEXTFIELD>
+				<TEXTFIELD w="50" title="Advisor Approval">majorapproval</TEXTFIELD>
 				<TEXTFIELD w="75" title="Close Application">finalised</TEXTFIELD>
 				<TEXTFIELD w="75" title="Printed" edit="true">printed</TEXTFIELD>
 			</FILTERGRID>
@@ -147,7 +148,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="800" name="Printed List" type="vert" key="565" h="500">
-		<GRID name="Student List" keyfield="qstudentid" updatetable="qstudents" table="printedstudentview" key="1">
+		<GRID name="Student List" keyfield="qstudentid" updatetable="qstudents" table="printedstudentview">
 			<TEXTFIELD w="75" title="Matrix Num">studentid</TEXTFIELD>
 			<TEXTFIELD w="135" title="Student Name">studentname</TEXTFIELD>
 			<TEXTFIELD w="135" title="Degree">degreename</TEXTFIELD>

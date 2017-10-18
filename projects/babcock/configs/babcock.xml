@@ -318,6 +318,17 @@
 					<TEXTAREA w="590" tab="Details" y="2" h="170" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
+			<GRID name="School Officers" keyfield="school_officer_id" linkfield="schoolid" table="vw_school_officers">
+				<TEXTFIELD w="75" title="Schoolid">schoolid</TEXTFIELD>
+				<TEXTFIELD w="75" title="Schoolname">schoolname</TEXTFIELD>
+				<TEXTFIELD w="75" title="User ID">entity_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Full Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="User Name">user_name</TEXTFIELD>
+				<FORM name="School Officers" keyfield="school_officer_id" linkfield="schoolid" table="school_officers">
+					<COMBOBOX w="430" title="User" lptable="entitys" where="(function_role = 'school')" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
 		</GRID>
 		<GRID name="Departments" keyfield="departmentid" table="departmentview">
 			<TEXTFIELD w="40" title="Department ID">departmentid</TEXTFIELD>

@@ -356,7 +356,7 @@
 			<TEXTDECIMAL w="50" title="Late">late</TEXTDECIMAL>
 			<TEXTDECIMAL w="50" title="Overtime">overtime</TEXTDECIMAL>
 			<FORM name="Attendance" keyfield="attendance_id" table="attendance">
-				<COMBOBOX w="150" title="Entity ID" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Staff" lptable="vw_employees" y="10" h="20" x="10" lpfield="employee_name">entity_id</COMBOBOX>
 				<TEXTDATE w="150" title="Attendance Date" y="10" h="20" x="290">attendance_date</TEXTDATE>
 				<SPINTIME w="150" title="Time In" type="2" y="30" h="20" x="10">time_in</SPINTIME>
 				<SPINTIME w="150" title="Time Out" type="2" y="30" h="20" x="290">time_out</SPINTIME>

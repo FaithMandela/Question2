@@ -75,49 +75,49 @@ ORDER BY vw_activity_types.activity_type_id]]>
 				<text><![CDATA[ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="23" y="0" width="136" height="15" forecolor="#000000" uuid="dd86d5a1-7915-49fc-a7f8-6f6980d6bd1a"/>
+				<reportElement style="Column header" x="23" y="0" width="120" height="15" forecolor="#000000" uuid="dd86d5a1-7915-49fc-a7f8-6f6980d6bd1a"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Activity Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="159" y="0" width="37" height="15" forecolor="#000000" uuid="3b04686f-c225-434e-b9fc-736013c1374b"/>
+				<reportElement style="Column header" x="143" y="0" width="37" height="15" forecolor="#000000" uuid="3b04686f-c225-434e-b9fc-736013c1374b"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Active]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="196" y="0" width="65" height="15" forecolor="#000000" uuid="16bdfbef-88e3-43e6-89f5-259c7483c5b4"/>
+				<reportElement style="Column header" x="180" y="0" width="92" height="15" forecolor="#000000" uuid="16bdfbef-88e3-43e6-89f5-259c7483c5b4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Use]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="261" y="0" width="65" height="15" forecolor="#000000" uuid="ae95e67f-0299-43e6-a724-4780d31da1bf"/>
+				<reportElement style="Column header" x="272" y="0" width="40" height="15" forecolor="#000000" uuid="ae95e67f-0299-43e6-a724-4780d31da1bf"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<text><![CDATA[Dr Account No]]></text>
+				<text><![CDATA[Dr No]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="326" y="0" width="65" height="15" forecolor="#000000" uuid="db13adaa-a843-4182-9eeb-9d3b3030409f"/>
+				<reportElement style="Column header" x="312" y="0" width="95" height="15" forecolor="#000000" uuid="db13adaa-a843-4182-9eeb-9d3b3030409f"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Dr Account Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="391" y="0" width="65" height="15" forecolor="#000000" uuid="b6798b07-d35c-4b51-bf00-4d767abc7455"/>
+				<reportElement style="Column header" x="407" y="0" width="40" height="15" forecolor="#000000" uuid="b6798b07-d35c-4b51-bf00-4d767abc7455"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<text><![CDATA[Cr Account No]]></text>
+				<text><![CDATA[Cr No]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="456" y="0" width="65" height="15" forecolor="#000000" uuid="fe8bb862-1825-4a2a-af67-8298c80c4eed"/>
+				<reportElement style="Column header" x="447" y="0" width="95" height="15" forecolor="#000000" uuid="fe8bb862-1825-4a2a-af67-8298c80c4eed"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
@@ -137,49 +137,49 @@ ORDER BY vw_activity_types.activity_type_id]]>
 					<textFieldExpression><![CDATA[$F{activity_type_id}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="23" y="0" width="136" height="15" uuid="45085c5d-07a3-422a-8804-4c5a4abbc388"/>
+					<reportElement style="Detail" x="23" y="0" width="120" height="15" uuid="45085c5d-07a3-422a-8804-4c5a4abbc388"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{activity_type_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="159" y="0" width="37" height="15" uuid="d523a61e-8792-42f3-ae70-2caefacfe025"/>
+					<reportElement style="Detail" x="143" y="0" width="37" height="15" uuid="d523a61e-8792-42f3-ae70-2caefacfe025"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{is_active}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="196" y="0" width="65" height="15" uuid="0b705df7-d849-4dc9-8064-492a58bcc27d"/>
+					<reportElement style="Detail" x="180" y="0" width="92" height="15" uuid="0b705df7-d849-4dc9-8064-492a58bcc27d"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{use_key_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="261" y="0" width="65" height="15" uuid="c9aa0473-165e-4974-b6f5-2dda0131fd44"/>
+					<reportElement style="Detail" x="272" y="0" width="40" height="15" uuid="c9aa0473-165e-4974-b6f5-2dda0131fd44"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{dr_account_no}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="326" y="0" width="65" height="15" uuid="3c900979-1083-4d85-ba0b-66f15a3ff087"/>
+					<reportElement style="Detail" x="312" y="0" width="95" height="15" uuid="3c900979-1083-4d85-ba0b-66f15a3ff087"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{dr_account_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="391" y="0" width="65" height="15" uuid="9be08bbf-ce23-4e53-9667-b13cc31780cf"/>
+					<reportElement style="Detail" x="407" y="0" width="40" height="15" uuid="9be08bbf-ce23-4e53-9667-b13cc31780cf"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{cr_account_no}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="456" y="0" width="65" height="15" uuid="10b285d1-19f3-4988-a61b-d2e1ff6d4387"/>
+					<reportElement style="Detail" x="447" y="0" width="95" height="15" uuid="10b285d1-19f3-4988-a61b-d2e1ff6d4387"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
@@ -189,7 +189,7 @@ ORDER BY vw_activity_types.activity_type_id]]>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="15" splitType="Stretch">
+		<band height="7" splitType="Stretch">
 			<line>
 				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="3cc4792e-076e-47d3-9ea5-5e488c6c0de2"/>
 				<graphicElement>

@@ -244,6 +244,11 @@
 				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
+		<GRID new="false" name="Banks" keyfield="terminalid" delete="false" updatetable="banks" table="banks" noorg="true">
+			<TEXTFIELD w="75" title="Terminal ID">terminalid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Bank Name" edit="true">bankname</TEXTFIELD>
+			<TEXTFIELD w="75" title="Account Code" edit="true">accountcode</TEXTFIELD>
+		</GRID>
 	</DESK>
 	<DESK w="630" name="Semesters Approval" key="16" h="520">
 		<GRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true" where="(active = true)">

@@ -1,4 +1,12 @@
 ---Project Database File
+CREATE TABLE locations ( 
+	location_id				serial primary key,
+	org_id					integer references orgs,
+	location_name			varchar(50),
+	details					text
+);
+CREATE INDEX locations_org_id ON locations(org_id);
+
 CREATE TABLE customers (
 	customer_id				serial primary key,
 	entity_id 				integer references entitys,
@@ -295,6 +303,61 @@ CREATE TABLE account_activity_log (
 );
 CREATE INDEX account_activity_log_account_activity_id ON account_activity_log(account_activity_id);
 CREATE INDEX account_activity_log_org_id ON account_activity_log(org_id);
+
+CREATE TABLE sms (
+	sms_id					serial primary key,
+	entity_id				integer references entitys,
+	org_id					integer references orgs,
+	sms_number				varchar(25),
+	sms_numbers				text,
+	sms_time				timestamp default now(),
+	sent					boolean default false not null,
+
+	message					text,
+	details					text
+);
+CREATE INDEX sms_entity_id ON sms (entity_id);
+CREATE INDEX sms_org_id ON sms (org_id);
+
+CREATE TABLE mpesa_trxs (
+	mpesa_trx_id			serial primary key,
+	org_id					integer references orgs,
+	mpesa_id				integer,
+	mpesa_orig				varchar(50),
+	mpesa_dest				varchar(50),
+	mpesa_tstamp			timestamp,
+	mpesa_text				varchar(320),
+	mpesa_code				varchar(50),
+	mpesa_acc				varchar(50),
+	mpesa_msisdn			varchar(50),
+	mpesa_trx_date			date,
+	mpesa_trx_time			time,
+	mpesa_amt				real,
+	mpesa_sender			varchar(50),
+	mpesa_pick_time			timestamp default now()
+);
+CREATE INDEX mpesa_trxs_org_id ON mpesa_trxs (org_id);
+
+CREATE TABLE mpesa_soap (
+	mpesa_soap_id			serial primary key,
+	org_id					integer references orgs,
+	request_id				varchar(32),
+	TransID					varchar(32),
+	TransAmount				real,
+	BillRefNumber			varchar(32),
+	TransTime				varchar(32),
+	BusinessShortCode		varchar(32),
+	TransType				varchar(32),
+	FirstName				varchar(32),
+	LastName				varchar(32),
+	MSISDN					varchar(32),
+	OrgAccountBalance		real,
+	InvoiceNumber			varchar(32),
+	ThirdPartyTransID		varchar(32),
+	created					timestamp default current_timestamp not null
+);
+CREATE INDEX mpesa_soap_org_id ON mpesa_soap (org_id);
+
 
 CREATE VIEW vw_interest_methods AS
 	SELECT activity_types.activity_type_id, activity_types.activity_type_name, activity_types.use_key_id,

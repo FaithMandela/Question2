@@ -30,9 +30,10 @@
 	vw_applicants.date_of_birth, vw_applicants.gender_name,
 	vw_applicants.marital_status_name, vw_applicants.sys_country_name,
  	vw_applicants.language, vw_applicants.objective, vw_applicants.interests,
+	vw_applicants.applicant_email, vw_applicants.applicant_phone,
 	vw_applicants.previous_salary, vw_applicants.expected_salary,
 
-	ad.post_office_box, ad.postal_code, ad.town, ad.mobile, ad.email
+	ad.post_office_box, ad.postal_code, ad.town
 
 FROM  vw_applicants LEFT JOIN
 
@@ -53,13 +54,13 @@ $P!{organd};]]>
 	<field name="language" class="java.lang.String"/>
 	<field name="objective" class="java.lang.String"/>
 	<field name="interests" class="java.lang.String"/>
+	<field name="applicant_email" class="java.lang.String"/>
+	<field name="applicant_phone" class="java.lang.String"/>
 	<field name="previous_salary" class="java.lang.Float"/>
 	<field name="expected_salary" class="java.lang.Float"/>
 	<field name="post_office_box" class="java.lang.String"/>
 	<field name="postal_code" class="java.lang.String"/>
 	<field name="town" class="java.lang.String"/>
-	<field name="mobile" class="java.lang.String"/>
-	<field name="email" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -199,14 +200,14 @@ $P!{organd};]]>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{mobile}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{applicant_phone}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="115" y="110" width="435" height="15" uuid="958fb8a3-66c2-40f5-b661-be2da90b8924"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{applicant_email}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement style="Column header" x="402" y="80" width="42" height="15" forecolor="#000000" uuid="abc42bd5-3ac6-4e09-8dc5-a9e380e7f397"/>

@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="customers_cd" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cd650081-921d-49fc-9a56-e9016b5174bc">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="16"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -59,9 +59,9 @@ $P!{organd}]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="85" splitType="Stretch">
+		<band height="62" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="66" y="0" width="446" height="62" uuid="bf41bb5d-6767-4476-a2a9-5a74e1d39b06"/>
+				<reportElement style="Title" x="14" y="28" width="534" height="34" uuid="bf41bb5d-6767-4476-a2a9-5a74e1d39b06"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
@@ -73,313 +73,296 @@ $P!{organd}]]>
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="16" splitType="Stretch">
+		<band height="13" splitType="Stretch">
 			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="802" height="1" uuid="1d8c833a-aca5-4a3c-991b-dce5742e7994"/>
+				<reportElement positionType="FixRelativeToBottom" x="10" y="5" width="646" height="1" uuid="63b4b519-ad3f-4acd-8e2a-29624bafdfd8"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineColor="#999999"/>
 				</graphicElement>
 			</line>
-			<staticText>
-				<reportElement style="Column header" x="37" y="0" width="36" height="15" forecolor="#000000" uuid="706f3d72-e462-40f7-924f-f41161313a20"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Person Title]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="73" y="0" width="36" height="15" forecolor="#000000" uuid="3676e9ff-ec03-4341-944d-1abf1145e751"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Customer Name]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="109" y="0" width="36" height="15" forecolor="#000000" uuid="3fe31556-e435-4ff0-8799-75dbdb5c0206"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Identification Number]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="145" y="0" width="36" height="15" forecolor="#000000" uuid="aaf99d13-5cf3-4217-b8df-6fef9d819214"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Identification Type]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="181" y="0" width="36" height="15" forecolor="#000000" uuid="c836b51c-aff4-4afd-b90d-ca25c19b936a"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Client Email]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="217" y="0" width="36" height="15" forecolor="#000000" uuid="61f1a755-c6f2-4942-a4c6-99bd4a7b52a4"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Telephone Number]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="253" y="0" width="36" height="15" forecolor="#000000" uuid="5d244945-cfe8-4416-9aa7-5692184b0fa0"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Address]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="289" y="0" width="36" height="15" forecolor="#000000" uuid="62f68e8d-6bf6-4aa0-a227-0a0b82df4b7d"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Town]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="325" y="0" width="36" height="15" forecolor="#000000" uuid="75f24d7d-a33a-4fd3-8990-5d4643fa37e9"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Zip Code]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="361" y="0" width="36" height="15" forecolor="#000000" uuid="b88d73aa-3e45-4973-8b40-b088e1d628e5"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Date Of Birth]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="397" y="0" width="36" height="15" forecolor="#000000" uuid="6533ff6a-b116-461d-a042-2507816f73da"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Gender]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="433" y="0" width="36" height="15" forecolor="#000000" uuid="16073089-36ff-4a98-8882-020e9beb7afe"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Nationality]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="469" y="0" width="36" height="15" forecolor="#000000" uuid="d5fd74ad-b32c-40eb-a894-9c1fd145f7d8"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Marital Status]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="505" y="0" width="36" height="15" forecolor="#000000" uuid="ea62e56d-be3d-4155-9cce-317059a808ad"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Employed]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="541" y="0" width="36" height="15" forecolor="#000000" uuid="e65c5348-f52b-4bb8-b29b-21872b360a33"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Self Employed]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="577" y="0" width="36" height="15" forecolor="#000000" uuid="7a1dd9b6-b2c5-445e-a2e9-0096d128a8ce"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Employer Name]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="613" y="0" width="36" height="15" forecolor="#000000" uuid="26c175da-0e4a-43a7-827b-2d152cb73173"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Monthly Salary]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="649" y="0" width="36" height="15" forecolor="#000000" uuid="5953c60b-043c-4cfe-bfa6-85c17030b12e"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Monthly Net Income]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="685" y="0" width="36" height="15" forecolor="#000000" uuid="ec3218e1-e71e-4231-a5ad-d06e829bc08c"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Annual Turnover]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="721" y="0" width="36" height="15" forecolor="#000000" uuid="e80bfd69-5f2c-4d03-bded-65696c7f79e4"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Annual Net Income]]></text>
-			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="74" splitType="Stretch">
-			<frame>
-				<reportElement style="Row" mode="Opaque" x="0" y="0" width="802" height="15" uuid="6cc675a7-366c-4a4f-8c9d-bc23254703fa"/>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="109" y="0" width="36" height="15" uuid="5a03c90f-d44a-4ff8-be0d-328888c7abb2"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{identification_number}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="145" y="0" width="36" height="15" uuid="3588097c-8ed8-46c9-a548-bc435d83fd2d"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{identification_type}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="181" y="0" width="36" height="15" uuid="7885a1ae-1dc7-4d2c-9cf5-b108cc9f0231"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{client_email}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="217" y="0" width="36" height="15" uuid="27072702-a42f-4349-8bf8-bf2798142b02"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{telephone_number}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="253" y="0" width="36" height="15" uuid="093b0b7c-6a7b-4fe4-ae7b-6e0fa9cf5516"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="289" y="0" width="36" height="15" uuid="65204d29-01b4-48df-bd41-5976c5fe7083"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{town}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="325" y="0" width="36" height="15" uuid="f5b336e4-bc2f-4d63-aceb-2e08d8215a75"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{zip_code}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="361" y="0" width="36" height="15" uuid="40254883-f5d6-43df-b875-cda547ce2f45"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{date_of_birth}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="397" y="0" width="36" height="15" uuid="b47fb8be-163e-4a7e-88f9-65a8c1c898d5"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{gender}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="433" y="0" width="36" height="15" uuid="d5c60e5d-abad-41f1-be24-671b55fd4489"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{nationality}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="469" y="0" width="36" height="15" uuid="075b63be-18ee-42de-8a06-4e80e7380921"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{marital_status}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="505" y="0" width="36" height="15" uuid="a93063b1-21b4-443f-844a-3f67139b77a1"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{employed}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="541" y="0" width="36" height="15" uuid="6262840e-49ed-41e3-81ee-3892e87e8515"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{self_employed}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="577" y="0" width="36" height="15" uuid="90859724-0fb7-4f33-b378-f65d7a81701d"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{employer_name}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="613" y="0" width="36" height="15" uuid="d678a2fa-6697-4141-8e67-d83e3d676426"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{monthly_salary}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="649" y="0" width="36" height="15" uuid="4c61683e-2c05-4de4-8b8f-b87e6abb1c7a"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{monthly_net_income}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="685" y="0" width="36" height="15" uuid="c79d9b5a-f2c7-4fd6-98bf-40707720ea2c"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{annual_turnover}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="721" y="0" width="36" height="15" uuid="e5f190e8-04bd-4a33-bd2b-fcfee6aca07e"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{annual_net_income}]]></textFieldExpression>
-				</textField>
-			</frame>
+		<band height="229" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="66" y="27" width="36" height="15" uuid="3e199683-3eba-4640-9aa4-0f192cf63c2c"/>
+				<reportElement style="Detail" x="115" y="7" width="90" height="15" uuid="3e199683-3eba-4640-9aa4-0f192cf63c2c"/>
 				<textElement>
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Times New Roman" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{customer_id}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="30" y="27" width="36" height="15" forecolor="#000000" uuid="3c9353a5-9966-46b2-a491-864ee744244c"/>
+				<reportElement style="Column header" x="14" y="7" width="91" height="15" forecolor="#000000" uuid="3c9353a5-9966-46b2-a491-864ee744244c"/>
 				<textElement>
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Times New Roman" size="12"/>
 				</textElement>
 				<text><![CDATA[Customer ID]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="37" y="42" width="36" height="15" uuid="03934de5-2a31-4ce0-8efb-fcb6d16604b8"/>
+				<reportElement style="Detail" x="115" y="76" width="90" height="15" uuid="03934de5-2a31-4ce0-8efb-fcb6d16604b8"/>
 				<textElement>
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Times New Roman" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{person_title}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="73" y="42" width="180" height="15" uuid="8ee70232-7ffb-42ab-91ba-86a5bae73269"/>
+				<reportElement style="Detail" x="115" y="99" width="150" height="15" uuid="8ee70232-7ffb-42ab-91ba-86a5bae73269"/>
 				<textElement>
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Times New Roman" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{customer_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="277" y="212" width="104" height="15" forecolor="#000000" uuid="ec3218e1-e71e-4231-a5ad-d06e829bc08c"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Annual Turnover]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="394" y="212" width="91" height="15" uuid="c79d9b5a-f2c7-4fd6-98bf-40707720ea2c"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{annual_turnover}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="14" y="76" width="75" height="15" forecolor="#000000" uuid="706f3d72-e462-40f7-924f-f41161313a20"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Title]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="14" y="99" width="75" height="15" forecolor="#000000" uuid="3676e9ff-ec03-4341-944d-1abf1145e751"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Customer Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="14" y="32" width="75" height="15" forecolor="#000000" uuid="3fe31556-e435-4ff0-8799-75dbdb5c0206"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[ID Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="14" y="55" width="75" height="15" forecolor="#000000" uuid="aaf99d13-5cf3-4217-b8df-6fef9d819214"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[ID Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="14" y="212" width="75" height="15" forecolor="#000000" uuid="c836b51c-aff4-4afd-b90d-ca25c19b936a"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Client Email]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="276" y="7" width="105" height="15" forecolor="#000000" uuid="61f1a755-c6f2-4942-a4c6-99bd4a7b52a4"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Telephone Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="276" y="30" width="91" height="15" forecolor="#000000" uuid="5d244945-cfe8-4416-9aa7-5692184b0fa0"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Address]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="276" y="76" width="91" height="15" forecolor="#000000" uuid="62f68e8d-6bf6-4aa0-a227-0a0b82df4b7d"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Town]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="276" y="53" width="91" height="15" forecolor="#000000" uuid="75f24d7d-a33a-4fd3-8990-5d4643fa37e9"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Zip Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="14" y="121" width="75" height="15" forecolor="#000000" uuid="b88d73aa-3e45-4973-8b40-b088e1d628e5"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Date Of Birth]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="14" y="144" width="75" height="15" forecolor="#000000" uuid="6533ff6a-b116-461d-a042-2507816f73da"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Gender]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="14" y="167" width="91" height="15" forecolor="#000000" uuid="d5fd74ad-b32c-40eb-a894-9c1fd145f7d8"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Marital Status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="276" y="99" width="91" height="15" forecolor="#000000" uuid="ea62e56d-be3d-4155-9cce-317059a808ad"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Employed]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="276" y="167" width="91" height="15" forecolor="#000000" uuid="e65c5348-f52b-4bb8-b29b-21872b360a33"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Self Employed]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="115" y="32" width="90" height="15" uuid="5a03c90f-d44a-4ff8-be0d-328888c7abb2"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{identification_number}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="115" y="55" width="101" height="15" uuid="3588097c-8ed8-46c9-a548-bc435d83fd2d"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{identification_type}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="115" y="213" width="101" height="15" uuid="7885a1ae-1dc7-4d2c-9cf5-b108cc9f0231"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{client_email}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="394" y="7" width="108" height="15" uuid="27072702-a42f-4349-8bf8-bf2798142b02"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{telephone_number}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="394" y="30" width="108" height="15" uuid="093b0b7c-6a7b-4fe4-ae7b-6e0fa9cf5516"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="394" y="76" width="73" height="15" uuid="65204d29-01b4-48df-bd41-5976c5fe7083"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{town}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="394" y="53" width="71" height="15" uuid="f5b336e4-bc2f-4d63-aceb-2e08d8215a75"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{zip_code}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="115" y="121" width="90" height="15" uuid="40254883-f5d6-43df-b875-cda547ce2f45"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date_of_birth}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="115" y="144" width="90" height="15" uuid="b47fb8be-163e-4a7e-88f9-65a8c1c898d5"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{gender}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="115" y="167" width="90" height="15" uuid="075b63be-18ee-42de-8a06-4e80e7380921"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{marital_status}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="394" y="99" width="36" height="15" uuid="a93063b1-21b4-443f-844a-3f67139b77a1"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{employed}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="394" y="167" width="91" height="15" uuid="6262840e-49ed-41e3-81ee-3892e87e8515"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{self_employed}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="115" y="191" width="90" height="15" uuid="d5c60e5d-abad-41f1-be24-671b55fd4489"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nationality}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="14" y="189" width="75" height="15" forecolor="#000000" uuid="16073089-36ff-4a98-8882-020e9beb7afe"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Nationality]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="276" y="122" width="91" height="15" forecolor="#000000" uuid="7a1dd9b6-b2c5-445e-a2e9-0096d128a8ce"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Employer Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="276" y="144" width="91" height="15" forecolor="#000000" uuid="26c175da-0e4a-43a7-827b-2d152cb73173"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Monthly Salary]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="394" y="121" width="130" height="15" uuid="90859724-0fb7-4f33-b378-f65d7a81701d"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{employer_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="394" y="144" width="91" height="15" uuid="d678a2fa-6697-4141-8e67-d83e3d676426"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{monthly_salary}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="276" y="189" width="118" height="15" forecolor="#000000" uuid="5953c60b-043c-4cfe-bfa6-85c17030b12e"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Monthly Net Income]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="394" y="189" width="91" height="15" uuid="4c61683e-2c05-4de4-8b8f-b87e6abb1c7a"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{monthly_net_income}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -396,7 +379,7 @@ $P!{organd}]]>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="-21" y="1" width="841" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="88c6c2e1-567c-4128-a031-12542709ff97"/>
+				<reportElement mode="Opaque" x="-21" y="-17" width="841" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="88c6c2e1-567c-4128-a031-12542709ff97"/>
 				<textField evaluationTime="Report">
 					<reportElement style="Column header" x="771" y="1" width="40" height="20" forecolor="#736343" uuid="670f755f-cef8-4774-94bb-128f3839deb6"/>
 					<textElement verticalAlignment="Middle">

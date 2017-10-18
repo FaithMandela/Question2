@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2017-09-08T10:27:03 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_employee_year" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="11bb61a0-0c20-49c7-b9cb-bd83c3039c63">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -28,13 +26,16 @@
 	<parameter name="organd" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
-	<queryString language="SQL">
+	<queryString>
 		<![CDATA[SELECT vw_employee_year.employee_name, vw_employee_year.identity_card, vw_employee_year.identity_card, vw_employee_year.contract_period, vw_employee_year.y_net_pay
-FROM vw_employee_year]]>
+
+FROM vw_employee_year
+
+WHERE (fiscal_year_id = '$P!{filterid}')
+$P!{organd}]]>
 	</queryString>
 	<field name="employee_name" class="java.lang.String"/>
 	<field name="identity_card" class="java.lang.String"/>
-	<field name="COLUMN_3" class="java.lang.String"/>
 	<field name="contract_period" class="java.lang.Integer"/>
 	<field name="y_net_pay" class="java.lang.Double"/>
 	<background>
