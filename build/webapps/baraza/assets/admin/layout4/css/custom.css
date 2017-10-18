@@ -366,3 +366,10 @@ ui-widget-content {
 .dashboard-stat2 .display {
     margin-bottom: 10px;
 }
+
+.ui-widget-content a {
+    color: #0088cc;
+	text-decoration: underline;
+}
+
+
