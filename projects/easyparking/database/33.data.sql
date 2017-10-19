@@ -32,6 +32,7 @@ INSERT INTO activity_types (activity_type_id, cr_account_id, dr_account_id, use_
 INSERT INTO activity_types (activity_type_id, cr_account_id, dr_account_id, use_key_id, org_id, activity_type_name, is_active) VALUES (6, 34005, 34005, 102, 0, 'Cheque Withdrawal', true);
 INSERT INTO activity_types (activity_type_id, cr_account_id, dr_account_id, use_key_id, org_id, activity_type_name, is_active) VALUES (7, 34005, 34005, 102, 0, 'MPESA Withdrawal', true);
 INSERT INTO activity_types (activity_type_id, cr_account_id, dr_account_id, use_key_id, org_id, activity_type_name, is_active) VALUES (12, 34005, 34005, 104, 0, 'Account Transfer', true);
+INSERT INTO activity_types (activity_type_id, cr_account_id, dr_account_id, use_key_id, org_id, activity_type_name, is_active) VALUES (14, 34005, 34005, 104, 0, 'Parking payment', true);
 INSERT INTO activity_types (activity_type_id, cr_account_id, dr_account_id, use_key_id, org_id, activity_type_name, is_active) VALUES (15, 70025, 34005, 110, 0, 'Account Penalty', true);
 INSERT INTO activity_types (activity_type_id, cr_account_id, dr_account_id, use_key_id, org_id, activity_type_name, is_active) VALUES (21, 70020, 34005, 201, 0, 'Account opening charges', true);
 INSERT INTO activity_types (activity_type_id, cr_account_id, dr_account_id, use_key_id, org_id, activity_type_name, is_active) VALUES (22, 70020, 34005, 202, 0, 'Transfer fees', true);
@@ -52,17 +53,17 @@ SELECT pg_catalog.setval('products_product_id_seq', 1, true);
 INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, account_number, is_active) VALUES 
 (2, 1, 1, 0, 0, 'Cash Deposit', '2017-01-01', NULL, '400000001', true),
 (3, 1, 1, 0, 0, 'Cheque Deposit', '2017-01-01', NULL, '400000001', true),
-(4, 1, 1, 0, 0, 'MPESA Deposit', '2017-01-01', NULL, '400000001', true),
+(4, 1, 1, 0, 0, 'MPESA Deposit', '2017-01-01', NULL, '400000002', true),
 (5, 1, 1, 0, 0, 'Cash Withdraw', '2017-01-01', NULL, '400000001', true),
 (6, 1, 1, 0, 0, 'Cheque Withdraw', '2017-01-01', NULL, '400000001', true),
-(7, 1, 1, 0, 0, 'MPESA Withdraw', '2017-01-01', NULL, '400000001', true);
+(7, 1, 1, 0, 0, 'MPESA Withdraw', '2017-01-01', NULL, '400000002', true);
 INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, account_number, is_active) VALUES 
 (2, 1, 1, 1, 0, 'Cash Deposit', '2017-01-01', NULL, '400000001', true),
 (3, 1, 1, 1, 0, 'Cheque Deposit', '2017-01-01', NULL, '400000001', true),
-(4, 1, 1, 1, 0, 'MPESA Deposit', '2017-01-01', NULL, '400000001', true),
+(4, 1, 1, 1, 0, 'MPESA Deposit', '2017-01-01', NULL, '400000002', true),
 (5, 1, 1, 1, 0, 'Cash Withdraw', '2017-01-01', NULL, '400000001', true),
 (6, 1, 1, 1, 0, 'Cheque Withdraw', '2017-01-01', NULL, '400000001', true),
-(7, 1, 1, 1, 0, 'MPESA Withdraw', '2017-01-01', NULL, '400000001', true);
+(7, 1, 1, 1, 0, 'MPESA Withdraw', '2017-01-01', NULL, '400000002', true);
 
 --- Create Initial customer and customer account
 INSERT INTO customers (entity_id, org_id, business_account, customer_name, identification_number, identification_type, customer_email, telephone_number, date_of_birth, nationality, approve_status)
@@ -71,11 +72,11 @@ INSERT INTO customers (entity_id, org_id, business_account, customer_name, ident
 VALUES (11, 0, 2, 'Cars', '102', 'Org', 'info@city.or.ke', '+254', current_date, 'KE', 'Approved');
 SELECT pg_catalog.setval('entitys_entity_id_seq', 11, true);
 
-INSERT INTO deposit_accounts (entity_id, product_id, org_id, is_active, approve_status, narrative, minimum_balance) VALUES 
-(10, 0, 0, true, 'Approved', 'Deposits', -100000000000),
-(10, 0, 0, true, 'Approved', 'MPESA', -100000000000),
-(10, 0, 0, true, 'Approved', 'Charges', -100000000000),
-(10, 0, 0, true, 'Approved', 'Penalty', -100000000000);
+INSERT INTO deposit_accounts (entity_id, product_id, org_id, is_active, approve_status, narrative, minimum_balance, account_number) VALUES 
+(10, 0, 0, true, 'Approved', 'Deposits', -100000000000, '400000001'),
+(10, 0, 0, true, 'Approved', 'MPESA', -100000000000, '400000002'),
+(10, 0, 0, true, 'Approved', 'Charges', -100000000000, '400000003'),
+(10, 0, 0, true, 'Approved', 'Penalty', -100000000000, '400000004');
 
 
 ---- Workflow setup

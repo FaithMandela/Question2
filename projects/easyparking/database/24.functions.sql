@@ -71,7 +71,6 @@ CREATE OR REPLACE FUNCTION ins_account_activity() RETURNS trigger AS $$
 DECLARE
 	v_deposit_account_id		integer;
 	v_period_id					integer;
-	v_loan_id					integer;
 	v_activity_type_id			integer;
 	v_use_key_id				integer;
 	v_minimum_balance			real;
@@ -173,10 +172,10 @@ BEGIN
 			AND (link_activity_id = NEW.link_activity_id);
 			
 		IF(v_account_activity_id is null)THEN
-			INSERT INTO account_activity (deposit_account_id, transfer_account_id, transfer_loan_id, activity_type_id,
+			INSERT INTO account_activity (deposit_account_id, transfer_account_id, activity_type_id,
 				currency_id, org_id, link_activity_id, activity_date, value_date,
 				activity_status_id, account_credit, account_debit, activity_frequency_id)
-			VALUES (NEW.transfer_account_id, NEW.deposit_account_id, NEW.loan_id, NEW.activity_type_id,
+			VALUES (NEW.transfer_account_id, NEW.deposit_account_id, NEW.activity_type_id,
 				NEW.currency_id, NEW.org_id, NEW.link_activity_id, NEW.activity_date, NEW.value_date,
 				NEW.activity_status_id, NEW.account_debit, NEW.account_credit, 1);
 		END IF;
@@ -242,14 +241,14 @@ BEGIN
 	INSERT INTO account_activity_log(account_activity_id, deposit_account_id, 
 		transfer_account_id, activity_type_id, activity_frequency_id, 
 		activity_status_id, currency_id, period_id, entity_id,
-		loan_id, transfer_loan_id, org_id, link_activity_id, deposit_account_no, 
+		org_id, link_activity_id, deposit_account_no, 
 		transfer_account_no, activity_date, value_date, account_credit, 
 		account_debit, balance, exchange_rate, application_date, approve_status, 
 		workflow_table_id, action_date, details)
     VALUES (NEW.account_activity_id, NEW.deposit_account_id, 
 		NEW.transfer_account_id, NEW.activity_type_id, NEW.activity_frequency_id, 
 		NEW.activity_status_id, NEW.currency_id, NEW.period_id, NEW.entity_id,
-		NEW.loan_id, NEW.transfer_loan_id, NEW.org_id, NEW.link_activity_id, NEW.deposit_account_no, 
+		NEW.org_id, NEW.link_activity_id, NEW.deposit_account_no, 
 		NEW.transfer_account_no, NEW.activity_date, NEW.value_date, NEW.account_credit, 
 		NEW.account_debit, NEW.balance, NEW.exchange_rate, NEW.application_date, NEW.approve_status, 
 		NEW.workflow_table_id, NEW.action_date, NEW.details);
@@ -288,56 +287,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION get_intrest(integer, integer, integer) RETURNS real AS $$
-DECLARE
-	v_principal_amount 			real;
-	v_interest_rate				real;
-	v_actual_balance			real;
-	v_total_debits				real;
-	v_start_date				date;
-	v_end_date					date;
-	ans							real;
-BEGIN
-
-	SELECT start_date, end_date INTO v_start_date, v_end_date
-	FROM periods WHERE (period_id = $3::integer);
-
-	IF($1 = 1)THEN
-		SELECT interest_rate INTO v_interest_rate
-		FROM loans  WHERE (loan_id = $2);
-
-		SELECT sum((account_debit - account_credit) * exchange_rate) INTO v_actual_balance
-		FROM account_activity 
-		WHERE (loan_id = $2) AND (activity_status_id < 2) AND (value_date <= v_end_date);
-
-		ans := v_actual_balance * v_interest_rate / 1200;
-	ELSIF($1 = 2)THEN
-		SELECT principal_amount, interest_rate INTO v_principal_amount, v_interest_rate
-		FROM vw_loans 
-		WHERE (loan_id = $2);
-		
-		ans := v_principal_amount * v_interest_rate / 1200;
-	ELSIF($1 = 3)THEN
-		SELECT interest_rate INTO v_interest_rate
-		FROM deposit_accounts  WHERE (deposit_account_id = $2);
-		
-		SELECT sum((account_credit - account_debit) * exchange_rate) INTO v_actual_balance
-		FROM account_activity 
-		WHERE (deposit_account_id = $2) AND (activity_status_id < 2) AND (value_date < v_start_date);
-		IF(v_actual_balance is null)THEN v_actual_balance := 0; END IF;
-		SELECT sum(account_debit * exchange_rate) INTO v_total_debits
-		FROM account_activity 
-		WHERE (deposit_account_id = $2) AND (activity_status_id < 2) AND (value_date BETWEEN v_start_date AND v_end_date);
-		IF(v_total_debits is null)THEN v_total_debits := 0; END IF;
-	
-		ans := (v_actual_balance - v_total_debits) * v_interest_rate / 1200;
-	END IF;
-
-	RETURN ans;
-END;
-$$ LANGUAGE plpgsql;
-
-
 CREATE OR REPLACE FUNCTION get_penalty(integer, integer, integer, real) RETURNS real AS $$
 DECLARE
 	v_actual_default			real;
@@ -352,7 +301,7 @@ BEGIN
 	IF($1 = 1)THEN
 		SELECT sum(account_credit * exchange_rate) INTO v_actual_default
 		FROM account_activity 
-		WHERE (loan_id = $2) AND (activity_status_id = 4) AND (value_date < v_start_date);
+		WHERE (deposit_account_id = $2) AND (activity_status_id = 4) AND (value_date < v_start_date);
 		
 		ans := v_actual_default * $3 / 1200;
 	END IF;
@@ -395,10 +344,9 @@ BEGIN
 		SELECT v_org_id, v_journal_id, account_activity.account_activity_id, activity_types.account_id,
 			(account_activity.account_debit * account_activity.exchange_rate),
 			(account_activity.account_credit * account_activity.exchange_rate),
-			COALESCE(deposit_accounts.account_number, loans.account_number)
+			deposit_accounts.account_number
 		FROM account_activity INNER JOIN activity_types ON account_activity.activity_type_id = activity_types.activity_type_id
 			LEFT JOIN deposit_accounts ON account_activity.deposit_account_id = deposit_accounts.deposit_account_id
-			LEFT JOIN loans ON account_activity.loan_id = loans.loan_id
 		WHERE (account_activity.period_id = v_period_id);
 	
 		msg := 'Banking posted';
@@ -415,6 +363,7 @@ DECLARE
 	v_entity_id					integer;
 	v_deposit_account_id		integer;
 	v_car_plate					varchar(12);
+	v_account_number			varchar(32);
 BEGIN
 
 	SELECT entity_id INTO v_entity_id
@@ -422,21 +371,39 @@ BEGIN
 	
 	IF(v_entity_id is null)THEN
 		v_entity_id := nextval('entitys_entity_id_seq');
-		INSERT INTO customers (org_id, entity_id, customer_name, identification_number, telephone_number)
-		VALUES (0, v_entity_id, NEW.mpesa_sender, NEW.mpesa_msisdn, NEW.mpesa_msisdn);
+		INSERT INTO customers (org_id, entity_id, customer_name, identification_number, telephone_number, approve_status)
+		VALUES (0, v_entity_id, NEW.mpesa_sender, NEW.mpesa_msisdn, NEW.mpesa_msisdn, 'Approved');
 		
-		INSERT INTO deposit_accounts (entity_id, updated_by, product_id, org_id)
-		VALUES (v_entity_id, v_entity_id, 1, 0);
+		INSERT INTO deposit_accounts (entity_id, updated_by, product_id, org_id, approve_status)
+		VALUES (v_entity_id, v_entity_id, 1, 0, 'Approved');
 	END IF;
+	
+	SELECT min(deposit_account_id) INTO v_deposit_account_id
+	FROM deposit_accounts WHERE (entity_id = v_entity_id) AND (product_id = 1);
+	SELECT account_number INTO v_account_number
+	FROM deposit_accounts WHERE (deposit_account_id = v_deposit_account_id);
+	INSERT INTO account_activity (deposit_account_id, activity_type_id,
+		currency_id, org_id, activity_date, value_date,
+		activity_status_id, account_credit, account_debit, activity_frequency_id)
+	VALUES (v_deposit_account_id, 4, 1, NEW.org_id, NEW.mpesa_trx_date, NEW.mpesa_trx_date,
+		1, NEW.mpesa_amt, 0, 1);
 	
 	v_car_plate := trim(upper(replace(NEW.mpesa_acc, ' ', '')));
 	SELECT deposit_account_id INTO v_deposit_account_id
 	FROM deposit_accounts WHERE account_number = v_car_plate;
 	IF(v_deposit_account_id is null)THEN
-		INSERT INTO deposit_accounts (entity_id, updated_by, product_id, org_id, account_number)
-		VALUES (11, v_entity_id, 1, 0, v_car_plate);
+		v_deposit_account_id := nextval('deposit_accounts_deposit_account_id_seq');
+		INSERT INTO deposit_accounts (deposit_account_id, entity_id, updated_by, product_id, org_id, account_number, approve_status)
+		VALUES (v_deposit_account_id, 11, v_entity_id, 1, 0, v_car_plate, 'Approved');
 	END IF;
-
+	
+	INSERT INTO account_activity (deposit_account_id, activity_type_id, currency_id, 
+		org_id, transfer_account_no, activity_date, value_date,
+		activity_status_id, account_credit, account_debit, activity_frequency_id)
+	VALUES (v_deposit_account_id, 14, 1, 
+		NEW.org_id, v_account_number, NEW.mpesa_trx_date, NEW.mpesa_trx_date,
+		1, 300, 0, 1);
+	
 	RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;

@@ -905,7 +905,7 @@
 			<TEXTFIELD w="75" title="Customer Name">customer_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Identification Number">identification_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Identification Type">identification_type</TEXTFIELD>
-			<TEXTFIELD w="75" title="Email">client_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email">customer_email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Telephone Number">telephone_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Gender">gender</TEXTFIELD>
 			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
@@ -961,7 +961,6 @@
 				</GRID>
 			</GRID>
 			<FORM cols="2" name="Clients" keyfield="entity_id" table="customers">
-				<USERFIELD>entity_id</USERFIELD>
 				<DEFAULT default="0">business_account</DEFAULT>
 				<COMBOLIST w="70" title="" y="10" h="20" x="70" span="true">person_title
 					<DATA>Miss</DATA>
@@ -973,7 +972,7 @@
 				<TEXTFIELD w="150" title="Customer Name" required="true" y="10" h="20" x="290">customer_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Identification Number" required="true" y="30" h="20" x="10" span="true">identification_number</TEXTFIELD>
 				<TEXTFIELD w="150" title="Identification Type" required="true" y="30" h="20" x="290">identification_type</TEXTFIELD>
-				<TEXTFIELD w="150" title="Email" required="true" y="50" h="20" x="10">client_email</TEXTFIELD>
+				<TEXTFIELD w="150" title="Email" required="true" y="50" h="20" x="10">customer_email</TEXTFIELD>
 				<TEXTFIELD w="150" title="Telephone Number" required="true" y="70" h="20" x="10" span="true">telephone_number</TEXTFIELD>
 				<TEXTFIELD w="150" title="Altenative Telephone" y="70" h="20" x="290">telephone_number2</TEXTFIELD>
 				<TEXTFIELD w="150" title="Address" required="true" y="90" h="20" x="10">address</TEXTFIELD>
@@ -1008,7 +1007,7 @@
 			<TEXTFIELD w="75" title="Customer Name">customer_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Identification Number">identification_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Identification Type">identification_type</TEXTFIELD>
-			<TEXTFIELD w="75" title="Applicant Email">client_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Applicant Email">customer_email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Telephone Number">telephone_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 			<ACTIONS>
@@ -1063,12 +1062,11 @@
 				</GRID>
 			</GRID>
 			<FORM cols="2" name="Clients" keyfield="entity_id" table="customers">
-				<USERFIELD>entity_id</USERFIELD>
 				<DEFAULT default="1">business_account</DEFAULT>
 				<TEXTFIELD w="150" title="Customer Name" required="true" y="10" h="20" x="10">customer_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Identification Number" required="true" y="30" h="20" x="10" span="true">identification_number</TEXTFIELD>
 				<TEXTFIELD w="150" title="Identification Type" required="true" y="30" h="20" x="290">identification_type</TEXTFIELD>
-				<TEXTFIELD w="150" title="Applicant Email" required="true" y="50" h="20" x="10">client_email</TEXTFIELD>
+				<TEXTFIELD w="150" title="Applicant Email" required="true" y="50" h="20" x="10">customer_email</TEXTFIELD>
 				<TEXTFIELD w="150" title="Telephone Number" required="true" y="70" h="20" x="10" span="true">telephone_number</TEXTFIELD>
 				<TEXTFIELD w="150" title="Alternative Telephone" y="70" h="20" x="290">telephone_number2</TEXTFIELD>
 				<TEXTFIELD w="150" title="Address" required="true" y="90" h="20" x="10">address</TEXTFIELD>
@@ -1088,14 +1086,10 @@
 			<TEXTFIELD w="45" title="Product ID">product_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>
 			<TEXTFIELD w="45" title="Currency">currency_symbol</TEXTFIELD>
-			<TEXTFIELD w="75" title="Interest Method">interest_method_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Description">description</TEXTFIELD>
-			<CHECKBOX w="45" title="For Loan">loan_account</CHECKBOX>
 			<CHECKBOX w="45" title="Active">is_active</CHECKBOX>
 			<FORM name="Products" keyfield="product_id" table="products">
-				<COMBOBOX w="150" title="Interest Method" lptable="interest_methods" y="30" h="20" x="10" lpfield="interest_method_name">interest_method_id</COMBOBOX>
 				<COMBOBOX w="1500" title="Penalty Method" lptable="penalty_methods" y="30" h="20" x="290" lpfield="penalty_method_name">penalty_method_id</COMBOBOX>
-				<COMBOBOX w="150" title="Interest Frequency" lptable="activity_frequency" orderby="activity_frequency_id" noorg="true" y="50" h="20" x="10" lpfield="activity_frequency_name">activity_frequency_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="50" h="20" x="290" lpfield="currency_name">currency_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Product" y="70" h="20" x="10">product_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="Description" y="90" h="20" x="10">description</TEXTFIELD>
@@ -1103,7 +1097,6 @@
 				<CHECKBOX w="150" title="Active" y="110" h="20" x="290">is_active</CHECKBOX>
 				<TEXTDECIMAL w="150" title="Interest Rate" y="130" h="20" x="10">interest_rate</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Min Opening Balance" y="150" h="20" x="290">min_opening_balance</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Lockin Period Frequency" y="170" h="20" x="10">lockin_period_frequency</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Minimum Balance" y="190" h="20" x="10">minimum_balance</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Maximum Balance" y="190" h="20" x="290">maximum_balance</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Minimum Day" y="210" h="20" x="10">minimum_day</TEXTDECIMAL>
@@ -1161,23 +1154,6 @@
 				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID name="Interest Methods" keyfield="interest_method_id" table="vw_interest_methods">
-			<TEXTFIELD w="75" title="Interest Method ID">interest_method_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Interest Method">interest_method_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Activity Type">activity_type_name</TEXTFIELD>
-			<CHECKBOX w="75" title="Reducing Balance">reducing_balance</CHECKBOX>
-			<TEXTFIELD w="75" title="Formural">formural</TEXTFIELD>
-			<TEXTFIELD w="75" title="Account Number">account_number</TEXTFIELD>
-			<FORM name="Interest Methods" keyfield="interest_method_id" table="interest_methods">
-				<COMBOBOX w="430" title="Activity Type" lptable="activity_types" y="10" h="20" x="10" lpfield="activity_type_name">activity_type_id</COMBOBOX>
-				<TEXTFIELD w="430" title="Interest Method" y="30" h="20" x="10">interest_method_name</TEXTFIELD>
-				<CHECKBOX w="150" title="Reducing Balance" y="50" h="20" x="10">reducing_balance</CHECKBOX>
-				<CHECKBOX w="150" title="Reducing Payments" y="50" h="20" x="290">reducing_payments</CHECKBOX>
-				<TEXTFIELD w="430" title="Formural" y="70" h="20" x="10">formural</TEXTFIELD>
-				<TEXTFIELD w="150" title="Account Number" y="90" h="20" x="10">account_number</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
-			</FORM>
-		</GRID>
 		<GRID name="Penalty Methods" keyfield="penalty_method_id" table="vw_penalty_methods">
 			<TEXTFIELD w="75" title="Activity Type">activity_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Penalty Method">penalty_method_name</TEXTFIELD>
@@ -1189,14 +1165,6 @@
 				<TEXTFIELD w="430" title="Formural" y="50" h="20" x="10">formural</TEXTFIELD>
 				<TEXTFIELD w="150" title="Account Number" y="70" h="20" x="10">account_number</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
-			</FORM>
-		</GRID>
-		<GRID name="Collateral Types" keyfield="collateral_type_id" table="collateral_types">
-			<TEXTFIELD w="75" title="Collateral Type ID">collateral_type_id</TEXTFIELD>
-			<TEXTFIELD w="175" title="Collateral Type">collateral_type_name</TEXTFIELD>
-			<FORM name="Collateral Types" keyfield="collateral_type_id" table="collateral_types">
-				<TEXTFIELD w="150" title="Collateral Type" y="10" h="20" x="10">collateral_type_name</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>
