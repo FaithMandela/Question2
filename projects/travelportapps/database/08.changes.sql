@@ -1,5 +1,8 @@
 ALTER TABLE sys_menu_msg ALTER COLUMN menu_id TYPE varchar(16);
 ALTER TABLE sys_menu_msg ADD COLUMN xml_file character varying(50);
+INSERT INTO sys_menu_msg(menu_id, menu_name, msg, xml_file)
+    VALUES ('82:0','policy number','<span>Click on policy number to access certificate& letter to embassy</span>','travelportapps.xml');
+
 
 CREATE OR REPLACE VIEW vw_passengers AS
   SELECT vw_entitys.org_id,  vw_entitys.org_name, vw_rates.rate_type_id, vw_rates.rate_plan_id, vw_rates.rate_category_name,

@@ -123,23 +123,6 @@
 				<TEXTFIELD w="75" title="Primary Email">primary_email</TEXTFIELD>
 				<TEXTFIELD w="75" title="Primary Telephone">primary_telephone</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Date Enroled">date_enroled</TEXTTIMESTAMP>
-				<FORM noorg="true" keyfield="entity_id" name="Consultant" linkfield="org_id" table="entitys">
-					<COMBOBOX w="430" h="20" lpfield="entity_type_name" x="10" y="10" lptable="entity_types" title="Entity Type ID">entity_type_id</COMBOBOX>
-					<TEXTFIELD w="430" h="20" x="10" y="30" title="Consultant Name">entity_name</TEXTFIELD>
-					<TEXTFIELD w="430" h="20" x="10" y="50" title="SON">son</TEXTFIELD>
-					<TEXTFIELD w="430" h="20" x="10" y="50" title="User Name">user_name</TEXTFIELD>
-					<TEXTFIELD w="430" h="20" x="10" y="70" title="Primary Email">primary_email</TEXTFIELD>
-					<TEXTFIELD w="150" h="20" x="10" y="90" title="Primary Telephone">primary_telephone</TEXTFIELD>
-					<COMBOLIST w="150" h="20" x="10" y="50" title="Function Role">function_role
-						<DATA key="manager">Manager</DATA>
-						<DATA key="finance">Finance Manager</DATA>
-						<DATA key="consultant">Consultant</DATA>
-						<DATA key="user">User</DATA>
-					</COMBOLIST>
-					<CHECKBOX w="150" h="20" x="290" y="150" title="Active">is_active</CHECKBOX>
-					<TEXTFIELD w="150" h="20" x="290" y="170" title="First Password">first_password</TEXTFIELD>
-					<TEXTAREA w="430" h="70" x="10" y="230" title="Details">details</TEXTAREA>
-				</FORM>
 			</GRID>
 			<FORM new="false" keyfield="org_id" name="Orgs" table="orgs">
 				<COMBOBOX w="430" h="20" lpfield="currency_name" x="10" y="10" lptable="currency" title="Currency ID">currency_id</COMBOBOX>
@@ -704,6 +687,9 @@
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Totalamount Covered">totalamount_covered</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Created On">approved_date</TEXTFIELD>
+			<ACTIONS>
+				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
+			</ACTIONS>
 			<JASPER reportfile="certificate.jasper" name="Emergency Card" linkfield="passenger_id"></JASPER>
 			<JASPER reportfile="letterToEmbassy.jasper" name="Letter To Embassy" linkfield="passenger_id"></JASPER>
 			<JASPER role="finance" reportfile="invoice.jasper" name="Invoice" linkfield="passenger_id"></JASPER>
@@ -723,6 +709,9 @@
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Created On">approved_date</TEXTFIELD>
+			<ACTIONS>
+				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
+			</ACTIONS>
 			<JASPER reportfile="corporate_certificate.jasper" name="Emergency Card" linkfield="passenger_id"></JASPER>
 			<JASPER reportfile="corporate_letterToEmbassy.jasper" name="Letter To Embassy" linkfield="passenger_id"></JASPER>
 			<JASPER role="finance" reportfile="cop_invoice.jasper" name="Invoice" linkfield="passenger_id"></JASPER>
@@ -742,6 +731,9 @@
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Totalamount Covered">totalamount_covered</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Created On">approved_date</TEXTFIELD>
+			<ACTIONS>
+				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
+			</ACTIONS>
 			<JASPER reportfile="certificate.jasper" name="Emergency Card" linkfield="passenger_id"></JASPER>
 		</GRID>
 		<GRID role="manager,finance" keyfield="passenger_id" name="In Country Corporate Insurance" where="approved is true AND incountry is true AND customer_code is not null" tab.count="count(passenger_id)" table="vw_corporate_passengers">
@@ -759,6 +751,9 @@
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Created On">approved_date</TEXTFIELD>
+			<ACTIONS>
+				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
+			</ACTIONS>
 			<JASPER reportfile="corporate_certificate.jasper" name="Emergency Card" linkfield="passenger_id"></JASPER>
 			<JASPER role="finance" reportfile="cop_invoice.jasper" name="Invoice" linkfield="passenger_id"></JASPER>
 		</GRID>
@@ -775,6 +770,9 @@
 			<TEXTFIELD w="75" title="Passport Number">passport_num</TEXTFIELD>
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Totalamount Covered">totalamount_covered</TEXTDECIMAL>
+			<ACTIONS>
+				<ACTION approval="2" fnct="upd_passenger">Revert</ACTION>
+			</ACTIONS>
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Transaction Invoice" key="206">
