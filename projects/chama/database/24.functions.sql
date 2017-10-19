@@ -13,6 +13,7 @@ BEGIN
 		IF(NEW.entity_id is null)THEN
 			NEW.entity_id := nextval('entitys_entity_id_seq');
 		END IF;
+		v_user_name := 'OR' || NEW.org_id || 'EN' || NEW.entity_id;
 		
 		INSERT INTO entitys (entity_id, org_id, use_key_id, entity_type_id, entity_name, user_name, primary_email, primary_telephone, function_role)
 		VALUES (NEW.entity_id, NEW.org_id, 100, v_entity_type_id, NEW.member_name, v_user_name, lower(trim(NEW.email)), NEW.phone_number, 'member');
