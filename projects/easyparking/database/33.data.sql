@@ -6,6 +6,7 @@ INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (102, 'Paym
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (103, 'Opening Account', 4);
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (104, 'Transfer', 4);
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (110, 'Account Penalty', 4);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (120, 'Parking Charge', 4);
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (201, 'Initial Charges', 4);
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (202, 'Transaction Charges', 4);
 
@@ -32,8 +33,8 @@ INSERT INTO activity_types (activity_type_id, cr_account_id, dr_account_id, use_
 INSERT INTO activity_types (activity_type_id, cr_account_id, dr_account_id, use_key_id, org_id, activity_type_name, is_active) VALUES (6, 34005, 34005, 102, 0, 'Cheque Withdrawal', true);
 INSERT INTO activity_types (activity_type_id, cr_account_id, dr_account_id, use_key_id, org_id, activity_type_name, is_active) VALUES (7, 34005, 34005, 102, 0, 'MPESA Withdrawal', true);
 INSERT INTO activity_types (activity_type_id, cr_account_id, dr_account_id, use_key_id, org_id, activity_type_name, is_active) VALUES (12, 34005, 34005, 104, 0, 'Account Transfer', true);
-INSERT INTO activity_types (activity_type_id, cr_account_id, dr_account_id, use_key_id, org_id, activity_type_name, is_active) VALUES (14, 34005, 34005, 104, 0, 'Parking payment', true);
 INSERT INTO activity_types (activity_type_id, cr_account_id, dr_account_id, use_key_id, org_id, activity_type_name, is_active) VALUES (15, 70025, 34005, 110, 0, 'Account Penalty', true);
+INSERT INTO activity_types (activity_type_id, cr_account_id, dr_account_id, use_key_id, org_id, activity_type_name, is_active) VALUES (16, 34005, 34005, 120, 0, 'Parking payment', true);
 INSERT INTO activity_types (activity_type_id, cr_account_id, dr_account_id, use_key_id, org_id, activity_type_name, is_active) VALUES (21, 70020, 34005, 201, 0, 'Account opening charges', true);
 INSERT INTO activity_types (activity_type_id, cr_account_id, dr_account_id, use_key_id, org_id, activity_type_name, is_active) VALUES (22, 70020, 34005, 202, 0, 'Transfer fees', true);
 SELECT pg_catalog.setval('activity_types_activity_type_id_seq', 22, true);
@@ -46,8 +47,9 @@ SELECT pg_catalog.setval('penalty_methods_penalty_method_id_seq', 2, true);
 
 INSERT INTO products (product_id, penalty_method_id, currency_id, org_id, product_name, description, loan_account, is_active, interest_rate, min_opening_balance, minimum_balance, maximum_balance, minimum_day, maximum_day, minimum_trx, maximum_trx) VALUES
 (0, 0, 1, 0, 'Banking', 'Banking', false, false, 0, 0, 0, 0, 0, 0, 0, 0),
-(1, 0, 1, 0, 'Transaction account', 'Account to handle transactions', false, true, 0, 0, 0, 0, 0, 0, 0, 0);
-SELECT pg_catalog.setval('products_product_id_seq', 1, true);
+(1, 0, 1, 0, 'Transaction', 'Account to handle transactions', false, true, 0, 0, 0, 0, 0, 0, 0, 0);
+(2, 0, 1, 0, 'Parking Fee', 'Account to Parking fee', false, true, 0, 0, 0, 0, 0, 0, 0, 0);
+SELECT pg_catalog.setval('products_product_id_seq', 2, true);
 
 
 INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, account_number, is_active) VALUES 
@@ -64,6 +66,15 @@ INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_
 (5, 1, 1, 1, 0, 'Cash Withdraw', '2017-01-01', NULL, '400000001', true),
 (6, 1, 1, 1, 0, 'Cheque Withdraw', '2017-01-01', NULL, '400000001', true),
 (7, 1, 1, 1, 0, 'MPESA Withdraw', '2017-01-01', NULL, '400000002', true);
+INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, account_number, is_active) VALUES 
+(2, 1, 1, 3, 0, 'Cash Deposit', '2017-01-01', NULL, '400000001', true),
+(3, 1, 1, 3, 0, 'Cheque Deposit', '2017-01-01', NULL, '400000001', true),
+(4, 1, 1, 3, 0, 'MPESA Deposit', '2017-01-01', NULL, '400000002', true),
+(5, 1, 1, 3, 0, 'Cash Withdraw', '2017-01-01', NULL, '400000001', true),
+(6, 1, 1, 3, 0, 'Cheque Withdraw', '2017-01-01', NULL, '400000001', true),
+(7, 1, 1, 3, 0, 'MPESA Withdraw', '2017-01-01', NULL, '400000002', true);
+INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, account_number, is_active, fee_amount) 
+VALUES (14, 1, 1, 3, 0, 'Parking Fee', '2017-01-01', NULL, '400000003', true, 30);
 
 --- Create Initial customer and customer account
 INSERT INTO customers (entity_id, org_id, business_account, customer_name, identification_number, identification_type, customer_email, telephone_number, date_of_birth, nationality, approve_status)
@@ -75,7 +86,7 @@ SELECT pg_catalog.setval('entitys_entity_id_seq', 11, true);
 INSERT INTO deposit_accounts (entity_id, product_id, org_id, is_active, approve_status, narrative, minimum_balance, account_number) VALUES 
 (10, 0, 0, true, 'Approved', 'Deposits', -100000000000, '400000001'),
 (10, 0, 0, true, 'Approved', 'MPESA', -100000000000, '400000002'),
-(10, 0, 0, true, 'Approved', 'Charges', -100000000000, '400000003'),
+(10, 0, 0, true, 'Approved', 'Parking Fee', -100000000000, '400000003'),
 (10, 0, 0, true, 'Approved', 'Penalty', -100000000000, '400000004');
 
 

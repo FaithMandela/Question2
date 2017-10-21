@@ -364,6 +364,7 @@ DECLARE
 	v_deposit_account_id		integer;
 	v_car_plate					varchar(12);
 	v_account_number			varchar(32);
+	msg							varchar(120);
 BEGIN
 
 	SELECT entity_id INTO v_entity_id
@@ -388,21 +389,7 @@ BEGIN
 	VALUES (v_deposit_account_id, 4, 1, NEW.org_id, NEW.mpesa_trx_date, NEW.mpesa_trx_date,
 		1, NEW.mpesa_amt, 0, 1);
 	
-	v_car_plate := trim(upper(replace(NEW.mpesa_acc, ' ', '')));
-	SELECT deposit_account_id INTO v_deposit_account_id
-	FROM deposit_accounts WHERE account_number = v_car_plate;
-	IF(v_deposit_account_id is null)THEN
-		v_deposit_account_id := nextval('deposit_accounts_deposit_account_id_seq');
-		INSERT INTO deposit_accounts (deposit_account_id, entity_id, updated_by, product_id, org_id, account_number, approve_status)
-		VALUES (v_deposit_account_id, 11, v_entity_id, 1, 0, v_car_plate, 'Approved');
-	END IF;
-	
-	INSERT INTO account_activity (deposit_account_id, activity_type_id, currency_id, 
-		org_id, transfer_account_no, activity_date, value_date,
-		activity_status_id, account_credit, account_debit, activity_frequency_id)
-	VALUES (v_deposit_account_id, 14, 1, 
-		NEW.org_id, v_account_number, NEW.mpesa_trx_date, NEW.mpesa_trx_date,
-		1, 300, 0, 1);
+	msg := charge_parking(NEW.org_id, v_deposit_account_id, NEW.mpesa_acc);
 	
 	RETURN NULL;
 END;
@@ -410,3 +397,38 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER aft_mpesa_trxs AFTER INSERT ON mpesa_trxs
 	FOR EACH ROW EXECUTE PROCEDURE aft_mpesa_trxs();
+
+
+CREATE OR REPLACE FUNCTION charge_parking(int, int, varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	v_deposit_account_id		integer;
+	v_car_plate					varchar(12);
+	v_fee_amount				real;
+	account_number				varchar(32);
+	msg							varchar(120);
+BEGIN
+	msg := 'Okay';
+	
+	SELECT fee_amount, account_number INTO 
+	FROM account_definations
+	
+	v_car_plate := trim(upper(replace(NEW.mpesa_acc, ' ', '')));
+	SELECT deposit_account_id INTO v_deposit_account_id
+	FROM deposit_accounts WHERE account_number = v_car_plate;
+	IF(v_deposit_account_id is null)THEN
+		v_deposit_account_id := nextval('deposit_accounts_deposit_account_id_seq');
+		INSERT INTO deposit_accounts (deposit_account_id, entity_id, updated_by, product_id, org_id, account_number, approve_status)
+		VALUES (v_deposit_account_id, 11, v_entity_id, 2, 0, v_car_plate, 'Approved');
+	END IF;
+
+	INSERT INTO account_activity (deposit_account_id, activity_type_id, currency_id, 
+		org_id, transfer_account_no, activity_date, value_date,
+		activity_status_id, account_credit, account_debit, activity_frequency_id)
+	VALUES (v_deposit_account_id, 14, 1, 
+		NEW.org_id, v_account_number, NEW.mpesa_trx_date, NEW.mpesa_trx_date,
+		1, 300, 0, 1);
+
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;	
