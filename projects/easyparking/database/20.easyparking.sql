@@ -273,6 +273,7 @@ CREATE TABLE sms (
 	sms_id					serial primary key,
 	entity_id				integer references entitys,
 	org_id					integer references orgs,
+	folder_id				integer,
 	sms_number				varchar(25),
 	sms_numbers				text,
 	sms_time				timestamp default now(),

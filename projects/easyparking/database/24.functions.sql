@@ -389,7 +389,12 @@ BEGIN
 	VALUES (v_deposit_account_id, 4, 1, NEW.org_id, NEW.mpesa_trx_date, NEW.mpesa_trx_date,
 		1, NEW.mpesa_amt, 0, 1);
 	
-	msg := charge_parking(NEW.org_id, v_deposit_account_id, NEW.mpesa_acc);
+	msg := charge_parking(v_deposit_account_id, NEW.mpesa_acc, NEW.mpesa_trx_date);
+	
+	IF(msg is not null)THEN
+		INSERT INTO sms (entity_id, org_id, folder_id, sms_number, message)
+		VALUES (v_entity_id, 0, 0, NEW.mpesa_msisdn, msg);
+	END IF;
 	
 	RETURN NULL;
 END;
@@ -399,36 +404,80 @@ CREATE TRIGGER aft_mpesa_trxs AFTER INSERT ON mpesa_trxs
 	FOR EACH ROW EXECUTE PROCEDURE aft_mpesa_trxs();
 
 
-CREATE OR REPLACE FUNCTION charge_parking(int, int, varchar(12)) RETURNS varchar(120) AS $$
+CREATE OR REPLACE FUNCTION charge_parking(int, varchar(12), date) RETURNS varchar(120) AS $$
 DECLARE
+	v_account_activity_id		integer;
 	v_deposit_account_id		integer;
+	v_org_id					integer;
 	v_car_plate					varchar(12);
 	v_fee_amount				real;
-	account_number				varchar(32);
+	v_account_number			varchar(32);
+	v_client_account_id			integer;
+	v_balance					real;
 	msg							varchar(120);
 BEGIN
-	msg := 'Okay';
+	msg := null;
 	
-	SELECT fee_amount, account_number INTO 
+	SELECT org_id , deposit_account_id, sum(account_credit - account_debit)
+		INTO v_org_id, v_client_account_id, v_balance
+	FROM deposit_accounts LEFT JOIN account_activity ON deposit_accounts.deposit_account_id = account_activity.deposit_account_id
+	WHERE (deposit_account_id = $1)
+	GROUP BY org_id , deposit_account_id;
+	
+	SELECT fee_amount, account_number INTO v_fee_amount, v_account_number
 	FROM account_definations
+	WHERE (activity_type_id = 16) AND (org_id = v_org_id);
 	
-	v_car_plate := trim(upper(replace(NEW.mpesa_acc, ' ', '')));
+	v_car_plate := trim(upper(replace($2, ' ', '')));
 	SELECT deposit_account_id INTO v_deposit_account_id
 	FROM deposit_accounts WHERE account_number = v_car_plate;
 	IF(v_deposit_account_id is null)THEN
 		v_deposit_account_id := nextval('deposit_accounts_deposit_account_id_seq');
 		INSERT INTO deposit_accounts (deposit_account_id, entity_id, updated_by, product_id, org_id, account_number, approve_status)
-		VALUES (v_deposit_account_id, 11, v_entity_id, 2, 0, v_car_plate, 'Approved');
+		VALUES (v_deposit_account_id, 11, 11, 2, v_org_id, v_car_plate, 'Approved');
 	END IF;
+	
+	SELECT account_activity_id INTO v_account_activity_id
+	FROM account_activity
+	WHERE (deposit_account_id = v_deposit_account_id) AND (activity_type_id = 16)
+		AND (activity_date = current_date);
 
-	INSERT INTO account_activity (deposit_account_id, activity_type_id, currency_id, 
-		org_id, transfer_account_no, activity_date, value_date,
-		activity_status_id, account_credit, account_debit, activity_frequency_id)
-	VALUES (v_deposit_account_id, 14, 1, 
-		NEW.org_id, v_account_number, NEW.mpesa_trx_date, NEW.mpesa_trx_date,
-		1, 300, 0, 1);
-
+	IF(v_fee_amount > v_balance)THEN
+		msg := 'You need to add more money to pay for parking';
+	ELSIF(v_account_activity_id is null)THEN
+		INSERT INTO account_activity (deposit_account_id, activity_type_id, currency_id, 
+			org_id, transfer_account_no, activity_date, value_date,
+			activity_status_id, account_credit, account_debit, activity_frequency_id)
+		VALUES (v_deposit_account_id, 16, 1, 
+			v_org_id, v_account_number, $3, $3,
+			1, 0, v_fee_amount, 1);
+			
+		INSERT INTO account_activity (deposit_account_id, activity_type_id, currency_id, 
+			org_id, transfer_account_no, activity_date, value_date,
+			activity_status_id, account_credit, account_debit, activity_frequency_id)
+		VALUES (v_client_account_id, 17, 1, 
+			v_org_id, v_car_plate, $3, $3,
+			1, 0, v_fee_amount, 1);
+	END IF;
 
 	RETURN msg;
 END;
-$$ LANGUAGE plpgsql;	
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION aft_sms() RETURNS trigger AS $$
+BEGIN
+	IF (NEW.folder_id = 3) THEN
+		INSERT INTO sms (org_id, folder_id, sms_number, message_ready, message)
+		VALUES (0, 0, NEW.sms_number, 'Thank you for contacting the Judiciary Service Desk. Your submission is being attended to. For further assistance call 020 2221221.');
+
+
+	END IF;
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER aft_sms AFTER INSERT ON sms
+    FOR EACH ROW EXECUTE PROCEDURE aft_sms();
+    
+    
