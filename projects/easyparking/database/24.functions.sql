@@ -418,11 +418,13 @@ DECLARE
 BEGIN
 	msg := null;
 	
-	SELECT org_id , deposit_account_id, sum(account_credit - account_debit)
+	SELECT deposit_accounts.org_id , deposit_accounts.deposit_account_id, 
+		sum(account_activity.account_credit - account_activity.account_debit)
 		INTO v_org_id, v_client_account_id, v_balance
 	FROM deposit_accounts LEFT JOIN account_activity ON deposit_accounts.deposit_account_id = account_activity.deposit_account_id
-	WHERE (deposit_account_id = $1)
-	GROUP BY org_id , deposit_account_id;
+	WHERE (deposit_accounts.deposit_account_id = $1)
+	GROUP BY deposit_accounts.org_id, deposit_accounts.deposit_account_id;
+	IF(v_balance is null)THEN v_balance := 0; END IF;
 	
 	SELECT fee_amount, account_number INTO v_fee_amount, v_account_number
 	FROM account_definations
@@ -464,20 +466,4 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION aft_sms() RETURNS trigger AS $$
-BEGIN
-	IF (NEW.folder_id = 3) THEN
-		INSERT INTO sms (org_id, folder_id, sms_number, message_ready, message)
-		VALUES (0, 0, NEW.sms_number, 'Thank you for contacting the Judiciary Service Desk. Your submission is being attended to. For further assistance call 020 2221221.');
-
-
-	END IF;
-
-	RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER aft_sms AFTER INSERT ON sms
-    FOR EACH ROW EXECUTE PROCEDURE aft_sms();
-    
     

@@ -1,7 +1,7 @@
 
 
 --- Data
-INSERT INTO currency (currency_id, currency_name, currency_symbol, default_country_id) VALUES (5, 'US Dollar', 'USD', 'KE');
+INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (5, 'US Dollar', 'USD');
 INSERT INTO orgs (org_id, org_name, org_sufix, currency_id, logo) VALUES (1, 'Default', 'df', 5, 'logo.png');
 UPDATE currency SET org_id = 1 WHERE currency_id = 5;
 SELECT pg_catalog.setval('orgs_org_id_seq', 1, true);

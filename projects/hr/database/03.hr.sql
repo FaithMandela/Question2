@@ -466,7 +466,9 @@ CREATE TABLE employee_leave_types (
 	leave_balance			real default 0 not null,
 	leave_starting			date default current_date not null,
 	leave_ending			date,
-	details					text
+	details					text,
+	
+	UNIQUE(entity_id, leave_type_id)
 );
 CREATE INDEX employee_leave_types_entity_id ON employee_leave_types (entity_id);
 CREATE INDEX employee_leave_types_leave_type_id ON employee_leave_types (leave_type_id);
@@ -2143,17 +2145,19 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION leave_aplication(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	v_leave_balance			real;
+	v_leave_total			real;
 	v_leave_overlap			integer;
 	v_approve_status		varchar(16);
 	v_table_id				integer;
 	v_employee_month_id		integer;
 	v_month_leave			real;
+	v_leave_ending			date;
 	rec						RECORD;
 	msg 					varchar(120);
 BEGIN
 	msg := 'Leave applied';
 
-	SELECT leave_types.leave_days_span, leave_types.month_limit, 
+	SELECT leave_types.leave_days_span, leave_types.month_limit, leave_types.maximum_days,
 		employee_leave.employee_leave_id, employee_leave.entity_id, employee_leave.leave_type_id,
 		employee_leave.leave_days, employee_leave.leave_from, employee_leave.leave_to,
 		employee_leave.contact_entity_id, employee_leave.narrative,
@@ -2162,8 +2166,14 @@ BEGIN
 	FROM leave_types INNER JOIN employee_leave ON leave_types.leave_type_id = employee_leave.leave_type_id
 		LEFT JOIN adjustments ON leave_types.adjustment_id = adjustments.adjustment_id
 	WHERE (employee_leave.employee_leave_id = CAST($1 as int));
+	
+	SELECT leave_ending INTO v_leave_ending FROM employee_leave_types WHERE entity_id = rec.entity_id;
 
 	v_leave_balance := get_leave_balance(rec.entity_id, rec.leave_type_id);
+	
+	SELECT sum(employee_leave.leave_days) INTO v_leave_total
+	FROM employee_leave 
+	WHERE (entity_id = rec.entity_id) AND (leave_type_id = rec.leave_type_id) AND (approve_status = 'Rejected');
 
 	SELECT count(employee_leave_id) INTO v_leave_overlap
 	FROM employee_leave
@@ -2208,6 +2218,12 @@ BEGIN
 		RAISE EXCEPTION '%', msg;
 	ELSIF((rec.month_limit > 0) AND (v_month_leave > rec.month_limit))THEN
 		msg := 'You exceed the month limit';
+		RAISE EXCEPTION '%', msg;
+	ELSIF((rec.maximum_days > 0) AND (v_leave_total > rec.maximum_days))THEN
+		msg := 'You exceed the total allowed leave day limit';
+		RAISE EXCEPTION '%', msg;
+	ELSIF((v_leave_ending is not null) AND (v_leave_ending < rec.leave_to))THEN
+		msg := 'You are not allowed to apply for the leave past ' || to_char(v_leave_ending, 'DD Mon YYYY');
 		RAISE EXCEPTION '%', msg;
 	ELSIF((rec.adjustment_id is not null) AND (v_employee_month_id is null))THEN
 		msg := 'This leave has an allowance or deduction and needs to be applied on a valid month';

@@ -340,7 +340,7 @@
 			<FORM name="Leave" keyfield="employee_leave_id" table="employee_leave">
 				<USERFIELD>entity_id</USERFIELD>
 				<DEFAULT default="Draft">approve_status</DEFAULT>
-				<COMBOBOX w="430" title="Leave Type" lptable="vw_employee_leave_types" user="entity_id" y="10" h="20" x="10" lpfield="leave_type_name">leave_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Leave Type" lptable="vw_employee_leave_types" where="(leave_valid = true)" user="entity_id" y="10" h="20" x="10" lpfield="leave_type_name">leave_type_id</COMBOBOX>
 				<COMBOBOX w="430" title="Contact Person" lptable="vw_employees" lpkey="entity_id" where="(active = true)" y="30" h="20" x="10" lpfield="employee_name">contact_entity_id</COMBOBOX>
 				<TEXTDATE w="150" title="Leave From" required="true" y="50" h="20" x="10">leave_from</TEXTDATE>
 				<TEXTDATE w="150" title="Leave To" y="50" h="20" x="290">leave_to</TEXTDATE>
@@ -385,7 +385,7 @@
 			</DIARY>
 		</DIARY>
 		<JASPER name="Monthly Report" user="filterid" reportfile="vw_employee_leave_d.jasper"></JASPER>
-		<GRID name="Leave Types" keyfield="employee_leave_type_id" table="vw_employee_leave_types" user="entity_id">
+		<GRID name="Leave Types" keyfield="employee_leave_type_id" table="vw_employee_leave_types" where="(leave_valid = true)" user="entity_id">
 			<TEXTFIELD w="75" title="Leave Type Name">leave_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Allowed Leave Days">allowed_leave_days</TEXTFIELD>
 			<TEXTFIELD w="75" title="Leave Days Span">leave_days_span</TEXTFIELD>
@@ -1956,8 +1956,9 @@
 				<FORM name="Leave Types" keyfield="employee_leave_type_id" linkfield="entity_id" table="employee_leave_types">
 					<COMBOBOX w="430" title="Leave Type" lptable="leave_types" y="10" h="20" x="10" lpfield="leave_type_name">leave_type_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Carry Over Leave" y="30" h="20" x="10">leave_balance</TEXTFIELD>
-					<TEXTDATE w="150" title="Leave Starting" default="now" y="30" h="20" x="290">leave_starting</TEXTDATE>
-					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+					<TEXTDATE w="150" title="Leave Starting" default="now" y="50" h="20" x="10">leave_starting</TEXTDATE>
+					<TEXTDATE w="150" title="Leave Ending" y="50" h="20" x="290">leave_ending</TEXTDATE>
+					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
 			<JASPER name="Leave" reportfile="vw_employee_leave_a.jasper"></JASPER>
@@ -1991,14 +1992,15 @@
 					<DATA key="2">Female</DATA>
 					<DATA key="3">Male</DATA>
 				</COMBOLIST>
-				<CHECKBOX w="150" title="Holiday" tab="Include" y="2" h="20" x="10">include_holiday</CHECKBOX>
-				<CHECKBOX w="50" title="Mon" lw="50" tab="Include" y="2" h="20" x="190">include_mon</CHECKBOX>
-				<CHECKBOX w="50" title="Tue" lw="50" tab="Include" y="2" h="20" x="290">include_tue</CHECKBOX>
-				<CHECKBOX w="50" title="Wed" lw="50" tab="Include" y="2" h="20" x="390">include_wed</CHECKBOX>
-				<CHECKBOX w="50" title="Thu" tab="Include" y="22" h="20" x="10">include_thu</CHECKBOX>
-				<CHECKBOX w="50" title="Fri" lw="50" tab="Include" y="22" h="20" x="190">include_fri</CHECKBOX>
-				<CHECKBOX w="50" title="Sat" lw="50" tab="Include" y="22" h="20" x="290">include_sat</CHECKBOX>
-				<CHECKBOX w="50" title="Sun" lw="50" tab="Include" y="22" h="20" x="390">include_sun</CHECKBOX>
+				<TEXTDECIMAL w="150" title="Maximum Days" default="0" y="70" h="20" x="290">maximum_days</TEXTDECIMAL>
+				<CHECKBOX w="50" title="Monday" default="true" tab="Include" y="2" h="20" x="10">include_mon</CHECKBOX>
+				<CHECKBOX w="50" title="Tuesday" default="true" tab="Include" y="2" h="20" x="290">include_tue</CHECKBOX>
+				<CHECKBOX w="50" title="Wednesday" default="true" tab="Include" y="22" h="20" x="10">include_wed</CHECKBOX>
+				<CHECKBOX w="50" title="Thursday" default="true" tab="Include" y="22" h="20" x="290">include_thu</CHECKBOX>
+				<CHECKBOX w="50" title="Friday" default="true" tab="Include" y="42" h="20" x="10">include_fri</CHECKBOX>
+				<CHECKBOX w="50" title="Saturday" default="true" tab="Include" y="42" h="20" x="290">include_sat</CHECKBOX>
+				<CHECKBOX w="50" title="Sunday" tab="Include" y="62" h="20" x="10">include_sun</CHECKBOX>
+				<CHECKBOX w="150" title="Holiday" tab="Include" y="62" h="20" x="290">include_holiday</CHECKBOX>
 				<TEXTAREA w="530" tab="Details" y="2" h="170" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
