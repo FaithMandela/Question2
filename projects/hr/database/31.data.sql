@@ -317,4 +317,10 @@ INSERT INTO review_category (review_category_id, org_id, review_category_name) V
 INSERT INTO task_types (task_type_id, org_id, task_type_name, default_cost, default_price)
 VALUES (0, 0, 'Default', 0, 0);
 
-
+INSERT INTO travel_types (org_id, travel_type_name) VALUES 
+(0, 'Conference'),
+(0, 'Site Visit'),
+(0, 'Seminar'),
+(0, 'Workshop'),
+(0, 'Training'),
+(0, 'Official duty');

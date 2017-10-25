@@ -363,9 +363,11 @@ BEGIN
 		WHERE (a.per_day_earning = true) AND (a.holiday_id is null) AND (a.period_id = v_period_id)
 		GROUP BY b.employee_month_id, a.normal_time_hr
 	LOOP
-		UPDATE employee_month SET basic_pay = reca.month_pay, 
-			hour_pay = reca.month_pay, worked_hours = rec.worked_hours
-		WHERE employee_month_id = reca.employee_month_id;
+		IF(reca.month_pay is not null)THEN
+			UPDATE employee_month SET basic_pay = reca.month_pay, 
+				hour_pay = reca.month_pay, worked_hours = reca.worked_hours
+			WHERE employee_month_id = reca.employee_month_id;
+		END IF;
 	END LOOP;
 	
 	DELETE FROM employee_overtime WHERE (auto_computed = true)
