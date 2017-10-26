@@ -3,10 +3,16 @@
 		<MENU name="Project">
 			<MENU name="Project">5</MENU>
 			<MENU name="Clients">10</MENU>
-			<MENU name="Attendance">15</MENU>
-			<MENU name="Shifts">25</MENU>
 			<MENU name="My Tasks">20</MENU>
 			<MENU name="Farming">30</MENU>
+		</MENU>
+		<MENU name="Time and Attendance">
+			<MENU name="Attendance">15</MENU>
+			<MENU name="Shifts">25</MENU>
+		</MENU>
+		<MENU name="Travel">
+			<MENU name="Employee Travels">35</MENU>
+			<MENU name="Travel Definations">40</MENU>
 		</MENU>
 		<MENU name="Reports">
 			<MENU name="Project Types">101</MENU>
@@ -675,6 +681,61 @@
 					<ACTION fnct="add_shift_staff">Add to Shift</ACTION>
 				</ACTIONS>
 			</GRID>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Employee Travels" key="35" h="550">
+		<GRID name="Employee Travels" keyfield="employee_travel_id" table="vw_employee_travels">
+			<TEXTFIELD w="35" title="ID">employee_travel_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Travel Type Name">travel_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Staff Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Project Name">project_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Client Name">client_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Travel Funding">travel_funding_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Funding Details">funding_details</TEXTFIELD>
+			<TEXTFIELD w="75" title="Purpose Of Trip">purpose_of_trip</TEXTFIELD>
+			<TEXTFIELD w="75" title="Travel Agent">travel_agent</TEXTFIELD>
+			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+			<FORM name="Employee Travels" keyfield="employee_travel_id" table="employee_travels">
+				<COMBOBOX w="430" title="Travel Type" lptable="travel_types" y="10" h="20" x="10" lpfield="travel_type_name">travel_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Staff" lptable="vw_employees" y="30" h="20" x="10" lpfield="employee_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Project" lptable="vw_projects" y="50" h="20" x="10" lpfield="project_disp">project_id</COMBOBOX>
+				<COMBOBOX w="430" title="Travel Funding" lptable="travel_funding" y="70" h="20" x="10" lpfield="travel_funding_name">travel_funding_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Funding Details" y="90" h="20" x="10">funding_details</TEXTFIELD>
+				<TEXTFIELD w="430" title="Purpose Of Trip" y="110" h="20" x="10">purpose_of_trip</TEXTFIELD>
+				<TEXTFIELD w="430" title="Travel Agent" y="130" h="20" x="10">travel_agent</TEXTFIELD>
+				<TEXTFIELD w="430" title="Ticket From" y="150" h="20" x="10">ticket_from</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="210" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Travel Definations" key="40" h="550">
+		<GRID name="Travel Types" keyfield="travel_type_id" table="travel_types">
+			<TEXTFIELD w="75" title="Travel Type ID">travel_type_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Travel Type">travel_type_name</TEXTFIELD>
+			<FORM name="Travel Types" keyfield="travel_type_id" table="travel_types">
+				<TEXTFIELD w="150" title="Travel Type" y="10" h="20" x="10">travel_type_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Travel Funding" keyfield="travel_funding_id" table="travel_funding">
+			<TEXTFIELD w="75" title="Travel Funding ID">travel_funding_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Travel Funding">travel_funding_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Require Details">require_details</CHECKBOX>
+			<FORM name="Travel Funding" keyfield="travel_funding_id" table="travel_funding">
+				<TEXTFIELD w="150" title="Travel Funding" y="10" h="20" x="10">travel_funding_name</TEXTFIELD>
+				<CHECKBOX w="150" title="Require Details" y="10" h="20" x="290">require_details</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Claim Types" keyfield="claim_type_id" table="vw_claim_types">
+			<TEXTFIELD w="75" title="Adjustment">adjustment_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Claim Type">claim_type_name</TEXTFIELD>
+			<FORM name="Claim Types" keyfield="claim_type_id" table="claim_types">
+				<COMBOBOX w="430" title="Adjustment" lptable="adjustments" where="(adjustment_type = 3)" y="10" h="20" x="10" lpfield="adjustment_name">adjustment_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Claim Type" y="30" h="20" x="10">claim_type_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+			</FORM>
 		</GRID>
 	</DESK>
 </APP>

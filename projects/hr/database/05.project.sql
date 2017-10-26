@@ -197,7 +197,8 @@ CREATE VIEW vw_projects AS
 		project_types.project_type_id, project_types.project_type_name, 
 		projects.org_id, projects.project_id, projects.project_name, projects.signed, projects.contract_ref, projects.monthly_amount,
 		projects.full_amount, projects.project_cost, projects.narrative, projects.start_date, projects.ending_date,
-		projects.project_account, projects.details
+		projects.project_account, projects.details,
+		(entitys.entity_name || ' - ' || projects.project_name) as project_disp
 	FROM projects INNER JOIN entitys ON projects.entity_id = entitys.entity_id
 		INNER JOIN project_types ON projects.project_type_id = project_types.project_type_id;
 

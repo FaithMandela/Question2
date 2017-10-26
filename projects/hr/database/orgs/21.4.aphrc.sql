@@ -21,3 +21,9 @@ INSERT INTO travel_types (org_id, travel_type_name) VALUES
 (0, 'Home Leave'),
 (0, 'PhD Study');
 
+INSERT INTO travel_funding (org_id, travel_funding_name, require_details) VALUES
+(0, 'APHRC Core', false),
+(0, 'APHRC Project (Specify)', true),
+(0, 'Other Institution (specify)', true),
+(0, 'Partly personal (specify)', true);
+

@@ -171,8 +171,8 @@
 			</FORM>
 		</GRID>
 		<GRID name="Claim Types" keyfield="claim_type_id" table="vw_claim_types">
-			<TEXTFIELD w="75" title="Adjustment Name">adjustment_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Claim Type Name">claim_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Adjustment">adjustment_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Claim Type">claim_type_name</TEXTFIELD>
 			<FORM name="Claim Types" keyfield="claim_type_id" table="claim_types">
 				<COMBOBOX w="430" title="Adjustment" lptable="adjustments" where="(adjustment_type = 3)" y="10" h="20" x="10" lpfield="adjustment_name">adjustment_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Claim Type" y="30" h="20" x="10">claim_type_name</TEXTFIELD>
