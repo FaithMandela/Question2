@@ -238,15 +238,25 @@ CREATE VIEW primajorstudentview AS
 	FROM (students INNER JOIN studentdegrees ON students.studentid = studentdegrees.studentid)
 		INNER JOIN primarymajorview ON studentdegrees.studentdegreeid = primarymajorview.studentdegreeid
 	WHERE (studentdegrees.completed = false);
+	
+CREATE VIEW vw_majorstudents AS
+	SELECT students.studentid, students.studentname, students.accountnumber, students.Nationality, students.Sex,
+		students.MaritalStatus, students.birthdate, students.onprobation, students.offcampus,
+		studentdegrees.studentdegreeid, studentdegrees.completed, studentdegrees.started, studentdegrees.graduated,
+		departments.departmentid, departments.departmentname, primarymajorview.majorid, primarymajorview.majorname
+	FROM (students INNER JOIN studentdegrees ON students.studentid = studentdegrees.studentid)
+		INNER JOIN primarymajorview ON studentdegrees.studentdegreeid = primarymajorview.studentdegreeid
+		INNER JOIN departments ON students.departmentid = students.departmentid
+	WHERE (studentdegrees.completed = false);
 
 CREATE VIEW primajorinstructorview AS
-	SELECT instructors.instructorid, instructors.instructorname, primajorstudentview.studentid, primajorstudentview.studentname,
-		primajorstudentview.accountnumber, primajorstudentview.Nationality, primajorstudentview.Sex, primajorstudentview.MaritalStatus,
-		primajorstudentview.birthdate, primajorstudentview.onprobation, primajorstudentview.offcampus,
-		primajorstudentview.studentdegreeid, primajorstudentview.completed, primajorstudentview.started, primajorstudentview.graduated,
-		primajorstudentview.departmentid, primajorstudentview.departmentname, primajorstudentview.majorid, primajorstudentview.majorname
-	FROM instructors INNER JOIN primajorstudentview ON instructors.departmentid = primajorstudentview.departmentid
-	WHERE (instructors.majoradvisor=true);
+	SELECT instructors.instructorid, instructors.instructorname, vw_majorstudents.studentid, vw_majorstudents.studentname,
+		vw_majorstudents.accountnumber, vw_majorstudents.Nationality, vw_majorstudents.Sex, vw_majorstudents.MaritalStatus,
+		vw_majorstudents.birthdate, vw_majorstudents.onprobation, vw_majorstudents.offcampus,
+		vw_majorstudents.studentdegreeid, vw_majorstudents.completed, vw_majorstudents.started, vw_majorstudents.graduated,
+		vw_majorstudents.departmentid, vw_majorstudents.departmentname, vw_majorstudents.majorid, vw_majorstudents.majorname
+	FROM instructors INNER JOIN vw_majorstudents ON instructors.departmentid = vw_majorstudents.departmentid
+	WHERE (instructors.majoradvisor = true);
 
 CREATE VIEW quarterview AS
 	SELECT quarters.quarterid, quarters.qstart, quarters.qlatereg, quarters.qlatechange, quarters.qlastdrop,

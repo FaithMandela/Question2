@@ -97,7 +97,7 @@ DELETE FROM qstudents WHERE sublevelid = 'MEDI' AND quarterid = '2016/2017.2';
 
 
 ALTER TABLE qgrades DISABLE TRIGGER del_qgrades;
-DELETE FROM qgrades WHERE qstudentid = 273994;
+DELETE FROM qgrades WHERE qstudentid = 286831;
 ALTER TABLE qgrades ENABLE TRIGGER del_qgrades;
 
 
