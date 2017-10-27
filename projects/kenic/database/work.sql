@@ -207,12 +207,12 @@ FROM ledger WHERE trans_type = 'Payment' ORDER BY ID DESC LIMIT 50;
 
 
 ------------------ Checking on domain duplicate renewar
-SELECT * FROM domain WHERE name = 'kotek.co.ke';
+SELECT * FROM domain WHERE name = 'mzimaconcepts.co.ke';
 SELECT * FROM domain WHERE name = 'agents.co.ke';
 
 
 SELECT id, client_roid, total, created, previous_expiry_date, renewal_refund 
-FROM ledger WHERE domain_name = 'kotek.co.ke' 
+FROM ledger WHERE domain_name = 'mzimaconcepts.co.ke' 
 ORDER BY id;
 
 SELECT id, client_roid, total, created, previous_expiry_date, renewal_refund 

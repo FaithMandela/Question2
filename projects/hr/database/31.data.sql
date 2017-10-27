@@ -324,3 +324,10 @@ INSERT INTO travel_types (org_id, travel_type_name) VALUES
 (0, 'Workshop'),
 (0, 'Training'),
 (0, 'Official duty');
+
+INSERT INTO travel_funding (org_id, travel_funding_name, require_details) VALUES
+(0, 'Organisation Core', false),
+(0, 'Project (Specify)', true),
+(0, 'Other Institution (specify)', true),
+(0, 'Partly personal (specify)', true);
+

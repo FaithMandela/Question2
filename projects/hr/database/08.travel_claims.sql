@@ -83,8 +83,8 @@ CREATE TABLE claims (
 	process_date			date,
 	
 	advance_given			real,
-	reconsiled				boolean default false not null,
-	reconsiled_date			date,
+	reconciled				boolean default false not null,
+	reconciled_date			date,
 	
 	application_date		timestamp default now(),
 	approve_status			varchar(16) default 'Draft' not null,
@@ -118,6 +118,16 @@ CREATE INDEX claim_details_claim_id ON claim_details(claim_id);
 CREATE INDEX claim_details_currency_id ON claim_details(currency_id);
 CREATE INDEX claim_details_org_id ON claim_details(org_id);
 
+CREATE OR REPLACE FUNCTION get_itinerary_start(integer) RETURNS date AS $$
+	SELECT min(travel_date)
+	FROM employee_itinerary WHERE (employee_travel_id = $1);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_itinerary_return(integer) RETURNS date AS $$
+	SELECT max(return_date)
+	FROM employee_itinerary WHERE (employee_travel_id = $1);
+$$ LANGUAGE SQL;
+
 CREATE VIEW vw_employee_travels AS
 	SELECT travel_types.travel_type_id, travel_types.travel_type_name,
 		entitys.entity_id, entitys.entity_name,
@@ -126,7 +136,10 @@ CREATE VIEW vw_employee_travels AS
 		employee_travels.org_id, employee_travels.employee_travel_id, employee_travels.funding_details, 
 		employee_travels.purpose_of_trip, employee_travels.travel_agent, employee_travels.ticket_from, 
 		employee_travels.application_date, employee_travels.approve_status, employee_travels.workflow_table_id, 
-		employee_travels.action_date, employee_travels.details
+		employee_travels.action_date, employee_travels.details,
+		
+		get_itinerary_start(employee_travels.employee_travel_id) as departure_date,
+		get_itinerary_return(employee_travels.employee_travel_id) as arrival_date
 	FROM employee_travels INNER JOIN travel_types ON employee_travels.travel_type_id = travel_types.travel_type_id
 		INNER JOIN entitys ON employee_travels.entity_id = entitys.entity_id
 		INNER JOIN vw_projects ON employee_travels.project_id = vw_projects.project_id
@@ -142,7 +155,7 @@ CREATE VIEW vw_claims AS
 		entitys.entity_id, entitys.entity_name, 
 		claims.org_id, claims.claim_id, claims.employee_adjustment_id, claims.employee_travel_id, 
 		claims.claim_date, claims.in_payroll, claims.narrative, claims.process_claim, claims.process_date, 
-		claims.advance_given, claims.reconsiled, claims.reconsiled_date, claims.application_date, 
+		claims.advance_given, claims.reconciled, claims.reconciled_date, claims.application_date, 
 		claims.approve_status, claims.workflow_table_id, claims.action_date, claims.details
 	FROM claims INNER JOIN claim_types ON claims.claim_type_id = claim_types.claim_type_id
 		INNER JOIN entitys ON claims.entity_id = entitys.entity_id;
@@ -166,3 +179,20 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON employee_travels
 
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON claims
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
+
+CREATE OR REPLACE FUNCTION ins_claims() RETURNS trigger AS $$
+BEGIN
+	
+	IF(NEW.employee_travel_id is not null)THEN
+		SELECT entity_id INTO NEW.entity_id
+		FROM employee_travels WHERE (employee_travel_id = NEW.employee_travel_id);
+	END IF;
+	
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_claims BEFORE INSERT OR UPDATE ON claims
+	FOR EACH ROW EXECUTE PROCEDURE ins_claims();
+    
+    

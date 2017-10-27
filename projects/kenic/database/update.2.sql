@@ -46,8 +46,8 @@ END;
 $$ LANGUAGE plpgsql;
 
 INSERT INTO audit.master (audit_user, audit_login) VALUES ('automation', 'automation');
-UPDATE ledger SET renewal_refund = false WHERE id = 471735;
-UPDATE ledger SET renewal_refund = true WHERE id = 471735;
+UPDATE ledger SET renewal_refund = false WHERE id = <<484597>>;
+UPDATE ledger SET renewal_refund = true WHERE id = <<484597>>;
 
 
 CREATE OR REPLACE FUNCTION upd_domain_refund() RETURNS trigger AS $$

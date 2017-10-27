@@ -570,8 +570,8 @@ BEGIN
 			NEW.tech_contact, NEW.tech_email, NEW.service_contact, NEW.service_email, now() + CAST('1 year' as interval),
 			false, false, false, false); 
 
-		INSERT INTO login (username, clid, name, password)
-		VALUES (myid, myid, myid, md5(NEW.firstpasswd));
+		INSERT INTO login (username, clid, name, password, country, timezone, email, create_username)
+		VALUES (myid, myid, myid, md5(NEW.firstpasswd), 'KE', 'EAT', NEW.admin_email, 'root');
 
 		INSERT INTO login_role (username, role)
 		VALUES (myid, 'REGISTRAR');

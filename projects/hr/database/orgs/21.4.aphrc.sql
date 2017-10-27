@@ -27,3 +27,6 @@ INSERT INTO travel_funding (org_id, travel_funding_name, require_details) VALUES
 (0, 'Other Institution (specify)', true),
 (0, 'Partly personal (specify)', true);
 
+
+INSERT INTO claim_types (adjustment_id, org_id, claim_type_name) VALUES
+(21, 0, 'Travel Claim');
