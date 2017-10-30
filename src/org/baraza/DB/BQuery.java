@@ -1752,9 +1752,10 @@ public class BQuery {
 		String pattern = el.getAttribute("pattern");
 		if(format == null) {
 			if(el.getName().equals("TEXTDATE")) format = "date";
-			if(el.getName().equals("TEXTTIMESTAMP")) format = "timestamp";
-			if(el.getName().equals("CHECKBOX")) format = "boolean";
-			if(el.getName().equals("TEXTDECIMAL")) format = "double";
+			else if(el.getName().equals("TEXTTIMESTAMP")) format = "timestamp";
+			else if(el.getName().equals("CHECKBOX")) format = "boolean";
+			else if(el.getName().equals("TEXTDECIMAL")) format = "double";
+			else if(el.getName().equals("SPINTIME")) format = "time";
 		}
 		
 		try {

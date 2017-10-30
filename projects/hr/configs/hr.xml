@@ -2651,8 +2651,8 @@
 					<TEXTDATE w="120" title="Travel Date" pattern="yyyy-MM-dd">travel_date</TEXTDATE>
 					<TEXTFIELD w="150" title="Departure">departure</TEXTFIELD>
 					<TEXTFIELD w="150" title="Arrival">arrival</TEXTFIELD>
-					<SPINTIME w="75" title="Departure Time">departure_time</SPINTIME>
-					<SPINTIME w="75" title="Arrival Time">arrival_time</SPINTIME>
+					<SPINTIME w="75" title="Departure Time" pattern="hh:mm a">departure_time</SPINTIME>
+					<SPINTIME w="75" title="Arrival Time" pattern="hh:mm a">arrival_time</SPINTIME>
 					<TEXTFIELD w="100" title="Carrier">carrier</TEXTFIELD>
 					<TEXTFIELD w="75" title="Flight Number">flight_number</TEXTFIELD>
 				</GRID>
