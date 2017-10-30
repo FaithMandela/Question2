@@ -151,6 +151,10 @@ public class BAccordion {
 				jsColEl.add("type", "date");
 				jsColEl.add("myCustomProperty", "datecp");
 				jsColModel.add(jsColEl);
+			} else if(fld_type.equals("SPINTIME")) {
+				jsColEl.add("type", "time");
+				jsColEl.add("myCustomProperty", "timecp");
+				jsColModel.add(jsColEl);
 			} else if(fld_type.equals("TEXTAREA")) {
 				jsColEl.add("type", "textarea");
 				jsColModel.add(jsColEl);

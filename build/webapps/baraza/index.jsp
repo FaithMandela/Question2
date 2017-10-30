@@ -606,6 +606,7 @@
     });
 
     jsGrid.fields.date = MyDateField;
+	jsGrid.fields.time = MyDateField;
 
 	<%= web.getAccordionJs() %>
 

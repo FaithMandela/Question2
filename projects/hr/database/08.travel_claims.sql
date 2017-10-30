@@ -11,6 +11,7 @@ CREATE TABLE travel_funding (
 	org_id					integer references orgs,
 	travel_funding_name		varchar(50),
 	require_details			boolean default false not null,
+	travel_funded			boolean default false not null,
 	details					text
 );
 CREATE INDEX travel_funding_org_id ON travel_funding(org_id);
@@ -38,6 +39,7 @@ CREATE TABLE employee_travels (
 
 	travel_agent			varchar(120),
 	ticket_from				varchar(120),
+	ticket_cost				real,
 	
 	application_date		timestamp default now(),
 	approve_status			varchar(16) default 'Draft' not null,
@@ -58,7 +60,8 @@ CREATE TABLE employee_itinerary (
 	org_id					integer references orgs,
 	
 	travel_date				date not null,
-	return_date				date not null,
+	departure_time			time not null,
+	arrival_time			time not null,
 	departure				varchar(120) not null,
 	arrival					varchar(120) not null,
 	carrier					varchar(120),
@@ -124,9 +127,16 @@ CREATE OR REPLACE FUNCTION get_itinerary_start(integer) RETURNS date AS $$
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION get_itinerary_return(integer) RETURNS date AS $$
-	SELECT max(return_date)
+	SELECT max(travel_date)
 	FROM employee_itinerary WHERE (employee_travel_id = $1);
 $$ LANGUAGE SQL;
+
+CREATE VIEW vw_claim_travel AS
+	SELECT claims.employee_travel_id,
+		sum(claim_details.requested_amount * claim_details.exchange_rate) as t_requested_amount,
+		sum(claim_details.amount * claim_details.exchange_rate) as t_amount
+	FROM claim_details INNER JOIN claims ON claim_details.claim_id = claims.claim_id
+	GROUP BY claims.employee_travel_id;
 
 CREATE VIEW vw_employee_travels AS
 	SELECT travel_types.travel_type_id, travel_types.travel_type_name,
@@ -135,20 +145,48 @@ CREATE VIEW vw_employee_travels AS
 		travel_funding.travel_funding_id, travel_funding.travel_funding_name, 
 		employee_travels.org_id, employee_travels.employee_travel_id, employee_travels.funding_details, 
 		employee_travels.purpose_of_trip, employee_travels.travel_agent, employee_travels.ticket_from, 
-		employee_travels.application_date, employee_travels.approve_status, employee_travels.workflow_table_id, 
-		employee_travels.action_date, employee_travels.details,
+		employee_travels.ticket_cost, employee_travels.application_date, employee_travels.approve_status, 
+		employee_travels.workflow_table_id, employee_travels.action_date, employee_travels.details,
 		
+		vw_claim_travel.t_requested_amount, vw_claim_travel.t_amount,
 		get_itinerary_start(employee_travels.employee_travel_id) as departure_date,
 		get_itinerary_return(employee_travels.employee_travel_id) as arrival_date
 	FROM employee_travels INNER JOIN travel_types ON employee_travels.travel_type_id = travel_types.travel_type_id
 		INNER JOIN entitys ON employee_travels.entity_id = entitys.entity_id
 		INNER JOIN vw_projects ON employee_travels.project_id = vw_projects.project_id
-		INNER JOIN travel_funding ON employee_travels.travel_funding_id = travel_funding.travel_funding_id;
+		INNER JOIN travel_funding ON employee_travels.travel_funding_id = travel_funding.travel_funding_id
+		LEFT JOIN vw_claim_travel ON employee_travels.employee_travel_id = vw_claim_travel.employee_travel_id;
+
+CREATE VIEW vw_employee_itinerary AS
+	SELECT vw_employee_travels.travel_type_id, vw_employee_travels.travel_type_name,
+		vw_employee_travels.entity_id, vw_employee_travels.entity_name,
+		vw_employee_travels.project_id, vw_employee_travels.project_name, vw_employee_travels.client_name,
+		vw_employee_travels.travel_funding_id, vw_employee_travels.travel_funding_name, 
+		vw_employee_travels.employee_travel_id, vw_employee_travels.funding_details, 
+		vw_employee_travels.purpose_of_trip, vw_employee_travels.travel_agent, vw_employee_travels.ticket_from, 
+		vw_employee_travels.ticket_cost, vw_employee_travels.application_date, vw_employee_travels.approve_status, 
+		vw_employee_travels.workflow_table_id, vw_employee_travels.action_date, vw_employee_travels.details,
+		vw_employee_travels.departure_date, vw_employee_travels.arrival_date,
+
+		orgs.org_id, orgs.org_name, orgs.logo,
+		employee_itinerary.employee_itinerary_id, employee_itinerary.travel_date, 
+		employee_itinerary.departure_time, employee_itinerary.arrival_time,
+		employee_itinerary.departure, employee_itinerary.arrival, employee_itinerary.carrier, employee_itinerary.flight_number
+		
+	FROM employee_itinerary INNER JOIN vw_employee_travels ON employee_itinerary.employee_travel_id = vw_employee_travels.employee_travel_id
+	INNER JOIN orgs ON employee_itinerary.org_id = orgs.org_id;
 	
 CREATE VIEW vw_claim_types AS
 	SELECT adjustments.adjustment_id, adjustments.adjustment_name, 
 		claim_types.org_id, claim_types.claim_type_id, claim_types.claim_type_name, claim_types.details
 	FROM claim_types INNER JOIN adjustments ON claim_types.adjustment_id = adjustments.adjustment_id;
+	
+CREATE VIEW vw_claim_funds AS
+	SELECT claim_details.claim_id,
+		sum(claim_details.requested_amount * claim_details.exchange_rate) as t_requested_amount,
+		sum(claim_details.amount * claim_details.exchange_rate) as t_amount
+	FROM claim_details
+	GROUP BY claim_details.claim_id;
 	
 CREATE VIEW vw_claims AS
 	SELECT claim_types.claim_type_id, claim_types.claim_type_name, 
@@ -156,9 +194,11 @@ CREATE VIEW vw_claims AS
 		claims.org_id, claims.claim_id, claims.employee_adjustment_id, claims.employee_travel_id, 
 		claims.claim_date, claims.in_payroll, claims.narrative, claims.process_claim, claims.process_date, 
 		claims.advance_given, claims.reconciled, claims.reconciled_date, claims.application_date, 
-		claims.approve_status, claims.workflow_table_id, claims.action_date, claims.details
+		claims.approve_status, claims.workflow_table_id, claims.action_date, claims.details,
+		vw_claim_funds.t_requested_amount, vw_claim_funds.t_amount
 	FROM claims INNER JOIN claim_types ON claims.claim_type_id = claim_types.claim_type_id
-		INNER JOIN entitys ON claims.entity_id = entitys.entity_id;
+		INNER JOIN entitys ON claims.entity_id = entitys.entity_id
+		LEFT JOIN vw_claim_funds ON claims.claim_id = vw_claim_funds.claim_id;
 		
 CREATE VIEW vw_claim_details AS
 	SELECT vw_claims.claim_type_id, vw_claims.claim_type_name, vw_claims.entity_id, vw_claims.entity_name, 
@@ -194,5 +234,4 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_claims BEFORE INSERT OR UPDATE ON claims
 	FOR EACH ROW EXECUTE PROCEDURE ins_claims();
-    
     

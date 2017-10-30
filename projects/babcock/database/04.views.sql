@@ -243,11 +243,13 @@ CREATE VIEW vw_majorstudents AS
 	SELECT students.studentid, students.studentname, students.accountnumber, students.Nationality, students.Sex,
 		students.MaritalStatus, students.birthdate, students.onprobation, students.offcampus,
 		studentdegrees.studentdegreeid, studentdegrees.completed, studentdegrees.started, studentdegrees.graduated,
-		departments.departmentid, departments.departmentname, primarymajorview.majorid, primarymajorview.majorname
-	FROM (students INNER JOIN studentdegrees ON students.studentid = studentdegrees.studentid)
-		INNER JOIN primarymajorview ON studentdegrees.studentdegreeid = primarymajorview.studentdegreeid
-		INNER JOIN departments ON students.departmentid = students.departmentid
-	WHERE (studentdegrees.completed = false);
+		departments.departmentid, departments.departmentname, majors.majorid, majors.majorname
+	FROM students INNER JOIN studentdegrees ON students.studentid = studentdegrees.studentid
+		INNER JOIN departments ON students.departmentid = departments.departmentid
+		INNER JOIN studentmajors ON studentdegrees.studentdegreeid = studentmajors.studentdegreeid
+		INNER JOIN majors ON studentmajors.majorid = majors.majorid
+	WHERE (studentdegrees.completed = false)
+		AND (studentmajors.major = true) AND (studentmajors.primarymajor = true); 
 
 CREATE VIEW primajorinstructorview AS
 	SELECT instructors.instructorid, instructors.instructorname, vw_majorstudents.studentid, vw_majorstudents.studentname,

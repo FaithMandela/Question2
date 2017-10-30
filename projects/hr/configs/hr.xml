@@ -8,6 +8,7 @@
 			<MENU name="My Details" role="applicant">10</MENU>
 			<MENU name="Vacancies">14</MENU>
 			<MENU name="Internships" role="applicant">15</MENU>
+			<MENU name="Travel Requests" role="staff">37</MENU>
 			<MENU name="Claims Requests" role="staff">36</MENU>
 			<MENU name="Loan Application" role="staff">205</MENU>
 			<MENU name="Advance Application" role="staff">210</MENU>
@@ -2620,6 +2621,69 @@
 				<ACTION fnct="objectives_review">Review Objectives</ACTION>
 				<ACTION fnct="upd_reviews" approval="3">Delete Objective</ACTION>
 			</ACTIONS>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Employee Travels" key="37" h="550">
+		<GRID name="Employee Travels" keyfield="employee_travel_id" table="vw_employee_travels" where="approve_status='Draft'" user="entity_id">
+			<TEXTFIELD w="35" title="ID">employee_travel_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Travel Type">travel_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Staff Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Project Name">project_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Travel Funding">travel_funding_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Purpose Of Trip">purpose_of_trip</TEXTFIELD>
+			<TEXTDATE w="75" title="Departure Date">departure_date</TEXTDATE>
+			<TEXTDATE w="75" title="Arrival Date">arrival_date</TEXTDATE>
+			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+			<ACCORDION name="Employee Travels" keyfield="employee_travel_id">
+				<FORM cols="2" name="Employee Travels" keyfield="employee_travel_id" table="employee_travels" collapse="in">
+					<USERFIELD>entity_id</USERFIELD>
+					<COMBOBOX w="150" title="Travel Type" lptable="travel_types" y="10" h="20" x="10" lpfield="travel_type_name">travel_type_id</COMBOBOX>
+					<COMBOBOX w="150" title="Project" lptable="vw_projects" y="50" h="20" x="10" span="true" lpfield="project_disp">project_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Purpose Of Trip" y="110" h="20" x="10">purpose_of_trip</TEXTFIELD>
+					<COMBOBOX w="150" title="Travel Funding" lptable="travel_funding" y="70" h="20" x="10" span="true" lpfield="travel_funding_name">travel_funding_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Funding Details" y="90" h="20" x="10">funding_details</TEXTFIELD>
+					<TEXTFIELD w="150" title="Travel Agent" y="130" h="20" x="10" span="true">travel_agent</TEXTFIELD>
+					<TEXTFIELD w="150" title="Ticket From" y="150" h="20" x="10">ticket_from</TEXTFIELD>
+					<TEXTDECIMAL w="150" title="Ticket Cost" y="170" h="20" x="10">ticket_cost</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="190" h="70" x="10" rows="5">details</TEXTAREA>
+				</FORM>
+				<GRID name="Employee Itinerary" keyfield="employee_itinerary_id" linkfield="employee_travel_id" table="employee_itinerary" collapse="in">
+					<TEXTDATE w="120" title="Travel Date" pattern="yyyy-MM-dd">travel_date</TEXTDATE>
+					<TEXTFIELD w="150" title="Departure">departure</TEXTFIELD>
+					<TEXTFIELD w="150" title="Arrival">arrival</TEXTFIELD>
+					<SPINTIME w="75" title="Departure Time">departure_time</SPINTIME>
+					<SPINTIME w="75" title="Arrival Time">arrival_time</SPINTIME>
+					<TEXTFIELD w="100" title="Carrier">carrier</TEXTFIELD>
+					<TEXTFIELD w="75" title="Flight Number">flight_number</TEXTFIELD>
+				</GRID>
+			</ACCORDION>
+			<GRID name="Claims" keyfield="claim_id" linkfield="employee_travel_id" table="vw_claims">
+				<TEXTFIELD w="75" title="Claim ID">claim_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Claim Type">claim_type_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Claim Date">claim_date</TEXTDATE>
+				<CHECKBOX w="75" title="In Payroll">in_payroll</CHECKBOX>
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+				<CHECKBOX w="75" title="Process Claim">process_claim</CHECKBOX>
+				<TEXTDECIMAL w="75" title="Advance Given">advance_given</TEXTDECIMAL>
+				<CHECKBOX w="75" title="Reconciled">reconciled</CHECKBOX>
+				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+				<ACCORDION name="Employee Travels" keyfield="claim_id" linkfield="employee_travel_id">
+					<FORM cols="2" name="Claims" keyfield="claim_id" linkfield="employee_travel_id" table="claims" collapse="in">
+						<COMBOBOX w="150" title="Claim Type" lptable="claim_types" y="10" h="20" x="10" span="true" lpfield="claim_type_name">claim_type_id</COMBOBOX>
+						<TEXTDATE w="150" title="Claim Date" default="now" y="90" h="20" x="10">claim_date</TEXTDATE>
+						<CHECKBOX w="150" title="In Payroll" y="90" h="20" x="290" span="true">in_payroll</CHECKBOX>
+						<TEXTFIELD w="150" title="Narrative" y="110" h="20" x="10">narrative</TEXTFIELD>
+						<TEXTAREA w="430" title="Details" y="230" h="70" x="10" rows="5">details</TEXTAREA>
+					</FORM>
+					<GRID name="Claim Details" keyfield="claim_detail_id" linkfield="claim_id" table="claim_details" collapse="in">
+						<COMBOBOX w="100" title="Currency" lptable="currency" lpfield="currency_symbol">currency_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Nature Of Expence">nature_of_expence</TEXTFIELD>
+						<TEXTDECIMAL w="100" title="Requested Amount">requested_amount</TEXTDECIMAL>
+						<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
+						<TEXTFIELD w="75" title="Expense Code">expense_code</TEXTFIELD>
+					</GRID>
+				</ACCORDION>
+			</GRID>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Claims Requests" key="36" h="590">

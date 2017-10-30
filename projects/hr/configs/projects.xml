@@ -661,10 +661,12 @@
 			<TEXTFIELD w="75" title="Travel Funding ID">travel_funding_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Travel Funding">travel_funding_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Require Details">require_details</CHECKBOX>
+			<CHECKBOX w="75" title="Travel Funded">travel_funded</CHECKBOX>
 			<FORM name="Travel Funding" keyfield="travel_funding_id" table="travel_funding">
 				<TEXTFIELD w="150" title="Travel Funding" y="10" h="20" x="10">travel_funding_name</TEXTFIELD>
-				<CHECKBOX w="150" title="Require Details" y="10" h="20" x="290">require_details</CHECKBOX>
-				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+				<CHECKBOX w="150" title="Require Details" y="30" h="20" x="10">require_details</CHECKBOX>
+				<CHECKBOX w="150" title="Travel Funded" y="30" h="20" x="290">travel_funded</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Claim Types" keyfield="claim_type_id" table="vw_claim_types">
@@ -698,7 +700,8 @@
 					<TEXTFIELD w="150" title="Funding Details" y="90" h="20" x="10">funding_details</TEXTFIELD>
 					<TEXTFIELD w="150" title="Travel Agent" y="130" h="20" x="10" span="true">travel_agent</TEXTFIELD>
 					<TEXTFIELD w="150" title="Ticket From" y="150" h="20" x="10">ticket_from</TEXTFIELD>
-					<TEXTAREA w="430" title="Details" y="210" h="70" x="10" rows="5">details</TEXTAREA>
+					<TEXTDECIMAL w="150" title="Ticket Cost" y="170" h="20" x="10">ticket_cost</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="190" h="70" x="10" rows="5">details</TEXTAREA>
 				</FORM>
 				<GRID name="Employee Itinerary" keyfield="employee_itinerary_id" linkfield="employee_travel_id" table="employee_itinerary" collapse="in">
 					<TEXTDATE w="120" title="Travel Date" pattern="yyyy-MM-dd">travel_date</TEXTDATE>
