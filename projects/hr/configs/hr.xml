@@ -2634,6 +2634,7 @@
 			<TEXTDATE w="75" title="Departure Date">departure_date</TEXTDATE>
 			<TEXTDATE w="75" title="Arrival Date">arrival_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+			<JASPER name="Travel Report" reportfile="vw_employee_itinerary.jasper"></JASPER>
 			<ACCORDION name="Employee Travels" keyfield="employee_travel_id">
 				<FORM cols="2" name="Employee Travels" keyfield="employee_travel_id" table="employee_travels" collapse="in">
 					<USERFIELD>entity_id</USERFIELD>
