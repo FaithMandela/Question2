@@ -6,11 +6,6 @@ Thank you for your Business
 We Turn your information into profitability'
 WHERE org_id = 0;
 
-INSERT INTO entitys (org_id, entity_type_id, use_key_id, user_name, entity_name, primary_email, first_password)
-VALUES (0, 0, 0, 'dewcis', 'Dew CIS Solutions Ltd', 'root@dewcis.com', 'baraza');
-
-INSERT INTO project_types (org_id, project_type_name) VALUES (0, 'Software Development');
-
 UPDATE transaction_counters SET document_number = '10001';
 
 INSERT INTO address (org_id, sys_country_id, table_name, table_id, post_office_box, postal_code, premises, street, town, phone_number, extension, mobile, fax, email, website, is_default, first_password, details) 
@@ -68,3 +63,11 @@ INSERT INTO items (item_id, org_id, item_category_id, tax_type_id, item_unit_id,
 SELECT pg_catalog.setval('items_item_id_seq', 5, true);
 
 
+--- Create a default organisation client
+INSERT INTO entitys (org_id, entity_type_id, use_key_id, user_name, entity_name, primary_email, first_password)
+VALUES (0, 0, 0, 'dewcis', 'Dew CIS Solutions Ltd', 'root@dewcis.com', 'baraza');
+
+INSERT INTO project_types (org_id, project_type_name) VALUES (0, 'Software Development');
+
+INSERT INTO projects (project_type_id, entity_id, org_id, project_name, signed, start_date)
+VALUES (currval('project_types_project_type_id_seq'), currval('entitys_entity_id_seq'), 0, 'Internal', true, '2017-01-01');

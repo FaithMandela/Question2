@@ -234,4 +234,39 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_claims BEFORE INSERT OR UPDATE ON claims
 	FOR EACH ROW EXECUTE PROCEDURE ins_claims();
-    
+
+CREATE OR REPLACE FUNCTION travel_aplication(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	v_amount			real;
+	msg 				varchar(120);
+BEGIN
+	msg := 'Travel applied';
+	
+	UPDATE employee_travels SET approve_status = 'Completed'
+	WHERE (employee_travel_id = $1::int) AND (approve_status = 'Draft');
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION claims_aplication(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	v_amount			real;
+	msg 				varchar(120);
+BEGIN
+	msg := 'Claim applied';
+	
+	SELECT sum(amount) INTO v_amount
+	FROM vw_claim_details
+	WHERE (claim_id = $1::int);
+	
+	IF(v_amount is null)THEN
+		RAISE EXCEPTION 'You need to add claim details';
+	END IF;
+	
+	UPDATE claims SET approve_status = 'Completed'
+	WHERE (claim_id = $1::int) AND (approve_status = 'Draft');
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;

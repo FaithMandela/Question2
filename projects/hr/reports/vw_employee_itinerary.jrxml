@@ -25,8 +25,12 @@
 	<parameter name="organd" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_employee_itinerary.travel_type_name, vw_employee_itinerary.entity_name, vw_employee_itinerary.project_name, vw_employee_itinerary.travel_funding_name, vw_employee_itinerary.funding_details, vw_employee_itinerary.purpose_of_trip, vw_employee_itinerary.travel_agent, vw_employee_itinerary.ticket_from, vw_employee_itinerary.details, vw_employee_itinerary.travel_date, vw_employee_itinerary.departure, vw_employee_itinerary.arrival, vw_employee_itinerary.departure_time, vw_employee_itinerary.arrival_time, vw_employee_itinerary.carrier, vw_employee_itinerary.flight_number
+		<![CDATA[SELECT vw_employee_itinerary.travel_type_name, vw_employee_itinerary.entity_name, vw_employee_itinerary.project_name, vw_employee_itinerary.travel_funding_name, vw_employee_itinerary.funding_details, vw_employee_itinerary.purpose_of_trip, vw_employee_itinerary.travel_agent, vw_employee_itinerary.ticket_from, vw_employee_itinerary.details, vw_employee_itinerary.travel_date, vw_employee_itinerary.departure, vw_employee_itinerary.arrival, vw_employee_itinerary.departure_time, vw_employee_itinerary.arrival_time, vw_employee_itinerary.carrier, vw_employee_itinerary.flight_number,
+vw_employee_itinerary.logo, vw_employee_itinerary.workflow_table_id
 
 FROM vw_employee_itinerary
 
@@ -49,13 +53,15 @@ $P!{organd}]]>
 	<field name="arrival_time" class="java.sql.Time"/>
 	<field name="carrier" class="java.lang.String"/>
 	<field name="flight_number" class="java.lang.String"/>
+	<field name="logo" class="java.lang.String"/>
+	<field name="workflow_table_id" class="java.lang.Integer"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="261" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="53" y="48" width="446" height="62" uuid="fe44aa8a-8e17-4dee-a3eb-e5c0dcfea629"/>
+				<reportElement style="Title" x="53" y="78" width="446" height="46" uuid="fe44aa8a-8e17-4dee-a3eb-e5c0dcfea629"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
@@ -180,6 +186,10 @@ $P!{organd}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{details}]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="1" y="0" width="396" height="65" uuid="73db5ba3-273c-4d3d-9d7c-6eb479709265"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + $F{logo}]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>
@@ -339,6 +349,15 @@ $P!{organd}]]>
 		</band>
 	</pageFooter>
 	<summary>
-		<band splitType="Stretch"/>
+		<band height="32" splitType="Stretch">
+			<subreport>
+				<reportElement x="1" y="0" width="554" height="32" uuid="da68f3f1-7011-4f53-aec4-c478e775321e"/>
+				<subreportParameter name="tableid">
+					<subreportParameterExpression><![CDATA[$F{workflow_table_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_approvals.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
 	</summary>
 </jasperReport>
