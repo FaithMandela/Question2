@@ -110,12 +110,18 @@ public class BAccordion {
 		jshd.add("data", "~~db_" + fieldId + "_table~~");
 		
 		JsonObjectBuilder jscnt = Json.createObjectBuilder();
-		jscnt.add("insertItem", "~~function(item) { return $.ajax({type:'GET', url:'ajax?fnct=jsinsert&viewno=" 
+		if(vw.getAttribute("new", "true").equals("true")) {
+			jscnt.add("insertItem", "~~function(item) { return $.ajax({type:'GET', url:'ajax?fnct=jsinsert&viewno=" 
 			+ fieldId + "', data: item}); }~~");
-		jscnt.add("updateItem", "~~function(item) { return $.ajax({type:'GET', url:'ajax?fnct=jsupdate&viewno=" 
+		}
+		if(vw.getAttribute("edit", "true").equals("true")) {
+			jscnt.add("updateItem", "~~function(item) { return $.ajax({type:'GET', url:'ajax?fnct=jsupdate&viewno=" 
 			+ fieldId + "', data: item}); }~~");
-		jscnt.add("deleteItem", "~~function(item) { return $.ajax({type:'GET', url:'ajax?fnct=jsdelete&viewno=" 
+		}
+		if(vw.getAttribute("del", "true").equals("true")) {
+			jscnt.add("deleteItem", "~~function(item) { return $.ajax({type:'GET', url:'ajax?fnct=jsdelete&viewno=" 
 			+ fieldId + "', data: item}); }~~");
+		}
 		jshd.add("controller", jscnt);
 		
 		Map<String, String> jsTables = new HashMap<String, String>();
@@ -131,6 +137,7 @@ public class BAccordion {
 			jsColEl.add("name", fld_name);
 			jsColEl.add("width", Integer.valueOf(fld_size));
 			if(el.getAttribute("required") != null) jsColEl.add("required", true);
+			if(el.getAttribute("readonly") != null) jsColEl.add("editing", false);
 			
 			if(el.getAttribute("default") != null) {
 				String defaultStr = "~~function() {var input = this.__proto__.insertTemplate.call(this); "

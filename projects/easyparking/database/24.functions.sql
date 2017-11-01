@@ -403,7 +403,6 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER aft_mpesa_trxs AFTER INSERT ON mpesa_trxs
 	FOR EACH ROW EXECUTE PROCEDURE aft_mpesa_trxs();
 
-
 CREATE OR REPLACE FUNCTION charge_parking(int, varchar(12), date) RETURNS varchar(120) AS $$
 DECLARE
 	v_account_activity_id		integer;
@@ -414,6 +413,7 @@ DECLARE
 	v_account_number			varchar(32);
 	v_client_account_id			integer;
 	v_balance					real;
+	v_car_balance				real;
 	msg							varchar(120);
 BEGIN
 	msg := null;
@@ -439,12 +439,29 @@ BEGIN
 		VALUES (v_deposit_account_id, 11, 11, 2, v_org_id, v_car_plate, 'Approved');
 	END IF;
 	
+	SELECT sum(account_activity.account_credit - account_activity.account_debit) INTO v_car_balance
+	FROM account_activity
+	WHERE (account_activity.deposit_account_id = v_deposit_account_id);
+	IF(v_car_balance is null)THEN v_car_balance := 0; END IF;
+	
 	SELECT account_activity_id INTO v_account_activity_id
 	FROM account_activity
-	WHERE (deposit_account_id = v_deposit_account_id) AND (activity_type_id = 16)
-		AND (activity_date = current_date);
-
-	IF(v_fee_amount > v_balance)THEN
+	WHERE (deposit_account_id = v_deposit_account_id) AND (activity_type_id = 16) AND (activity_date = $3);
+	
+	IF((v_car_balance > 0) AND (v_car_balance < v_balance))THEN
+		INSERT INTO account_activity (deposit_account_id, activity_type_id, currency_id, 
+			org_id, transfer_account_no, activity_date, value_date,
+			activity_status_id, account_credit, account_debit, activity_frequency_id)
+		VALUES (v_client_account_id, 17, 1, 
+			v_org_id, v_car_plate, $3, $3,
+			1, 0, v_car_balance, 1);
+			
+		v_balance := v_balance - v_car_balance;
+	END IF;
+	
+	IF(v_car_balance > v_balance)THEN
+		msg := 'The car has a previous balance to be paid of ' || v_car_balance::text;
+	ELSIF(v_fee_amount > v_balance)THEN
 		msg := 'You need to add more money to pay for parking';
 	ELSIF(v_account_activity_id is null)THEN
 		INSERT INTO account_activity (deposit_account_id, activity_type_id, currency_id, 
@@ -466,4 +483,48 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION charge_parking(varchar(12), date) RETURNS varchar(120) AS $$
+DECLARE
+	v_account_activity_id		integer;
+	v_deposit_account_id		integer;
+	v_org_id					integer;
+	v_car_plate					varchar(12);
+	v_fee_amount				real;
+	v_account_number			varchar(32);
+	v_client_account_id			integer;
+	v_balance					real;
+	msg							varchar(120);
+BEGIN
+	msg := null;
+	
+	SELECT fee_amount, account_number, org_id INTO v_fee_amount, v_account_number, v_org_id
+	FROM account_definations
+	WHERE (activity_type_id = 16) AND (org_id = 0);
+	
+	v_car_plate := trim(upper(replace($2, ' ', '')));
+	SELECT deposit_account_id INTO v_deposit_account_id
+	FROM deposit_accounts WHERE account_number = v_car_plate;
+	IF(v_deposit_account_id is null)THEN
+		v_deposit_account_id := nextval('deposit_accounts_deposit_account_id_seq');
+		INSERT INTO deposit_accounts (deposit_account_id, entity_id, updated_by, product_id, org_id, account_number, approve_status)
+		VALUES (v_deposit_account_id, 11, 11, 2, v_org_id, v_car_plate, 'Approved');
+	END IF;
+	
+	SELECT account_activity_id INTO v_account_activity_id
+	FROM account_activity
+	WHERE (deposit_account_id = v_deposit_account_id) AND (activity_type_id = 16)
+		AND (activity_date = $2);
+
+	IF(v_account_activity_id is null)THEN
+		INSERT INTO account_activity (deposit_account_id, activity_type_id, currency_id, 
+			org_id, transfer_account_no, activity_date, value_date,
+			activity_status_id, account_credit, account_debit, activity_frequency_id)
+		VALUES (v_deposit_account_id, 16, 1, 
+			v_org_id, v_account_number, $2, $2,
+			1, 0, v_fee_amount, 1);
+	END IF;
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;
     

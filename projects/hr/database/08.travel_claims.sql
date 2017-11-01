@@ -32,6 +32,7 @@ CREATE TABLE employee_travels (
 	entity_id				integer references entitys,
 	project_id				integer references projects,
 	travel_funding_id		integer references travel_funding,
+	department_role_id		integer references department_roles,
 	org_id					integer references orgs,
 	
 	funding_details			varchar(320),
@@ -52,6 +53,7 @@ CREATE INDEX employee_travels_travel_type_id ON employee_travels(travel_type_id)
 CREATE INDEX employee_travels_entity_id ON employee_travels(entity_id);
 CREATE INDEX employee_travels_project_id ON employee_travels(project_id);
 CREATE INDEX employee_travels_travel_funding_id ON employee_travels(travel_funding_id);
+CREATE INDEX employee_travels_department_role_id ON employee_travels(department_role_id);
 CREATE INDEX employee_travels_org_id ON employee_travels(org_id);
 
 CREATE TABLE employee_itinerary (
@@ -76,6 +78,7 @@ CREATE TABLE claims (
 	entity_id				integer references entitys,
 	employee_adjustment_id	integer references employee_adjustments,
 	employee_travel_id		integer references employee_travels,
+	department_role_id		integer references department_roles,
 	org_id					integer references orgs,
 	
 	claim_date				date not null,
@@ -100,6 +103,7 @@ CREATE INDEX claims_claim_type_id ON claims(claim_type_id);
 CREATE INDEX claims_entity_id ON claims(entity_id);
 CREATE INDEX claims_employee_adjustment_id ON claims(employee_adjustment_id);
 CREATE INDEX claims_employee_travel_id ON claims(employee_travel_id);
+CREATE INDEX claims_department_role_id ON claims(department_role_id);
 CREATE INDEX claims_org_id ON claims(org_id);
 
 CREATE TABLE claim_details (
@@ -149,13 +153,16 @@ CREATE VIEW vw_employee_travels AS
 		employee_travels.workflow_table_id, employee_travels.action_date, employee_travels.details,
 		
 		vw_claim_travel.t_requested_amount, vw_claim_travel.t_amount,
+		vw_department_roles.department_id, vw_department_roles.department_name, 
+		vw_department_roles.department_role_id, vw_department_roles.department_role_name,
 		get_itinerary_start(employee_travels.employee_travel_id) as departure_date,
 		get_itinerary_return(employee_travels.employee_travel_id) as arrival_date
 	FROM employee_travels INNER JOIN travel_types ON employee_travels.travel_type_id = travel_types.travel_type_id
 		INNER JOIN entitys ON employee_travels.entity_id = entitys.entity_id
 		INNER JOIN vw_projects ON employee_travels.project_id = vw_projects.project_id
 		INNER JOIN travel_funding ON employee_travels.travel_funding_id = travel_funding.travel_funding_id
-		LEFT JOIN vw_claim_travel ON employee_travels.employee_travel_id = vw_claim_travel.employee_travel_id;
+		LEFT JOIN vw_claim_travel ON employee_travels.employee_travel_id = vw_claim_travel.employee_travel_id
+		LEFT JOIN vw_department_roles ON employee_travels.department_role_id = vw_department_roles.department_role_id;
 
 CREATE VIEW vw_employee_itinerary AS
 	SELECT vw_employee_travels.travel_type_id, vw_employee_travels.travel_type_name,
@@ -191,6 +198,9 @@ CREATE VIEW vw_claim_funds AS
 CREATE VIEW vw_claims AS
 	SELECT claim_types.claim_type_id, claim_types.claim_type_name, 
 		entitys.entity_id, entitys.entity_name, 
+		vw_department_roles.department_id, vw_department_roles.department_name, 
+		vw_department_roles.department_role_id, vw_department_roles.department_role_name,
+
 		claims.org_id, claims.claim_id, claims.employee_adjustment_id, claims.employee_travel_id, 
 		claims.claim_date, claims.in_payroll, claims.narrative, claims.process_claim, claims.process_date, 
 		claims.advance_given, claims.reconciled, claims.reconciled_date, claims.application_date, 
@@ -198,7 +208,8 @@ CREATE VIEW vw_claims AS
 		vw_claim_funds.t_requested_amount, vw_claim_funds.t_amount
 	FROM claims INNER JOIN claim_types ON claims.claim_type_id = claim_types.claim_type_id
 		INNER JOIN entitys ON claims.entity_id = entitys.entity_id
-		LEFT JOIN vw_claim_funds ON claims.claim_id = vw_claim_funds.claim_id;
+		LEFT JOIN vw_claim_funds ON claims.claim_id = vw_claim_funds.claim_id
+		LEFT JOIN vw_department_roles ON claims.department_role_id = vw_department_roles.department_role_id;
 		
 CREATE VIEW vw_claim_details AS
 	SELECT vw_claims.claim_type_id, vw_claims.claim_type_name, vw_claims.entity_id, vw_claims.entity_name, 
@@ -219,6 +230,34 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON employee_travels
 
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON claims
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
+    
+CREATE OR REPLACE FUNCTION ins_employee_travels() RETURNS trigger AS $$
+BEGIN
+	
+	SELECT department_role_id INTO NEW.department_role_id
+	FROM employees
+	WHERE (entity_id = NEW.entity_id);
+	
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_employee_travels BEFORE INSERT OR UPDATE ON employee_travels
+	FOR EACH ROW EXECUTE PROCEDURE ins_employee_travels();
+	
+CREATE OR REPLACE FUNCTION aft_employee_travels() RETURNS trigger AS $$
+BEGIN
+	
+	IF((OLD.approve_status = 'Completed') AND (NEW.approve_status = 'Approved'))THEN
+		UPDATE claims SET approve_status = 'Approved' WHERE (employee_travel_id = NEW.employee_travel_id);
+	END IF;
+	
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER aft_employee_travels AFTER UPDATE ON employee_travels
+	FOR EACH ROW EXECUTE PROCEDURE aft_employee_travels();
 
 CREATE OR REPLACE FUNCTION ins_claims() RETURNS trigger AS $$
 BEGIN
@@ -227,6 +266,27 @@ BEGIN
 		SELECT entity_id INTO NEW.entity_id
 		FROM employee_travels WHERE (employee_travel_id = NEW.employee_travel_id);
 	END IF;
+	
+	IF(TG_OP = 'INSERT')THEN
+		IF(NEW.process_claim = true)THEN
+			NEW.process_date := current_date;
+		END IF;
+		IF(NEW.reconciled = true)THEN
+			NEW.reconciled_date := current_date;
+		END IF;
+	END IF;
+	IF(TG_OP = 'UPDATE')THEN
+		IF((OLD.process_claim = false) AND (NEW.process_claim = true))THEN
+			NEW.process_date := current_date;
+		END IF;
+		IF((NEW.reconciled = false) AND (NEW.reconciled = true))THEN
+			NEW.reconciled_date := current_date;
+		END IF;
+	END IF;
+	
+	SELECT department_role_id INTO NEW.department_role_id
+	FROM employees
+	WHERE (entity_id = NEW.entity_id);
 	
 	RETURN NEW;
 END;

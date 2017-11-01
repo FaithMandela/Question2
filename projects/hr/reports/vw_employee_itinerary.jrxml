@@ -30,7 +30,8 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_employee_itinerary.travel_type_name, vw_employee_itinerary.entity_name, vw_employee_itinerary.project_name, vw_employee_itinerary.travel_funding_name, vw_employee_itinerary.funding_details, vw_employee_itinerary.purpose_of_trip, vw_employee_itinerary.travel_agent, vw_employee_itinerary.ticket_from, vw_employee_itinerary.details, vw_employee_itinerary.travel_date, vw_employee_itinerary.departure, vw_employee_itinerary.arrival, vw_employee_itinerary.departure_time, vw_employee_itinerary.arrival_time, vw_employee_itinerary.carrier, vw_employee_itinerary.flight_number,
-vw_employee_itinerary.logo, vw_employee_itinerary.workflow_table_id
+vw_employee_itinerary.logo, vw_employee_itinerary.workflow_table_id,
+vw_employee_itinerary.employee_travel_id
 
 FROM vw_employee_itinerary
 
@@ -55,6 +56,7 @@ $P!{organd}]]>
 	<field name="flight_number" class="java.lang.String"/>
 	<field name="logo" class="java.lang.String"/>
 	<field name="workflow_table_id" class="java.lang.Integer"/>
+	<field name="employee_travel_id" class="java.lang.Integer"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -349,14 +351,37 @@ $P!{organd}]]>
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="32" splitType="Stretch">
+		<band height="56" splitType="Stretch">
 			<subreport>
-				<reportElement x="1" y="0" width="554" height="32" uuid="da68f3f1-7011-4f53-aec4-c478e775321e"/>
+				<reportElement positionType="Float" x="1" y="28" width="554" height="23" uuid="da68f3f1-7011-4f53-aec4-c478e775321e"/>
 				<subreportParameter name="tableid">
 					<subreportParameterExpression><![CDATA[$F{workflow_table_id}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_approvals.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="0" y="1" width="555" height="23" uuid="1cde66a2-faf9-4c09-bd3f-121500c5fe50"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="filterid">
+					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="orgid">
+					<subreportParameterExpression><![CDATA[$P{orgid}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="orgwhere">
+					<subreportParameterExpression><![CDATA[$P{orgwhere}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="organd">
+					<subreportParameterExpression><![CDATA[$P{organd}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="employeetravelid">
+					<subreportParameterExpression><![CDATA[$F{employee_travel_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_claims_travel.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</summary>
