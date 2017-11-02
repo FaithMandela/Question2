@@ -21,6 +21,7 @@
 			<MENU name="Project Tasks">103</MENU>
 			<MENU name="Project Staff">104</MENU>
 			<MENU name="Attendance">115</MENU>
+			<MENU name="Travel">120</MENU>
 		</MENU>
 		<MENU name="HR" xml="hr.xml">0</MENU>
 		<MENU name="Business" role="finance" xml="business.xml">0</MENU>
@@ -874,6 +875,16 @@
 				<DRILLDOWN name="Month" keyfield="period_id" orderby="month_id" wherefield="period_year" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER name="Attendance Schedule" reportfile="vw_attendance_schedule.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" name="Travel" key="120" h="550">
+		<FILTER w="700" name="Travel" split="150" type="vert" h="550">
+			<FILTERFORM name="Date Range">
+				<TEXTDATE w="150" title="Starting From" y="10" h="20" default_fnct="get_start_year" x="10">startrange</TEXTDATE>
+				<TEXTDATE w="150" title="Ending At" y="10" h="20" default_fnct="get_end_year" x="290">endrange</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Travel List" reportfile="vw_employee_travels_a.jasper"></JASPER>
+			<JASPER name="Travel" reportfile="vw_employee_travels.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 </APP>

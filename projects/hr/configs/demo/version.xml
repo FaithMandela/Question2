@@ -5,4 +5,10 @@
 		</REMOVE>
 	</VERSION>
 
+	<VERSION name="Projects" source="../projects.xml" destination="projects.xml">
+		<REMOVE>
+			<MENU name="Farming">30</MENU>
+		</REMOVE>
+	</VERSION>
+
 </VERSIONS>
