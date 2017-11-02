@@ -24,18 +24,15 @@ $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION getcurrhours(int) RETURNS float AS $$
 	SELECT sum(qgrades.hours)
-	FROM qgrades INNER JOIN qstudents ON qgrades.qstudentid = qstudents.qstudentid
-	WHERE (qgrades.qstudentid = $1) AND (qgrades.dropped = false) AND (qgrades.gradeid <> 'W') AND (qgrades.gradeid <> 'AW')
-		AND (qstudents.approved = true);
+	FROM qgrades
+	WHERE (qgrades.qstudentid = $1) AND (qgrades.dropped = false) AND (qgrades.gradeid <> 'W') AND (qgrades.gradeid <> 'AW');
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION getcurrcredit(int) RETURNS float AS $$
 	SELECT sum(qgrades.credit)
 	FROM qgrades INNER JOIN grades ON qgrades.gradeid = grades.gradeid
-		INNER JOIN qstudents ON qgrades.qstudentid = qstudents.qstudentid
 	WHERE (qgrades.qstudentid = $1) AND (grades.gpacount = true) AND (qgrades.dropped = false) 
-		AND (qgrades.repeated = false) AND (qgrades.gradeid <> 'W') AND (qgrades.gradeid <> 'AW')
-		AND (qstudents.approved = true);
+		AND (qgrades.repeated = false) AND (qgrades.gradeid <> 'W') AND (qgrades.gradeid <> 'AW');
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION getcurrgpa(int) RETURNS float AS $$

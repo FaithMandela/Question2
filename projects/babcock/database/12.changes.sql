@@ -36,6 +36,19 @@ CREATE VIEW qprimajorinstructorview AS
 	FROM primajorinstructorview INNER JOIN (qstudents INNER JOIN quarters ON qstudents.quarterid = quarters.quarterid)
 		ON primajorinstructorview.studentdegreeid = qstudents.studentdegreeid 
 	WHERE (quarters.active = true) AND (qstudents.finalised = true) AND (qstudents.majorapproval = false);
+
+CREATE OR REPLACE FUNCTION getcurrhours(int) RETURNS float AS $$
+	SELECT sum(qgrades.hours)
+	FROM qgrades
+	WHERE (qgrades.qstudentid = $1) AND (qgrades.dropped = false) AND (qgrades.gradeid <> 'W') AND (qgrades.gradeid <> 'AW');
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION getcurrcredit(int) RETURNS float AS $$
+	SELECT sum(qgrades.credit)
+	FROM qgrades INNER JOIN grades ON qgrades.gradeid = grades.gradeid
+	WHERE (qgrades.qstudentid = $1) AND (grades.gpacount = true) AND (qgrades.dropped = false) 
+		AND (qgrades.repeated = false) AND (qgrades.gradeid <> 'W') AND (qgrades.gradeid <> 'AW');
+$$ LANGUAGE SQL;
 	
 CREATE OR REPLACE FUNCTION approve_so(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(240) AS $$
 DECLARE
