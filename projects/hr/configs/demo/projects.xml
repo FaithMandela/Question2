@@ -4,7 +4,6 @@
 			<MENU name="Project">5</MENU>
 			<MENU name="Clients">10</MENU>
 			<MENU name="My Tasks">20</MENU>
-			<MENU name="Farming">30</MENU>
 		</MENU>
 		<MENU name="Time and Attendance">
 			<MENU name="Shifts">25</MENU>
@@ -21,6 +20,7 @@
 			<MENU name="Project Tasks">103</MENU>
 			<MENU name="Project Staff">104</MENU>
 			<MENU name="Attendance">115</MENU>
+			<MENU name="Travel">120</MENU>
 		</MENU>
 		<MENU name="HR" xml="hr.xml">0</MENU>
 		<MENU name="Business" role="finance" xml="business.xml">0</MENU>
@@ -680,7 +680,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Employee Travels" key="35" h="550">
-		<GRID name="Employee Travels" keyfield="employee_travel_id" table="vw_employee_travels">
+		<GRID name="Employee Travels" keyfield="employee_travel_id" orderby="employee_travel_id desc" table="vw_employee_travels">
 			<TEXTFIELD w="35" title="ID">employee_travel_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Travel Type">travel_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Staff Name">entity_name</TEXTFIELD>
@@ -733,8 +733,8 @@
 						<CHECKBOX w="150" title="Process Claim" y="130" h="20" x="10" span="true">process_claim</CHECKBOX>
 						<TEXTDATE w="150" title="Process Date" y="130" h="20" x="290">process_date</TEXTDATE>
 						<TEXTDECIMAL w="150" title="Advance Given" y="150" h="20" x="10">advance_given</TEXTDECIMAL>
-						<CHECKBOX w="150" title="Reconciled" y="150" h="20" x="290" span="true">reconciled</CHECKBOX>
-						<TEXTDATE w="150" title="Reconciled Date" y="170" h="20" x="10">reconciled_date</TEXTDATE>
+						<CHECKBOX w="150" title="Validated" y="150" h="20" x="290" span="true">validated</CHECKBOX>
+						<TEXTDATE w="150" title="Validated Date" y="170" h="20" x="10">validated_date</TEXTDATE>
 						<TEXTAREA w="430" title="Details" y="230" h="70" x="10" rows="5">details</TEXTAREA>
 					</FORM>
 					<GRID name="Claim Details" keyfield="claim_detail_id" linkfield="claim_id" table="claim_details" collapse="in">
@@ -784,7 +784,7 @@
 				</GRID>
 			</ACCORDION>
 		</GRID>
-		<GRID name="Reconcile Claims" keyfield="claim_id" table="vw_claims" where="(process_claim = true) AND (reconciled = false)">
+		<GRID name="Validate Claims" keyfield="claim_id" table="vw_claims" where="(reconciled = true) AND (validated = false)">
 			<TEXTFIELD w="75" title="Claim ID">claim_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Claim Type">claim_type_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Claim Date">claim_date</TEXTDATE>
@@ -804,8 +804,8 @@
 					<CHECKBOX w="150" title="Processed" y="130" h="20" x="10" span="true">process_claim</CHECKBOX>
 					<TEXTDATE w="150" title="Process Date" y="130" h="20" x="290">process_date</TEXTDATE>
 					<TEXTDECIMAL w="150" title="Advance Given" y="150" h="20" x="10">advance_given</TEXTDECIMAL>
-					<CHECKBOX w="150" title="Reconciled" y="150" h="20" x="290" span="true">reconciled</CHECKBOX>
-					<TEXTDATE w="150" title="Reconciled Date" y="170" h="20" x="10">reconciled_date</TEXTDATE>
+					<CHECKBOX w="150" title="Validated" y="150" h="20" x="290" span="true">validated</CHECKBOX>
+					<TEXTDATE w="150" title="Validated Date" y="170" h="20" x="10">validated_date</TEXTDATE>
 					<TEXTAREA w="430" title="Details" y="230" h="70" x="10" rows="5">details</TEXTAREA>
 				</FORM>
 				<GRID name="Claim Details" keyfield="claim_detail_id" linkfield="claim_id" table="claim_details" collapse="in">
@@ -825,7 +825,7 @@
 				<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 			</FILES>
 		</GRID>
-		<GRID name="Claims" keyfield="claim_id" table="vw_claims" where="(process_claim = true) AND (reconciled = true)">
+		<GRID name="Claims" keyfield="claim_id" orderby="(claim_id desc)" table="vw_claims" where="(process_claim = true) AND (reconciled = true)">
 			<TEXTFIELD w="75" title="Claim ID">claim_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Claim Type">claim_type_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Claim Date">claim_date</TEXTDATE>
@@ -874,6 +874,16 @@
 				<DRILLDOWN name="Month" keyfield="period_id" orderby="month_id" wherefield="period_year" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER name="Attendance Schedule" reportfile="vw_attendance_schedule.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" name="Travel" key="120" h="550">
+		<FILTER w="700" name="Travel" split="150" type="vert" h="550">
+			<FILTERFORM name="Date Range">
+				<TEXTDATE w="150" title="Starting From" y="10" h="20" default_fnct="get_start_year" x="10">startrange</TEXTDATE>
+				<TEXTDATE w="150" title="Ending At" y="10" h="20" default_fnct="get_end_year" x="290">endrange</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Travel List" reportfile="vw_employee_travels_a.jasper"></JASPER>
+			<JASPER name="Travel" reportfile="vw_employee_travels.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 </APP>

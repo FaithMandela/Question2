@@ -394,6 +394,9 @@ BEGIN
 	IF(msg is not null)THEN
 		INSERT INTO sms (entity_id, org_id, folder_id, sms_number, message)
 		VALUES (v_entity_id, 0, 0, NEW.mpesa_msisdn, msg);
+	ELSE
+		INSERT INTO sms (entity_id, org_id, folder_id, sms_number, message)
+		VALUES (v_entity_id, 0, 0, NEW.mpesa_msisdn, 'Your account is credited and Parking paid sucesfully');
 	END IF;
 	
 	RETURN NULL;
@@ -439,7 +442,7 @@ BEGIN
 		VALUES (v_deposit_account_id, 11, 11, 2, v_org_id, v_car_plate, 'Approved');
 	END IF;
 	
-	SELECT sum(account_activity.account_credit - account_activity.account_debit) INTO v_car_balance
+	SELECT sum(account_activity.account_debit - account_activity.account_credit) INTO v_car_balance
 	FROM account_activity
 	WHERE (account_activity.deposit_account_id = v_deposit_account_id);
 	IF(v_car_balance is null)THEN v_car_balance := 0; END IF;

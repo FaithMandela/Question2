@@ -1309,7 +1309,8 @@
 			<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
 			<FORM cols="2" tw="570" name="Details" keyfield="entity_id" table="employees" th="180">
-				<COMBOBOX w="150" title="Designation" lptable="vw_department_roles" cmb_fnct="department_name || ', ' || department_role_name" orderby="department_name" y="10" h="20" x="10" lpfield="department_role">department_role_id</COMBOBOX>
+				<COMBOBOX w="150" title="Designation" lptable="vw_department_roles" cmb_fnct="department_name || ', ' || department_role_name" orderby="department_name" y="10" h="20" x="10" span="true" lpfield="department_role">department_role_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Email" y="10" h="20" x="290">employee_email</TEXTFIELD>
 				<TEXTFIELD w="150" title="Employee ID" y="30" h="20" x="10" span="true">employee_id</TEXTFIELD>
 				<TEXTFIELD w="150" title="Phone" y="30" h="20" x="290">phone</TEXTFIELD>
 				<COMBOLIST w="70" title="" y="50" h="20" x="70" span="true">person_title
@@ -1621,7 +1622,8 @@
 			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
 			<FORM new="false" cols="2" tw="570" name="Details" keyfield="entity_id" delete="false" table="employees" th="180">
-				<COMBOBOX w="150" title="Designation" lptable="vw_department_roles" cmb_fnct="department_name || ', ' || department_role_name" orderby="department_name" y="10" h="20" x="10" lpfield="department_role">department_role_id</COMBOBOX>
+				<COMBOBOX w="150" title="Designation" lptable="vw_department_roles" cmb_fnct="department_name || ', ' || department_role_name" orderby="department_name" y="10" h="20" x="10" span="true" lpfield="department_role">department_role_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Email" y="10" h="20" x="290">employee_email</TEXTFIELD>
 				<TEXTFIELD w="150" title="Employee ID" y="30" h="20" x="10" span="true">employee_id</TEXTFIELD>
 				<TEXTFIELD w="150" title="Phone" y="30" h="20" x="290">phone</TEXTFIELD>
 				<COMBOLIST w="70" title="" y="50" h="20" x="70" span="true">person_title
@@ -2687,7 +2689,7 @@
 				</ACCORDION>
 			</GRID>
 		</GRID>
-		<GRID name="Travel Update" keyfield="employee_travel_id" table="vw_employee_travels" where="approve_status!='Draft'" user="entity_id">
+		<GRID name="Reconcile Travel" keyfield="employee_travel_id" table="vw_employee_travels" where="(approve_status='Approved') AND (un_reconciled > 0)" user="entity_id">
 			<TEXTFIELD w="35" title="ID">employee_travel_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Travel Type">travel_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Project Name">project_name</TEXTFIELD>
@@ -2710,7 +2712,9 @@
 				<JASPER name="Claim Report" reportfile="vw_claims.jasper"></JASPER>
 				<ACCORDION name="Claims" keyfield="claim_id" linkfield="employee_travel_id">
 					<FORM cols="2" name="Claims" keyfield="claim_id" linkfield="employee_travel_id" table="claims" collapse="in">
-						<TEXTAREA w="430" title="Details" y="10" h="70" x="10" rows="5">details</TEXTAREA>
+						<CHECKBOX w="150" title="Reconciled" y="10" h="20" x="10">reconciled</CHECKBOX>
+						<TEXTDATE w="150" title="Reconciled Date" y="10" h="20" x="290">reconciled_date</TEXTDATE>
+						<TEXTAREA w="430" title="Details" y="30" h="70" x="10" rows="5">details</TEXTAREA>
 					</FORM>
 					<GRID name="Claim Details" keyfield="claim_detail_id" linkfield="claim_id" del="false" table="claim_details" collapse="in">
 						<COMBOBOX w="100" title="Currency" lptable="currency" lpfield="currency_symbol">currency_id</COMBOBOX>
@@ -2728,6 +2732,17 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 			</GRID>
+		</GRID>
+		<GRID name="Travel" keyfield="employee_travel_id" orderby="employee_travel_id desc" table="vw_employee_travels" user="entity_id">
+			<TEXTFIELD w="35" title="ID">employee_travel_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Travel Type">travel_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Project Name">project_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Travel Funding">travel_funding_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Purpose Of Trip">purpose_of_trip</TEXTFIELD>
+			<TEXTDATE w="75" title="Departure Date">departure_date</TEXTDATE>
+			<TEXTDATE w="75" title="Arrival Date">arrival_date</TEXTDATE>
+			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+			<JASPER name="Travel Report" reportfile="vw_employee_itinerary.jasper"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Claims Requests" key="36" h="590">

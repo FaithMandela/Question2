@@ -13,6 +13,7 @@
 			<MENU name="Employees" role="admin,payroll,hr">3</MENU>
 			<MENU name="Monthly Payroll" role="admin,payroll,hr">10</MENU>
 			<MENU name="Payroll Archive" role="admin,payroll">5</MENU>
+			<MENU name="Fiscal Years">12</MENU>
 		</MENU>
 		<MENU name="Loans" role="admin,payroll">
 			<MENU name="Loans">30</MENU>
@@ -167,8 +168,8 @@
 			</FORM>
 		</GRID>
 		<GRID name="Claim Types" keyfield="claim_type_id" table="vw_claim_types">
-			<TEXTFIELD w="75" title="Adjustment Name">adjustment_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Claim Type Name">claim_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Adjustment">adjustment_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Claim Type">claim_type_name</TEXTFIELD>
 			<FORM name="Claim Types" keyfield="claim_type_id" table="claim_types">
 				<COMBOBOX w="430" title="Adjustment" lptable="adjustments" where="(adjustment_type = 3)" y="10" h="20" x="10" lpfield="adjustment_name">adjustment_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Claim Type" y="30" h="20" x="10">claim_type_name</TEXTFIELD>
@@ -532,7 +533,8 @@
 				<ACTION fnct="increment_payroll" approval="2" role="hr">Step Increment</ACTION>
 			</ACTIONS>
 			<FORM cols="2" tw="570" name="Details" keyfield="entity_id" table="employees" th="180">
-				<COMBOBOX w="150" title="Designation" lptable="vw_department_roles" cmb_fnct="department_name || ', ' || department_role_name" orderby="department_name" y="10" h="20" x="10" lpfield="department_role">department_role_id</COMBOBOX>
+				<COMBOBOX w="150" title="Designation" lptable="vw_department_roles" cmb_fnct="department_name || ', ' || department_role_name" orderby="department_name" y="10" h="20" x="10" span="true" lpfield="department_role">department_role_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Email" y="10" h="20" x="290">employee_email</TEXTFIELD>
 				<TEXTFIELD w="150" title="Employee ID" y="30" h="20" x="10" span="true">employee_id</TEXTFIELD>
 				<TEXTFIELD w="150" title="Phone" y="30" h="20" x="290">phone</TEXTFIELD>
 				<COMBOLIST w="70" title="" y="50" h="20" x="70" span="true">person_title
@@ -741,7 +743,8 @@
 			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
 			<FORM cols="2" tw="570" name="Details" keyfield="entity_id" table="employees" th="180">
-				<COMBOBOX w="150" title="Designation" lptable="vw_department_roles" cmb_fnct="department_name || ', ' || department_role_name" orderby="department_name" y="10" h="20" x="10" lpfield="department_role">department_role_id</COMBOBOX>
+				<COMBOBOX w="150" title="Designation" lptable="vw_department_roles" cmb_fnct="department_name || ', ' || department_role_name" orderby="department_name" y="10" h="20" x="10" span="true" lpfield="department_role">department_role_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Email" y="10" h="20" x="290">employee_email</TEXTFIELD>
 				<TEXTFIELD w="150" title="Employee ID" y="30" h="20" x="10" span="true">employee_id</TEXTFIELD>
 				<TEXTFIELD w="150" title="Phone" y="30" h="20" x="290">phone</TEXTFIELD>
 				<COMBOLIST w="70" title="" y="50" h="20" x="70" span="true">person_title
@@ -1347,6 +1350,49 @@
 					<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 				</GRID>
 			</GRID>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Fiscal Years" key="12" h="500">
+		<GRID name="Fiscal Years" keyfield="fiscal_year_id" table="fiscal_years">
+			<TEXTFIELD w="75" title="Fiscal Year">fiscal_year</TEXTFIELD>
+			<TEXTDATE w="75" title="Fiscal Year Start">fiscal_year_start</TEXTDATE>
+			<TEXTDATE w="75" title="Fiscal Year End">fiscal_year_end</TEXTDATE>
+			<CHECKBOX w="75" title="Year Opened">year_opened</CHECKBOX>
+			<CHECKBOX w="75" title="Year Closed">year_closed</CHECKBOX>
+			<ACTIONS>
+				<ACTION fnct="add_periods">Generate Months</ACTION>
+				<ACTION fnct="close_year" approval="1">Close Year</ACTION>
+			</ACTIONS>
+			<GRID name="Periods" keyfield="period_id" linkfield="fiscal_year_id" table="vw_periods">
+				<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
+				<TEXTDATE w="75" title="Period Start">start_date</TEXTDATE>
+				<TEXTDATE w="75" title="Period End">end_date</TEXTDATE>
+				<CHECKBOX w="75" title="Opened">opened</CHECKBOX>
+				<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
+				<CHECKBOX w="75" title="Active">activated</CHECKBOX>
+				<FORM name="Periods" keyfield="period_id" linkfield="fiscal_year_id" table="periods">
+					<TEXTDATE w="150" title="Period Start" y="10" h="20" x="10">start_date</TEXTDATE>
+					<TEXTDATE w="150" title="Period End" y="10" h="20" x="290">end_date</TEXTDATE>
+					<CHECKBOX w="150" title="Period Opened" y="30" h="20" x="10">opened</CHECKBOX>
+					<CHECKBOX w="150" title="Period Closed" y="30" h="20" x="290">closed</CHECKBOX>
+					<CHECKBOX w="150" title="Activated" y="50" h="20" x="10">activated</CHECKBOX>
+					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+				</FORM>
+				<ACTIONS>
+					<ACTION fnct="open_periods" approval="1">Open Period</ACTION>
+					<ACTION fnct="open_periods" approval="2">Close Period</ACTION>
+					<ACTION fnct="open_periods" approval="3">Activate Period</ACTION>
+					<ACTION fnct="open_periods" approval="4">De-activate Period</ACTION>
+				</ACTIONS>
+			</GRID>
+			<FORM name="Fiscal Years" keyfield="fiscal_year_id" table="fiscal_years">
+				<TEXTFIELD w="250" title="Fiscal Year" y="10" h="20" default_fnct="get_current_year" x="10">fiscal_year</TEXTFIELD>
+				<TEXTDATE w="150" title="Fiscal Year Start" y="30" h="20" default_fnct="get_start_year" x="10">fiscal_year_start</TEXTDATE>
+				<TEXTDATE w="150" title="Fiscal Year End" y="30" h="20" default_fnct="get_end_year" x="290">fiscal_year_end</TEXTDATE>
+				<TEXTDATE w="150" title="Submission Date" y="50" h="20" x="10">submission_date</TEXTDATE>
+				<CHECKBOX w="150" title="Year Opened" default="true" y="70" h="20" x="10">year_opened</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+			</FORM>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Loans" key="30" h="500">

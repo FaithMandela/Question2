@@ -69,3 +69,11 @@ $$ LANGUAGE plpgsql;
 
 UPDATE qstudents SET printed = true WHERE approved = true;
 
+
+SELECT studentid, studentname, quarterid, applicationtime, firstclosetime
+FROM qstudentview
+WHERE (quarterid = '2016/2017.3') AND (studentid IN
+('12/0146', '12/3171', '12/0172', '12/1878', '06/0531'));
+
+
+

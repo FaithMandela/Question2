@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ESCALATION title="HR Mail" processdelay="5"
+<ESCALATION title="HR Mail" processdelay="2"
 	host="localhost" mailuser="sysadmin" mailpassword="invent2k" mailfrom="dennis@localhost"
 	inbox="INBOX" sentbox="INBOX.Sent" testemail="sysadmin@localhost">
 	
