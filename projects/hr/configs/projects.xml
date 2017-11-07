@@ -880,12 +880,12 @@
 	<DESK w="700" name="Travel" key="120" h="550">
 		<FILTER w="700" name="Travel" split="150" type="vert" h="550">
 			<FILTERFORM name="Date Range">
-				<TEXTDATE w="150" title="Starting From" y="10" h="20" default_fnct="get_start_year" x="10">startrange</TEXTDATE>
-				<TEXTDATE w="150" title="Ending At" y="10" h="20" default_fnct="get_end_year" x="290">endrange</TEXTDATE>
+				<TEXTDATE w="150" filterfield="departure_date" title="Starting From" filtertype=">=" y="10" h="20" default_fnct="get_start_year" x="10">startrange</TEXTDATE>
+				<TEXTDATE w="150" filterfield="departure_date" title="Ending At" filtertype="&lt;=" y="10" h="20" default_fnct="get_end_year" x="290">endrange</TEXTDATE>
 			</FILTERFORM>
 			<JASPER name="Travel List" reportfile="vw_employee_travels_a.jasper"></JASPER>
 			<JASPER name="Travel" reportfile="vw_employee_travels.jasper"></JASPER>
-			<GRID name="Vw Employee Travels" keyfield="travel_type_id" orderby="employee_travel_id desc" table="vw_employee_travels">
+			<GRID name="Travel List" keyfield="travel_type_id" orderby="employee_travel_id desc" table="vw_employee_travels">
 				<TEXTFIELD w="75" title="ID">employee_travel_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
@@ -900,7 +900,6 @@
 				<TEXTDECIMAL w="75" title="Ticket Cost">ticket_cost</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Requested Amount">t_requested_amount</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Amount">t_amount</TEXTDECIMAL>
-				<TEXTFIELD w="75" title="Un Reconciled">un_reconciled</TEXTFIELD>
 				<TEXTDATE w="75" title="Departure Date">departure_date</TEXTDATE>
 				<TEXTDATE w="75" title="Arrival Date">arrival_date</TEXTDATE>
 				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>

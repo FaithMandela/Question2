@@ -805,7 +805,6 @@ public class BWeb {
 		return linkData;
 	}
 	
-
 	public String getBody(HttpServletRequest request, String reportPath) {
 		if((root == null) || (db == null)) return "";	// error check
 		
@@ -862,6 +861,9 @@ public class BWeb {
 				else wheresql = "(" + tableFilter + "')";
 			}
 		}
+		
+		// Save the parameters in filter is the session
+		setFilterParams(request);
 
 		if(view.getName().equals("GRID")) {
 			if(request.getParameter("refresh") != null) webSession.removeAttribute("F" + viewKey);
@@ -1045,6 +1047,33 @@ public class BWeb {
 			dbvalue = myvalue;
 		}
 		return dbvalue;
+	}
+	
+	/* Save the parameters in filter is the session */
+	public void setFilterParams(HttpServletRequest request) {
+		if(views.size() > 1) {
+			BElement flt = views.get(views.size()-2);
+			if(flt.getName().equals("FILTER")) {
+				for(BElement sv : flt.getElements()) {
+					if(sv.getName().equals("FILTERGRID")) {
+						String myFilter = sv.getAttribute("filter", "filterid");
+						String myValue = request.getParameter(myFilter);
+						if(myValue != null) webSession.setAttribute(myFilter, myValue);
+					} else if(sv.getName().equals("DRILLDOWN")) {
+						String myFilter = sv.getAttribute("filter", "filterid");
+						String myValue = request.getParameter(myFilter);
+						if(myValue != null) webSession.setAttribute(myFilter, myValue);
+					} else if(sv.getName().equals("FILTERFORM")) {
+						for(BElement ffe : sv.getElements()) {
+							String myFilter = ffe.getValue();
+							String myValue = request.getParameter(myFilter);
+							if(myValue != null) webSession.setAttribute(myFilter, palseValue(ffe, myValue));
+					System.out.println("BASE 2005 : " + myFilter + " : " + myValue);
+						}
+					}
+				}
+			}
+		}
 	}
 
 	public String getOperations() {
@@ -2071,7 +2100,42 @@ log.severe("BASE : " + mysql);
 			}
 		}
 		
+		if(views.size() > 1) {
+			BElement flt = views.get(views.size()-2);
+			if(flt.getName().equals("FILTER")) {
+				for(BElement sv : flt.getElements()) {
+					if(sv.getName().equals("FILTERGRID")) {
+						String myFilter = sv.getAttribute("filter", "filterid");
+						String myFilterField = sv.getAttribute("filterfield", myFilter);
+						JWheresql = getFilterParam(myFilter, myFilterField, " = ", JWheresql);
+					} else if(sv.getName().equals("DRILLDOWN")) {
+						String myFilter = sv.getAttribute("filter", "filterid");
+						String myFilterField = sv.getAttribute("filterfield", myFilter);
+						JWheresql = getFilterParam(myFilter, myFilterField, " = ", JWheresql);
+					} else if(sv.getName().equals("FILTERFORM")) {
+						for(BElement ffe : sv.getElements()) {
+							String myFilter = ffe.getValue();
+							String myFilterField = ffe.getAttribute("filterfield", myFilter);
+							String myFilterType = ffe.getAttribute("filtertype", "=");
+							JWheresql = getFilterParam(myFilter, myFilterField, myFilterType, JWheresql);
+						}
+					}
+				}
+				System.out.println("BASE 2010 FILTER : " + JWheresql);
+			}
+		}
+		
 		return JWheresql;
+	}
+	
+	private String getFilterParam(String myFilter, String myFilterField, String myFilterType, String JWhereSql) {
+		if(webSession.getAttribute(myFilter) != null) {
+			String myValue = (String)webSession.getAttribute(myFilter);
+			if(JWhereSql != null) JWhereSql += " AND (";
+			else JWhereSql = "(";
+			JWhereSql += myFilterField + " " + myFilterType + " '" + myValue + "')";
+		}
+		return JWhereSql;
 	}
 	
 	public String getViewName() {
