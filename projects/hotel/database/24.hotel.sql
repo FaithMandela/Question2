@@ -24,6 +24,7 @@ CREATE TABLE room_types (
 	room_type_name			varchar(50) not null,
 	units					integer default 10 not null,
 	image 					character varying(50),
+	max_occupancy			integer,
 	details					text,
 	UNIQUE(org_id, room_type_name)
 );
@@ -99,6 +100,7 @@ CREATE TABLE bookings (
 	tax3					real not null default 0,
 	exchange_rate			real default 1 not null,
 	payment_method			varchar(50),
+	residents 				integer,
 	details					text
 );
 CREATE INDEX bookings_entity_id ON bookings (entity_id);
@@ -204,22 +206,22 @@ CREATE OR REPLACE VIEW vw_clients AS
 CREATE OR REPLACE VIEW vw_rooms AS
 	SELECT room_types.room_type_id, room_types.room_type_name,
 		rooms.org_id, rooms.room_id, rooms.room_number, rooms.is_active, rooms.operation_date,
-		rooms.details
+		rooms.details,rooms.image,room_types.max_occupancy
 	FROM rooms INNER JOIN room_types ON rooms.room_type_id = room_types.room_type_id;
 
-CREATE OR REPLACE VIEW vw_room_rates AS
-	SELECT room_types.room_type_id, room_types.room_type_name,
-		service_types.service_type_id, service_types.service_type_name,
-		service_types.tax_rate1, service_types.tax_rate2, service_types.tax_rate3,
-		currency.currency_id, currency.currency_name, currency.currency_symbol,
-		room_rates.org_id, room_rates.room_rate_id, room_rates.current_rate, room_rates.date_start,
-		room_rates.date_end, room_rates.is_active, room_rates.exchange_rate, room_rates.details,
-		(room_types.room_type_name || ', ' || service_types.service_type_name || ', ' || room_rates.date_start) as disp,
-		room_types.image,orgs.city_code,orgs.star
-	FROM room_rates INNER JOIN room_types ON room_rates.room_type_id = room_types.room_type_id
-		INNER JOIN service_types ON room_rates.service_type_id = service_types.service_type_id
-		INNER JOIN orgs ON room_rates.org_id = orgs.org_id
-		INNER JOIN currency ON room_rates.currency_id = currency.currency_id;
+	CREATE OR REPLACE VIEW vw_room_rates AS
+		SELECT room_types.room_type_id, room_types.room_type_name,
+			service_types.service_type_id, service_types.service_type_name,
+			service_types.tax_rate1, service_types.tax_rate2, service_types.tax_rate3,
+			currency.currency_id, currency.currency_name, currency.currency_symbol,
+			room_rates.org_id, room_rates.room_rate_id, room_rates.current_rate, room_rates.date_start,
+			room_rates.date_end, room_rates.is_active, room_rates.exchange_rate, room_rates.details,
+			(room_types.room_type_name || ', ' || service_types.service_type_name || ', ' || room_rates.date_start) as disp,
+			room_types.image,vw_orgs.city_code,vw_orgs.star,vw_orgs.location,room_types.units,room_types.max_occupancy,vw_orgs.city_name
+		FROM room_rates INNER JOIN room_types ON room_rates.room_type_id = room_types.room_type_id
+			INNER JOIN service_types ON room_rates.service_type_id = service_types.service_type_id
+			INNER JOIN vw_orgs ON room_rates.org_id = vw_orgs.org_id
+			INNER JOIN currency ON room_rates.currency_id = currency.currency_id;
 
 CREATE OR REPLACE VIEW vw_bookings AS
 	SELECT vw_room_rates.room_type_id, vw_room_rates.room_type_name,
@@ -231,8 +233,10 @@ CREATE OR REPLACE VIEW vw_bookings AS
 		bookings.org_id, bookings.booking_id, bookings.booking_date, bookings.arrival_date, bookings.arrival_time,
 		bookings.departure_date, bookings.departure_time, bookings.units, bookings.confirmed, bookings.closed,
 		bookings.book_rate, bookings.commision, bookings.discount, bookings.tax1, bookings.tax2, bookings.tax3,
-		bookings.exchange_rate, bookings.payment_method, bookings.details, bookings.check_in, bookings.check_out
+		bookings.exchange_rate, bookings.payment_method, bookings.details, bookings.check_in, bookings.check_out,bookings.residents,
+		vw_room_rates.max_occupancy,bookings.unit_rate,orgs.org_name as hotel_name
 	FROM bookings INNER JOIN vw_room_rates ON bookings.room_rate_id = vw_room_rates.room_rate_id
+		INNER JOIN orgs ON bookings.org_id = orgs.org_id
 		INNER JOIN entitys ON bookings.entity_id = entitys.entity_id
 		INNER JOIN currency ON bookings.currency_id = currency.currency_id
 		INNER JOIN reserve_modes ON bookings.reserve_mode_id = reserve_modes.reserve_mode_id;
@@ -254,7 +258,7 @@ CREATE OR REPLACE VIEW vw_stay AS
 		room_types.room_type_id, room_types.room_type_name,
 		rooms.room_id, rooms.room_number,
 		stay.org_id, stay.stay_id, stay.arrival_date, stay.arrival_time, stay.departure_date,
-		stay.departure_time, stay.completed, stay.room_cleared, stay.details
+		stay.departure_time, stay.completed, stay.room_cleared, stay.details,room_types.max_occupancy,stay.room_link
 	FROM stay INNER JOIN vw_bookings ON stay.booking_id = vw_bookings.booking_id
 	INNER JOIN residents ON stay.resident_id = residents.resident_id
 	INNER JOIN rooms ON stay.room_id = rooms.room_id

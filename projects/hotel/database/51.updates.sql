@@ -11,9 +11,14 @@ ALTER TABLE residents ADD COLUMN phone_number character varying(20);
 ALTER TABLE bookings ADD COLUMN check_in boolean;
 ALTER TABLE bookings ADD COLUMN check_out boolean;
 
+ALTER TABLE bookings ADD COLUMN unit_rate real;
+
 ALTER TABLE orgs ADD COLUMN facebook_link  varchar(50);
 ALTER TABLE orgs ADD COLUMN twitter_link  varchar(50);
 ALTER TABLE orgs ADD COLUMN google_link  varchar(50);
+ALTER TABLE stay ADD COLUMN room_link varchar(20);;
+ALTER TABLE stay ADD COLUMN created_by integer  REFERENCES entitys;
+CREATE INDEX stay_entity_id ON entitys(entity_id);
 
 ALTER TABLE residents ADD COLUMN booking_id integer REFERENCES bookings;
 CREATE INDEX residents_bookin_id ON bookings(booking_id);
@@ -49,19 +54,19 @@ CREATE OR REPLACE VIEW vw_orgs AS
 	LEFT JOIN city_codes ON orgs.city_code = city_codes.city_code
 		LEFT JOIN vw_org_address ON orgs.org_id = vw_org_address.org_table_id;
 
-CREATE OR REPLACE VIEW vw_room_rates AS
-	SELECT room_types.room_type_id, room_types.room_type_name,
-		service_types.service_type_id, service_types.service_type_name,
-		service_types.tax_rate1, service_types.tax_rate2, service_types.tax_rate3,
-		currency.currency_id, currency.currency_name, currency.currency_symbol,
-		room_rates.org_id, room_rates.room_rate_id, room_rates.current_rate, room_rates.date_start,
-		room_rates.date_end, room_rates.is_active, room_rates.exchange_rate, room_rates.details,
-		(room_types.room_type_name || ', ' || service_types.service_type_name || ', ' || room_rates.date_start) as disp,
-		room_types.image,vw_orgs.city_code,vw_orgs.star,vw_orgs.location,room_types.units,room_rates.max_occupancy,vw_orgs.city_name
-	FROM room_rates INNER JOIN room_types ON room_rates.room_type_id = room_types.room_type_id
-		INNER JOIN service_types ON room_rates.service_type_id = service_types.service_type_id
-		INNER JOIN vw_orgs ON room_rates.org_id = vw_orgs.org_id
-		INNER JOIN currency ON room_rates.currency_id = currency.currency_id;
+		CREATE OR REPLACE VIEW vw_room_rates AS
+			SELECT room_types.room_type_id, room_types.room_type_name,
+				service_types.service_type_id, service_types.service_type_name,
+				service_types.tax_rate1, service_types.tax_rate2, service_types.tax_rate3,
+				currency.currency_id, currency.currency_name, currency.currency_symbol,
+				room_rates.org_id, room_rates.room_rate_id, room_rates.current_rate, room_rates.date_start,
+				room_rates.date_end, room_rates.is_active, room_rates.exchange_rate, room_rates.details,
+				(room_types.room_type_name || ', ' || service_types.service_type_name || ', ' || room_rates.date_start) as disp,
+				room_types.image,vw_orgs.city_code,vw_orgs.star,vw_orgs.location,room_types.units,room_types.max_occupancy,vw_orgs.city_name
+			FROM room_rates INNER JOIN room_types ON room_rates.room_type_id = room_types.room_type_id
+				INNER JOIN service_types ON room_rates.service_type_id = service_types.service_type_id
+				INNER JOIN vw_orgs ON room_rates.org_id = vw_orgs.org_id
+				INNER JOIN currency ON room_rates.currency_id = currency.currency_id;
 
 
 
@@ -179,3 +184,20 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_bookingEmailed AFTER INSERT ON bookings
     FOR EACH ROW EXECUTE PROCEDURE ins_bookingEmailed();
+
+
+	CREATE TABLE payments (
+		payment_id			serial primary key,
+		booking_id			integer references bookings,
+		paid_by				integer references entitys,
+		paymentType			varchar(50),
+		amount_paid			real,
+		payment_date		timestamp default now(),
+		details				text
+	);
+	CREATE INDEX payments_paid_by ON payments(paid_by);
+	CREATE INDEX payments_booking_id ON payments(booking_id);
+
+CREATE OR REPLACE VIEW vw_payments AS
+	SELECT payments.payment_id, payments.booking_id, payments.paid_by,payments.amount_paid, payments.paymentType, payments.payment_date, payments.details
+	FROM payments;

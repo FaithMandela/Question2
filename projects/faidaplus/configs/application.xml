@@ -6,6 +6,7 @@
 	<DESK w="700" name="Registration" key="1" h="500">
 		<FORM  new="true" name="Applicant" keyfield="applicant_id" edit="false" delete="false" audit="false" table="applicants" fornew="true" save.button="Apply">
 			<DEFAULT default="0">org_id</DEFAULT>
+			<TEXTFIELD w="430" required="true" title="Full Name *" placeholder="Full Name" y="50" h="20" x="10">applicant_name</TEXTFIELD>
 			<TEXTFIELD w="430" required="true" title="Email *" placeholder="Personal Email Address" y="50" h="20" x="10">applicant_email</TEXTFIELD>
 			<TEXTFIELD w="430" required="true" title="Username *" placeholder="Username" y="50" h="20" x="10">user_name</TEXTFIELD>
 			<TEXTFIELD w="430" required="true" title="Mobile Number *" placeholder="Mobile Number" y="50" h="20" x="10">phone_no</TEXTFIELD>
@@ -15,6 +16,7 @@
 			<CHECKBOX w="75" title="Has Agency signed the Faidaplus acknowledgement letter?" >acknowledgement</CHECKBOX>
 
 			<FORMVIEW name="Applicant" keyfield="applicant_id" linkfield="applicant_id" table="applicants">
+				<TEXTFIELD w="430" required="true" title="Applicant Name *" y="50" h="20" x="10">applicant_name</TEXTFIELD>
 				<TEXTFIELD w="430" fnct="'Data submited, Email will be send once your data is approved'::text" title="Submit" y="110" h="20" x="10">disp</TEXTFIELD>
 				<TEXTFIELD w="430" required="true" title="Email *" y="50" h="20" x="10">applicant_email</TEXTFIELD>
 				<TEXTFIELD w="430" required="true" title="Username *" y="50" h="20" x="10">user_name</TEXTFIELD>

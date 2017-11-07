@@ -156,7 +156,7 @@ $BODY$
 
     		SELECT entity_type_id INTO v_entity_type_id
     		FROM entity_types
-    		WHERE (org_id = NEW.org_id) AND (use_key_id = 0);
+    		WHERE (org_id = NEW.org_id) AND (use_key_id = 5);
 
 
     		UPDATE entitys SET org_id = NEW.org_id, entity_type_id = v_entity_type_id, function_role='subscription,admin,staff,finance'

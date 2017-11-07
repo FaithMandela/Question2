@@ -1,22 +1,22 @@
 <APP password="change_password" material="true" org="org_id" name="Hotel">
 	<MENU name="Hotel">
 		<MENU icon="icon-drawer" name="Bookings" page="reservation">bookings</MENU>
-		<MENU icon="icon-doc" name="Transaction Ledger">50</MENU>
-		<MENU icon="icon-notebook" name="Journals">30</MENU>
-		<MENU icon="icon-settings" name="Administration">
-			<MENU name="Clients">3</MENU>
-			<MENU name="Organisation">5</MENU>
-			<MENU name="Hotel Setup">35</MENU>
-			<MENU name="Departments">10</MENU>
-			<MENU name="Banks">15</MENU>
-			<MENU name="Fiscal Years">20</MENU>
-			<MENU name="Chat of Accounts">25</MENU>
-			<MENU name="Items">65</MENU>
-			<MENU name="Emails and News">55</MENU>
-			<MENU name="Workflows">60</MENU>
-			<MENU name="Approvals">83</MENU>
+		<MENU role="admin" icon="icon-doc" name="Transaction Ledger">50</MENU>
+		<MENU role="admin" icon="icon-notebook" name="Journals">30</MENU>
+		<MENU role="admin,staff" icon="icon-settings" name="Administration">
+			<MENU role="admin,staff" name="Clients">3</MENU>
+			<MENU role="admin,staff" name="Organisation">5</MENU>
+			<MENU role="admin,staff" name="Hotel Setup">35</MENU>
+			<MENU role="admin" name="Departments">10</MENU>
+			<MENU role="admin" name="Banks">15</MENU>
+			<MENU role="admin" name="Fiscal Years">20</MENU>
+			<MENU role="admin" name="Chat of Accounts">25</MENU>
+			<MENU role="admin" name="Items">65</MENU>
+			<MENU role="admin" name="Emails and News">55</MENU>
+			<MENU role="admin" name="Workflows">60</MENU>
+			<MENU role="admin" name="Approvals">83</MENU>
 		</MENU>
-		<MENU icon="icon-layers" name="Reports">
+		<MENU role="admin" icon="icon-layers" name="Reports">
 			<MENU name="Bank Accounts">105</MENU>
 			<MENU name="Chart of Accounts">135</MENU>
 			<MENU name="Items">140</MENU>
@@ -334,6 +334,7 @@
 					<TEXTFIELD w="430" h="20" x="10" y="30" title="Primary Email">primary_email</TEXTFIELD>
 					<TEXTFIELD w="250" h="20" x="10" y="50" title="Primary Telephone">primary_telephone</TEXTFIELD>
 					<CHECKBOX w="150" h="20" x="290" y="70" title="Entity Leader">entity_leader</CHECKBOX>
+					<COMBOBOX noorg="false" w="430" h="20" lpfield="entity_type_name" x="10" y="30" lptable="entity_types" title="Entity Type">entity_type_id</COMBOBOX>
 					<TEXTFIELD w="150" h="20" x="290" y="90" title="Function Role">function_role</TEXTFIELD>
 					<CHECKBOX w="150" h="20" x="10" y="110" title="Active">is_active</CHECKBOX>
 					<TEXTFIELD w="150" h="20" x="290" y="110" title="First Password">first_password</TEXTFIELD>
@@ -346,6 +347,32 @@
 				<ACTIONS>
 					<ACTION fnct="change_password">Reset Password</ACTION>
 				</ACTIONS>
+			</GRID>
+			<GRID role="admin" keyfield="entity_type_id" name="Entity Types" table="entity_types">
+				<TEXTFIELD w="75" title="Entity Type ID">entity_type_id</TEXTFIELD>
+				<TEXTFIELD w="175" title="Entity Type Name">entity_type_name</TEXTFIELD>
+				<TEXTFIELD w="175" title="Entity Role">entity_role</TEXTFIELD>
+				<TEXTFIELD w="175" title="Group EMail">group_email</TEXTFIELD>
+				<TEXTFIELD w="75" title="Use Key">use_key_id</TEXTFIELD>
+				<GRID keyfield="entity_subscription_id" name="Entity Subscriptions" linkfield="entity_type_id" table="vw_entity_subscriptions">
+					<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
+					<TEXTFIELD w="275" title="Entity Name">entity_name</TEXTFIELD>
+					<TEXTFIELD w="275" title="Level">subscription_level_name</TEXTFIELD>
+					<FORM keyfield="entity_subscription_id" name="Entity Subscriptions" linkfield="entity_type_id" table="entity_subscriptions">
+						<COMBOBOX w="430" h="20" lpfield="entity_name" x="10" y="10" lptable="entitys" title="Entity">entity_id</COMBOBOX>
+						<COMBOBOX w="430" h="20" lpfield="subscription_level_name" x="10" y="30" lptable="subscription_levels" title="Subscription Level">subscription_level_id</COMBOBOX>
+						<TEXTAREA w="430" h="70" x="10" y="50" title="Details">details</TEXTAREA>
+					</FORM>
+				</GRID>
+				<FORM th="210" keyfield="entity_type_id" name="Entity Types" table="entity_types">
+					<TEXTFIELD w="430" h="20" x="10" y="10" title="Entity Type Name">entity_type_name</TEXTFIELD>
+					<TEXTFIELD w="430" h="20" x="10" y="30" title="Entity Role">entity_role</TEXTFIELD>
+					<TEXTFIELD w="150" h="20" x="10" y="50" title="Use Key">use_key_id</TEXTFIELD>
+					<TEXTFIELD w="150" h="20" x="290" y="50" title="Start View">start_view</TEXTFIELD>
+					<TEXTFIELD w="430" h="20" x="10" y="70" title="Group EMail">group_email</TEXTFIELD>
+					<TEXTAREA tab="Description" w="530" h="170" x="10" y="2">description</TEXTAREA>
+					<TEXTAREA tab="Details" w="530" h="170" x="10" y="2">details</TEXTAREA>
+				</FORM>
 			</GRID>
 		</GRID>
 		<FORM new="false" keyfield="entity_id" foredit="true" name="Select Organisation" delete="false" user="entity_id" table="entitys">
@@ -416,8 +443,9 @@
 		</GRID>
 		<GRID keyfield="room_type_id" name="Room Types" table="room_types">
 			<TEXTFIELD w="75" title="Room Type ID">room_type_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Room Type">room_type_name</TEXTFIELD>
+			<TEXTFIELD w="150" title="Room Type">room_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Units">units</TEXTFIELD>
+			<TEXTFIELD w="75" h="20" x="10" y="30" title="Max Occupancy">max_occupancy</TEXTFIELD>
 			<GRID keyfield="room_id" name="Rooms" linkfield="room_type_id" table="vw_rooms">
 				<TEXTFIELD w="75" title="Room ID">room_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Room Number">room_number</TEXTFIELD>
@@ -437,6 +465,7 @@
 					<TEXTFIELD w="150" h="20" x="10" y="10" title="Room Number">room_number</TEXTFIELD>
 					<CHECKBOX w="150" h="20" x="290" y="10" title="Active">is_active</CHECKBOX>
 					<TEXTDATE w="150" h="20" x="10" y="30" title="Operation Date">operation_date</TEXTDATE>
+					<PICTURE access="ob" tab="Picture" w="550" h="150" x="10" y="1">image</PICTURE>
 					<TEXTAREA w="430" h="70" x="10" y="50" title="Details">details</TEXTAREA>
 				</FORM>
 			</GRID>
@@ -454,8 +483,8 @@
 					<COMBOBOX w="430" h="20" lpfield="service_type_name" x="10" y="10" lptable="service_types" title="Service Type">service_type_id</COMBOBOX>
 					<COMBOBOX noorg="true" w="430" h="20" lpfield="currency_name" x="10" y="30" lptable="currency" default_org_fnct="get_default_currency" title="Currency">currency_id</COMBOBOX>
 					<TEXTDECIMAL w="150" h="20" x="10" y="50" title="Current Rate">current_rate</TEXTDECIMAL>
-					<TEXTFIELD w="150" h="20" x="10" y="30" title="Max Occupancy">max_occupancy</TEXTFIELD>
 					<TEXTDECIMAL default="1" w="150" h="20" x="290" y="50" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
+					<CHECKBOX w="150" h="20" title="Active">is_active</CHECKBOX>
 					<TEXTDATE w="150" h="20" x="10" y="70" title="Date Start">date_start</TEXTDATE>
 					<TEXTDATE w="150" h="20" x="290" y="70" title="Date End">date_end</TEXTDATE>
 					<TEXTAREA w="430" h="70" x="10" y="110" title="Details">details</TEXTAREA>
@@ -464,60 +493,9 @@
 			<FORM keyfield="room_type_id" name="Room Types" table="room_types">
 				<TEXTFIELD w="150" h="20" x="10" y="10" title="Room Type Name">room_type_name</TEXTFIELD>
 				<TEXTFIELD w="150" h="20" x="290" y="10" title="Units">units</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="10" y="30" title="Max Occupancy">max_occupancy</TEXTFIELD>
 				<PICTURE access="ob" tab="Picture" w="550" h="150" x="10" y="1">image</PICTURE>
 				<TEXTAREA w="430" h="70" x="10" y="30" title="Details">details</TEXTAREA>
-			</FORM>
-		</GRID>
-		<GRID keyfield="room_id" name="Rooms" table="vw_rooms">
-			<TEXTFIELD w="75" title="Room ID">room_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Room Type">room_type_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Room Number">room_number</TEXTFIELD>
-			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
-			<TEXTDATE w="75" title="Operation Date">operation_date</TEXTDATE>
-			<GRID keyfield="room_block_id" name="Room Block" linkfield="room_id" table="room_block">
-				<TEXTDATE w="75" title="Date From">date_from</TEXTDATE>
-				<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
-				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
-				<FORM keyfield="room_block_id" name="Room Block" linkfield="room_id" table="room_block">
-					<TEXTDATE w="150" h="20" x="10" y="10" title="Date From">date_from</TEXTDATE>
-					<TEXTDATE w="150" h="20" x="290" y="10" title="Date To">date_to</TEXTDATE>
-					<TEXTFIELD w="430" h="20" x="10" y="30" title="Narrative">narrative</TEXTFIELD>
-				</FORM>
-			</GRID>
-			<FORM keyfield="room_id" name="Rooms" table="rooms">
-				<COMBOBOX w="430" h="20" lpfield="room_type_name" x="10" y="10" lptable="room_types" title="Room Type">room_type_id</COMBOBOX>
-				<TEXTFIELD w="150" h="20" x="10" y="30" title="Room Number">room_number</TEXTFIELD>
-				<CHECKBOX w="150" h="20" x="290" y="30" title="Active">is_active</CHECKBOX>
-				<TEXTDATE w="150" h="20" x="10" y="50" title="Operation Date">operation_date</TEXTDATE>
-				<PICTURE access="ob" tab="Picture" w="550" h="150" x="10" y="1">image</PICTURE>
-				<TEXTAREA w="430" h="70" x="10" y="70" title="Details">details</TEXTAREA>
-			</FORM>
-		</GRID>
-		<GRID keyfield="room_rate_id" name="Room Rates" table="vw_room_rates">
-			<TEXTFIELD w="75" title="Room Rate ID">room_rate_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Room Type">room_type_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Service Type">service_type_name</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Tax Rate 1">tax_rate1</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Tax Rate 2">tax_rate2</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Tax Rate 3">tax_rate3</TEXTDECIMAL>
-			<TEXTFIELD w="75" title="Currency Name">currency_symbol</TEXTFIELD>
-			<TEXTFIELD w="75" title="Max Occupancy">max_occupancy</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Current Rate">current_rate</TEXTDECIMAL>
-			<TEXTDATE w="75" title="Date Start">date_start</TEXTDATE>
-			<TEXTDATE w="75" title="Date End">date_end</TEXTDATE>
-			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
-			<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
-			<FORM keyfield="room_rate_id" name="Room Rates" table="room_rates">
-				<COMBOBOX w="430" h="20" lpfield="room_type_name" x="10" y="10" lptable="room_types" title="Room Type">room_type_id</COMBOBOX>
-				<COMBOBOX w="430" h="20" lpfield="service_type_name" x="10" y="30" lptable="service_types" title="Service Type">service_type_id</COMBOBOX>
-				<COMBOBOX w="430" h="20" lpfield="currency_name" x="10" y="50" lptable="currency" default_org_fnct="get_default_currency" title="Currency">currency_id</COMBOBOX>
-				<TEXTDECIMAL w="150" h="20" x="10" y="70" title="Current Rate">current_rate</TEXTDECIMAL>
-				<TEXTFIELD w="150" h="20" x="10" y="30" title="Max Occupancy">max_occupancy</TEXTFIELD>
-				<TEXTDECIMAL default="1" w="150" h="20" x="290" y="70" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
-				<TEXTDATE w="150" h="20" x="10" y="90" title="Date Start">date_start</TEXTDATE>
-				<TEXTDATE w="150" h="20" x="290" y="90" title="Date End">date_end</TEXTDATE>
-				<CHECKBOX w="150" h="20" x="10" y="110" title="Active">is_active</CHECKBOX>
-				<TEXTAREA w="430" h="70" x="10" y="130" title="Details">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID noorg="true" keyfield="reserve_mode_id" name="Reserve Modes" table="reserve_modes">
