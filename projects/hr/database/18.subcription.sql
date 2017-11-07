@@ -272,7 +272,8 @@ BEGIN
 		INSERT INTO sys_emails (org_id, use_type,  sys_email_name, title, details) 
 		SELECT NEW.org_id, use_type, sys_email_name, title, details
 		FROM sys_emails
-		WHERE org_id = 1;
+		WHERE org_id = 1
+		ORDER BY sys_email_id;
 		
 		INSERT INTO account_class (org_id, account_class_no, chat_type_id, chat_type_name, account_class_name)
 		SELECT NEW.org_id, account_class_no, chat_type_id, chat_type_name, account_class_name
@@ -334,11 +335,6 @@ BEGIN
 			INNER JOIN entity_types cc ON aa.approval_entity_id = cc.entity_type_id
 			INNER JOIN entity_types dd ON cc.use_key_id = dd.use_key_id
 		WHERE aa.org_id = 1 AND bb.org_id = NEW.org_id AND dd.org_id = NEW.org_id;
-		
-		INSERT INTO sys_emails (org_id, use_type, sys_email_name, title, details)
-		SELECT NEW.org_id, use_type, sys_email_name, title, details
-		FROM sys_emails
-		WHERE org_id = 1;
 
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
 		VALUES (5, NEW.org_id, NEW.entity_id, 'subscription');

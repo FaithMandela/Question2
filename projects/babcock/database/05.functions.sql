@@ -2108,7 +2108,7 @@ DECLARE
 	mystr VARCHAR(120);
 BEGIN
 	IF($3 = '3')THEN
-		UPDATE qstudents SET so_approval = true, approved = true
+		UPDATE qstudents SET so_approval = true, approved = true, printed = true
 		WHERE (qstudentid = $1::integer);
 		mystr := 'School officers approval';
 	ELSIF($3 = '4')THEN

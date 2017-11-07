@@ -36,5 +36,44 @@ CREATE VIEW qprimajorinstructorview AS
 	FROM primajorinstructorview INNER JOIN (qstudents INNER JOIN quarters ON qstudents.quarterid = quarters.quarterid)
 		ON primajorinstructorview.studentdegreeid = qstudents.studentdegreeid 
 	WHERE (quarters.active = true) AND (qstudents.finalised = true) AND (qstudents.majorapproval = false);
+
+CREATE OR REPLACE FUNCTION getcurrhours(int) RETURNS float AS $$
+	SELECT sum(qgrades.hours)
+	FROM qgrades
+	WHERE (qgrades.qstudentid = $1) AND (qgrades.dropped = false) AND (qgrades.gradeid <> 'W') AND (qgrades.gradeid <> 'AW');
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION getcurrcredit(int) RETURNS float AS $$
+	SELECT sum(qgrades.credit)
+	FROM qgrades INNER JOIN grades ON qgrades.gradeid = grades.gradeid
+	WHERE (qgrades.qstudentid = $1) AND (grades.gpacount = true) AND (qgrades.dropped = false) 
+		AND (qgrades.repeated = false) AND (qgrades.gradeid <> 'W') AND (qgrades.gradeid <> 'AW');
+$$ LANGUAGE SQL;
 	
+CREATE OR REPLACE FUNCTION approve_so(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(240) AS $$
+DECLARE
+	mystr VARCHAR(120);
+BEGIN
+	IF($3 = '3')THEN
+		UPDATE qstudents SET so_approval = true, approved = true, printed = true
+		WHERE (qstudentid = $1::integer);
+		mystr := 'School officers approval';
+	ELSIF($3 = '4')THEN
+		UPDATE qstudents SET majorapproval = false WHERE (qstudentid = $1::integer);
+		mystr := 'Returned to major advisor';
+	END IF;
 	
+	RETURN mystr;
+END;
+$$ LANGUAGE plpgsql;
+
+UPDATE qstudents SET printed = true WHERE approved = true;
+
+
+SELECT studentid, studentname, quarterid, applicationtime, firstclosetime
+FROM qstudentview
+WHERE (quarterid = '2016/2017.3') AND (studentid IN
+('12/0146', '12/3171', '12/0172', '12/1878', '06/0531'));
+
+
+

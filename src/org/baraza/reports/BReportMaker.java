@@ -30,6 +30,9 @@ public class BReportMaker {
 		myReport += "			<style backcolor=\"#E6DAC3\"/>\n";
 		myReport += "		</conditionalStyle>\n";
 		myReport += "	</style>\n";
+		myReport += "	<parameter name=\"SUBREPORT_DIR\" class=\"java.lang.String\">\n";
+		myReport += "		<defaultValueExpression><![CDATA[\"./\"]]></defaultValueExpression>\n";
+		myReport += "	</parameter>\n";
 		myReport += "	<parameter name=\"filterid\" class=\"java.lang.String\">\n";
 		myReport += "		<defaultValueExpression><![CDATA[\"1\"]]></defaultValueExpression>\n";
 		myReport += "	</parameter>\n";
@@ -178,6 +181,9 @@ public class BReportMaker {
 		myReport += "			<style backcolor=\"#E6DAC3\"/>\n";
 		myReport += "		</conditionalStyle>\n";
 		myReport += "	</style>\n";
+		myReport += "	<parameter name=\"SUBREPORT_DIR\" class=\"java.lang.String\">\n";
+		myReport += "		<defaultValueExpression><![CDATA[\"./\"]]></defaultValueExpression>\n";
+		myReport += "	</parameter>\n";
 		myReport += "	<parameter name=\"filterid\" class=\"java.lang.String\">\n";
 		myReport += "		<defaultValueExpression><![CDATA[\"1\"]]></defaultValueExpression>\n";
 		myReport += "	</parameter>\n";
@@ -326,6 +332,9 @@ public class BReportMaker {
 		myReport += "			<style backcolor=\"#E6DAC3\"/>\n";
 		myReport += "		</conditionalStyle>\n";
 		myReport += "	</style>\n";
+		myReport += "	<parameter name=\"SUBREPORT_DIR\" class=\"java.lang.String\">\n";
+		myReport += "		<defaultValueExpression><![CDATA[\"./\"]]></defaultValueExpression>\n";
+		myReport += "	</parameter>\n";
 		myReport += "	<parameter name=\"filterid\" class=\"java.lang.String\">\n";
 		myReport += "		<defaultValueExpression><![CDATA[\"1\"]]></defaultValueExpression>\n";
 		myReport += "	</parameter>\n";

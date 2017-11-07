@@ -140,6 +140,7 @@ CREATE TABLE employees (
 	first_name				varchar(50) not null,
 	middle_name				varchar(50),
 	employee_full_name		varchar(120),
+	employee_email			varchar(120),
 	date_of_birth			date,
 	dob_email				date default '2016-01-01'::date,
 	
@@ -1566,17 +1567,17 @@ BEGIN
 			IF(v_user_count > 0) THEN v_user_name := v_user_name || v_user_count::varchar; END IF;
 
 			INSERT INTO entitys (entity_id, org_id, entity_type_id, use_key_id,
-				entity_name, user_name, function_role, 
+				entity_name, user_name, primary_email, function_role, 
 				first_password, entity_password)
 			VALUES (NEW.entity_id, NEW.org_id, v_entity_type_id, 1, 
 				(NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),
-				v_user_name, 'staff',
+				v_user_name, NEW.employee_email, 'staff',
 				v_first_password, md5(v_first_password));
 				
 			INSERT INTO sys_emailed (org_id, sys_email_id, table_id, table_name, email_type)
 			SELECT org_id, sys_email_id, NEW.entity_id, 'entitys', 1
 			FROM sys_emails
-			WHERE (use_type = 3) AND (org_id = NEW.org_id);
+			WHERE (use_type = 2) AND (org_id = NEW.org_id);
 		END IF;
 
 		v_use_type := 2;
@@ -1595,7 +1596,8 @@ BEGIN
 		WHERE (org_id = NEW.org_id);
 	
 	ELSIF (TG_OP = 'UPDATE') THEN
-		UPDATE entitys  SET entity_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''))
+		UPDATE entitys  SET entity_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),
+			primary_email = NEW.employee_email
 		WHERE entity_id = NEW.entity_id;
 	END IF;
 

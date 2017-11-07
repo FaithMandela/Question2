@@ -6,8 +6,6 @@ Thank you for your Business
 We Turn your information into profitability'
 WHERE org_id = 0;
 
-INSERT INTO project_types (org_id, project_type_name) VALUES (0, 'Software Development');
-
 UPDATE transaction_counters SET document_number = '10001';
 
 INSERT INTO address (org_id, sys_country_id, table_name, table_id, post_office_box, postal_code, premises, street, town, phone_number, extension, mobile, fax, email, website, is_default, first_password, details) 
@@ -30,6 +28,9 @@ VALUES (0, 1, '8783', 2, 0, 0, 0, 0, 'blackshamrat', 'Sazzadur ', 'Rahman', '199
 INSERT INTO employees (org_id, currency_id, employee_id, department_role_id, pay_scale_id, pay_group_id, location_id, bank_branch_id, surname, first_name, middle_name, date_of_birth, gender, nationality, marital_status, appointment_date, current_appointment, exit_date, contract, contract_period, employment_terms, identity_card, basic_salary, bank_account, picture_file, active, language, desg_code, inc_mth, previous_sal_point, current_sal_point, halt_point, interests, objective, details) 
 VALUES (0, 1, '7551', 2, 0, 0, 0, 0, 'Ondero', 'Stanley', 'Makori', '2012-11-03', 'M', 'KE', 'M', '2013-05-01', NULL, NULL, false, 0, 'Parmanent and pensionable', '25145552', 100000, '0510191137356', NULL, false, 'English', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 UPDATE employees SET currency_id = 1;
+
+INSERT INTO entity_subscriptions (entity_type_id, entity_id, subscription_level_id, org_id)
+VALUES (1, 0, 1, 0);
 
 INSERT INTO default_adjustments (default_adjustment_id, entity_id, adjustment_id, org_id, amount, balance, final_date, active, narrative) VALUES (1, 4, 11, 0, 5000, 0, NULL, true, NULL);
 INSERT INTO default_adjustments (default_adjustment_id, entity_id, adjustment_id, org_id, amount, balance, final_date, active, narrative) VALUES (2, 6, 11, 0, 5000, 0, NULL, true, NULL);
@@ -62,3 +63,11 @@ INSERT INTO items (item_id, org_id, item_category_id, tax_type_id, item_unit_id,
 SELECT pg_catalog.setval('items_item_id_seq', 5, true);
 
 
+--- Create a default organisation client
+INSERT INTO entitys (org_id, entity_type_id, use_key_id, user_name, entity_name, primary_email, first_password)
+VALUES (0, 0, 0, 'dewcis', 'Dew CIS Solutions Ltd', 'root@dewcis.com', 'baraza');
+
+INSERT INTO project_types (org_id, project_type_name) VALUES (0, 'Software Development');
+
+INSERT INTO projects (project_type_id, entity_id, org_id, project_name, signed, start_date)
+VALUES (currval('project_types_project_type_id_seq'), currval('entitys_entity_id_seq'), 0, 'Internal', true, '2017-01-01');

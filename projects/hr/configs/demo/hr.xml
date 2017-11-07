@@ -113,8 +113,6 @@
 				<TEXTDATE w="75" title="Leave From">leave_from</TEXTDATE>
 				<TEXTDATE w="75" title="Leave To">leave_to</TEXTDATE>
 			</TILELIST>
-			<ATTENDANCE></ATTENDANCE>
-			<TASK></TASK>
 		</DASHBOARD>
 	</DESK>
 	<DESK w="700" name="Registration" key="2" h="500">

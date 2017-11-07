@@ -1298,8 +1298,8 @@ INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role,
 SELECT pg_catalog.setval('entity_types_entity_type_id_seq', 5, true);
 
 INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 0, 'Basic');
-INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 1, 'Manager');
-INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 2, 'Consumer');
+INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 1, 'Consumer');
+INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 2, 'Manager');
 SELECT pg_catalog.setval('subscription_levels_subscription_level_id_seq', 3, true);
 
 INSERT INTO entitys (entity_id, org_id, entity_type_id, use_key_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)

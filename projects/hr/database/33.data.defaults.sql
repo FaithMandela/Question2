@@ -102,7 +102,8 @@ INSERT INTO stores (org_id, store_name) VALUES (1, 'Main Store');
 INSERT INTO sys_emails (org_id, use_type,  sys_email_name, title, details) 
 SELECT 1, use_type, sys_email_name, title, details
 FROM sys_emails
-WHERE org_id = 0;
+WHERE org_id = 0
+ORDER BY sys_email_id;
 
 INSERT INTO account_class (org_id, account_class_no, chat_type_id, chat_type_name, account_class_name)
 SELECT 1, account_class_no, chat_type_id, chat_type_name, account_class_name
@@ -144,10 +145,6 @@ FROM workflow_phases aa INNER JOIN workflows bb ON aa.workflow_id = bb.link_copy
 	INNER JOIN entity_types cc ON aa.approval_entity_id = cc.use_key_id
 WHERE aa.org_id = 0 AND bb.org_id = 1 AND cc.org_id = 1;
 
-INSERT INTO sys_emails (org_id, use_type, sys_email_name, title, details)
-SELECT 1, use_type, sys_email_name, title, details
-FROM sys_emails
-WHERE org_id = 0;
 
 INSERT INTO task_types (org_id, task_type_name, default_cost, default_price)
 SELECT 1, task_type_name, default_cost, default_price

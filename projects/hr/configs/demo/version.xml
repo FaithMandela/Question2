@@ -1,0 +1,14 @@
+<VERSIONS version="1.0">
+	<VERSION name="Payroll" source="../payroll.xml" destination="payroll.xml">
+		<REMOVE>
+			<MENU name="IR56B">121</MENU>
+		</REMOVE>
+	</VERSION>
+
+	<VERSION name="Projects" source="../projects.xml" destination="projects.xml">
+		<REMOVE>
+			<MENU name="Farming">30</MENU>
+		</REMOVE>
+	</VERSION>
+
+</VERSIONS>

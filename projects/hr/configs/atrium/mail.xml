@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <ESCALATION title="HR Mail" processdelay="2"
-	host="localhost" mailuser="sysadmin" mailpassword="invent2k" mailfrom="dennis@localhost"
-	inbox="INBOX" sentbox="INBOX.Sent" testemail="sysadmin@localhost">
+	host="smtp.livemail.co.uk" mailuser="admin@1stophospitality.uk" mailpassword="Atrium@01" 
+	mailfrom="admin@1stophospitality.uk" inbox="INBOX" sentbox="INBOX.Sent" 
+	imaphost="mail.livemail.co.uk" smtptls="true">
 	
 	<REPORT name="Entitys" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
 			table="sys_emails, sys_emailed, entitys"
