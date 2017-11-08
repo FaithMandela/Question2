@@ -322,8 +322,6 @@
 							<% } %>
 						</div>
 
-						<%= web.getFilters() %>
-
 						<% actionOp = web.getOperations();
 						if(actionOp != null) {	%>
                             <div class="row" style="">

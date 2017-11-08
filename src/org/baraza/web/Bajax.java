@@ -106,7 +106,7 @@ public class Bajax extends HttpServlet {
 		} else if("calmove".equals(fnct)) {
 			resp = calMove(id, startDate, startTime, endDate, endTime);
 		} else if("filter".equals(fnct)) {
-			resp = filterJSON(request);
+			resp = web.getFilterWhere(request);
 		} else if("operation".equals(fnct)) {
 			resp = calOperation(id, ids, request);
 			response.setContentType("application/json;charset=\"utf-8\"");
@@ -224,57 +224,7 @@ public class Bajax extends HttpServlet {
 		
 		return resp;
 	}
-	
-	public String filterJSON(HttpServletRequest request) {
-		String filterName = request.getParameter("filtername");
-		String filterType = request.getParameter("filtertype");
-		String filterValue = request.getParameter("filtervalue");
-		String filterAnd = request.getParameter("filterand");
-		String filterOr = request.getParameter("filteror");
-		
-		if(filterValue == null) return "";
-		if(filterValue.equals("")) return "";
-		if(filterValue.toLowerCase().contains("select ")) return "";
-		if(filterValue.toLowerCase().contains("update ")) return "";
-		if(filterValue.toLowerCase().contains("insert ")) return "";
-		if(filterAnd == null) filterAnd = "false";
-		if(filterOr == null) filterOr = "false";
-		
-		String filterSN = "F" + web.getViewKey();
-System.out.println("BASE 3010 : " + filterSN);
-System.out.println("BASE 3020 : " + web.getDataItem());
-		
-		// Only postgres supports ilike so for the others turn to like
-		String wheresql = "";
-		if((db.getDBType()!=1) && (filterType.startsWith("ilike"))) filterType = "like";
 
-		if(filterType.startsWith("like")) {
-			if(db.getDBType()==1) wheresql += "(cast(" + filterName + " as varchar) " + filterType + " '%" + filterValue + "%')";
-			else wheresql += "(lower(" + filterName + ") " + filterType + " lower('%" + filterValue + "%'))";
-		} else if(filterType.startsWith("ilike")) {
-			wheresql += "(cast(" + filterName + " as varchar) " + filterType + " '%" + filterValue + "%')";
-		} else {
-			wheresql += "(" + filterName + " " + filterType + " '" + filterValue + "')";
-		}
-		
-		HttpSession webSession = request.getSession(true);
-		if(webSession.getAttribute(filterSN) != null) {
-			if(filterAnd.equals("true")) {
-				wheresql = (String)webSession.getAttribute(filterSN) + " AND " + wheresql;
-			} else if(filterOr.equals("true")) {
-				wheresql = (String)webSession.getAttribute(filterSN) + " OR " + wheresql;
-			}
-		}
-		
-		
-		webSession.setAttribute(filterSN, wheresql);
-		if(web.getDataItem() != null) webSession.setAttribute("K" + filterSN, web.getDataItem());
-		else webSession.setAttribute("K" + filterSN, "");
-		System.out.println(wheresql + " : " + filterAnd);
-		
-		return wheresql;
-	}
-	
 	public String changePassword(String oldPass, String newPass) {
 		String resp = "";
 				

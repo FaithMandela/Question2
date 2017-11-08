@@ -10,6 +10,7 @@ package org.baraza.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 import java.util.Enumeration;
 import java.util.logging.Logger;
 
@@ -74,7 +75,8 @@ public class BJSONData extends HttpServlet {
 			if(filterKSN.equals(wDataItem)) wheresql = (String)webSession.getAttribute(filterSN);
 			else webSession.removeAttribute(filterSN);
 		}
-		wheresql = web.getJSONWhere(request, wheresql);
+		Map<String, String> whereParams = web.getWhere(request);
+		wheresql = whereParams.get("wheresql");
 		System.out.println("JSON Where :" + filterSN + ": " + wheresql);
 		
 		String pageNum = request.getParameter("page");
