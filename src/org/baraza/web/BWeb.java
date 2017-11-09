@@ -741,13 +741,24 @@ public class BWeb {
 		String filterAnd = request.getParameter("filterand");
 		String filterOr = request.getParameter("filteror");
 		
+		if(filterName == null) return "";
+		if(filterType == null) return "";
 		if(filterValue == null) return "";
 		if(filterValue.equals("")) return "";
 		if(filterValue.toLowerCase().contains("select ")) return "";
 		if(filterValue.toLowerCase().contains("update ")) return "";
 		if(filterValue.toLowerCase().contains("insert ")) return "";
+		if(filterValue.toLowerCase().contains("insert ")) return "";
 		if(filterAnd == null) filterAnd = "false";
 		if(filterOr == null) filterOr = "false";
+		
+		boolean isField = false;
+		for(BElement el : view.getElements()) {
+			if(filterName.equals(el.getValue())) isField = true;
+		}
+		if(!isField) return "";
+		
+		if("ilikelike=><<=>=".indexOf(filterType) < 0) return "";
 		
 		String filterSN = "F" + getViewKey();
 System.out.println("BASE 3010 : " + filterSN);
@@ -878,7 +889,6 @@ System.out.println("BASE 3020 : " + dataItem);
 						}
 					}
 				}
-				System.out.println("BASE 2010 FILTER : " + wheresql);
 			}
 		}
 		
@@ -887,7 +897,7 @@ System.out.println("BASE 3020 : " + dataItem);
 		whereParams.put("formLinkData", formLinkData);
 		whereParams.put("wheresql", wheresql);
 		
-System.out.println("BASE 3030 WHERE : " + wheresql);
+//System.out.println("BASE 3030 WHERE : " + wheresql);
 		
 		return whereParams;
 	}
@@ -901,7 +911,7 @@ System.out.println("BASE 3030 WHERE : " + wheresql);
 		//if(!hasLicense()) return "";
 		
 		// Save the parameters in filter is the session
-		String filterList = setFilterParams(request);
+		List<String> filterList = setFilterParams(request);
 		
 		// Call the where create function
 		Map<String, String> whereParams = getWhere(request);
@@ -978,19 +988,18 @@ System.out.println("BASE 3030 WHERE : " + wheresql);
 			body += "	</div>\n";
 			body += "</div>\n";
 		} else if(view.getName().equals("JASPER")) {
-//System.out.println("BASE 1010 ");
 			BWebReport report = new BWebReport(view, db.getUserID(), null, request);
 			
 			BElement flt = views.get(views.size()-2);
-			if(flt.getName().equals("FILTER")) {
-				webSession.setAttribute("reportfilters", filterList);
-			} else {
+			if(!flt.getName().equals("FILTER")) {
 				String myFilter = view.getAttribute("linkfield", "filterid");
 				if((linkParam != null) && (view.getAttribute("linkparams") != null)) linkData = linkParam;
-
-				report.setParams(webSession, myFilter, linkData);
-				webSession.setAttribute("reportfilters", myFilter + ",");
+				if(linkData != null) filterList.add(myFilter);
+				webSession.setAttribute(myFilter, linkData);
 			}
+			
+			webSession.setAttribute("reportfilters", filterList);
+			report.setParams(webSession);
 			body += report.getReport(db, linkData, request, reportPath);
 		} else if(view.getName().equals("FILTER")) {
 			boolean isFirst = true;
@@ -1077,8 +1086,8 @@ System.out.println("BASE 3030 WHERE : " + wheresql);
 	}
 	
 	/* Save the parameters in filter is the session */
-	public String setFilterParams(HttpServletRequest request) {
-		String filterList = "";
+	public List<String> setFilterParams(HttpServletRequest request) {
+		List<String> filterList = new ArrayList<String>();
 		if(views.size() > 1) {
 			BElement flt = views.get(views.size()-2);
 			if(flt.getName().equals("FILTER")) {
@@ -1086,18 +1095,18 @@ System.out.println("BASE 3030 WHERE : " + wheresql);
 					if(sv.getName().equals("FILTERGRID")) {
 						String myFilter = sv.getAttribute("filter", "filterid");
 						String myValue = request.getParameter(myFilter);
-						filterList += myFilter + ",";
+						filterList.add(myFilter);
 						if(myValue != null) webSession.setAttribute(myFilter, myValue);
 					} else if(sv.getName().equals("DRILLDOWN")) {
 						String myFilter = sv.getAttribute("filter", "filterid");
 						String myValue = request.getParameter(myFilter);
-						filterList += myFilter + ",";
+						filterList.add(myFilter);
 						if(myValue != null) webSession.setAttribute(myFilter, myValue);
 					} else if(sv.getName().equals("FILTERFORM")) {
 						for(BElement ffe : sv.getElements()) {
 							String myFilter = ffe.getValue();
 							String myValue = request.getParameter(myFilter);
-							filterList += myFilter + ",";
+							filterList.add(myFilter);
 							if(myValue != null) webSession.setAttribute(myFilter, palseValue(ffe, myValue));
 					System.out.println("BASE 2005 : " + myFilter + " : " + myValue);
 						}

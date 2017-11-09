@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.sql.Connection;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -204,12 +205,8 @@ public class BWebReport  {
 			parameters.put("entityid", db.getUserID());
 			parameters.put("entityname", db.getUserName());
 
-			String reportFilters = (String)session.getAttribute("reportfilters");
-			String reportFilter[] = reportFilters.split(",");
-			for(int i = 0; i < reportFilter.length; i++) {
-				String filterValue = (String)session.getAttribute(reportFilter[i]);
-				parameters.put(reportFilter[i], filterValue);
-			}
+			// set the session parameters
+			setParams(session);
 		
 			String linkField = (String)session.getAttribute("linkfield");
 			String linkValue = (String)session.getAttribute("linkvalue");
@@ -308,15 +305,16 @@ public class BWebReport  {
 			log.severe("Web Print Writer Error : " + ex);
 		}
 	}
-
-	public void	setParams(HttpSession session, String filterName, String filterValue) {
-		if(filterValue == null) {
-			filterValue = (String)session.getAttribute(filterName);
-		} else {
-			session.setAttribute(filterName, filterValue);
+	
+	public void	setParams(HttpSession session) {
+		if(session.getAttribute("reportfilters") != null) {
+			List<String> reportFilters = (List<String>)session.getAttribute("reportfilters");
+			for(String reportFilter : reportFilters) {
+				String filterValue = (String)session.getAttribute(reportFilter);
+				parameters.put(reportFilter, filterValue);
+				log.info("Filter = " + reportFilter + " key = " + filterValue);
+			}
 		}
-    	parameters.put(filterName, filterValue);
-		log.info("Filter = " + filterName + " key = " + filterValue);
 	}
 	
 	public void	setParams(String filterName, String filterValue) {

@@ -168,6 +168,20 @@ CREATE VIEW vw_employee_travels AS
 		LEFT JOIN (SELECT employee_travel_id, count(claim_id) as unreconciled FROM claims
 			WHERE (reconciled = false) GROUP BY employee_travel_id) as unrec
 		ON employee_travels.employee_travel_id = unrec.employee_travel_id;
+		
+CREATE VIEW vw_travel_summary AS
+	SELECT vw_employee_travels.department_id, vw_employee_travels.department_name, 
+		vw_employee_travels.department_role_id, vw_employee_travels.department_role_name,
+		vw_employee_travels.entity_id, vw_employee_travels.entity_name,
+		vw_employee_travels.org_id,
+		to_char(departure_date, 'yyyy') as travel_year,
+		sum(arrival_date - departure_date) as travel_days
+	FROM vw_employee_travels
+	GROUP BY vw_employee_travels.department_id, vw_employee_travels.department_name, 
+		vw_employee_travels.department_role_id, vw_employee_travels.department_role_name,
+		vw_employee_travels.entity_id, vw_employee_travels.entity_name,
+		vw_employee_travels.org_id,
+		to_char(departure_date, 'yyyy');
 
 CREATE VIEW vw_employee_itinerary AS
 	SELECT vw_employee_travels.travel_type_id, vw_employee_travels.travel_type_name,
