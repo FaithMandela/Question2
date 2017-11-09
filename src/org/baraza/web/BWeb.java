@@ -785,7 +785,6 @@ System.out.println("BASE 3020 : " + dataItem);
 	public Map<String, String> getWhere(HttpServletRequest request) {
 		Map<String, String> whereParams = new HashMap<String, String>();
 
-		String whereFilter = getFilterWhere(request);
 		String linkData = "";
 		String linkParam = null;
 		String formLinkData = "";
@@ -795,6 +794,19 @@ System.out.println("BASE 3020 : " + dataItem);
 		BElement sview = null;
 		comboField = request.getParameter("field");
 		if(comboField != null) sview = view.getElement(comboField).getElement(0);
+		
+		String filterSN = "F" + viewKey;
+		if(webSession.getAttribute(filterSN) != null) {
+			String filterKSN = "";
+			if(webSession.getAttribute("K" + filterSN) != null) filterKSN = (String)webSession.getAttribute("K" + filterSN);
+			String wDataItem = "";
+			if(dataItem != null) wDataItem = dataItem;
+			
+			if(filterKSN.equals(wDataItem)) wheresql = (String)webSession.getAttribute(filterSN);
+			else webSession.removeAttribute(filterSN);
+			
+			System.out.println("Filter Where :" + filterSN + ": " + wheresql);
+		}
 		
 		int vds = viewKeys.size();
 		if(vds > 2) {
@@ -874,6 +886,8 @@ System.out.println("BASE 3020 : " + dataItem);
 		whereParams.put("linkParam", linkParam);
 		whereParams.put("formLinkData", formLinkData);
 		whereParams.put("wheresql", wheresql);
+		
+System.out.println("BASE 3030 WHERE : " + wheresql);
 		
 		return whereParams;
 	}
@@ -1689,11 +1703,10 @@ log.severe("BASE : " + mysql);
 		String body = "";
 		wheresql = null;
 		sortby = null;
-		
-		if(webSession.getAttribute("F" + viewKey) != null) wheresql = (String)webSession.getAttribute("F" + viewKey);
 
 		// Call the where create function
 		Map<String, String> whereParams = getWhere(request);
+		wheresql = whereParams.get("wheresql");
 		
 		BElement sview = null;
 		comboField = request.getParameter("field");
@@ -1721,9 +1734,8 @@ log.severe("BASE : " + mysql);
 		wheresql = null;
 		sortby = null;
 		
-		if(webSession.getAttribute("F" + viewKey) != null) wheresql = (String)webSession.getAttribute("F" + viewKey);
-		
 		Map<String, String> whereParams = getWhere(request);
+		wheresql = whereParams.get("wheresql");
 		
 		response.setContentType("text/xml");
 		response.setHeader("Content-Disposition", "attachment; filename=report.xml");

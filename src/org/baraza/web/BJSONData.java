@@ -64,20 +64,9 @@ public class BJSONData extends HttpServlet {
 		}
 		System.out.println("JSON sort : " + sortby);
 		
-		String wheresql = null;
-		String filterSN = "F" + web.getViewKey();
-		if(webSession.getAttribute(filterSN) != null) {
-			String filterKSN = "";
-			if(webSession.getAttribute("K" + filterSN) != null) filterKSN = (String)webSession.getAttribute("K" + filterSN);
-			String wDataItem = "";
-			if(web.getDataItem() != null) wDataItem = web.getDataItem();
-			
-			if(filterKSN.equals(wDataItem)) wheresql = (String)webSession.getAttribute(filterSN);
-			else webSession.removeAttribute(filterSN);
-		}
 		Map<String, String> whereParams = web.getWhere(request);
-		wheresql = whereParams.get("wheresql");
-		System.out.println("JSON Where :" + filterSN + ": " + wheresql);
+		String wheresql = whereParams.get("wheresql");
+		System.out.println("JSON Where :" + wheresql);
 		
 		String pageNum = request.getParameter("page");
 		if(pageNum == null) pageNum = "0";
