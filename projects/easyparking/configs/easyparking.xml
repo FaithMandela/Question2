@@ -912,7 +912,7 @@
 			<ACTIONS>
 				<ACTION fnct="apply_approval" approval="1">Approval Application</ACTION>
 			</ACTIONS>
-			<JASPER name="Personal" reportfile="customers_cd.jasper"></JASPER>
+			<JASPER name="Personal" reportfile="customers_pd.jasper"></JASPER>
 			<GRID name="Deposit Accounts" keyfield="deposit_account_id" linkfield="entity_id" table="vw_deposit_accounts">
 				<TEXTFIELD w="75" title="Deposit Account ID">deposit_account_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>
@@ -994,10 +994,7 @@
 				<CHECKBOX w="150" title="Employed" y="170" h="20" x="10" span="true">employed</CHECKBOX>
 				<CHECKBOX w="150" title="Self Employed" y="170" h="20" x="290">self_employed</CHECKBOX>
 				<TEXTFIELD w="150" title="Employer Name" y="190" h="20" x="10">employer_name</TEXTFIELD>
-				<TEXTDECIMAL w="150" title="Monthly Salary" y="210" h="20" x="10" span="true">monthly_salary</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Monthly Net Income" y="210" h="20" x="290">monthly_net_income</TEXTDECIMAL>
 				<TEXTAREA w="150" title="Employer Address" y="230" h="30" x="10" span="true" rows="3">employer_address</TEXTAREA>
-				<TEXTFIELD w="150" title="Introduced By" y="230" h="20" x="290">introduced_by</TEXTFIELD>
 				<PICTURE w="550" tab="Picture" access="ob" y="1" h="150" x="10">picture_file</PICTURE>
 				<TEXTAREA w="430" tab="Details" y="340" h="70" x="10">details</TEXTAREA>
 			</FORM>
@@ -1074,9 +1071,6 @@
 				<TEXTFIELD w="150" title="Zip Code" required="true" y="110" h="20" x="290">zip_code</TEXTFIELD>
 				<TEXTDATE w="150" title="Date Of Registration" y="130" h="20" x="10" span="true">date_of_birth</TEXTDATE>
 				<COMBOBOX w="150" title="Country" lptable="sys_countrys" default_org_fnct="get_default_country" noorg="true" lpkey="sys_country_id" y="130" h="20" x="290" lpfield="sys_country_name">nationality</COMBOBOX>
-				<TEXTDECIMAL w="150" title="Annual Turnover" y="150" h="20" x="10" span="true">annual_turnover</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Annual Net Income" y="150" h="20" x="290">annual_net_income</TEXTDECIMAL>
-				<TEXTFIELD w="150" title="Introduced By" y="190" h="20" x="10">introduced_by</TEXTFIELD>
 				<TEXTAREA w="430" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>

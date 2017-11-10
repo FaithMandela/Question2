@@ -375,8 +375,8 @@ BEGIN
 		INSERT INTO customers (org_id, entity_id, customer_name, identification_number, telephone_number, approve_status)
 		VALUES (0, v_entity_id, NEW.mpesa_sender, NEW.mpesa_msisdn, NEW.mpesa_msisdn, 'Approved');
 		
-		INSERT INTO deposit_accounts (entity_id, updated_by, product_id, org_id, approve_status)
-		VALUES (v_entity_id, v_entity_id, 1, 0, 'Approved');
+		INSERT INTO deposit_accounts (entity_id, updated_by, product_id, org_id, is_active, approve_status)
+		VALUES (v_entity_id, v_entity_id, 1, 0, true, 'Approved');
 	END IF;
 	
 	SELECT min(deposit_account_id) INTO v_deposit_account_id
@@ -438,8 +438,8 @@ BEGIN
 	FROM deposit_accounts WHERE account_number = v_car_plate;
 	IF(v_deposit_account_id is null)THEN
 		v_deposit_account_id := nextval('deposit_accounts_deposit_account_id_seq');
-		INSERT INTO deposit_accounts (deposit_account_id, entity_id, updated_by, product_id, org_id, account_number, approve_status)
-		VALUES (v_deposit_account_id, 11, 11, 2, v_org_id, v_car_plate, 'Approved');
+		INSERT INTO deposit_accounts (deposit_account_id, entity_id, updated_by, product_id, org_id, account_number, is_active, approve_status)
+		VALUES (v_deposit_account_id, 11, 11, 2, v_org_id, v_car_plate, true, 'Approved');
 	END IF;
 	
 	SELECT sum(account_activity.account_debit - account_activity.account_credit) INTO v_car_balance
@@ -509,8 +509,8 @@ BEGIN
 	FROM deposit_accounts WHERE account_number = v_car_plate;
 	IF(v_deposit_account_id is null)THEN
 		v_deposit_account_id := nextval('deposit_accounts_deposit_account_id_seq');
-		INSERT INTO deposit_accounts (deposit_account_id, entity_id, updated_by, product_id, org_id, account_number, approve_status)
-		VALUES (v_deposit_account_id, 11, 11, 2, v_org_id, v_car_plate, 'Approved');
+		INSERT INTO deposit_accounts (deposit_account_id, entity_id, updated_by, product_id, org_id, account_number, is_active, approve_status)
+		VALUES (v_deposit_account_id, 11, 11, 2, v_org_id, v_car_plate, true, 'Approved');
 	END IF;
 	
 	SELECT account_activity_id INTO v_account_activity_id
