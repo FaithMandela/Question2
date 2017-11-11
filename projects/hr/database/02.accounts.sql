@@ -106,7 +106,7 @@ CREATE TABLE tax_types (
 	employer_formural		varchar(320),
 	employer_account		varchar(32),
 	limit_employer			real,
-	active					boolean default true,
+	active					boolean default true not null,
 	Details					text,
 	
 	UNIQUE(tax_type_name, org_id, sys_country_id)
