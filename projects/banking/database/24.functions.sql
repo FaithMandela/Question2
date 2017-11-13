@@ -39,10 +39,10 @@ BEGIN
 	
 		NEW.account_number := '4' || lpad(NEW.org_id::varchar, 2, '0')  || lpad(NEW.customer_id::varchar, 4, '0') || lpad(NEW.deposit_account_id::varchar, 2, '0');
 		
-		NEW.minimum_balance := myrec.minimum_balance;
-		NEW.maximum_balance := myrec.maximum_balance;
-	
-		NEW.interest_rate := myrec.interest_rate;
+		IF(NEW.minimum_balance is null) THEN NEW.minimum_balance := myrec.minimum_balance; END IF;
+		IF(NEW.maximum_balance is null) THEN NEW.maximum_balance := myrec.maximum_balance; END IF;
+		IF(NEW.interest_rate is null) THEN NEW.interest_rate := myrec.interest_rate; END IF;
+		
 		NEW.activity_frequency_id := myrec.activity_frequency_id;
 		NEW.lockin_period_frequency := myrec.lockin_period_frequency;
 	ELSE
@@ -69,7 +69,6 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER ins_deposit_accounts BEFORE INSERT OR UPDATE ON deposit_accounts
 	FOR EACH ROW EXECUTE PROCEDURE ins_deposit_accounts();
 
-
 CREATE OR REPLACE FUNCTION ins_account_activity() RETURNS trigger AS $$
 DECLARE
 	v_deposit_account_id		integer;
@@ -94,7 +93,7 @@ BEGIN
 	WHERE (opened = true) AND (activated = true) AND (closed = false)
 		AND (start_date <= NEW.activity_date) AND (end_date >= NEW.activity_date);
 	IF(NEW.period_id is null)THEN
-		RAISE EXCEPTION 'The transaction needs to be in an open and actiive period';
+		RAISE EXCEPTION 'The transaction needs to be in an open and active period';
 	END IF;
 	
 	IF(NEW.link_activity_id is null)THEN
@@ -132,7 +131,7 @@ BEGIN
 		END IF;
 	END IF;
 	
-	IF(NEW.transfer_account_no is null)THEN
+	IF((NEW.transfer_account_no is null) AND (NEW.transfer_account_id is null) AND (NEW.transfer_loan_id is null))THEN
 		SELECT vw_account_definations.account_number INTO NEW.transfer_account_no
 		FROM vw_account_definations INNER JOIN deposit_accounts ON vw_account_definations.product_id = deposit_accounts.product_id
 		WHERE (deposit_accounts.deposit_account_id = NEW.deposit_account_id) 
@@ -142,29 +141,37 @@ BEGIN
 	
 	IF(NEW.transfer_account_no is not null)THEN
 		SELECT deposit_account_id INTO v_deposit_account_id
-		FROM deposit_accounts
-		WHERE (account_number = NEW.transfer_account_no);
+		FROM deposit_accounts WHERE (account_number = NEW.transfer_account_no);
 		
 		IF(v_deposit_account_id is null)THEN
 			SELECT loan_id INTO v_loan_id
-			FROM loans
-			WHERE (account_number = NEW.transfer_account_no);
+			FROM loans WHERE (account_number = NEW.transfer_account_no);
 		END IF;
 		
 		IF((v_deposit_account_id is null) AND (v_loan_id is null))THEN
 			RAISE EXCEPTION 'Enter a valid account to do transfer';
+		ELSIF((v_deposit_account_id is not null) AND (NEW.deposit_account_id = v_deposit_account_id))THEN
+			RAISE EXCEPTION 'You cannot do a transfer on same account';
+		ELSIF((v_loan_id is not null) AND (NEW.loan_id = v_loan_id))THEN
+			RAISE EXCEPTION 'You cannot do a transfer on same account';
 		ELSIF(v_deposit_account_id is not null)THEN
 			NEW.transfer_account_id := v_deposit_account_id;
 		ELSIF(v_loan_id is not null)THEN
 			NEW.transfer_loan_id := v_loan_id;
 		END IF;
+	ELSIF(NEW.transfer_account_id is not null)THEN
+		SELECT account_number INTO NEW.transfer_account_no
+		FROM deposit_accounts WHERE (deposit_account_id = NEW.transfer_account_id);
+	ELSIF(NEW.transfer_loan_id is not null)THEN
+		SELECT account_number INTO NEW.transfer_account_no
+		FROM loans WHERE (loan_id = NEW.transfer_loan_id);
 	END IF;
 			
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER ins_account_activity BEFORE INSERT OR UPDATE ON account_activity
+CREATE TRIGGER ins_account_activity BEFORE INSERT ON account_activity
 	FOR EACH ROW EXECUTE PROCEDURE ins_account_activity();
 
 CREATE OR REPLACE FUNCTION aft_account_activity() RETURNS trigger AS $$
@@ -195,10 +202,10 @@ BEGIN
 			
 		IF(v_account_activity_id is null)THEN
 			INSERT INTO account_activity (deposit_account_id, transfer_account_id, transfer_loan_id, activity_type_id,
-				currency_id, org_id, link_activity_id, activity_date, value_date,
+				currency_id, org_id, entity_id, link_activity_id, activity_date, value_date,
 				activity_status_id, account_credit, account_debit, activity_frequency_id)
 			VALUES (NEW.transfer_account_id, NEW.deposit_account_id, NEW.loan_id, NEW.activity_type_id,
-				NEW.currency_id, NEW.org_id, NEW.link_activity_id, NEW.activity_date, NEW.value_date,
+				NEW.currency_id, NEW.org_id, NEW.entity_id, NEW.link_activity_id, NEW.activity_date, NEW.value_date,
 				NEW.activity_status_id, NEW.account_debit, NEW.account_credit, 1);
 		END IF;
 	END IF;
@@ -212,10 +219,10 @@ BEGIN
 			
 		IF(v_account_activity_id is null)THEN
 			INSERT INTO account_activity (loan_id, transfer_account_id, transfer_loan_id, activity_type_id,
-				currency_id, org_id, link_activity_id, activity_date, value_date,
+				currency_id, org_id, entity_id, link_activity_id, activity_date, value_date,
 				activity_status_id, account_credit, account_debit, activity_frequency_id)
 			VALUES (NEW.transfer_loan_id, NEW.deposit_account_id, NEW.loan_id, NEW.activity_type_id,
-				NEW.currency_id, NEW.org_id, NEW.link_activity_id, NEW.activity_date, NEW.value_date,
+				NEW.currency_id, NEW.org_id, NEW.entity_id, NEW.link_activity_id, NEW.activity_date, NEW.value_date,
 				NEW.activity_status_id, NEW.account_debit, NEW.account_credit, 1);
 		END IF;
 	END IF;
@@ -271,7 +278,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER aft_account_activity AFTER INSERT OR UPDATE ON account_activity
+CREATE TRIGGER aft_account_activity AFTER INSERT ON account_activity
 	FOR EACH ROW EXECUTE PROCEDURE aft_account_activity();
 	
 CREATE OR REPLACE FUNCTION log_account_activity() RETURNS trigger AS $$
