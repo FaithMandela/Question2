@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_activity_types" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="af657c58-fd4c-48aa-aade-3a87e80387e0">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
@@ -46,9 +46,9 @@ ORDER BY vw_activity_types.activity_type_id]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="71" splitType="Stretch">
+		<band height="63" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="66" y="0" width="446" height="62" uuid="fb6fb47b-873d-4738-afdc-0f6e196c59a6"/>
+				<reportElement style="Title" x="143" y="0" width="269" height="62" uuid="fb6fb47b-873d-4738-afdc-0f6e196c59a6"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
@@ -103,21 +103,21 @@ ORDER BY vw_activity_types.activity_type_id]]>
 				<text><![CDATA[Dr No]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="312" y="0" width="95" height="15" forecolor="#000000" uuid="db13adaa-a843-4182-9eeb-9d3b3030409f"/>
+				<reportElement style="Column header" x="312" y="0" width="100" height="15" forecolor="#000000" uuid="db13adaa-a843-4182-9eeb-9d3b3030409f"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Dr Account Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="407" y="0" width="40" height="15" forecolor="#000000" uuid="b6798b07-d35c-4b51-bf00-4d767abc7455"/>
+				<reportElement style="Column header" x="412" y="0" width="40" height="15" forecolor="#000000" uuid="b6798b07-d35c-4b51-bf00-4d767abc7455"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Cr No]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="447" y="0" width="95" height="15" forecolor="#000000" uuid="fe8bb862-1825-4a2a-af67-8298c80c4eed"/>
+				<reportElement style="Column header" x="452" y="0" width="100" height="15" forecolor="#000000" uuid="fe8bb862-1825-4a2a-af67-8298c80c4eed"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
@@ -165,21 +165,21 @@ ORDER BY vw_activity_types.activity_type_id]]>
 					<textFieldExpression><![CDATA[$F{dr_account_no}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="312" y="0" width="95" height="15" uuid="3c900979-1083-4d85-ba0b-66f15a3ff087"/>
+					<reportElement style="Detail" x="312" y="0" width="100" height="15" uuid="3c900979-1083-4d85-ba0b-66f15a3ff087"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{dr_account_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="407" y="0" width="40" height="15" uuid="9be08bbf-ce23-4e53-9667-b13cc31780cf"/>
+					<reportElement style="Detail" x="412" y="0" width="40" height="15" uuid="9be08bbf-ce23-4e53-9667-b13cc31780cf"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{cr_account_no}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="447" y="0" width="95" height="15" uuid="10b285d1-19f3-4988-a61b-d2e1ff6d4387"/>
+					<reportElement style="Detail" x="452" y="0" width="100" height="15" uuid="10b285d1-19f3-4988-a61b-d2e1ff6d4387"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>

@@ -954,7 +954,7 @@
 			<ACTIONS>
 				<ACTION fnct="apply_approval" approval="1">Approval Application</ACTION>
 			</ACTIONS>
-			<JASPER name="Personal" reportfile="customers_cd.jasper"></JASPER>
+			<JASPER name="Personal" reportfile="customers_pd.jasper"></JASPER>
 			<GRID name="Deposit Accounts" keyfield="deposit_account_id" linkfield="customer_id" table="vw_deposit_accounts">
 				<TEXTFIELD w="75" title="Deposit Account ID">deposit_account_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>

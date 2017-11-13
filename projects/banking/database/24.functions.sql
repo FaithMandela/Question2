@@ -121,7 +121,7 @@ BEGIN
 		SELECT use_key_id INTO v_use_key_id
 		FROM activity_types WHERE (activity_type_id = NEW.activity_type_id);
 		
-		IF(v_use_key_id = 102)THEN
+		IF(v_use_key_id IN (102, 104, 107))THEN
 			SELECT COALESCE(minimum_balance, 0) INTO v_minimum_balance
 			FROM deposit_accounts WHERE deposit_account_id = NEW.deposit_account_id;
 			
