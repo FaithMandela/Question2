@@ -967,6 +967,7 @@
 				<ACTIONS>
 					<ACTION fnct="apply_approval" approval="2">Approval Application</ACTION>
 				</ACTIONS>
+				<JASPER name="Report" reportfile="vw_account_activity.jasper"></JASPER>
 				<FORM name="Deposit Accounts" keyfield="deposit_account_id" linkfield="customer_id" table="deposit_accounts">
 					<USERFIELD>entity_id</USERFIELD>
 					<COMBOBOX w="430" title="Product" lptable="products" where="(loan_account = false) AND (is_active = true)" y="10" h="20" x="10" lpfield="product_name">product_id</COMBOBOX>
@@ -1177,6 +1178,7 @@
 				<ACTIONS>
 					<ACTION fnct="apply_approval" approval="2">Approval Application</ACTION>
 				</ACTIONS>
+				<JASPER name="Report" reportfile="vw_account_activity.jasper"></JASPER>
 				<FORM name="Deposit Accounts" keyfield="deposit_account_id" linkfield="customer_id" table="deposit_accounts">
 					<USERFIELD>entity_id</USERFIELD>
 					<COMBOBOX w="430" title="Product" lptable="products" where="(loan_account = false) AND (is_active = true)" y="10" h="20" x="10" lpfield="product_name">product_id</COMBOBOX>

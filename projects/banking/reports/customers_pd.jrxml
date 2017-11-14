@@ -25,8 +25,11 @@
 	<parameter name="organd" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/root/baraza/projects/banking/reports/"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[SELECT customers.customer_id, customers.person_title, customers.customer_name, customers.identification_number, customers.identification_type, customers.client_email, customers.telephone_number, customers.address, customers.town, customers.zip_code, customers.date_of_birth, customers.gender, customers.nationality, customers.marital_status, customers.employed, customers.self_employed, customers.employer_name, customers.monthly_salary, customers.monthly_net_income, customers.annual_turnover, customers.annual_net_income
+		<![CDATA[SELECT customers.customer_id, customers.person_title, customers.customer_name, customers.identification_number, customers.identification_type, customers.client_email, customers.telephone_number, customers.address, customers.town, customers.zip_code, customers.date_of_birth, customers.gender, customers.nationality, customers.marital_status, customers.employed, customers.self_employed, customers.employer_name, customers.monthly_salary, customers.monthly_net_income, customers.annual_turnover, customers.annual_net_income, customers.details
 
 FROM customers
 
@@ -55,6 +58,7 @@ $P!{organd}]]>
 	<field name="monthly_net_income" class="java.lang.Float"/>
 	<field name="annual_turnover" class="java.lang.Float"/>
 	<field name="annual_net_income" class="java.lang.Float"/>
+	<field name="details" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -83,7 +87,7 @@ $P!{organd}]]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="131" splitType="Stretch">
+		<band height="209" splitType="Stretch">
 			<staticText>
 				<reportElement style="Column header" x="0" y="0" width="93" height="14" forecolor="#000000" uuid="3c9353a5-9966-46b2-a491-864ee744244c"/>
 				<textElement>
@@ -344,11 +348,59 @@ $P!{organd}]]>
 				<text><![CDATA[Monthly Net Income]]></text>
 			</staticText>
 			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="128" width="555" height="1" uuid="d1b757c2-7e73-4cc9-a4fc-3fd7da06b482"/>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="146" width="555" height="1" uuid="d1b757c2-7e73-4cc9-a4fc-3fd7da06b482"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineColor="#999999"/>
 				</graphicElement>
 			</line>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="149" width="555" height="24" uuid="5984ed43-6a77-485f-939f-c1dc783f56b6"/>
+				<subreportParameter name="filterid">
+					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="orgid">
+					<subreportParameterExpression><![CDATA[$P{orgid}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="orgwhere">
+					<subreportParameterExpression><![CDATA[$P{orgwhere}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="organd">
+					<subreportParameterExpression><![CDATA[$P{organd}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_deposit_accounts_d.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="179" width="555" height="27" uuid="14b45e78-7b93-4c37-9ad2-8168c6e7c83b"/>
+				<subreportParameter name="filterid">
+					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="orgid">
+					<subreportParameterExpression><![CDATA[$P{orgid}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="orgwhere">
+					<subreportParameterExpression><![CDATA[$P{orgwhere}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="organd">
+					<subreportParameterExpression><![CDATA[$P{organd}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_loans_d.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement style="Column header" x="0" y="127" width="93" height="14" forecolor="#000000" uuid="46c9b7a3-f959-41be-b10f-bd2746fa7080"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Details]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="94" y="127" width="459" height="14" uuid="45ea7667-3c84-4aae-a094-886e43b5e84a"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{details}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>
