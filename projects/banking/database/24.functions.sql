@@ -125,8 +125,8 @@ BEGIN
 			SELECT COALESCE(minimum_balance, 0) INTO v_minimum_balance
 			FROM deposit_accounts WHERE deposit_account_id = NEW.deposit_account_id;
 			
-			IF(NEW.balance < v_minimum_balance)THEN
-				RAISE EXCEPTION 'You cannot withdraw below allowed minimum balance';
+			IF((NEW.balance < v_minimum_balance) AND (NEW.activity_status_id = 1))THEN
+					RAISE EXCEPTION 'You cannot withdraw below allowed minimum balance';
 			END IF;
 		END IF;
 	END IF;

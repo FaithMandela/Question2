@@ -2,14 +2,14 @@
 	<MENU name="Banking">
 		<MENU name="Transactions">115</MENU>
 		<MENU name="Loans">120</MENU>
-		<MENU name="Customers">105</MENU>
-		<MENU name="Processing">125</MENU>
+		<MENU name="Customers" role="manager">105</MENU>
+		<MENU name="Processing" role="manager">125</MENU>
 		<MENU name="Service">
 			<MENU name="Client Forms">22</MENU>
 			<MENU name="Applicants">265</MENU>
 			<MENU name="Approvals">83</MENU>
 		</MENU>
-		<MENU name="Operations">
+		<MENU name="Operations" role="manager">
 			<MENU name="Clients and Suppliers">17</MENU>
 			<MENU name="Sales">2</MENU>
 			<MENU name="Purchase">27</MENU>
@@ -43,7 +43,7 @@
 			<MENU name="Loans">235</MENU>
 			<MENU name="Configuration">255</MENU>
 		</MENU>
-		<MENU name="Operations Reports">
+		<MENU name="Operations Reports" role="manager">
 			<MENU name="Operational Entitys">220</MENU>
 			<MENU name="Bank Accounts">225</MENU>
 			<MENU name="Tax Types">135</MENU>
@@ -1020,6 +1020,7 @@
 				<ACTIONS>
 					<ACTION fnct="apply_approval" approval="3">Approval Application</ACTION>
 				</ACTIONS>
+				<JASPER name="Report" reportfile="vw_loans_a.jasper"></JASPER>
 				<FORM name="Loans" keyfield="loan_id" linkfield="customer_id" table="loans">
 					<USERFIELD>entity_id</USERFIELD>
 					<COMBOBOX w="430" title="Product" lptable="products" where="(loan_account = true) AND (is_active = true)" y="10" h="20" x="10" lpfield="product_name">product_id</COMBOBOX>
@@ -1231,6 +1232,7 @@
 				<ACTIONS>
 					<ACTION fnct="apply_approval" approval="3">Approval Application</ACTION>
 				</ACTIONS>
+				<JASPER name="Report" reportfile="vw_loans_a.jasper"></JASPER>
 				<FORM name="Loans" keyfield="loan_id" linkfield="customer_id" table="loans">
 					<USERFIELD>entity_id</USERFIELD>
 					<COMBOBOX w="430" title="Product" lptable="products" where="(loan_account = true) AND (is_active = true)" y="10" h="20" x="10" lpfield="product_name">product_id</COMBOBOX>
@@ -1642,6 +1644,7 @@
 			<TEXTDATE w="75" title="Disbursed Date">disbursed_date</TEXTDATE>
 			<TEXTDECIMAL w="75" title="Committed Balance">committed_balance</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Actual Balance">actual_balance</TEXTDECIMAL>
+			<JASPER name="Report" reportfile="vw_loans_a.jasper"></JASPER>
 			<GRID name="Loan Activity" keyfield="account_activity_id" linkfield="loan_id" table="vw_loan_activity">
 				<TEXTFIELD w="75" title="Activity ID">account_activity_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Activity">activity_type_name</TEXTFIELD>

@@ -112,17 +112,17 @@ BEGIN
 		SELECT use_key_id INTO v_use_key_id
 		FROM activity_types WHERE (activity_type_id = NEW.activity_type_id);
 		
-		IF(v_use_key_id = 102)THEN
+		IF(v_use_key_id IN (102, 104, 107))THEN
 			SELECT COALESCE(minimum_balance, 0) INTO v_minimum_balance
 			FROM deposit_accounts WHERE deposit_account_id = NEW.deposit_account_id;
 			
-			IF(NEW.balance < v_minimum_balance)THEN
-				RAISE EXCEPTION 'You cannot withdraw below allowed minimum balance';
+			IF((NEW.balance < v_minimum_balance) AND (NEW.activity_status_id = 1))THEN
+					RAISE EXCEPTION 'You cannot withdraw below allowed minimum balance';
 			END IF;
 		END IF;
 	END IF;
 	
-	IF(NEW.transfer_account_no is null)THEN
+	IF((NEW.transfer_account_no is null) AND (NEW.transfer_account_id is null))THEN
 		SELECT vw_account_definations.account_number INTO NEW.transfer_account_no
 		FROM vw_account_definations INNER JOIN deposit_accounts ON vw_account_definations.product_id = deposit_accounts.product_id
 		WHERE (deposit_accounts.deposit_account_id = NEW.deposit_account_id) 
@@ -132,14 +132,18 @@ BEGIN
 	
 	IF(NEW.transfer_account_no is not null)THEN
 		SELECT deposit_account_id INTO v_deposit_account_id
-		FROM deposit_accounts
-		WHERE (account_number = NEW.transfer_account_no);
-				
+		FROM deposit_accounts WHERE (account_number = NEW.transfer_account_no);
+			
 		IF(v_deposit_account_id is null)THEN
 			RAISE EXCEPTION 'Enter a valid account to do transfer';
+		ELSIF((v_deposit_account_id is not null) AND (NEW.deposit_account_id = v_deposit_account_id))THEN
+			RAISE EXCEPTION 'You cannot do a transfer on same account';
 		ELSIF(v_deposit_account_id is not null)THEN
 			NEW.transfer_account_id := v_deposit_account_id;
 		END IF;
+	ELSIF(NEW.transfer_account_id is not null)THEN
+		SELECT account_number INTO NEW.transfer_account_no
+		FROM deposit_accounts WHERE (deposit_account_id = NEW.transfer_account_id);
 	END IF;
 			
 	RETURN NEW;
@@ -375,8 +379,8 @@ BEGIN
 		INSERT INTO customers (org_id, entity_id, customer_name, identification_number, telephone_number, approve_status)
 		VALUES (0, v_entity_id, NEW.mpesa_sender, NEW.mpesa_msisdn, NEW.mpesa_msisdn, 'Approved');
 		
-		INSERT INTO deposit_accounts (entity_id, updated_by, product_id, org_id, is_active, approve_status)
-		VALUES (v_entity_id, v_entity_id, 1, 0, true, 'Approved');
+		INSERT INTO deposit_accounts (entity_id, updated_by, product_id, org_id, account_number, is_active, approve_status)
+		VALUES (v_entity_id, v_entity_id, 1, 0, NEW.mpesa_msisdn, true, 'Approved');
 	END IF;
 	
 	SELECT min(deposit_account_id) INTO v_deposit_account_id
