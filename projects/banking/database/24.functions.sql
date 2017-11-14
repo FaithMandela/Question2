@@ -280,7 +280,7 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER aft_account_activity AFTER INSERT ON account_activity
 	FOR EACH ROW EXECUTE PROCEDURE aft_account_activity();
-	
+
 CREATE OR REPLACE FUNCTION log_account_activity() RETURNS trigger AS $$
 BEGIN
 

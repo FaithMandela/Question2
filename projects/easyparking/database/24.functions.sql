@@ -66,7 +66,6 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER ins_deposit_accounts BEFORE INSERT OR UPDATE ON deposit_accounts
 	FOR EACH ROW EXECUTE PROCEDURE ins_deposit_accounts();
 
-
 CREATE OR REPLACE FUNCTION ins_account_activity() RETURNS trigger AS $$
 DECLARE
 	v_deposit_account_id		integer;
@@ -150,7 +149,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER ins_account_activity BEFORE INSERT OR UPDATE ON account_activity
+CREATE TRIGGER ins_account_activity BEFORE INSERT ON account_activity
 	FOR EACH ROW EXECUTE PROCEDURE ins_account_activity();
 
 CREATE OR REPLACE FUNCTION aft_account_activity() RETURNS trigger AS $$
@@ -236,7 +235,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER aft_account_activity AFTER INSERT OR UPDATE ON account_activity
+CREATE TRIGGER aft_account_activity AFTER INSERT ON account_activity
 	FOR EACH ROW EXECUTE PROCEDURE aft_account_activity();
 	
 CREATE OR REPLACE FUNCTION log_account_activity() RETURNS trigger AS $$
