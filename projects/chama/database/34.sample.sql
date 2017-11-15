@@ -11,6 +11,15 @@ DELETE FROM currency WHERE currency_id > 1;
 INSERT INTO banks (org_id, bank_id, bank_name) VALUES (0, 1, 'Safaricom');
 INSERT INTO bank_branch (org_id, bank_branch_id, bank_id, bank_branch_name) VALUES (0, 1, 1, 'MPESA');
 
+INSERT INTO investment_types (org_id, investment_type_name, interest_amount) VALUES
+(0, 'Land', 10);
+
+INSERT INTO investment_status (org_id, investment_status_name) VALUES 
+(0, 'Proposal'),
+(0, 'Rejected'),
+(0, 'Commited'),
+(0, 'Executed');
+
 INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, fee_amount, account_number, is_active, has_charge) 
 VALUES (21, 1, 1, 3, 0, 'Opening account', '2017-01-01', NULL, 300, '400000002', true, true);
 

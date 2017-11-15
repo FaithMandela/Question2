@@ -398,7 +398,7 @@ CREATE VIEW vw_transactions AS
 	SELECT transaction_types.transaction_type_id, transaction_types.transaction_type_name, 
 		transaction_types.document_prefix, transaction_types.for_posting, transaction_types.for_sales, 
 		entitys.entity_id, entitys.entity_name, entitys.account_id as entity_account_id, 
-		currency.currency_id, currency.currency_name,
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		vw_bank_accounts.bank_id, vw_bank_accounts.bank_name, vw_bank_accounts.bank_branch_name, vw_bank_accounts.account_id as gl_bank_account_id, 
 		vw_bank_accounts.bank_account_id, vw_bank_accounts.bank_account_name, vw_bank_accounts.bank_account_number, 
 		departments.department_id, departments.department_name,

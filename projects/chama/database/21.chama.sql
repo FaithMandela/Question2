@@ -44,8 +44,10 @@ CREATE INDEX members_org_id ON members (org_id);
 CREATE TABLE meetings (
 	meeting_id				serial primary key,
 	org_id					integer references orgs,
-	meeting_date			date,
-	meeting_place			varchar (120) not null,
+	meeting_title			varchar(120) not null,
+	meeting_date			date not null,
+	meeting_place			varchar(120) not null,
+	done					boolean default false not null,
 	minutes					text,
 	details					text
 );
@@ -54,7 +56,7 @@ CREATE INDEX meetings_org_id ON meetings (org_id);
 CREATE TABLE member_meetings (
 	member_meeting_id		serial primary key,
 	meeting_id				integer references meetings,
-	entity_id 				integer references entitys,
+	entity_id 				integer references members,
 	org_id					integer references orgs,
 	apologies				boolean default false not null,
 	narrative				text
@@ -181,7 +183,7 @@ CREATE INDEX account_definations_org_id ON account_definations(org_id);
 
 CREATE TABLE deposit_accounts (
 	deposit_account_id		serial primary key,
-	entity_id 				integer references entitys,
+	entity_id 				integer references members,
 	product_id 				integer references products,
 	activity_frequency_id	integer references activity_frequency,
 	created_by 				integer references entitys,
@@ -298,6 +300,7 @@ CREATE TABLE account_activity_log (
 	approve_status			varchar(16),
 	workflow_table_id		integer,
 	action_date				timestamp,	
+	
 	details					text,
 	
 	created					timestamp default now() not null
@@ -314,30 +317,46 @@ CREATE TABLE investment_types (
 );
 CREATE INDEX investment_types_org_id ON investment_types (org_id);
 
+CREATE TABLE investment_status (
+	investment_status_id	serial primary key,
+	org_id					integer references orgs,
+	investment_status_name	varchar (120),
+	details					text
+);
+CREATE INDEX investment_status_org_id ON investment_status (org_id);
+
 CREATE TABLE investments (
 	investment_id			serial primary key,
 	investment_type_id		integer references investment_types,
+	investment_status_id	integer references investment_status,
 	currency_id				integer references currency,
 	entity_id 				integer references entitys,
 	org_id					integer references orgs,
 
 	investment_name 		varchar(120),
-	investment_status		varchar(25) NOT NULL DEFAULT 'Prospective',
-	date_of_accrual			date,
-	principal 				real,
-	interest				real,
-	repayment_period		real,
+	started_date			date,
+	expected_maturity		date,
+	
+	exhange_rate			real default 1 not null,
+	proposed_capital		real default 0 not null,
+	expected_profit			real default 0 not null,
+	
 	initial_payment			real default 0 not null,
-	monthly_payments		real,
+	monthly_payments		real default 0 not null,
+	monthly_returns			real default 0 not null,
+	
+	is_active				boolean default true not null,
+	is_completed			boolean default true not null,
 
-	approve_status			varchar(16) default 'Draft' not null,
+	application_date		timestamp,
+	approve_status			varchar(16),
 	workflow_table_id		integer,
 	action_date				timestamp,
 
-	is_active				boolean default true not null,
 	details					text
 );
 CREATE INDEX investments_investment_type_id ON investments (investment_type_id);
+CREATE INDEX investments_investment_status_id ON investments (investment_status_id);
 CREATE INDEX investments_currency_id ON investments (currency_id);
 CREATE INDEX investments_entity_id ON investments (entity_id);
 CREATE INDEX investments_org_id ON investments (org_id);
@@ -346,7 +365,37 @@ CREATE INDEX investments_org_id ON investments (org_id);
 ALTER TABLE transactions ADD investment_id integer references investments;
 CREATE INDEX transactions_investment_id ON transactions (investment_id);
 
+CREATE TABLE phases (
+	phase_id				serial primary key,
+	investment_id			integer references investments,
+	org_id					integer references orgs,
+	phase_name				varchar(240) not null,
+	start_date				date not null,
+	end_date				date,
+	completed				boolean not null default false,
+	phase_cost				real default 0 not null,
+	details					text
+);
+CREATE INDEX phases_investment_id ON phases (investment_id);
+CREATE INDEX phases_org_id ON phases(org_id);
 
+CREATE TABLE tasks (
+	task_id					serial primary key,
+	phase_id				integer references phases,
+	entity_id				integer references members,
+	org_id					integer references orgs,
+	task_name				varchar(320) not null,
+	start_date				date not null,
+	dead_line				date,
+	end_date				date,
+	task_cost				real default 0 not null,
+	task_completed			boolean not null default false,
+	details					text
+);
+CREATE INDEX tasks_phase_id ON tasks (phase_id);
+CREATE INDEX tasks_entity_id ON tasks (entity_id);
+CREATE INDEX tasks_org_id ON tasks (org_id);
+	
 CREATE VIEW vw_members AS
 	SELECT vw_bank_branch.bank_id, vw_bank_branch.bank_name, vw_bank_branch.bank_branch_id, 
 		vw_bank_branch.bank_branch_name, vw_bank_branch.bank_branch_code,
@@ -363,6 +412,14 @@ CREATE VIEW vw_members AS
 	FROM members INNER JOIN vw_bank_branch ON members.bank_branch_id = vw_bank_branch.bank_branch_id
 		INNER JOIN entitys sales_agents ON members.sales_agent_id = sales_agents.entity_id
 		INNER JOIN sys_countrys ON members.nationality = sys_countrys.sys_country_id;
+		
+CREATE VIEW vw_member_meetings AS
+	SELECT meetings.meeting_id, meetings.meeting_title, members.entity_id, entitys.member_name,  
+		member_meetings.org_id, member_meetings.member_meeting_id, member_meetings.apologies, 
+		member_meetings.narrative
+	FROM member_meetings INNER JOIN members ON member_meetings.entity_id = members.entity_id
+		INNER JOIN meetings ON member_meetings.meeting_id = meetings.meeting_id
+		INNER JOIN orgs ON member_meetings.org_id = orgs.org_id;
 
 CREATE VIEW vw_interest_methods AS
 	SELECT activity_types.activity_type_id, activity_types.activity_type_name, activity_types.use_key_id,
@@ -512,19 +569,39 @@ CREATE VIEW vw_account_activity AS
 		LEFT JOIN vw_deposit_accounts trnf_accounts ON account_activity.transfer_account_id =  trnf_accounts.deposit_account_id;
 
 CREATE VIEW vw_investments AS
-	SELECT currency.currency_id, currency.currency_name, currency.currency_symbol,
+	SELECT investment_types.investment_type_id, investment_types.investment_type_name,
+		investment_status.investment_status_id, investment_status.investment_status_name, 
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		entitys.entity_id, entitys.entity_name, 
-		investment_types.investment_type_id, investment_types.investment_type_name, 
-		investments.org_id, investments.investment_id, investments.investment_name, investments.investment_status, 
-		investments.date_of_accrual, investments.principal, investments.interest, investments.repayment_period, 
-		investments.initial_payment, investments.monthly_payments, 
-		investments.approve_status, investments.workflow_table_id, investments.action_date, 
-		investments.is_active, investments.details
+		investments.org_id, investments.investment_id, investments.investment_name, investments.started_date, 
+		investments.expected_maturity, investments.exhange_rate, investments.proposed_capital, 
+		investments.expected_profit, investments.initial_payment, investments.monthly_payments, 
+		investments.monthly_returns, investments.is_active, investments.is_completed, 
+		investments.application_date, investments.approve_status, investments.workflow_table_id, investments.action_date, 
+		investments.details
 	FROM investments INNER JOIN investment_types ON investments.investment_type_id = investment_types.investment_type_id
+		INNER JOIN investment_status ON investments.investment_status_id = investment_status.investment_status_id
 		INNER JOIN currency ON investments.currency_id = currency.currency_id
 		INNER JOIN entitys ON investments.entity_id = entitys.entity_id;
-
 		
+CREATE VIEW vw_phases AS
+	SELECT vw_investments.investment_type_id, vw_investments.investment_type_name,
+		vw_investments.investment_status_id, vw_investments.investment_status_name, 
+		vw_investments.investment_id, vw_investments.investment_name, vw_investments.started_date,
+		phases.org_id, phases.phase_id, phases.phase_name, phases.start_date, phases.end_date, 
+		phases.completed, phases.phase_cost, phases.details
+	FROM phases INNER JOIN vw_investments ON phases.investment_id = vw_investments.investment_id;
+	
+CREATE VIEW vw_tasks AS
+	SELECT vw_phases.investment_type_id, vw_phases.investment_type_name,
+		vw_phases.investment_status_id, vw_phases.investment_status_name, 
+		vw_phases.investment_id, vw_phases.investment_name, vw_phases.started_date,
+		vw_phases.phase_id, vw_phases.phase_name, vw_phases.start_date, vw_phases.end_date, vw_phases.completed,
+		members.entity_id, members.member_name, 
+		tasks.org_id, tasks.task_id, tasks.task_name, tasks.start_date, tasks.dead_line, tasks.end_date, tasks.task_cost, tasks.task_completed, tasks.details
+	FROM tasks INNER JOIN vw_phases ON tasks.phase_id = vw_phases.phase_id
+		INNER JOIN members ON tasks.entity_id = members.entity_id;
+
 ------------ Update Transactions view
 DROP VIEW vw_stock_movement;
 DROP VIEW vw_transaction_details;
@@ -534,7 +611,7 @@ CREATE VIEW vw_transactions AS
 	SELECT transaction_types.transaction_type_id, transaction_types.transaction_type_name, 
 		transaction_types.document_prefix, transaction_types.for_posting, transaction_types.for_sales, 
 		entitys.entity_id, entitys.entity_name, entitys.account_id as entity_account_id, 
-		currency.currency_id, currency.currency_name,
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		vw_bank_accounts.bank_id, vw_bank_accounts.bank_name, vw_bank_accounts.bank_branch_name, vw_bank_accounts.account_id as gl_bank_account_id, 
 		vw_bank_accounts.bank_account_id, vw_bank_accounts.bank_account_name, vw_bank_accounts.bank_account_number, 
 		departments.department_id, departments.department_name,

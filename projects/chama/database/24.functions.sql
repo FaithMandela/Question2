@@ -17,6 +17,9 @@ BEGIN
 		
 		INSERT INTO entitys (entity_id, org_id, use_key_id, entity_type_id, entity_name, user_name, primary_email, primary_telephone, function_role)
 		VALUES (NEW.entity_id, NEW.org_id, 100, v_entity_type_id, NEW.member_name, v_user_name, lower(trim(NEW.email)), NEW.phone_number, 'member');
+	ELSE
+		UPDATE entitys SET entity_name = NEW.member_name, primary_email = lower(trim(NEW.email))
+		WHERE (entity_id = NEW.entity_id);
 	END IF;
 
 	RETURN NEW;
