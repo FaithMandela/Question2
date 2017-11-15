@@ -59,7 +59,8 @@ CREATE TABLE member_meetings (
 	entity_id 				integer references members,
 	org_id					integer references orgs,
 	apologies				boolean default false not null,
-	narrative				text
+	narrative				varchar(320),
+	UNIQUE(meeting_id, entity_id)
 );
 CREATE INDEX member_meetings_meeting_id ON member_meetings (meeting_id);
 CREATE INDEX member_meetings_entity_id ON member_meetings (entity_id);
@@ -337,7 +338,7 @@ CREATE TABLE investments (
 	started_date			date,
 	expected_maturity		date,
 	
-	exhange_rate			real default 1 not null,
+	exchange_rate			real default 1 not null,
 	proposed_capital		real default 0 not null,
 	expected_profit			real default 0 not null,
 	
@@ -385,9 +386,9 @@ CREATE TABLE tasks (
 	entity_id				integer references members,
 	org_id					integer references orgs,
 	task_name				varchar(320) not null,
-	start_date				date not null,
-	dead_line				date,
-	end_date				date,
+	task_start				date not null,
+	task_deadline			date,
+	task_end				date,
 	task_cost				real default 0 not null,
 	task_completed			boolean not null default false,
 	details					text
@@ -414,7 +415,7 @@ CREATE VIEW vw_members AS
 		INNER JOIN sys_countrys ON members.nationality = sys_countrys.sys_country_id;
 		
 CREATE VIEW vw_member_meetings AS
-	SELECT meetings.meeting_id, meetings.meeting_title, members.entity_id, entitys.member_name,  
+	SELECT meetings.meeting_id, meetings.meeting_title, members.entity_id, members.member_name,  
 		member_meetings.org_id, member_meetings.member_meeting_id, member_meetings.apologies, 
 		member_meetings.narrative
 	FROM member_meetings INNER JOIN members ON member_meetings.entity_id = members.entity_id
@@ -574,7 +575,7 @@ CREATE VIEW vw_investments AS
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		entitys.entity_id, entitys.entity_name, 
 		investments.org_id, investments.investment_id, investments.investment_name, investments.started_date, 
-		investments.expected_maturity, investments.exhange_rate, investments.proposed_capital, 
+		investments.expected_maturity, investments.exchange_rate, investments.proposed_capital, 
 		investments.expected_profit, investments.initial_payment, investments.monthly_payments, 
 		investments.monthly_returns, investments.is_active, investments.is_completed, 
 		investments.application_date, investments.approve_status, investments.workflow_table_id, investments.action_date, 
@@ -598,93 +599,76 @@ CREATE VIEW vw_tasks AS
 		vw_phases.investment_id, vw_phases.investment_name, vw_phases.started_date,
 		vw_phases.phase_id, vw_phases.phase_name, vw_phases.start_date, vw_phases.end_date, vw_phases.completed,
 		members.entity_id, members.member_name, 
-		tasks.org_id, tasks.task_id, tasks.task_name, tasks.start_date, tasks.dead_line, tasks.end_date, tasks.task_cost, tasks.task_completed, tasks.details
+		tasks.org_id, tasks.task_id, tasks.task_name, tasks.task_start, tasks.task_deadline, tasks.task_end,
+		tasks.task_cost, tasks.task_completed, tasks.details
 	FROM tasks INNER JOIN vw_phases ON tasks.phase_id = vw_phases.phase_id
 		INNER JOIN members ON tasks.entity_id = members.entity_id;
 
 ------------ Update Transactions view
-DROP VIEW vw_stock_movement;
-DROP VIEW vw_transaction_details;
-DROP VIEW vw_transactions;
+DROP VIEW vws_tx_ledger;
+DROP VIEW vw_tx_ledger;
 
-CREATE VIEW vw_transactions AS
-	SELECT transaction_types.transaction_type_id, transaction_types.transaction_type_name, 
-		transaction_types.document_prefix, transaction_types.for_posting, transaction_types.for_sales, 
-		entitys.entity_id, entitys.entity_name, entitys.account_id as entity_account_id, 
+CREATE VIEW vw_tx_ledger AS
+	SELECT ledger_types.ledger_type_id, ledger_types.ledger_type_name, ledger_types.account_id, ledger_types.ledger_posting,
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
-		vw_bank_accounts.bank_id, vw_bank_accounts.bank_name, vw_bank_accounts.bank_branch_name, vw_bank_accounts.account_id as gl_bank_account_id, 
-		vw_bank_accounts.bank_account_id, vw_bank_accounts.bank_account_name, vw_bank_accounts.bank_account_number, 
-		departments.department_id, departments.department_name,
-		ledger_types.ledger_type_id, ledger_types.ledger_type_name, ledger_types.account_id as ledger_account_id, 
-		ledger_types.tax_account_id, ledger_types.ledger_posting,
-		investments.investment_id, investments.investment_name,
-		transaction_status.transaction_status_id, transaction_status.transaction_status_name, transactions.journal_id, 
-		transactions.transaction_id, transactions.org_id, transactions.transaction_date, transactions.transaction_amount,
-		transactions.transaction_tax_amount,
+		entitys.entity_id, entitys.entity_name, 
+		bank_accounts.bank_account_id, bank_accounts.bank_account_name,
+		
+		vw_investments.investment_type_id, vw_investments.investment_type_name,
+		vw_investments.investment_status_id, vw_investments.investment_status_name, 
+		vw_investments.investment_id, vw_investments.investment_name,
+		
+		transactions.org_id, transactions.transaction_id, transactions.journal_id, 
+		transactions.exchange_rate, transactions.tx_type, transactions.transaction_date, transactions.payment_date,
+		transactions.transaction_amount, transactions.transaction_tax_amount, transactions.reference_number, 
+		transactions.payment_number, transactions.for_processing, transactions.completed, transactions.is_cleared,
 		transactions.application_date, transactions.approve_status, transactions.workflow_table_id, transactions.action_date, 
-		transactions.narrative, transactions.document_number, transactions.payment_number, transactions.order_number,
-		transactions.exchange_rate, transactions.payment_terms, transactions.job, transactions.details, transactions.notes,
+		transactions.narrative, transactions.details,
+		
 		(CASE WHEN transactions.journal_id is null THEN 'Not Posted' ELSE 'Posted' END) as posted,
-		(CASE WHEN (transactions.transaction_type_id = 2) or (transactions.transaction_type_id = 8) or (transactions.transaction_type_id = 10) or (transactions.transaction_type_id = 21)  
-			THEN transactions.transaction_amount ELSE 0 END) as debit_amount,
-		(CASE WHEN (transactions.transaction_type_id = 5) or (transactions.transaction_type_id = 7) or (transactions.transaction_type_id = 9) or (transactions.transaction_type_id = 22) 
-			THEN transactions.transaction_amount ELSE 0 END) as credit_amount
-	FROM transactions INNER JOIN transaction_types ON transactions.transaction_type_id = transaction_types.transaction_type_id
-		INNER JOIN transaction_status ON transactions.transaction_status_id = transaction_status.transaction_status_id
+		to_char(transactions.payment_date, 'YYYY.MM') as ledger_period,
+		to_char(transactions.payment_date, 'YYYY') as ledger_year,
+		to_char(transactions.payment_date, 'Month') as ledger_month,
+		
+		(transactions.exchange_rate * transactions.tx_type * transactions.transaction_amount) as base_amount,
+		(transactions.exchange_rate * transactions.tx_type * transactions.transaction_tax_amount) as base_tax_amount,
+		
+		(CASE WHEN transactions.completed = true THEN 
+			(transactions.exchange_rate * transactions.tx_type * transactions.transaction_amount)
+		ELSE 0::real END) as base_balance,
+		
+		(CASE WHEN transactions.is_cleared = true THEN 
+			(transactions.exchange_rate * transactions.tx_type * transactions.transaction_amount)
+		ELSE 0::real END) as cleared_balance,
+		
+		(CASE WHEN transactions.tx_type = 1 THEN 
+			(transactions.exchange_rate * transactions.transaction_amount)
+		ELSE 0::real END) as dr_amount,
+		
+		(CASE WHEN transactions.tx_type = -1 THEN 
+			(transactions.exchange_rate * transactions.transaction_amount) 
+		ELSE 0::real END) as cr_amount
+		
+	FROM transactions
 		INNER JOIN currency ON transactions.currency_id = currency.currency_id
-		LEFT JOIN entitys ON transactions.entity_id = entitys.entity_id
-		LEFT JOIN vw_bank_accounts ON vw_bank_accounts.bank_account_id = transactions.bank_account_id
-		LEFT JOIN departments ON transactions.department_id = departments.department_id
+		INNER JOIN entitys ON transactions.entity_id = entitys.entity_id
+		LEFT JOIN bank_accounts ON transactions.bank_account_id = bank_accounts.bank_account_id
 		LEFT JOIN ledger_types ON transactions.ledger_type_id = ledger_types.ledger_type_id
-		LEFT JOIN investments ON transactions.investment_id = investments.investment_id;
-
-CREATE VIEW vw_transaction_details AS
-	SELECT vw_transactions.department_id, vw_transactions.department_name, vw_transactions.transaction_type_id, 
-		vw_transactions.transaction_type_name, vw_transactions.document_prefix, vw_transactions.transaction_id, 
-		vw_transactions.transaction_date, vw_transactions.entity_id, vw_transactions.entity_name,
-		vw_transactions.document_number, vw_transactions.approve_status, vw_transactions.workflow_table_id,
-		vw_transactions.currency_name, vw_transactions.exchange_rate,
-		vw_transactions.investment_id, vw_transactions.investment_name,
-		accounts.account_id, accounts.account_name, stores.store_id, stores.store_name, 
+		LEFT JOIN vw_investments ON transactions.investment_id = vw_investments.investment_id
+	WHERE transactions.tx_type is not null;
+	
+CREATE VIEW vws_tx_ledger AS
+	SELECT org_id, ledger_period, ledger_year, ledger_month, 
+		sum(base_amount) as sum_base_amount, sum(base_tax_amount) as sum_base_tax_amount,
+		sum(base_balance) as sum_base_balance, sum(cleared_balance) as sum_cleared_balance,
+		sum(dr_amount) as sum_dr_amount, sum(cr_amount) as sum_cr_amount,
 		
-		vw_items.item_id, vw_items.item_name,
-		vw_items.tax_type_id, vw_items.tax_account_id, vw_items.tax_type_name, vw_items.tax_rate, vw_items.tax_inclusive,
-		vw_items.sales_account_id, vw_items.purchase_account_id,
-		vw_items.for_sale, vw_items.for_purchase, vw_items.for_stock, vw_items.inventory,
-		
-		transaction_details.transaction_detail_id, transaction_details.org_id, transaction_details.quantity, 
-		transaction_details.amount, transaction_details.tax_amount, transaction_details.narrative, transaction_details.details,
-		COALESCE(transaction_details.narrative, vw_items.item_name) as item_description,
-		(transaction_details.quantity * transaction_details.amount) as full_amount,
-		(transaction_details.quantity * transaction_details.tax_amount) as full_tax_amount,
-		(transaction_details.quantity * (transaction_details.amount + transaction_details.tax_amount)) as full_total_amount,
-		(CASE WHEN (vw_transactions.transaction_type_id = 5) or (vw_transactions.transaction_type_id = 9) 
-			THEN (transaction_details.quantity * transaction_details.tax_amount) ELSE 0 END) as tax_debit_amount,
-		(CASE WHEN (vw_transactions.transaction_type_id = 2) or (vw_transactions.transaction_type_id = 10) 
-			THEN (transaction_details.quantity * transaction_details.tax_amount) ELSE 0 END) as tax_credit_amount,
-		(CASE WHEN (vw_transactions.transaction_type_id = 5) or (vw_transactions.transaction_type_id = 9) 
-			THEN (transaction_details.quantity * transaction_details.amount) ELSE 0 END) as full_debit_amount,
-		(CASE WHEN (vw_transactions.transaction_type_id = 2) or (vw_transactions.transaction_type_id = 10) 
-			THEN (transaction_details.quantity * transaction_details.amount)  ELSE 0 END) as full_credit_amount,
-		(CASE WHEN (vw_transactions.transaction_type_id = 2) or (vw_transactions.transaction_type_id = 9) 
-			THEN vw_items.sales_account_id ELSE vw_items.purchase_account_id END) as trans_account_id
-	FROM transaction_details INNER JOIN vw_transactions ON transaction_details.transaction_id = vw_transactions.transaction_id
-		LEFT JOIN vw_items ON transaction_details.item_id = vw_items.item_id
-		LEFT JOIN accounts ON transaction_details.account_id = accounts.account_id
-		LEFT JOIN stores ON transaction_details.store_id = stores.store_id;
-		
-CREATE VIEW vw_stock_movement AS
-	SELECT org_id, department_id, department_name, transaction_type_id, transaction_type_name, 
-		document_prefix, document_number, transaction_id, transaction_date, 
-		entity_id, entity_name, approve_status,  store_id, store_name, 
-		item_id, item_name, 
-		(CASE WHEN transaction_type_id = 11 THEN quantity ELSE 0 END) as q_sold,
-		(CASE WHEN transaction_type_id = 12 THEN quantity ELSE 0 END) as q_purchased,
-		(CASE WHEN transaction_type_id = 17 THEN quantity ELSE 0 END) as q_used
-
-	FROM vw_transaction_details
-
-	WHERE (transaction_type_id IN (11, 17, 12)) AND (for_stock = true) AND (approve_status <> 'Draft');
+		to_date(ledger_period || '.01', 'YYYY.MM.DD') as start_date,
+		sum(base_amount) + prev_balance(to_date(ledger_period || '.01', 'YYYY.MM.DD')) as prev_balance_amount,
+		sum(cleared_balance) + prev_clear_balance(to_date(ledger_period || '.01', 'YYYY.MM.DD')) as prev_clear_balance_amount
+			
+	FROM vw_tx_ledger
+	GROUP BY org_id, ledger_period, ledger_year, ledger_month;
 		
 ------------Hooks to approval trigger
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON members

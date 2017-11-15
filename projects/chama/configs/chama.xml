@@ -4,6 +4,7 @@
 		<MENU name="Loans">120</MENU>
 		<MENU name="Members">105</MENU>
 		<MENU name="Investments">260</MENU>
+		<MENU name="Meetings">265</MENU>
 		<MENU name="Processing">125</MENU>
 		<MENU name="Service Desk">
 			<MENU name="Client Forms">22</MENU>
@@ -945,6 +946,7 @@
 				<ACTIONS>
 					<ACTION fnct="apply_approval" approval="2">Approval Application</ACTION>
 				</ACTIONS>
+				<JASPER name="Report" reportfile="vw_account_activity.jasper"></JASPER>
 				<FORM name="Deposit Accounts" keyfield="deposit_account_id" linkfield="entity_id" table="deposit_accounts">
 					<USERFIELD>created_by</USERFIELD>
 					<COMBOBOX w="430" title="Product" lptable="products" where="(loan_account = false) AND (is_active = true)" y="10" h="20" x="10" lpfield="product_name">product_id</COMBOBOX>
@@ -993,6 +995,7 @@
 				<TEXTDATE w="75" title="Disbursed Date">disbursed_date</TEXTDATE>
 				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
+				<JASPER name="Report" reportfile="vw_loans_b.jasper"></JASPER>
 				<ACTIONS>
 					<ACTION fnct="apply_approval" approval="3">Approval Application</ACTION>
 				</ACTIONS>
@@ -1226,7 +1229,7 @@
 	</DESK>
 	<DESK w="700" name="Deposit Accounts" key="115" h="550">
 		<GRID name="Deposit Accounts" keyfield="deposit_account_id" table="vw_deposit_accounts" where="(approve_status = 'Approved') AND (is_active = true)">
-			<TEXTFIELD w="75" title="Account Number">account_number</TEXTFIELD>
+			<TEXTLINK w="75" title="Account Number">account_number</TEXTLINK>
 			<TEXTFIELD w="75" title="Member">member_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
@@ -1312,7 +1315,7 @@
 	</DESK>
 	<DESK w="700" name="Loans" key="120" h="550">
 		<GRID name="Loans" keyfield="loan_id" table="vw_loans" where="(approve_status = 'Approved')">
-			<TEXTFIELD w="75" title="Loan Account">account_number</TEXTFIELD>
+			<TEXTLINK w="75" title="Loan Account">account_number</TEXTLINK>
 			<TEXTFIELD w="75" title="Member">member_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
@@ -1323,6 +1326,7 @@
 			<TEXTDATE w="75" title="Disbursed Date">disbursed_date</TEXTDATE>
 			<TEXTDECIMAL w="75" title="Committed Balance">committed_balance</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Actual Balance">actual_balance</TEXTDECIMAL>
+			<JASPER name="Report" reportfile="vw_loans_b.jasper"></JASPER>
 			<GRID limit="100" name="Loan Activity" keyfield="account_activity_id" orderby="account_activity_id desc" linkfield="loan_id" table="vw_loan_activity">
 				<TEXTFIELD w="75" title="Activity ID">account_activity_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Activity">activity_type_name</TEXTFIELD>
@@ -2063,35 +2067,38 @@
 	</DESK>
 	<DESK w="700" name="Investments" key="260" h="550">
 		<GRID name="Investments" keyfield="investment_id" table="vw_investments">
-			<TEXTFIELD w="45" title="ID">investment_id</TEXTFIELD>
-			<TEXTFIELD w="125" title="Investment">investment_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+			<TEXTFIELD w="75" title="Investment ID">investment_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Investment Type">investment_type_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Investment Status">investment_status</TEXTFIELD>
-			<TEXTDATE w="75" title="Date Of Accrual">date_of_accrual</TEXTDATE>
-			<TEXTDECIMAL w="75" title="Principal">principal</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Interest">interest</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Repayment Period">repayment_period</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Investment Status">investment_status_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+			<TEXTFIELD w="75" title="Investment Name">investment_name</TEXTFIELD>
+			<TEXTDATE w="75" title="Started Date">started_date</TEXTDATE>
+			<TEXTDATE w="75" title="Expected Maturity">expected_maturity</TEXTDATE>
+			<TEXTDECIMAL w="75" title="Proposed Capital">proposed_capital</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Expected Profit">expected_profit</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Initial Payment">initial_payment</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Monthly Payments">monthly_payments</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Monthly Returns">monthly_returns</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+			<CHECKBOX w="75" title="Completed">is_completed</CHECKBOX>
+			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 			<FORM name="Investments" keyfield="investment_id" table="investments">
 				<USERFIELD>entity_id</USERFIELD>
 				<COMBOBOX w="430" title="Investment Type" lptable="investment_types" y="10" h="20" x="10" lpfield="investment_type_name">investment_type_id</COMBOBOX>
-				<COMBOBOX w="430" title="Currency" lptable="currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<TEXTFIELD w="430" title="Investment Name" y="70" h="20" x="10">investment_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="Investment Status" y="90" h="20" x="10">investment_status</TEXTFIELD>
-				<TEXTDATE w="150" title="Date Of Accrual" y="90" h="20" x="290">date_of_accrual</TEXTDATE>
-				<TEXTDECIMAL w="150" title="Principal" y="110" h="20" x="10">principal</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Interest" y="110" h="20" x="290">interest</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Repayment Period" y="130" h="20" x="10">repayment_period</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Initial Payment" y="130" h="20" x="290">initial_payment</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Monthly Payments" y="150" h="20" x="10">monthly_payments</TEXTDECIMAL>
-				<TEXTFIELD w="150" title="Approve Status" y="150" h="20" x="290">approve_status</TEXTFIELD>
-				<TEXTFIELD w="150" title="Workflow Table ID" y="170" h="20" x="10">workflow_table_id</TEXTFIELD>
-				<TEXTTIMESTAMP w="150" title="Action Date" y="170" h="20" x="290">action_date</TEXTTIMESTAMP>
+				<COMBOBOX w="430" title="Investment Status" lptable="investment_status" y="30" h="20" x="10" lpfield="investment_status_name">investment_status_id</COMBOBOX>
+				<COMBOBOX w="430" title="Currency" lptable="currency" y="50" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Investment Name" y="90" h="20" x="10">investment_name</TEXTFIELD>
+				<TEXTDATE w="150" title="Started Date" y="110" h="20" x="10">started_date</TEXTDATE>
+				<TEXTDATE w="150" title="Expected Maturity" y="110" h="20" x="290">expected_maturity</TEXTDATE>
+				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="130" h="20" x="10">exchange_rate</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Proposed Capital" y="130" h="20" x="290">proposed_capital</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Expected Profit" y="150" h="20" x="10">expected_profit</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Initial Payment" y="150" h="20" x="290">initial_payment</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Monthly Payments" y="170" h="20" x="10">monthly_payments</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Monthly Returns" y="170" h="20" x="290">monthly_returns</TEXTDECIMAL>
 				<CHECKBOX w="150" title="Active" y="190" h="20" x="10">is_active</CHECKBOX>
-				<TEXTAREA w="430" title="Details" y="210" h="70" x="10">details</TEXTAREA>
+				<CHECKBOX w="150" title="Completed" y="190" h="20" x="290">is_completed</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="250" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<GRID name="Expenditure" keyfield="transaction_id" orderby="completed desc, payment_date" linkfield="investment_id" table="vw_tx_ledger" where="(tx_type = -1) ">
 				<TEXTFIELD w="75" title="Ledger Type">ledger_type_name</TEXTFIELD>
@@ -2208,6 +2215,42 @@
 				<JASPER name="Receipts" reportfile="vw_trxr.jasper"></JASPER>
 				<JASPER name="Invoice" reportfile="vw_trx.jasper"></JASPER>
 			</GRID>
+			<GRID name="Phases" keyfield="phase_id" linkfield="investment_id" table="vw_phases">
+				<TEXTFIELD w="75" title="Phase ID">phase_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Phase Name">phase_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+				<CHECKBOX w="75" title="Completed">completed</CHECKBOX>
+				<TEXTDECIMAL w="75" title="Phase Cost">phase_cost</TEXTDECIMAL>
+				<FORM name="Phases" keyfield="phase_id" linkfield="investment_id" table="phases">
+					<TEXTFIELD w="430" title="Phase Name" y="10" h="20" x="10">phase_name</TEXTFIELD>
+					<TEXTDATE w="150" title="Start Date" y="30" h="20" x="10">start_date</TEXTDATE>
+					<TEXTDATE w="150" title="End Date" y="30" h="20" x="290">end_date</TEXTDATE>
+					<CHECKBOX w="150" title="Completed" y="50" h="20" x="10">completed</CHECKBOX>
+					<TEXTDECIMAL w="150" title="Phase Cost" y="50" h="20" x="290">phase_cost</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+				</FORM>
+				<GRID name="Tasks" keyfield="task_id" linkfield="phase_id" table="vw_tasks">
+					<TEXTFIELD w="75" title="Task ID">task_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Task Name">task_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Member Name">member_name</TEXTFIELD>
+					<TEXTDATE w="75" title="Task Start">task_start</TEXTDATE>
+					<TEXTDATE w="75" title="Task Deadline">task_deadline</TEXTDATE>
+					<TEXTDATE w="75" title="Task End">task_end</TEXTDATE>
+					<TEXTDECIMAL w="75" title="Task Cost">task_cost</TEXTDECIMAL>
+					<CHECKBOX w="75" title="Task Completed">task_completed</CHECKBOX>
+					<FORM name="Tasks" keyfield="task_id" linkfield="phase_id" table="tasks">
+						<COMBOBOX w="430" title="Member" lptable="members" y="10" h="20" x="10" lpfield="member_name">entity_id</COMBOBOX>
+						<TEXTFIELD w="430" title="Task Name" y="30" h="20" x="10">task_name</TEXTFIELD>
+						<TEXTDATE w="150" title="Task Start" y="50" h="20" x="10">task_start</TEXTDATE>
+						<TEXTDATE w="150" title="Task Deadline" y="50" h="20" x="290">task_deadline</TEXTDATE>
+						<TEXTDATE w="150" title="Task End" y="70" h="20" x="10">task_end</TEXTDATE>
+						<TEXTDECIMAL w="150" title="Task Cost" y="70" h="20" x="290">task_cost</TEXTDECIMAL>
+						<CHECKBOX w="150" title="Task Completed" y="90" h="20" x="10">task_completed</CHECKBOX>
+						<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
+			</GRID>
 		</GRID>
 		<GRID name="Investment Types" keyfield="investment_type_id" table="investment_types">
 			<TEXTFIELD w="75" title="Investment Type ID">investment_type_id</TEXTFIELD>
@@ -2218,6 +2261,62 @@
 				<TEXTDECIMAL w="150" title="Interest Amount" y="30" h="20" x="10">interest_amount</TEXTDECIMAL>
 				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
+		</GRID>
+		<GRID name="Investment Status" keyfield="investment_status_id" table="investment_status">
+			<TEXTFIELD w="75" title="Investment Status ID">investment_status_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Investment Status Name">investment_status_name</TEXTFIELD>
+			<FORM name="Investment Status" keyfield="investment_status_id" table="investment_status">
+				<TEXTFIELD w="430" title="Investment Status Name" y="10" h="20" x="10">investment_status_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Ledger Types" keyfield="ledger_type_id" table="vw_ledger_types">
+			<TEXTFIELD w="15" title="ID">ledger_type_id</TEXTFIELD>
+			<TEXTFIELD w="45" title="Account">account_no</TEXTFIELD>
+			<TEXTFIELD w="75" title="Account Name">account_name</TEXTFIELD>
+			<TEXTFIELD w="45" title="Tax Account">t_account_no</TEXTFIELD>
+			<TEXTFIELD w="75" title="Tax Account Name">t_account_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Ledger Type Name">ledger_type_name</TEXTFIELD>
+			<CHECKBOX w="35" title="Posting">ledger_posting</CHECKBOX>
+			<CHECKBOX w="35" title="Income">income_ledger</CHECKBOX>
+			<CHECKBOX w="35" title="Expense">expense_ledger</CHECKBOX>
+			<FORM name="Ledger Types" keyfield="ledger_type_id" table="ledger_types">
+				<COMBOBOX w="430" title="Account" lptable="vw_accounts" y="10" h="20" x="10" lpfield="account_description">account_id</COMBOBOX>
+				<COMBOBOX w="430" title="Tax Account" lptable="vw_accounts" lpkey="account_id" y="30" h="20" x="10" lpfield="account_description">tax_account_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Ledger Type Name" y="50" h="20" x="10">ledger_type_name</TEXTFIELD>
+				<CHECKBOX w="150" title="For Posting" y="70" h="20" x="10">ledger_posting</CHECKBOX>
+				<CHECKBOX w="150" title="Income" y="90" h="20" x="10">income_ledger</CHECKBOX>
+				<CHECKBOX w="150" title="Expense" y="90" h="20" x="290">expense_ledger</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Meetings" key="265" h="550">
+		<GRID name="Meetings" keyfield="meeting_id" table="meetings">
+			<TEXTFIELD w="75" title="Meeting ID">meeting_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Meeting Title">meeting_title</TEXTFIELD>
+			<TEXTDATE w="75" title="Meeting Date">meeting_date</TEXTDATE>
+			<TEXTFIELD w="75" title="Meeting Place">meeting_place</TEXTFIELD>
+			<CHECKBOX w="75" title="Done">done</CHECKBOX>
+			<FORM name="Meetings" keyfield="meeting_id" table="meetings">
+				<TEXTFIELD w="430" title="Meeting Title" y="10" h="20" x="10">meeting_title</TEXTFIELD>
+				<TEXTDATE w="150" title="Meeting Date" y="30" h="20" x="10">meeting_date</TEXTDATE>
+				<TEXTFIELD w="430" title="Meeting Place" y="50" h="20" x="10">meeting_place</TEXTFIELD>
+				<CHECKBOX w="150" title="Done" y="70" h="20" x="10">done</CHECKBOX>
+				<TEXTAREA w="430" title="Minutes" y="90" h="70" x="10">minutes</TEXTAREA>
+				<TEXTAREA w="430" title="Details" y="160" h="70" x="10">details</TEXTAREA>
+			</FORM>
+			<GRID name="Member Meetings" keyfield="member_meeting_id" linkfield="meeting_id" table="vw_member_meetings">
+				<TEXTFIELD w="75" title="Member Name">member_name</TEXTFIELD>
+				<CHECKBOX w="75" title="Apologies">apologies</CHECKBOX>
+				<TEXTFIELD w="75" title="narrative">narrative</TEXTFIELD>
+				<FORM name="Member Meetings" keyfield="member_meeting_id" linkfield="meeting_id" table="member_meetings">
+					<COMBOBOX w="430" title="Member" lptable="members" y="10" h="20" x="10" lpfield="member_name">entity_id</COMBOBOX>
+					<CHECKBOX w="150" title="Apologies" y="30" h="20" x="10">apologies</CHECKBOX>
+					<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">narrative</TEXTFIELD>
+				</FORM>
+			</GRID>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Transaction Ledger" key="32" h="550">
