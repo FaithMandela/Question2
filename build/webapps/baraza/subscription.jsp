@@ -241,8 +241,6 @@
 							</div>
 						</div>
 
-						<%= web.getFilters() %>
-
 						<% String actionOp = web.getOperations();
 						if(actionOp != null) {	%>
 							

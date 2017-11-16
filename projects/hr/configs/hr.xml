@@ -684,22 +684,24 @@
 		</FORMVIEW>
 	</DESK>
 	<DESK w="700" name="Vacancies" key="14" h="550">
-		<GRID name="Available Positions" keyfield="intake_id" table="vw_intake" where="(closing_date >= current_date)">
-			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Role">department_role_name</TEXTFIELD>
+		<GRID name="Available Positions" keyfield="intake_id" table="vw_intake" noorgs="true" where="(closing_date >= current_date)">
+			<TEXTFIELD w="75" title="Organisation">org_name</TEXTFIELD>
+			<TEXTLINK w="75" title="Role">department_role_name</TEXTLINK>
 			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
 			<TEXTDATE w="75" title="Closing Date">closing_date</TEXTDATE>
 			<TEXTFIELD w="50" title="Positions">positions</TEXTFIELD>
 			<TEXTFIELD w="75" title="Location">location_name</TEXTFIELD>
 			<TEXTFIELD w="175" title="Details">details</TEXTFIELD>
-			<FORMVIEW tw="570" name="Role Details" keyfield="intake_id" linkfield="intake_id" table="vw_intake">
-				<ACTION fnct="Ins_applications" title="Apply" action="Apply For Post" jumpview="10:0">intake_id</ACTION>
-				<TEXTFIELD w="410" title="Unit" lw="140" y="30" h="20" x="10">department_name</TEXTFIELD>
-				<TEXTFIELD w="430" title="Designation" y="30" h="20" x="10">department_role_name</TEXTFIELD>
-				<TEXTFIELD w="430" title="Reporting To" y="10" h="20" x="10">parent_role_name</TEXTFIELD>
+			<FORMVIEW tw="570" name="Role Details" keyfield="intake_id" linkfield="intake_id" table="vw_intake" noorgs="true">
+				<ACTION fnct="Ins_applications" title="Apply" action="Apply For Post" jumpview="14:1">intake_id</ACTION>
+				<TEXTFIELD w="410" title="Organisation">org_name</TEXTFIELD>
+				<TEXTFIELD w="410" title="Organisation Details">org_details</TEXTFIELD>
+				<TEXTFIELD w="410" title="Department">department_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Designation">department_role_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Reporting To">parent_role_name</TEXTFIELD>
 				<TEXTFIELD w="50" title="Positions">positions</TEXTFIELD>
 				<TEXTFIELD w="75" title="Location">location_name</TEXTFIELD>
-				<TEXTFIELD w="550" title="Job Description" y="1" h="280" x="10">job_description</TEXTFIELD>
+				<TEXTFIELD w="550" title="Job Description">job_description</TEXTFIELD>
 			</FORMVIEW>
 			<ACTIONS>
 				<ACTION fnct="Ins_applications">Apply For Post</ACTION>
@@ -726,17 +728,24 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Internships" key="15" h="550">
-		<GRID name="Internships Posts" keyfield="internship_id" table="vw_internships" where="(closing_date >= current_date)">
+		<GRID name="Internships Posts" keyfield="internship_id" table="vw_internships" noorgs="true" where="(closing_date >= current_date)">
 			<TEXTFIELD w="75" title="Organization">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+			<TEXTLINK w="50" title="Positions">positions</TEXTLINK>
 			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
 			<TEXTDATE w="75" title="Closing Date">closing_date</TEXTDATE>
-			<TEXTFIELD w="50" title="Positions">positions</TEXTFIELD>
 			<TEXTFIELD w="75" title="Location">location</TEXTFIELD>
-			<TEXTFIELD w="175" title="Details">details</TEXTFIELD>
-			<ACTIONS>
-				<ACTION fnct="Ins_interns">Apply For Internship</ACTION>
-			</ACTIONS>
+			<FORMVIEW name="Internships Posts" keyfield="internship_id" table="vw_internships" noorgs="true" where="(closing_date >= current_date)">
+				<ACTION fnct="Ins_interns" title="Apply" action="Apply For Internship" jumpview="15:1">internship_id</ACTION>
+				<TEXTFIELD w="75" title="Organization">org_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Organization Details">org_details</TEXTFIELD>
+				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
+				<TEXTDATE w="75" title="Closing Date">closing_date</TEXTDATE>
+				<TEXTFIELD w="50" title="Positions">positions</TEXTFIELD>
+				<TEXTFIELD w="75" title="Location">location</TEXTFIELD>
+				<TEXTFIELD w="175" title="Details">details</TEXTFIELD>
+			</FORMVIEW>
 		</GRID>
 		<GRID name="Internships Applied" keyfield="department_name" table="vw_interns" user="entity_id">
 			<TEXTFIELD w="75" title="Organization">org_name</TEXTFIELD>
