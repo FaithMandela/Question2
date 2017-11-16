@@ -74,6 +74,10 @@
 		<servlet-name>BJSONData</servlet-name>
 		<url-pattern>/jsondata</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>BJSONData</servlet-name>
+		<url-pattern>/jsongeneral</url-pattern>
+	</servlet-mapping>
 
 	<servlet>
 		<servlet-name>BAppLauncher</servlet-name>

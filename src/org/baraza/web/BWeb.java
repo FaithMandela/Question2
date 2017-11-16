@@ -589,7 +589,9 @@ public class BWeb {
 				buttons += "<a class='btn blue btn-sm' title='Add New' href='?view=" + viewKey + ":" + String.valueOf(fv) + "&data={new}'><i class='fa fa-plus'></i>   " + newBtn + "</a>\n";
 			}
 			buttons += "<a class='btn green btn-sm' href='?view=" + viewKey + did + "&refresh=true'><i class='fa fa-refresh'></i>   Refresh</a>\n";
-			buttons += "<a class='btn green btn-sm' target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'><i class='fa fa-file-excel-o'></i>   Export</a>\n";
+			
+			if(view.getAttribute("grid.export", "true").equals("true"))
+				buttons += "<a class='btn green btn-sm' target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'><i class='fa fa-file-excel-o'></i>   Export</a>\n";
 			
 			if(view.getAttribute("grid.print", "false").equals("true"))
 				buttons += "<a class='btn green btn-sm' target='_blank' href='b_print.jsp?view=" + viewKey + did + "&action=print'><i class='fa fa-print'></i>   Print</a>\n";
@@ -795,7 +797,7 @@ System.out.println("BASE 3020 : " + dataItem);
 	
 	public Map<String, String> getWhere(HttpServletRequest request) {
 		Map<String, String> whereParams = new HashMap<String, String>();
-
+System.out.println("BASE 3005 WHERE : ");
 		String linkData = "";
 		String linkParam = null;
 		String formLinkData = "";
@@ -805,9 +807,10 @@ System.out.println("BASE 3020 : " + dataItem);
 		BElement sview = null;
 		comboField = request.getParameter("field");
 		if(comboField != null) sview = view.getElement(comboField).getElement(0);
-		
+System.out.println("BASE 3007 WHERE : ");
 		String filterSN = "F" + viewKey;
 		if(webSession.getAttribute(filterSN) != null) {
+System.out.println("BASE 3008 WHERE : ");
 			String filterKSN = "";
 			if(webSession.getAttribute("K" + filterSN) != null) filterKSN = (String)webSession.getAttribute("K" + filterSN);
 			String wDataItem = "";
@@ -818,7 +821,7 @@ System.out.println("BASE 3020 : " + dataItem);
 			
 			System.out.println("Filter Where :" + filterSN + ": " + wheresql);
 		}
-		
+System.out.println("BASE 3010 WHERE : ");
 		int vds = viewKeys.size();
 		if(vds > 2) {
 			linkData = viewData.get(vds - 1);
@@ -835,7 +838,7 @@ System.out.println("BASE 3020 : " + dataItem);
 					wheresql += view.getAttribute("linkfield") + " = '" + linkData + "')";
 				}
 			}
-
+System.out.println("BASE 3030 WHERE : ");
 			// Table linking on parameters
 			String paramLinkData = linkData;
 			String linkParams = view.getAttribute("linkparams");
@@ -867,7 +870,7 @@ System.out.println("BASE 3020 : " + dataItem);
 				else wheresql = "(" + tableFilter + "')";
 			}
 		}
-		
+System.out.println("BASE 3050 WHERE : ");
 		if(views.size() > 1) {
 			BElement flt = views.get(views.size()-2);
 			if(flt.getName().equals("FILTER")) {
@@ -891,7 +894,7 @@ System.out.println("BASE 3020 : " + dataItem);
 				}
 			}
 		}
-		
+System.out.println("BASE 3070 WHERE : ");
 		whereParams.put("linkData", linkData);
 		whereParams.put("linkParam", linkParam);
 		whereParams.put("formLinkData", formLinkData);
@@ -2051,7 +2054,9 @@ log.severe("BASE : " + mysql);
 		jsColKF.add("hidden", true);
 		jsColModel.add(jsColKF);
 		
-		jshd.add("url", "jsondata");
+		String jUrl = view.getAttribute("url", "jsondata");
+		
+		jshd.add("url", jUrl);
 		jshd.add("datatype", "json");
 		jshd.add("mtype", "GET");
 		jshd.add("colNames", jsColNames);

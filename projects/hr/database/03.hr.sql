@@ -1135,7 +1135,7 @@ CREATE VIEW vw_intake AS
 		
 		locations.location_id, locations.location_name, pay_groups.pay_group_id, pay_groups.pay_group_name, 
 		pay_scales.pay_scale_id, pay_scales.pay_scale_name, 
-		orgs.org_name, orgs.details as org_detail,
+		orgs.org_name, orgs.details as org_details,
 		
 		intake.org_id, intake.intake_id, intake.opening_date, intake.closing_date, intake.positions, intake.contract, 
 		intake.contract_period, intake.details,
@@ -1155,7 +1155,7 @@ CREATE VIEW vw_applications AS
 		vw_intake.department_role_id, vw_intake.department_role_name, vw_intake.parent_role_name,
 		vw_intake.job_description, vw_intake.job_requirements, vw_intake.duties, vw_intake.performance_measures, 
 		vw_intake.intake_id, vw_intake.opening_date, vw_intake.closing_date, vw_intake.positions, 
-		vw_intake.org_name, vw_intake.org_detail,
+		vw_intake.org_name, vw_intake.org_details,
 		entitys.entity_id, entitys.entity_name, entitys.primary_email,
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		
@@ -1653,6 +1653,7 @@ BEGIN
 	SELECT org_id, entity_id, currency_id, previous_salary, expected_salary INTO reca
 	FROM applicants
 	WHERE (entity_id = $2::int);
+	
 	v_entity_id := reca.entity_id;
 	IF(reca.entity_id is null) THEN
 		SELECT org_id, entity_id, currency_id, basic_salary as previous_salary, basic_salary as expected_salary INTO reca
@@ -1694,11 +1695,8 @@ BEGIN
 	ELSIF (c_education_id < 2) THEN
 		msg := 'You need to have at least two education levels added';
 		RAISE EXCEPTION '%', msg;
-	ELSIF (c_referees < 3) THEN
-		msg := 'You need to have at least three referees added';
-		RAISE EXCEPTION '%', msg;
-	ELSIF (c_files < 2) THEN
-		msg := 'CV and Cover Letter MUST be uploaded';
+	ELSIF (c_referees < 2) THEN
+		msg := 'You need to have at least two referees added';
 		RAISE EXCEPTION '%', msg;
 	ELSE
 		v_application_id := nextval('applications_application_id_seq');
@@ -1728,8 +1726,8 @@ BEGIN
 	SELECT intern_id INTO v_intern_id FROM interns 
 	WHERE (internship_id = $1::int) AND (entity_id = $2::int);
 	
-	SELECT org_id INTO v_org_id FROM internships 
-	WHERE (internship_id = $1::int);
+	SELECT org_id INTO v_org_id FROM entitys 
+	WHERE (entity_id = $2::int);
 
 	IF v_intern_id is null THEN
 		v_intern_id := nextval('interns_intern_id_seq');

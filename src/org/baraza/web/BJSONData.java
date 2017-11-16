@@ -84,8 +84,20 @@ public class BJSONData extends HttpServlet {
 			if(!web.getUser().getSuperUser()) return;
 		}
 		
+		boolean secured = true;
+		System.out.println("BASE 2010 " + request.getContextPath());
+		System.out.println("BASE 2030 " + request.getRequestURI());
+		System.out.println("BASE 2050 " + request.getQueryString());
+		
+		String rUrl = request.getRequestURI();
+		if(rUrl == null) rUrl = "";
+		if(rUrl.contains("jsongeneral")) {
+			if(!view.getAttribute("secured", "false").equals("true")) secured = false;
+		}
+		
 		BJSONQuery JSONQuery = new BJSONQuery(web.getDB(), view, wheresql, sortby, pageStart, pageSize);
-		String JSONStr = JSONQuery.getJSONData(web.getViewKey(), false);
+		String JSONStr = "";
+		if(secured) JSONStr = JSONQuery.getJSONData(web.getViewKey(), false);
 
 		try {
 			PrintWriter out = response.getWriter();
