@@ -11,9 +11,9 @@
 			<MENU name="Attendance">15</MENU>
 			<MENU name="Attendance Import">17</MENU>
 		</MENU>
-		<MENU name="Travel">
-			<MENU name="Employee Travels">35</MENU>
-			<MENU name="Travel Definations">40</MENU>
+		<MENU name="Travel" role="finance,business">
+			<MENU name="Employee Travels" role="finance,business">35</MENU>
+			<MENU name="Travel Definations" role="finance,business">40</MENU>
 		</MENU>
 		<MENU name="Reports">
 			<MENU name="Project Types">101</MENU>

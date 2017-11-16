@@ -745,10 +745,10 @@ public class BWeb {
 		if(filterType == null) return "";
 		if(filterValue == null) return "";
 		if(filterValue.equals("")) return "";
-		if(filterValue.toLowerCase().contains("select ")) return "";
-		if(filterValue.toLowerCase().contains("update ")) return "";
-		if(filterValue.toLowerCase().contains("insert ")) return "";
-		if(filterValue.toLowerCase().contains("insert ")) return "";
+		if(filterValue.toLowerCase().contains("select")) return "";
+		if(filterValue.toLowerCase().contains("update")) return "";
+		if(filterValue.toLowerCase().contains("insert")) return "";
+		if(filterValue.toLowerCase().contains("delete")) return "";
 		if(filterAnd == null) filterAnd = "false";
 		if(filterOr == null) filterOr = "false";
 		

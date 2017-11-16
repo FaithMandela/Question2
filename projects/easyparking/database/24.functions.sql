@@ -399,7 +399,7 @@ BEGIN
 		VALUES (v_entity_id, 0, 0, NEW.mpesa_msisdn, msg);
 	ELSE
 		INSERT INTO sms (entity_id, org_id, folder_id, sms_number, message)
-		VALUES (v_entity_id, 0, 0, NEW.mpesa_msisdn, 'Your account is credited and Parking paid sucesfully');
+		VALUES (v_entity_id, 0, 0, NEW.mpesa_msisdn, 'Your account is credited and Parking paid sucesfully for ' || NEW.mpesa_acc);
 	END IF;
 	
 	RETURN NULL;
@@ -454,7 +454,7 @@ BEGIN
 	FROM account_activity
 	WHERE (deposit_account_id = v_deposit_account_id) AND (activity_type_id = 16) AND (activity_date = $3);
 	
-	IF((v_car_balance > 0) AND (v_car_balance < v_balance))THEN
+	IF((v_car_balance > 0) AND (v_car_balance <= v_balance))THEN
 		INSERT INTO account_activity (deposit_account_id, activity_type_id, currency_id, 
 			org_id, transfer_account_no, activity_date, value_date,
 			activity_status_id, account_credit, account_debit, activity_frequency_id)
