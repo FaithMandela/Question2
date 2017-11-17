@@ -706,7 +706,7 @@
 				<TEXTFIELD w="550" title="Job Description">job_description</TEXTFIELD>
 			</FORMVIEW>
 		</GRID>
-		<GRID name="Positions Applied" keyfield="application_id" orderby="opening_date" table="vw_applications" user="entity_id">
+		<GRID name="Positions Applied" keyfield="application_id" orderby="opening_date" table="vw_applications" noorg="true" user="entity_id">
 			<TEXTFIELD w="45" title="Post ID">intake_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Organisation">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
@@ -749,7 +749,7 @@
 				<TEXTFIELD w="175" title="Details">details</TEXTFIELD>
 			</FORMVIEW>
 		</GRID>
-		<GRID name="Internships Applied" keyfield="department_name" table="vw_interns" user="entity_id">
+		<GRID name="Internships Applied" keyfield="department_name" table="vw_interns" noorg="true" user="entity_id">
 			<TEXTFIELD w="45" title="Internship ID">internship_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Organization">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
@@ -2065,7 +2065,7 @@
 			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Positions">positions</TEXTFIELD>
 			<CHECKBOX w="75" title="Contract">contract</CHECKBOX>
-			<GRID name="Applications" keyfield="application_id" linkfield="intake_id" table="vw_applications" params="entity_id" noorg="true" where="(short_listed = 0)" ssort="true">
+			<GRID name="Applications" keyfield="application_id" linkfield="intake_id" table="vw_applications" params="entity_id" where="(short_listed = 0)" ssort="true">
 				<TEXTFIELD w="75" title="Applicant Name">entity_name</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
 				<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
@@ -2081,7 +2081,6 @@
 					<ACTION fnct="add_shortlist" approval="1">Short List</ACTION>
 				</ACTIONS>
 				<FORM name="Applications" keyfield="application_id" linkfield="intake_id" table="applications" th="210">
-					<COMBOBOX w="430" title="Applicant" lptable="entitys" where="((use_key_id = 1) OR (use_key_id = 4))" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<TEXTDATE w="150" title="Contract Date" y="30" h="20" x="10">contract_date</TEXTDATE>
 					<TEXTDATE w="150" title="Contract Close" y="30" h="20" x="290">contract_close</TEXTDATE>
 					<TEXTDATE w="150" title="Contract Start" y="50" h="20" x="10">contract_start</TEXTDATE>
@@ -2098,7 +2097,7 @@
 					<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 				</FILES>
 			</GRID>
-			<GRID name="Short Listed" keyfield="application_id" linkfield="intake_id" table="vw_applications" params="entity_id" noorg="true" where="(short_listed = 1)" ssort="true">
+			<GRID name="Short Listed" keyfield="application_id" linkfield="intake_id" table="vw_applications" params="entity_id" where="(short_listed = 1)" ssort="true">
 				<TEXTFIELD w="75" title="Applicant Name">entity_name</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
 				<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
@@ -2113,7 +2112,6 @@
 					<ACTION fnct="add_shortlist" approval="2">Un Short List</ACTION>
 				</ACTIONS>
 				<FORM name="Applications" keyfield="application_id" linkfield="intake_id" table="applications" th="210">
-					<COMBOBOX w="430" title="Applicant" lptable="entitys" where="((use_key_id = 1) OR (use_key_id = 4))" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<TEXTDATE w="150" title="Contract Date" y="30" h="20" x="10">contract_date</TEXTDATE>
 					<TEXTDATE w="150" title="Contract Close" y="30" h="20" x="290">contract_close</TEXTDATE>
 					<TEXTDATE w="150" title="Contract Start" y="50" h="20" x="10">contract_start</TEXTDATE>

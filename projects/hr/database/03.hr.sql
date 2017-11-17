@@ -1143,7 +1143,6 @@ CREATE VIEW vw_intake AS
 		(vw_department_roles.department_name || ', ' || vw_department_roles.department_role_name || ', ' || to_char(intake.opening_date, 'YYYY, Mon')) as intake_disp,
 		('<a href="index.jsp?view=14:0:0&data=' || intake.intake_id || '">Apply For Post</a>') as apply
 		
-		
 	FROM intake INNER JOIN vw_department_roles ON intake.department_role_id = vw_department_roles.department_role_id
 		INNER JOIN locations ON intake.location_id = locations.location_id
 		INNER JOIN pay_groups ON intake.pay_group_id = pay_groups.pay_group_id
@@ -1408,7 +1407,7 @@ CREATE VIEW vw_intern_evaluations AS
 		education.examination_taken, vw_internships.department_id, vw_internships.department_name, 
 		vw_internships.internship_id, vw_internships.positions, vw_internships.opening_date, vw_internships.closing_date, 
 
-		interns.intern_id, interns.payment_amount, interns.start_date, interns.end_date, interns.application_date, 
+		interns.org_id, interns.intern_id, interns.payment_amount, interns.start_date, interns.end_date, interns.application_date, 
 		interns.approve_status, interns.action_date, interns.workflow_table_id, interns.applicant_comments, interns.review
 	FROM vw_applicants JOIN education ON vw_applicants.entity_id = education.entity_id
 		JOIN interns ON interns.entity_id = vw_applicants.entity_id
@@ -1636,6 +1635,8 @@ CREATE TRIGGER ins_job_reviews AFTER INSERT ON job_reviews
 
 CREATE OR REPLACE FUNCTION ins_applications(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
+	v_intake_id				integer;
+	v_org_id				integer;
 	v_entity_id				integer;
 	v_application_id		integer;
 	v_sys_email_id			integer;
@@ -1647,16 +1648,18 @@ DECLARE
 	msg 					varchar(120);
 BEGIN
 	SELECT application_id INTO v_application_id
-	FROM applications 
-	WHERE (intake_id = $1::int) AND (entity_id = $2::int);
+	FROM applications WHERE (intake_id = $1::int) AND (entity_id = $2::int);
 	
-	SELECT org_id, entity_id, currency_id, previous_salary, expected_salary INTO reca
+	SELECT intake_id, org_id INTO v_intake_id, v_org_id
+	FROM intake WHERE (intake_id = $1::int);
+	
+	SELECT entity_id, currency_id, previous_salary, expected_salary INTO reca
 	FROM applicants
 	WHERE (entity_id = $2::int);
 	
 	v_entity_id := reca.entity_id;
 	IF(reca.entity_id is null) THEN
-		SELECT org_id, entity_id, currency_id, basic_salary as previous_salary, basic_salary as expected_salary INTO reca
+		SELECT entity_id, currency_id, basic_salary as previous_salary, basic_salary as expected_salary INTO reca
 		FROM employees
 		WHERE (entity_id = $2::int);
 		v_entity_id := reca.entity_id;
@@ -1701,13 +1704,13 @@ BEGIN
 	ELSE
 		v_application_id := nextval('applications_application_id_seq');
 		INSERT INTO applications (application_id, intake_id, org_id, entity_id, currency_id, previous_salary, expected_salary, approve_status)
-		VALUES (v_application_id, $1::int, reca.org_id, reca.entity_id, reca.currency_id, reca.previous_salary, reca.expected_salary, 'Completed');
+		VALUES (v_application_id, v_intake_id, v_org_id, reca.entity_id, reca.currency_id, reca.previous_salary, reca.expected_salary, 'Completed');
 		
 		SELECT sys_email_id INTO v_sys_email_id FROM sys_emails
-		WHERE (use_type = 10) AND (org_id = reca.org_id);
+		WHERE (use_type = 10) AND (org_id = v_org_id);
 		
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name, email_type)
-		VALUES (v_sys_email_id, reca.org_id, v_application_id, 'applications', 10);
+		VALUES (v_sys_email_id, v_org_id, v_application_id, 'applications', 10);
 		
 		msg := 'Added Job application';
 	END IF;
@@ -1718,21 +1721,22 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION ins_interns(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
-	v_intern_id			integer;
-	v_org_id			integer;
-	v_sys_email_id		integer;
-	msg					varchar(120);
+	v_internship_id			integer;
+	v_intern_id				integer;
+	v_org_id				integer;
+	v_sys_email_id			integer;
+	msg						varchar(120);
 BEGIN
-	SELECT intern_id INTO v_intern_id FROM interns 
-	WHERE (internship_id = $1::int) AND (entity_id = $2::int);
+	SELECT internship_id, org_id INTO v_internship_id, v_org_id
+	FROM internships WHERE (internship_id = $1::int);
 	
-	SELECT org_id INTO v_org_id FROM entitys 
-	WHERE (entity_id = $2::int);
-
+	SELECT intern_id INTO v_intern_id
+	FROM interns WHERE (internship_id = $1::int) AND (entity_id = $2::int);
+	
 	IF v_intern_id is null THEN
 		v_intern_id := nextval('interns_intern_id_seq');
 		INSERT INTO interns (intern_id, org_id, internship_id, entity_id, approve_status)
-		VALUES (v_intern_id, v_org_id, $1::int, $2::int, 'Completed');
+		VALUES (v_intern_id, v_org_id, v_internship_id, $2::int, 'Completed');
 		
 		SELECT sys_email_id INTO v_sys_email_id FROM sys_emails
 		WHERE (use_type = 11) AND (org_id = v_org_id);

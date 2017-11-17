@@ -85,10 +85,6 @@ public class BJSONData extends HttpServlet {
 		}
 		
 		boolean secured = true;
-		System.out.println("BASE 2010 " + request.getContextPath());
-		System.out.println("BASE 2030 " + request.getRequestURI());
-		System.out.println("BASE 2050 " + request.getQueryString());
-		
 		String rUrl = request.getRequestURI();
 		if(rUrl == null) rUrl = "";
 		if(rUrl.contains("jsongeneral")) {

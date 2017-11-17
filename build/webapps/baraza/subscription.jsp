@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
-<c:set var="mainPage" value="index.jsp" scope="page" />
+<c:set var="mainPage" value="subscription.jsp" scope="page" />
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="org.baraza.DB.BQuery" %>
@@ -12,11 +12,12 @@
 	ServletContext context = getServletContext();
 	String dbconfig = "java:/comp/env/jdbc/database";
 	String xmlcnf = "subscription.xml";
-	if(request.getParameter("logoff") != null) {
+	if(request.getParameter("logoff") == null) {
+		session.setAttribute("xmlcnf", xmlcnf);
+	} else {
 		session.removeAttribute("xmlcnf");
 		session.invalidate();
   	}
-
 	String ps = System.getProperty("file.separator");
 	String xmlfile = context.getRealPath("WEB-INF") + ps + "configs" + ps + xmlcnf;
 	String reportPath = context.getRealPath("reports") + ps;
@@ -28,7 +29,7 @@
 
 	BWeb web = new BWeb(dbconfig, xmlfile);
 	web.init(request);
-	web.setMainPage("subscription.jsp");
+	web.setMainPage(String.valueOf(pageContext.getAttribute("mainPage")));
 
 	String entryformid = null;
 	String action = request.getParameter("action");

@@ -797,7 +797,7 @@ System.out.println("BASE 3020 : " + dataItem);
 	
 	public Map<String, String> getWhere(HttpServletRequest request) {
 		Map<String, String> whereParams = new HashMap<String, String>();
-System.out.println("BASE 3005 WHERE : ");
+
 		String linkData = "";
 		String linkParam = null;
 		String formLinkData = "";
@@ -807,10 +807,9 @@ System.out.println("BASE 3005 WHERE : ");
 		BElement sview = null;
 		comboField = request.getParameter("field");
 		if(comboField != null) sview = view.getElement(comboField).getElement(0);
-System.out.println("BASE 3007 WHERE : ");
+
 		String filterSN = "F" + viewKey;
 		if(webSession.getAttribute(filterSN) != null) {
-System.out.println("BASE 3008 WHERE : ");
 			String filterKSN = "";
 			if(webSession.getAttribute("K" + filterSN) != null) filterKSN = (String)webSession.getAttribute("K" + filterSN);
 			String wDataItem = "";
@@ -821,7 +820,7 @@ System.out.println("BASE 3008 WHERE : ");
 			
 			System.out.println("Filter Where :" + filterSN + ": " + wheresql);
 		}
-System.out.println("BASE 3010 WHERE : ");
+
 		int vds = viewKeys.size();
 		if(vds > 2) {
 			linkData = viewData.get(vds - 1);
@@ -838,7 +837,7 @@ System.out.println("BASE 3010 WHERE : ");
 					wheresql += view.getAttribute("linkfield") + " = '" + linkData + "')";
 				}
 			}
-System.out.println("BASE 3030 WHERE : ");
+
 			// Table linking on parameters
 			String paramLinkData = linkData;
 			String linkParams = view.getAttribute("linkparams");
@@ -870,7 +869,7 @@ System.out.println("BASE 3030 WHERE : ");
 				else wheresql = "(" + tableFilter + "')";
 			}
 		}
-System.out.println("BASE 3050 WHERE : ");
+
 		if(views.size() > 1) {
 			BElement flt = views.get(views.size()-2);
 			if(flt.getName().equals("FILTER")) {
@@ -894,7 +893,7 @@ System.out.println("BASE 3050 WHERE : ");
 				}
 			}
 		}
-System.out.println("BASE 3070 WHERE : ");
+
 		whereParams.put("linkData", linkData);
 		whereParams.put("linkParam", linkParam);
 		whereParams.put("formLinkData", formLinkData);
