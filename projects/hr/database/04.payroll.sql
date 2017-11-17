@@ -41,7 +41,7 @@ CREATE INDEX leave_types_adjustment_id ON leave_types(adjustment_id);
 
 CREATE TABLE default_adjustments (
 	default_adjustment_id	serial primary key,
-	entity_id				integer references entitys,
+	entity_id				integer references employees,
 	adjustment_id			integer references adjustments,
 	org_id					integer references orgs,
 	
@@ -58,7 +58,7 @@ CREATE INDEX default_adjustments_org_id ON default_adjustments(org_id);
 
 CREATE TABLE default_banking (
 	default_banking_id		serial primary key,
-	entity_id				integer references entitys,
+	entity_id				integer references employees,
 	bank_branch_id			integer references bank_branch,
 	currency_id				integer references currency,
 	org_id					integer references orgs,
@@ -80,7 +80,7 @@ CREATE INDEX default_banking_org_id ON default_banking(org_id);
 
 CREATE TABLE pensions (
 	pension_id 				serial primary key,
-	entity_id				integer references entitys,
+	entity_id				integer references employees,
 	adjustment_id			integer references adjustments,
 	contribution_id			integer references adjustments,
 	org_id					integer references orgs,
@@ -105,7 +105,7 @@ CREATE INDEX pension_org_id ON pensions (org_id);
 
 CREATE TABLE employee_month (
 	employee_month_id		serial primary key,
-	entity_id				integer references entitys not null,
+	entity_id				integer references employees not null,
 	period_id				integer references periods not null,
 	bank_branch_id			integer references bank_branch not null,
 	pay_group_id			integer references pay_groups not null,
@@ -281,6 +281,24 @@ CREATE INDEX employee_banking_employee_month_id ON employee_banking (employee_mo
 CREATE INDEX employee_banking_bank_branch_id ON employee_banking (bank_branch_id);
 CREATE INDEX employee_banking_currency_id ON employee_banking (currency_id);
 CREATE INDEX employee_banking_org_id ON employee_banking(org_id);
+
+CREATE TABLE intern_month (
+	intern_month_id			serial primary key,
+	period_id				integer references periods not null,
+	intern_id				integer references interns not null,
+	currency_id				integer references currency,
+	org_id					integer references orgs,
+	
+	exchange_rate			real default 1 not null,
+	month_allowance			float default 0 not null,
+
+	details					text,
+	unique (intern_id, period_id)
+);
+CREATE INDEX intern_month_period_id ON intern_month (period_id);
+CREATE INDEX intern_month_intern_id ON intern_month (intern_id);
+CREATE INDEX intern_month_currency_id ON intern_month (currency_id);
+CREATE INDEX intern_month_org_id ON intern_month(org_id);
 
 CREATE VIEW vw_adjustments AS
 	SELECT currency.currency_id, currency.currency_name, currency.currency_symbol,
@@ -1031,6 +1049,25 @@ CREATE VIEW vw_sun_ledger_trx AS
 	ORDER BY gl_payroll_account desc, amount desc, debit_credit desc;
 	
 
+CREATE VIEW vw_intern_month AS
+	SELECT vw_interns.entity_id, vw_interns.entity_name, vw_interns.primary_email, vw_interns.primary_telephone, 
+		vw_interns.department_id, vw_interns.department_name,
+		vw_interns.internship_id, vw_interns.opening_date, vw_interns.closing_date,
+		vw_interns.intern_id, vw_interns.payment_amount,
+		vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.overtime_rate, 
+		vw_periods.activated, vw_periods.closed, vw_periods.month_id, vw_periods.period_year, vw_periods.period_month,
+		vw_periods.quarter, vw_periods.semister, vw_periods.gl_payroll_account, vw_periods.is_posted,
+		vw_periods.fiscal_year_id, vw_periods.fiscal_year, vw_periods.fiscal_year_start, vw_periods.fiscal_year_end, 
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
+		
+		intern_month.org_id, intern_month.intern_month_id, intern_month.exchange_rate,
+		intern_month.month_allowance, intern_month.details,
+		(intern_month.exchange_rate * intern_month.month_allowance) as b_month_allowance
+
+	FROM vw_interns INNER JOIN intern_month ON vw_interns.intern_id = intern_month.intern_id
+		INNER JOIN vw_periods ON intern_month.period_id = vw_periods.period_id
+		INNER JOIN currency ON intern_month.currency_id = currency.currency_id;
+
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON employee_overtime
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
@@ -1083,12 +1120,15 @@ DECLARE
 	v_period_tax_type_id		integer;
 	v_employee_month_id			integer;
 	v_period_id					integer;
+	v_currency_id				integer;
 	v_org_id					integer;
+	v_end_date					date;
 	v_month_name				varchar(50);
 
 	msg 						varchar(120);
 BEGIN
-	SELECT period_id, org_id, to_char(start_date, 'Month YYYY') INTO v_period_id, v_org_id, v_month_name
+	SELECT period_id, org_id, to_char(start_date, 'Month YYYY'), end_date
+		INTO v_period_id, v_org_id, v_month_name, v_end_date
 	FROM periods
 	WHERE (period_id = CAST($1 as integer));
 	
@@ -1123,6 +1163,15 @@ BEGIN
 			(CASE WHEN loan_balance > monthly_repayment THEN monthly_repayment ELSE loan_balance END)
 		FROM vw_loans 
 		WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  false) AND (org_id = v_org_id);
+		
+		SELECT currency_id INTO v_currency_id
+		FROM orgs WHERE org_id = v_org_id;
+		
+		INSERT INTO intern_month (period_id, currency_id, org_id, intern_id, exchange_rate, month_allowance)
+		SELECT v_period_id, v_currency_id, v_org_id, intern_id, 1, payment_amount
+		FROM interns
+		WHERE (org_id = v_org_id) AND (approve_status = 'Approved')
+			AND (start_date < v_end_date) AND (end_date > v_end_date);
 		
 		--- costs on projects based on staff
 		msg := get_task_costs($1, $2, $3);

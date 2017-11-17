@@ -1102,6 +1102,20 @@
 				<TEXTFIELD w="75" title="Bank Account">bank_account</TEXTFIELD>
 				<TEXTDECIMAL w="75" fnct="round(cast(banked as numeric), 1)" title="Banked">banked_amount</TEXTDECIMAL>
 			</GRID>
+			<GRID name="Intern Month" keyfield="intern_month_id" linkfield="period_id" table="vw_intern_month">
+				<TEXTFIELD w="75" title="Intern ID">entity_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Intern">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Currency Symbol">currency_symbol</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Month Allowance">month_allowance</TEXTDECIMAL>
+				<FORM name="Intern Month" keyfield="intern_month_id" linkfield="period_id" table="intern_month">
+					<COMBOBOX w="430" title="Intern" lptable="vw_interns" lpkey="intern_id" y="10" h="20" x="10" lpfield="entity_name">intern_id</COMBOBOX>
+					<COMBOBOX w="430" title="Currency" lptable="currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+					<TEXTDECIMAL w="150" title="Exchange Rate" y="50" h="20" x="10">exchange_rate</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Month Allowance" y="50" h="20" x="290">month_allowance</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
 			<FORM tw="570" name="Period" keyfield="period_id" table="periods" th="210">
 				<TEXTDATE w="150" title="Start Date" y="10" h="20" x="10">start_date</TEXTDATE>
 				<TEXTDATE w="150" title="End Date" y="10" h="20" x="290">end_date</TEXTDATE>

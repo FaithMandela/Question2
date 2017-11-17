@@ -2234,24 +2234,14 @@
 				<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
 				<TEXTFIELD w="75" title="EMail">primary_email</TEXTFIELD>
 				<TEXTFIELD w="75" title="Telephone">primary_telephone</TEXTFIELD>
+				<JASPER name="CV" reportfile="cv_applicant_i.jasper"></JASPER>
 				<FORM tw="210" name="Interns" keyfield="intern_id" linkfield="internship_id" table="interns">
-					<COMBOBOX w="430" title="Applicant" lptable="entitys" where="(entity_type_id=4)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<TEXTDATE w="150" title="Start Date" y="30" h="20" x="10">start_date</TEXTDATE>
 					<TEXTDATE w="150" title="End Date" y="30" h="20" x="290">end_date</TEXTDATE>
 					<TEXTDECIMAL w="150" title="Payment Amount" y="50" h="20" x="10">payment_amount</TEXTDECIMAL>
 					<TEXTAREA w="530" title="Comments" y="1" h="170" x="10">applicant_comments</TEXTAREA>
 					<TEXTAREA w="530" title="Review" y="1" h="170" x="10">review</TEXTAREA>
 				</FORM>
-			</GRID>
-			<GRID name="Evaluations" keyfield="entity_id" linkfield="internship_id" table="vw_intern_evaluations">
-				<TEXTFIELD w="75" title="ID">intern_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="Applicant Name">applicant_name</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="Payment Amount">payment_amount</TEXTDECIMAL>
-				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
-				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
-				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
-				<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
-				<JASPER name="CV" org.table="vw_applicants" reportfile="cv_applicant.jasper"></JASPER>
 			</GRID>
 			<FORM name="Internships" keyfield="internship_id" table="internships">
 				<COMBOBOX w="430" title="Department" lptable="departments" y="10" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>

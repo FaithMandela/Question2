@@ -1400,23 +1400,6 @@ CREATE VIEW vw_employee_trainings AS
 	FROM employee_trainings INNER JOIN entitys ON employee_trainings.entity_id = entitys.entity_id
 		INNER JOIN trainings ON employee_trainings.training_id = trainings.training_id;
 
-CREATE VIEW vw_intern_evaluations AS 
-	SELECT vw_applicants.entity_id, vw_applicants.sys_country_name, vw_applicants.applicant_name, 
-		vw_applicants.applicant_age, vw_applicants.gender_name, vw_applicants.marital_status_name, vw_applicants.language, 
-		vw_applicants.objective, vw_applicants.interests, education.date_from, education.date_to, education.name_of_school, 
-		education.examination_taken, vw_internships.department_id, vw_internships.department_name, 
-		vw_internships.internship_id, vw_internships.positions, vw_internships.opening_date, vw_internships.closing_date, 
-
-		interns.org_id, interns.intern_id, interns.payment_amount, interns.start_date, interns.end_date, interns.application_date, 
-		interns.approve_status, interns.action_date, interns.workflow_table_id, interns.applicant_comments, interns.review
-	FROM vw_applicants JOIN education ON vw_applicants.entity_id = education.entity_id
-		JOIN interns ON interns.entity_id = vw_applicants.entity_id
-		JOIN vw_internships ON interns.internship_id = vw_internships.internship_id
-		JOIN (SELECT education.entity_id, max(education.education_class_id) AS mx_class_id FROM education
-			WHERE education.entity_id IS NOT NULL
-			GROUP BY education.entity_id) a ON education.entity_id = a.entity_id AND education.education_class_id = a.mx_class_id
-		WHERE education.education_class_id > 6
-		ORDER BY vw_applicants.entity_id;
 
 ------- Functions
 
