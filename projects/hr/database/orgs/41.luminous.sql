@@ -103,6 +103,7 @@ CREATE VIEW vw_adjustment_year AS
 			
 			
 ---- Initialization data
+DELETE FROM claim_types;
 DELETE FROM items;
 DELETE FROM default_tax_types;
 DELETE FROM tax_rates;

@@ -2108,7 +2108,7 @@
 			<TEXTFIELD w="75" title="Designation">designation</TEXTFIELD>
 			<TEXTFIELD w="75" title="NoRecordBatch">no_of_records</TEXTFIELD>
 			<TEXTFIELD w="75" title="TotIncomeBatch">total_income</TEXTFIELD>
-			<JASPER name="IR56A" reportfile="vw_employee_year.jasper"></JASPER>
+			<JASPER name="IR56A" reportfile="IR56A.jasper"></JASPER>
 		</GRID>
 		<FILTER w="700" name="IR56B Report" split="250" h="550">
 			<FILTERFORM name="Employees">
