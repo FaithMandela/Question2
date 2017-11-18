@@ -401,15 +401,13 @@ CREATE INDEX casual_application_org_id ON casual_application(org_id);
 
 CREATE TABLE casuals (
 	casual_id				serial primary key,
-	entity_id				integer references entitys,
+	entity_id				integer references applicants,
 	casual_application_id	integer references casual_application,
 	org_id					integer references orgs,
 	start_date				date,
 	end_date				date,
 	duration				integer,
 	pay_rate				real,
-	amount_paid				real,
-	paid					boolean default false not null,
 
 	approve_status			varchar(16) default 'draft' not null,
 	workflow_table_id		integer,
@@ -607,7 +605,8 @@ CREATE TABLE internships (
 	org_id					integer references orgs,
 	opening_date			date not null,
 	closing_date			date not null,
-	positions				int,
+	positions				integer,
+	duration				integer default 3,
 	location				varchar(50),
 	details					text
 );
@@ -1087,7 +1086,7 @@ CREATE VIEW vw_casuals AS
 		vw_casual_application.action_date as application_action_date, vw_casual_application.work_duration,
 		entitys.entity_id, entitys.entity_name, 
 		casuals.org_id, casuals.casual_id, casuals.start_date, casuals.end_date, casuals.duration, casuals.pay_rate, 
-		casuals.amount_paid, casuals.approve_status, casuals.action_date, casuals.paid, casuals.details
+		casuals.approve_status, casuals.action_date, casuals.details
 	FROM casuals INNER JOIN vw_casual_application ON casuals.casual_application_id = vw_casual_application.casual_application_id
 		INNER JOIN entitys ON casuals.entity_id = entitys.entity_id;
 
@@ -1220,7 +1219,7 @@ CREATE VIEW vw_contracting AS
 CREATE VIEW vw_internships AS
 	SELECT departments.department_id, departments.department_name, internships.internship_id, internships.opening_date, 
 		orgs.org_id, orgs.org_name, orgs.details as org_details,
-		internships.closing_date, internships.positions, internships.location, internships.details
+		internships.closing_date, internships.positions, internships.location, internships.duration, internships.details
 	FROM internships INNER JOIN departments ON internships.department_id = departments.department_id
 		INNER JOIN orgs ON internships.org_id = orgs.org_id;
 

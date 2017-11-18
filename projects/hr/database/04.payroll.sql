@@ -300,6 +300,26 @@ CREATE INDEX intern_month_intern_id ON intern_month (intern_id);
 CREATE INDEX intern_month_currency_id ON intern_month (currency_id);
 CREATE INDEX intern_month_org_id ON intern_month(org_id);
 
+CREATE TABLE casuals_month (
+	casuals_month_id		serial primary key,
+	period_id				integer references periods not null,
+	casual_id				integer references casuals not null,
+	currency_id				integer references currency,
+	org_id					integer references orgs,
+	
+	exchange_rate			real default 1 not null,
+	amount_paid				float default 0 not null,
+	
+	paid					boolean default false not null,
+	pay_date				date default current_date not null,
+
+	details					text
+);
+CREATE INDEX casuals_month_period_id ON casuals_month (period_id);
+CREATE INDEX casuals_month_casual_id ON casuals_month (casual_id);
+CREATE INDEX casuals_month_currency_id ON casuals_month (currency_id);
+CREATE INDEX casuals_month_org_id ON casuals_month(org_id);
+
 CREATE VIEW vw_adjustments AS
 	SELECT currency.currency_id, currency.currency_name, currency.currency_symbol,
 		adjustments.org_id, adjustments.adjustment_id, adjustments.adjustment_name, adjustments.adjustment_type, 
@@ -1067,6 +1087,25 @@ CREATE VIEW vw_intern_month AS
 	FROM vw_interns INNER JOIN intern_month ON vw_interns.intern_id = intern_month.intern_id
 		INNER JOIN vw_periods ON intern_month.period_id = vw_periods.period_id
 		INNER JOIN currency ON intern_month.currency_id = currency.currency_id;
+
+CREATE VIEW vw_casuals_month AS
+	SELECT vw_casuals.casual_category_id, vw_casuals.casual_category_name, 
+		vw_casuals.department_id, vw_casuals.department_name, vw_casuals.casual_application_id, 
+		vw_casuals.entity_id, vw_casuals.entity_name, 
+		vw_casuals.casual_id, vw_casuals.pay_rate, vw_casuals.approve_status,
+		vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.overtime_rate, 
+		vw_periods.activated, vw_periods.closed, vw_periods.month_id, vw_periods.period_year, vw_periods.period_month,
+		vw_periods.quarter, vw_periods.semister, vw_periods.gl_payroll_account, vw_periods.is_posted,
+		vw_periods.fiscal_year_id, vw_periods.fiscal_year, vw_periods.fiscal_year_start, vw_periods.fiscal_year_end, 
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
+
+		casuals_month.org_id, casuals_month.casuals_month_id, casuals_month.exchange_rate,
+		casuals_month.amount_paid, casuals_month.paid, casuals_month.pay_date, casuals_month.details,
+		
+		(casuals_month.exchange_rate * casuals_month.amount_paid) as b_amount_paid
+	FROM vw_casuals INNER JOIN casuals_month ON vw_casuals.casual_id = casuals_month.casual_id
+		INNER JOIN vw_periods ON casuals_month.period_id = vw_periods.period_id
+		INNER JOIN currency ON casuals_month.currency_id = currency.currency_id;
 
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON employee_overtime
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
