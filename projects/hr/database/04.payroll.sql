@@ -310,7 +310,7 @@ CREATE TABLE casuals_month (
 	exchange_rate			real default 1 not null,
 	amount_paid				float default 0 not null,
 	
-	accrued_date			boolean default false not null,
+	accrued_date			date default current_date not null,
 	paid					boolean default false not null,
 	pay_date				date default current_date not null,
 

@@ -33,7 +33,8 @@
 	vw_applicants.applicant_email, vw_applicants.applicant_phone,
 	vw_applicants.previous_salary, vw_applicants.expected_salary,
 
-	ad.post_office_box, ad.postal_code, ad.town
+	ad.post_office_box, ad.postal_code, ad.town,
+	vw_applicants.entity_id::text as filterlink
 
 FROM  vw_applicants INNER JOIN interns ON vw_applicants.entity_id = interns.entity_id
 
@@ -43,8 +44,7 @@ address.table_id
 FROM address WHERE (address.table_name = 'applicant') AND (address.is_default = true)) as ad
 ON vw_applicants.entity_id = ad.table_id
 
-WHERE (interns.intern_id = '$P!{filterid}')
-]]>
+WHERE (interns.intern_id = '$P!{filterid}')]]>
 	</queryString>
 	<field name="applicant_name" class="java.lang.String"/>
 	<field name="date_of_birth" class="java.sql.Date"/>
@@ -61,6 +61,7 @@ WHERE (interns.intern_id = '$P!{filterid}')
 	<field name="post_office_box" class="java.lang.String"/>
 	<field name="postal_code" class="java.lang.String"/>
 	<field name="town" class="java.lang.String"/>
+	<field name="filterlink" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -240,7 +241,7 @@ WHERE (interns.intern_id = '$P!{filterid}')
 			<subreport>
 				<reportElement positionType="Float" x="0" y="201" width="555" height="17" uuid="43f48504-1e1e-4c1a-8848-eedd68ccd5e7"/>
 				<subreportParameter name="filterid">
-					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{filterlink}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_education.jasper"]]></subreportExpression>
@@ -248,7 +249,7 @@ WHERE (interns.intern_id = '$P!{filterid}')
 			<subreport>
 				<reportElement positionType="Float" x="0" y="241" width="555" height="17" uuid="52442d5b-d941-462d-9332-6af916b43774"/>
 				<subreportParameter name="filterid">
-					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{filterlink}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_skills.jasper"]]></subreportExpression>
@@ -256,7 +257,7 @@ WHERE (interns.intern_id = '$P!{filterid}')
 			<subreport>
 				<reportElement positionType="Float" x="0" y="304" width="555" height="17" uuid="cd2f3b21-0ef2-40f2-b895-418e99b0c313"/>
 				<subreportParameter name="filterid">
-					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{filterlink}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "cv_referees.jasper"]]></subreportExpression>
@@ -264,7 +265,7 @@ WHERE (interns.intern_id = '$P!{filterid}')
 			<subreport>
 				<reportElement positionType="Float" x="0" y="262" width="555" height="17" uuid="5008bb74-47bd-47c9-86d7-0faf15d7a402"/>
 				<subreportParameter name="filterid">
-					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{filterlink}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "cv_seminars.jasper"]]></subreportExpression>
@@ -272,7 +273,7 @@ WHERE (interns.intern_id = '$P!{filterid}')
 			<subreport>
 				<reportElement positionType="Float" x="0" y="283" width="555" height="17" uuid="f7b531ef-4593-4d61-b2ec-d4e7b9a58fe9"/>
 				<subreportParameter name="filterid">
-					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{filterlink}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "cv_projects.jasper"]]></subreportExpression>
@@ -322,7 +323,7 @@ WHERE (interns.intern_id = '$P!{filterid}')
 			<subreport>
 				<reportElement positionType="Float" x="0" y="221" width="555" height="17" uuid="1c247c4c-5fb2-4847-a3ef-3bf5da09fe49"/>
 				<subreportParameter name="filterid">
-					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{filterlink}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_employment_a.jasper"]]></subreportExpression>

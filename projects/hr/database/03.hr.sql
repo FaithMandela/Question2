@@ -387,7 +387,7 @@ CREATE TABLE casual_application (
 	work_duration			integer default 1 not null,
 	approved_pay_rate		real,
 	
-	approve_status			varchar(16) default 'draft' not null,
+	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
 	application_date		timestamp default now(),
 	action_date				timestamp,
@@ -409,12 +409,13 @@ CREATE TABLE casuals (
 	duration				integer,
 	pay_rate				real,
 
-	approve_status			varchar(16) default 'draft' not null,
+	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
 	application_date		timestamp default now(),
 	action_date				timestamp,
 
-	details					text
+	details					text,
+	UNIQUE(entity_id, casual_application_id)
 );
 CREATE INDEX casuals_entity_id ON casuals (entity_id);
 CREATE INDEX casuals_casual_application_id ON casuals (casual_application_id);
@@ -2474,17 +2475,19 @@ DECLARE
 	v_entity_id				integer;
 	v_employee_id			integer;
 	v_intake_id				integer;
+	v_org_id				integer;
 	v_initial_salary		real;
 	msg		 				varchar(120);
 BEGIN
 
-	v_application_id := CAST($1 as int);
-	SELECT employees.entity_id, applications.employee_id, applications.intake_id, applications.initial_salary, applications.entity_id
-		INTO v_entity_id, v_employee_id, v_intake_id, v_initial_salary, v_applicant_id
+	v_application_id := $1::int;
+	SELECT employees.entity_id, applications.employee_id, applications.intake_id, applications.initial_salary, 
+			applications.entity_id, applications.org_id
+		INTO v_entity_id, v_employee_id, v_intake_id, v_initial_salary, v_applicant_id, v_org_id
 	FROM applications LEFT JOIN employees ON applications.entity_id = employees.entity_id
 	WHERE (application_id = v_application_id);
 
-	IF(v_employee_id is null) AND (v_entity_id is null)THEN
+	IF(v_employee_id is null) AND (v_entity_id is null)THEN	
 		INSERT INTO employees (org_id, currency_id, bank_branch_id,
 			department_role_id, pay_scale_id, pay_group_id, location_id,  
 			person_title, surname, first_name, middle_name,
@@ -2501,9 +2504,9 @@ BEGIN
 			
 			intake.contract, applications.contract_date, applications.contract_start, 
 			applications.contract_period, applications.initial_salary
-		FROM orgs INNER JOIN applicants ON orgs.org_id = applicants.org_id
-			INNER JOIN applications ON applicants.entity_id = applications.entity_id
+		FROM applicants INNER JOIN applications ON applicants.entity_id = applications.entity_id
 			INNER JOIN intake ON applications.intake_id = intake.intake_id
+			INNER JOIN orgs ON intake.org_id = orgs.org_id
 			
 		WHERE (applications.application_id = v_application_id);
 		
@@ -2517,7 +2520,7 @@ BEGIN
 			table_name, table_id, post_office_box, postal_code, premises, 
 			street, town, phone_number, extension, mobile, fax, email, website, 
 			is_default, first_password, details, company_name, position_held)
-		SELECT address_type_id, sys_country_id, org_id, address_name, 
+		SELECT address_type_id, sys_country_id, v_org_id, address_name, 
 			'employees', v_entity_id, post_office_box, postal_code, premises, 
 			street, town, phone_number, extension, mobile, fax, email, website, 
 			is_default, first_password, details, company_name, position_held
@@ -2527,32 +2530,32 @@ BEGIN
 		--- Copy education
 		INSERT INTO education(entity_id, education_class_id, org_id, date_from, 
 			date_to, name_of_school, examination_taken, grades_obtained, certificate_number, details)
-		SELECT v_entity_id, education_class_id, org_id, date_from, 
+		SELECT v_entity_id, education_class_id, v_org_id, date_from, 
 			date_to, name_of_school, examination_taken, grades_obtained, certificate_number, details
 		FROM education
 		WHERE (entity_id = v_applicant_id);
 		
 		--- Copy employment
 		INSERT INTO employment(entity_id, org_id, date_from, date_to, employers_name, position_held, details)
-		SELECT v_entity_id, org_id, date_from, date_to, employers_name, position_held, details
+		SELECT v_entity_id, v_org_id, date_from, date_to, employers_name, position_held, details
 		FROM employment
 		WHERE (entity_id = v_applicant_id);
 		
 		--- Copy Seminars
 		INSERT INTO cv_seminars(entity_id, org_id, cv_seminar_name, cv_seminar_date, details)
-		SELECT v_entity_id, org_id, cv_seminar_name, cv_seminar_date, details
+		SELECT v_entity_id, v_org_id, cv_seminar_name, cv_seminar_date, details
 		FROM cv_seminars
 		WHERE (entity_id = v_applicant_id);
 
 		INSERT INTO cv_projects(entity_id, org_id, cv_project_name, cv_project_date, details)
-		SELECT v_entity_id, org_id, cv_project_name, cv_project_date, details
+		SELECT v_entity_id, v_org_id, cv_project_name, cv_project_date, details
 		FROM cv_projects
 		WHERE (entity_id = v_applicant_id);
 
 		--- Copy skills
 		INSERT INTO skills(entity_id, skill_type_id, skill_level_id, org_id, state_skill, 
 			aquired, training_date, trained, training_institution, training_cost, details)
-		SELECT v_entity_id, skill_type_id, skill_level_id, org_id, state_skill, 
+		SELECT v_entity_id, skill_type_id, skill_level_id, v_org_id, state_skill, 
 			aquired, training_date, trained, training_institution, training_cost, details
 		FROM skills
 		WHERE (entity_id = v_applicant_id);
@@ -2562,7 +2565,7 @@ BEGIN
 			table_name, table_id, post_office_box, postal_code, premises, 
 			street, town, phone_number, extension, mobile, fax, email, website, 
 			details, company_name, position_held)
-		SELECT address_type_id, sys_country_id, org_id, address_name, 
+		SELECT address_type_id, sys_country_id, v_org_id, address_name, 
 			'referees', v_entity_id, post_office_box, postal_code, premises, 
 			street, town, phone_number, extension, mobile, fax, email, website, 
 			details, company_name, position_held

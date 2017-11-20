@@ -1872,7 +1872,7 @@
 			<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
 			<TEXTFIELD w="75" title="Work Duration">work_duration</TEXTFIELD>
 			<GRID name="Casuals" keyfield="casual_id" linkfield="casual_application_id" table="vw_casuals">
-				<TEXTFIELD w="75" title="ID">entity_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="ID">casual_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Worker Name">entity_name</TEXTFIELD>
 				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
@@ -1880,9 +1880,8 @@
 				<TEXTDECIMAL w="75" title="Pay Rate">pay_rate</TEXTDECIMAL>
 				<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
-				<CHECKBOX w="75" title="Paid">paid</CHECKBOX>
 				<FORM name="Casuals" keyfield="casual_id" linkfield="casual_application_id" table="casuals">
-					<COMBOBOX w="430" title="Worker" lptable="entitys" where="(entity_type_id=4)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<COMBOBOX w="430" title="Worker" lptable="vw_applicants" y="10" h="20" x="10" lpfield="applicant_name">entity_id</COMBOBOX>
 					<TEXTDATE w="150" title="Start Date" y="30" h="20" x="10">start_date</TEXTDATE>
 					<TEXTDATE w="150" title="End Date" y="30" h="20" x="290">end_date</TEXTDATE>
 					<TEXTFIELD w="150" title="Duration" y="50" h="20" x="10">duration</TEXTFIELD>
@@ -1925,7 +1924,7 @@
 				<CHECKBOX w="75" title="Paid">paid</CHECKBOX>
 				<TEXTDATE w="75" title="Pay Date">pay_date</TEXTDATE>
 				<FORM name="Casuals Month" keyfield="casuals_month_id" linkfield="period_id" table="casuals_month">
-					<COMBOBOX w="430" title="Casual" lptable="vw_casuals" y="10" h="20" x="10" lpfield="casual_id">casual_id</COMBOBOX>
+					<COMBOBOX w="430" title="Casual" lptable="vw_casuals" cmb_fnct="casual_id || ', ' || entity_name" y="10" h="20" x="10" lpfield="casual_disp">casual_id</COMBOBOX>
 					<COMBOBOX w="150" title="Currency" lptable="currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Exchange Rate" y="30" h="20" x="10">exchange_rate</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Amount Paid" y="50" h="20" x="10">amount_paid</TEXTDECIMAL>
