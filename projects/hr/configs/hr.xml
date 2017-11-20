@@ -1879,7 +1879,6 @@
 				<TEXTFIELD w="75" title="Duration">duration</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Pay Rate">pay_rate</TEXTDECIMAL>
 				<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="Amount Paid">amount_paid</TEXTDECIMAL>
 				<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
 				<CHECKBOX w="75" title="Paid">paid</CHECKBOX>
 				<FORM name="Casuals" keyfield="casual_id" linkfield="casual_application_id" table="casuals">
@@ -1888,10 +1887,16 @@
 					<TEXTDATE w="150" title="End Date" y="30" h="20" x="290">end_date</TEXTDATE>
 					<TEXTFIELD w="150" title="Duration" y="50" h="20" x="10">duration</TEXTFIELD>
 					<TEXTDECIMAL w="150" title="Pay Rate" y="50" h="20" x="290">pay_rate</TEXTDECIMAL>
-					<TEXTDECIMAL w="150" title="Amount Paid" y="70" h="20" x="10">amount_paid</TEXTDECIMAL>
-					<CHECKBOX w="150" title="Paid" y="70" h="20" x="290">paid</CHECKBOX>
 					<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
 				</FORM>
+				<GRID name="Casuals Month" keyfield="casuals_month_id" linkfield="casual_id" table="vw_casuals_month">
+					<TEXTFIELD w="75" fnct="to_char('YYYY, MMMM', start_date)" title="Month">year_month</TEXTFIELD>
+					<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+					<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
+					<TEXTDECIMAL w="75" title="Amount Paid">amount_paid</TEXTDECIMAL>
+					<CHECKBOX w="75" title="Paid">paid</CHECKBOX>
+					<TEXTDATE w="75" title="Pay Date">pay_date</TEXTDATE>
+				</GRID>
 			</GRID>
 			<FORM name="Casual Application" keyfield="casual_application_id" table="casual_application">
 				<USERFIELD>entity_id</USERFIELD>
@@ -1903,6 +1908,33 @@
 				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<JASPER name="Casuals" reportfile="vw_casuals.jasper"></JASPER>
+		</GRID>
+		<GRID name="Payments" keyfield="period_id" orderby="start_date desc" table="vw_periods" where="(closed = false)">
+			<TEXTFIELD w="45" title="Period ID">period_id</TEXTFIELD>
+			<TEXTFIELD w="45" title="Period Code">period_code</TEXTFIELD>
+			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+			<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
+			<GRID name="Casuals Paments" keyfield="casuals_month_id" linkfield="period_id" table="vw_casuals_month">
+				<TEXTFIELD w="75" title="Casual Category">casual_category_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Amount Paid">amount_paid</TEXTDECIMAL>
+				<CHECKBOX w="75" title="Paid">paid</CHECKBOX>
+				<TEXTDATE w="75" title="Pay Date">pay_date</TEXTDATE>
+				<FORM name="Casuals Month" keyfield="casuals_month_id" linkfield="period_id" table="casuals_month">
+					<COMBOBOX w="430" title="Casual" lptable="vw_casuals" y="10" h="20" x="10" lpfield="casual_id">casual_id</COMBOBOX>
+					<COMBOBOX w="150" title="Currency" lptable="currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+					<TEXTDECIMAL w="150" title="Exchange Rate" y="30" h="20" x="10">exchange_rate</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Amount Paid" y="50" h="20" x="10">amount_paid</TEXTDECIMAL>
+					<TEXTDATE w="150" title="Accrued Date" y="50" h="20" x="290">accrued_date</TEXTDATE>
+					<CHECKBOX w="150" title="Paid" y="70" h="20" x="10">paid</CHECKBOX>
+					<TEXTDATE w="150" title="Pay Date" y="70" h="20" x="290">pay_date</TEXTDATE>
+					<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
 		</GRID>
 		<GRID name="Casual Category" keyfield="casual_category_id" table="casual_category">
 			<TEXTFIELD w="75" title="Casual Category ID">casual_category_id</TEXTFIELD>

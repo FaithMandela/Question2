@@ -310,6 +310,7 @@ CREATE TABLE casuals_month (
 	exchange_rate			real default 1 not null,
 	amount_paid				float default 0 not null,
 	
+	accrued_date			boolean default false not null,
 	paid					boolean default false not null,
 	pay_date				date default current_date not null,
 
@@ -1068,7 +1069,6 @@ CREATE VIEW vw_sun_ledger_trx AS
 	FROM vw_employee_month a)) as b
 	ORDER BY gl_payroll_account desc, amount desc, debit_credit desc;
 	
-
 CREATE VIEW vw_intern_month AS
 	SELECT vw_interns.entity_id, vw_interns.entity_name, vw_interns.primary_email, vw_interns.primary_telephone, 
 		vw_interns.department_id, vw_interns.department_name,
@@ -1100,7 +1100,8 @@ CREATE VIEW vw_casuals_month AS
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 
 		casuals_month.org_id, casuals_month.casuals_month_id, casuals_month.exchange_rate,
-		casuals_month.amount_paid, casuals_month.paid, casuals_month.pay_date, casuals_month.details,
+		casuals_month.amount_paid, casuals_month.accrued_date, casuals_month.paid, casuals_month.pay_date, 
+		casuals_month.details,
 		
 		(casuals_month.exchange_rate * casuals_month.amount_paid) as b_amount_paid
 	FROM vw_casuals INNER JOIN casuals_month ON vw_casuals.casual_id = casuals_month.casual_id
