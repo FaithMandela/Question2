@@ -117,6 +117,8 @@ DECLARE
 	v_entity_type_id		integer;
 	v_org_id				integer;
 	v_currency_id			integer;
+	v_customer_id			integer;
+	v_product_id			integer;
 	v_department_id			integer;
 	v_bank_id				integer;
 	v_tax_type_id			integer;
@@ -226,39 +228,83 @@ BEGIN
 		FROM entity_types 
 		WHERE (org_id = NEW.org_id) AND (use_key_id = 0);
 				
-		UPDATE entitys SET org_id = NEW.org_id, entity_type_id = v_entity_type_id, function_role='subscription,admin,staff,finance'
+		UPDATE entitys SET org_id = NEW.org_id, entity_type_id = v_entity_type_id, function_role='subscription,admin,manager'
 		WHERE entity_id = NEW.entity_id;
 		
 		UPDATE entity_subscriptions SET org_id = NEW.org_id, entity_type_id = v_entity_type_id
 		WHERE entity_id = NEW.entity_id;
 		
-		INSERT INTO collateral_types (org_id, collateral_type_name) VALUES (NEW.org_id, 'Land Title');
-		INSERT INTO collateral_types (org_id, collateral_type_name) VALUES (NEW.org_id, 'Car Log book');
+		INSERT INTO collateral_types (org_id, collateral_type_name) VALUES (NEW.org_id, 'Property Title Deed');
 		
-		INSERT INTO activity_types (cr_account_id, dr_account_id, use_key_id, org_id, activity_type_name, is_active)
+		INSERT INTO activity_types (cr_account_id, dr_account_id, use_key_id, org_id, activity_type_name, is_active, activity_type_no)
 		SELECT dra.account_id, cra.account_id, vw_activity_types.use_key_id, NEW.org_id, 
-			vw_activity_types.activity_type_name, vw_activity_types.is_active
+			vw_activity_types.activity_type_name, vw_activity_types.is_active, vw_activity_types.activity_type_no
 		FROM vw_activity_types
 			INNER JOIN accounts dra ON vw_activity_types.dr_account_no = dra.account_no
 			INNER JOIN accounts cra ON vw_activity_types.cr_account_no = cra.account_no
 		WHERE (dra.org_id = NEW.org_id) AND (cra.org_id = NEW.org_id) AND (vw_activity_types.org_id = 1)
 		ORDER BY vw_activity_types.activity_type_id;
 
-		INSERT INTO interest_methods (activity_type_id, org_id, interest_method_name, reducing_balance, reducing_payments, formural, account_number)
+		INSERT INTO interest_methods (activity_type_id, org_id, interest_method_name, reducing_balance, reducing_payments, formural, account_number, interest_method_no)
 		SELECT oa.activity_type_id, oa.org_id, interest_methods.interest_method_name, 
 			interest_methods.reducing_balance, interest_methods.reducing_payments, 
-			interest_methods.formural, interest_methods.account_number
+			interest_methods.formural, interest_methods.account_number, interest_methods.interest_method_no
 		FROM interest_methods INNER JOIN activity_types ON interest_methods.activity_type_id = activity_types.activity_type_id
-			INNER JOIN activity_types oa ON activity_types.use_key_id = oa.use_key_id
+			INNER JOIN activity_types oa ON activity_types.activity_type_no = oa.activity_type_no
 		WHERE (activity_types.org_id = 1) AND (oa.org_id = NEW.org_id)
 		ORDER BY interest_methods.interest_method_id;
 		
-		INSERT INTO penalty_methods(activity_type_id, org_id, penalty_method_name, formural, account_number)
-		SELECT oa.activity_type_id, oa.org_id, penalty_methods.penalty_method_name, penalty_methods.formural, penalty_methods.account_number
+		INSERT INTO penalty_methods(activity_type_id, org_id, penalty_method_name, formural, account_number, penalty_method_no)
+		SELECT oa.activity_type_id, oa.org_id, penalty_methods.penalty_method_name, penalty_methods.formural, 
+			penalty_methods.account_number, penalty_methods.penalty_method_no
 		FROM penalty_methods INNER JOIN activity_types ON penalty_methods.activity_type_id = activity_types.activity_type_id
-			INNER JOIN activity_types oa ON activity_types.use_key_id = oa.use_key_id
+			INNER JOIN activity_types oa ON activity_types.activity_type_no = oa.activity_type_no
 		WHERE (activity_types.org_id = 1) AND (oa.org_id = NEW.org_id)
 		ORDER BY penalty_methods.penalty_method_id;
+		
+		INSERT INTO products(interest_method_id, penalty_method_id, activity_frequency_id, 
+			currency_id, org_id, product_name, description, loan_account, 
+			is_active, interest_rate, min_opening_balance, lockin_period_frequency, 
+			minimum_balance, maximum_balance, minimum_day, maximum_day, minimum_trx, 
+			maximum_trx, maximum_repayments, product_no,  approve_status)
+		SELECT interest_methods.interest_method_id, penalty_methods.penalty_method_id, vw_products.activity_frequency_id, 
+			v_currency_id, NEW.org_id, vw_products.product_name, vw_products.description, vw_products.loan_account, 
+			vw_products.is_active, vw_products.interest_rate, vw_products.min_opening_balance, vw_products.lockin_period_frequency, 
+			vw_products.minimum_balance, vw_products.maximum_balance, vw_products.minimum_day, vw_products.maximum_day, vw_products.minimum_trx, 
+			vw_products.maximum_trx, vw_products.maximum_repayments, vw_products.product_no, vw_products.approve_status
+		FROM vw_products INNER JOIN interest_methods ON vw_products.interest_method_no = interest_methods.interest_method_no
+			INNER JOIN penalty_methods ON vw_products.penalty_method_no = penalty_methods.penalty_method_no
+		WHERE (vw_products.org_id = 1) 
+			AND (interest_methods.org_id = NEW.org_id) AND (penalty_methods.org_id = NEW.org_id)
+		ORDER BY vw_products.product_id;
+
+		INSERT INTO account_definations(product_id, activity_type_id, charge_activity_id, 
+			activity_frequency_id, org_id, account_defination_name, start_date, 
+			end_date, fee_amount, fee_ps, has_charge, is_active, account_number)
+		SELECT products.product_id, activity_types.activity_type_id, charge_activity.activity_type_id, 
+			ad.activity_frequency_id, NEW.org_id, ad.account_defination_name, 
+			ad.start_date, ad.end_date, ad.fee_amount, 
+			ad.fee_ps, ad.has_charge, ad.is_active, 
+			ad.account_number	
+		FROM vw_account_definations as ad INNER JOIN products ON ad.product_no = products.product_no
+			INNER JOIN activity_types ON ad.activity_type_no = activity_types.activity_type_no
+			INNER JOIN activity_types as charge_activity ON ad.charge_activity_no = charge_activity.activity_type_no
+		WHERE (ad.org_id = 1) 
+			AND (products.org_id = NEW.org_id) AND (activity_types.org_id = NEW.org_id) AND (charge_activity.org_id = NEW.org_id);
+
+		SELECT product_id INTO v_product_id
+		FROM products WHERE (product_no = 0) AND (org_id = NEW.org_id);
+
+		v_customer_id := nextval('customers_customer_id_seq');
+		INSERT INTO customers (customer_id, org_id, business_account, customer_name, identification_number, identification_type, client_email, telephone_number, date_of_birth, nationality, approve_status)
+		VALUES (v_customer_id, NEW.org_id, 2, 'OpenBaraza Bank', '0', 'Org', 'info@openbaraza.org', '+254', current_date, 'KE', 'Approved');
+
+		INSERT INTO deposit_accounts (customer_id, product_id, org_id, is_active, approve_status, narrative, minimum_balance) VALUES 
+		(v_customer_id, v_product_id, NEW.org_id, true, 'Approved', 'Deposits', -100000000000),
+		(v_customer_id, v_product_id, NEW.org_id, true, 'Approved', 'Charges', -100000000000),
+		(v_customer_id, v_product_id, NEW.org_id, true, 'Approved', 'Interest', -100000000000),
+		(v_customer_id, v_product_id, NEW.org_id, true, 'Approved', 'Penalty', -100000000000),
+		(v_customer_id, v_product_id, NEW.org_id, true, 'Approved', 'Loan', -100000000000);
 		
 		INSERT INTO workflows (link_copy, org_id, source_entity_id, workflow_name, table_name, approve_email, reject_email) 
 		SELECT aa.workflow_id, cc.org_id, cc.entity_type_id, aa.workflow_name, aa.table_name, aa.approve_email, aa.reject_email

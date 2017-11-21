@@ -139,6 +139,7 @@ CREATE TABLE products (
 	minimum_trx				real,
 	maximum_trx				real,
 	maximum_repayments		integer default 100 not null,
+	product_no				integer,
 	
 	application_date		timestamp default now() not null,
 	approve_status			varchar(16) default 'Draft' not null,
@@ -361,50 +362,54 @@ CREATE TABLE mpesa_soap (
 );
 CREATE INDEX mpesa_soap_org_id ON mpesa_soap (org_id);
 
-
-CREATE VIEW vw_interest_methods AS
-	SELECT activity_types.activity_type_id, activity_types.activity_type_name, activity_types.use_key_id,
-		interest_methods.org_id, interest_methods.interest_method_id, interest_methods.interest_method_name, 
-		interest_methods.reducing_balance, interest_methods.formural, interest_methods.account_number, 
-		interest_methods.details
-	FROM interest_methods INNER JOIN activity_types ON interest_methods.activity_type_id = activity_types.activity_type_id;
-	
-CREATE VIEW vw_penalty_methods AS
-	SELECT activity_types.activity_type_id, activity_types.activity_type_name, activity_types.use_key_id,
-		penalty_methods.org_id, penalty_methods.penalty_method_id, penalty_methods.penalty_method_name, 
-		penalty_methods.formural, penalty_methods.account_number, penalty_methods.details
-	FROM penalty_methods INNER JOIN activity_types ON penalty_methods.activity_type_id = activity_types.activity_type_id;
-
 CREATE VIEW vw_activity_types AS
 	SELECT activity_types.dr_account_id, dra.account_no as dr_account_no, dra.account_name as dr_account_name,
 		activity_types.cr_account_id, cra.account_no as cr_account_no, cra.account_name as cr_account_name,
 		use_keys.use_key_id, use_keys.use_key_name, 
 		activity_types.org_id, activity_types.activity_type_id, activity_types.activity_type_name, 
-		activity_types.is_active, activity_types.details
+		activity_types.is_active, activity_types.activity_type_no, activity_types.details
 	FROM activity_types INNER JOIN vw_accounts dra ON activity_types.dr_account_id = dra.account_id
 		INNER JOIN vw_accounts cra ON activity_types.cr_account_id = cra.account_id
 		INNER JOIN use_keys ON activity_types.use_key_id = use_keys.use_key_id;
+		
+CREATE VIEW vw_interest_methods AS
+	SELECT activity_types.activity_type_id, activity_types.activity_type_name, activity_types.use_key_id,
+		interest_methods.org_id, interest_methods.interest_method_id, interest_methods.interest_method_name, 
+		interest_methods.reducing_balance, interest_methods.formural, interest_methods.account_number, 
+		interest_methods.interest_method_no, interest_methods.details
+	FROM interest_methods INNER JOIN activity_types ON interest_methods.activity_type_id = activity_types.activity_type_id;
+	
+CREATE VIEW vw_penalty_methods AS
+	SELECT activity_types.activity_type_id, activity_types.activity_type_name, activity_types.use_key_id,
+		penalty_methods.org_id, penalty_methods.penalty_method_id, penalty_methods.penalty_method_name, 
+		penalty_methods.formural, penalty_methods.account_number, penalty_methods.penalty_method_no,
+		penalty_methods.details
+	FROM penalty_methods INNER JOIN activity_types ON penalty_methods.activity_type_id = activity_types.activity_type_id;
 
 CREATE VIEW vw_products AS
 	SELECT activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
-		vw_interest_methods.interest_method_id, vw_interest_methods.interest_method_name, vw_interest_methods.reducing_balance, 
-		penalty_methods.penalty_method_id, penalty_methods.penalty_method_name,
+		vw_interest_methods.interest_method_id, vw_interest_methods.interest_method_name, 
+		vw_interest_methods.reducing_balance, vw_interest_methods.interest_method_no,
+		penalty_methods.penalty_method_id, penalty_methods.penalty_method_name, penalty_methods.penalty_method_no,
 		products.org_id, products.product_id, products.product_name, products.description, 
 		products.loan_account, products.is_active, products.interest_rate, 
 		products.min_opening_balance, products.lockin_period_frequency, 
 		products.minimum_balance, products.maximum_balance, products.minimum_day, products.maximum_day,
-		products.minimum_trx, products.maximum_trx, products.details
+		products.minimum_trx, products.maximum_trx, products.maximum_repayments, products.product_no, 
+		products.application_date, products.approve_status, products.workflow_table_id, products.action_date,
+		products.details
 	FROM products INNER JOIN activity_frequency ON products.activity_frequency_id = activity_frequency.activity_frequency_id
 		INNER JOIN currency ON products.currency_id = currency.currency_id
 		INNER JOIN vw_interest_methods ON products.interest_method_id = vw_interest_methods.interest_method_id
 		INNER JOIN penalty_methods ON products.penalty_method_id = penalty_methods.penalty_method_id;
 
 CREATE VIEW vw_account_definations AS
-	SELECT products.product_id, products.product_name,
-		vw_activity_types.activity_type_id, vw_activity_types.activity_type_name, 
+	SELECT products.product_id, products.product_name, products.product_no,
+		vw_activity_types.activity_type_id, vw_activity_types.activity_type_name, vw_activity_types.activity_type_no,
 		vw_activity_types.use_key_id, vw_activity_types.use_key_name,
 		account_definations.charge_activity_id, charge_activitys.activity_type_name as charge_activity_name,
+		charge_activitys.activity_type_no as charge_activity_no,
 		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
 		account_definations.org_id, account_definations.account_defination_id, account_definations.account_defination_name, 
 		account_definations.start_date, account_definations.end_date, account_definations.is_active, 
