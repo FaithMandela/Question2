@@ -17,8 +17,8 @@ INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id) VAL
 INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id) VALUES (1, 'Bank Customers', 'client', 100);
 
 INSERT INTO subscription_levels (org_id, subscription_level_name) VALUES (1, 'Basic');
-INSERT INTO subscription_levels (org_id, subscription_level_name) VALUES (1, 'Manager');
 INSERT INTO subscription_levels (org_id, subscription_level_name) VALUES (1, 'Consumer');
+INSERT INTO subscription_levels (org_id, subscription_level_name) VALUES (1, 'Manager');
 
 INSERT INTO locations (org_id, location_name) VALUES (1, 'Head Office');
 INSERT INTO departments (org_id, department_name) VALUES (1, 'Board of Directors');
@@ -47,28 +47,30 @@ SELECT b.org_id, a.use_key_id, b.account_id
 FROM default_accounts a INNER JOIN accounts b ON a.account_id = b.account_no
 WHERE (a.org_id = 0) AND (b.org_id = 1);
 
-INSERT INTO collateral_types (org_id, collateral_type_name) VALUES (1, 'Land Title');
-INSERT INTO collateral_types (org_id, collateral_type_name) VALUES (1, 'Car Log book');
+INSERT INTO collateral_types (org_id, collateral_type_name) VALUES (1, 'Property Title Deed');
 
-INSERT INTO activity_types (cr_account_id, dr_account_id, use_key_id, org_id, activity_type_name, is_active)
-SELECT dra.account_id, cra.account_id, activity_types.use_key_id, 1, activity_types.activity_type_name, activity_types.is_active
+INSERT INTO activity_types (cr_account_id, dr_account_id, use_key_id, org_id, activity_type_name, is_active, activity_type_no)
+SELECT dra.account_id, cra.account_id, activity_types.use_key_id, 1, activity_types.activity_type_name, activity_types.is_active, 
+	activity_types.activity_type_no
 FROM activity_types
 INNER JOIN accounts dra ON activity_types.dr_account_id = dra.account_no
 INNER JOIN accounts cra ON activity_types.cr_account_id = cra.account_no
 WHERE (dra.org_id = 1) AND (cra.org_id = 1) AND (activity_types.org_id = 0)
 ORDER BY activity_types.activity_type_id;
 
-INSERT INTO interest_methods (activity_type_id, org_id, interest_method_name, reducing_balance, reducing_payments, formural, account_number)
+INSERT INTO interest_methods (activity_type_id, org_id, interest_method_name, reducing_balance, reducing_payments, formural, account_number, interest_method_no)
 SELECT oa.activity_type_id, oa.org_id, interest_methods.interest_method_name, 
        interest_methods.reducing_balance, interest_methods.reducing_payments, 
-       interest_methods.formural, interest_methods.account_number
+       interest_methods.formural, interest_methods.account_number,
+       interest_methods.interest_method_no
 FROM interest_methods INNER JOIN activity_types ON interest_methods.activity_type_id = activity_types.activity_type_id
 INNER JOIN activity_types oa ON activity_types.use_key_id = oa.use_key_id
 WHERE (activity_types.org_id = 0) AND (oa.org_id = 1)
 ORDER BY interest_methods.interest_method_id;
 
-INSERT INTO penalty_methods(activity_type_id, org_id, penalty_method_name, formural, account_number)
-SELECT oa.activity_type_id, oa.org_id, penalty_methods.penalty_method_name, penalty_methods.formural, penalty_methods.account_number
+INSERT INTO penalty_methods(activity_type_id, org_id, penalty_method_name, formural, account_number, penalty_method_no)
+SELECT oa.activity_type_id, oa.org_id, penalty_methods.penalty_method_name, penalty_methods.formural, penalty_methods.account_number,
+	penalty_methods.penalty_method_no
 FROM penalty_methods INNER JOIN activity_types ON penalty_methods.activity_type_id = activity_types.activity_type_id
 INNER JOIN activity_types oa ON activity_types.use_key_id = oa.use_key_id
 WHERE (activity_types.org_id = 0) AND (oa.org_id = 1)

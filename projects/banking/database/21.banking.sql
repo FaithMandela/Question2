@@ -77,6 +77,7 @@ CREATE TABLE activity_types (
 	org_id					integer references orgs,
 	activity_type_name		varchar(120) not null,
 	is_active				boolean default true not null,
+	activity_type_no		integer,
 	details					text,
 	UNIQUE(org_id, activity_type_name)
 );
@@ -94,6 +95,7 @@ CREATE TABLE interest_methods (
 	reducing_payments		boolean not null default false,
 	formural				varchar(320),
 	account_number			varchar(32),
+	interest_method_no		integer,
 	details					text,
 	UNIQUE(org_id, interest_method_name)
 );
@@ -107,6 +109,7 @@ CREATE TABLE penalty_methods (
 	penalty_method_name		varchar(120) not null,
 	formural				varchar(320),
 	account_number			varchar(32),
+	penalty_method_no		integer,
 	details					text,
 	UNIQUE(org_id, penalty_method_name)
 );
