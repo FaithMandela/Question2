@@ -589,7 +589,9 @@ public class BWeb {
 				buttons += "<a class='btn blue btn-sm' title='Add New' href='?view=" + viewKey + ":" + String.valueOf(fv) + "&data={new}'><i class='fa fa-plus'></i>   " + newBtn + "</a>\n";
 			}
 			buttons += "<a class='btn green btn-sm' href='?view=" + viewKey + did + "&refresh=true'><i class='fa fa-refresh'></i>   Refresh</a>\n";
-			buttons += "<a class='btn green btn-sm' target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'><i class='fa fa-file-excel-o'></i>   Export</a>\n";
+			
+			if(view.getAttribute("grid.export", "true").equals("true"))
+				buttons += "<a class='btn green btn-sm' target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'><i class='fa fa-file-excel-o'></i>   Export</a>\n";
 			
 			if(view.getAttribute("grid.print", "false").equals("true"))
 				buttons += "<a class='btn green btn-sm' target='_blank' href='b_print.jsp?view=" + viewKey + did + "&action=print'><i class='fa fa-print'></i>   Print</a>\n";
@@ -805,7 +807,7 @@ System.out.println("BASE 3020 : " + dataItem);
 		BElement sview = null;
 		comboField = request.getParameter("field");
 		if(comboField != null) sview = view.getElement(comboField).getElement(0);
-		
+
 		String filterSN = "F" + viewKey;
 		if(webSession.getAttribute(filterSN) != null) {
 			String filterKSN = "";
@@ -818,7 +820,7 @@ System.out.println("BASE 3020 : " + dataItem);
 			
 			System.out.println("Filter Where :" + filterSN + ": " + wheresql);
 		}
-		
+
 		int vds = viewKeys.size();
 		if(vds > 2) {
 			linkData = viewData.get(vds - 1);
@@ -867,7 +869,7 @@ System.out.println("BASE 3020 : " + dataItem);
 				else wheresql = "(" + tableFilter + "')";
 			}
 		}
-		
+
 		if(views.size() > 1) {
 			BElement flt = views.get(views.size()-2);
 			if(flt.getName().equals("FILTER")) {
@@ -891,7 +893,7 @@ System.out.println("BASE 3020 : " + dataItem);
 				}
 			}
 		}
-		
+
 		whereParams.put("linkData", linkData);
 		whereParams.put("linkParam", linkParam);
 		whereParams.put("formLinkData", formLinkData);
@@ -2051,7 +2053,9 @@ log.severe("BASE : " + mysql);
 		jsColKF.add("hidden", true);
 		jsColModel.add(jsColKF);
 		
-		jshd.add("url", "jsondata");
+		String jUrl = view.getAttribute("url", "jsondata");
+		
+		jshd.add("url", jUrl);
 		jshd.add("datatype", "json");
 		jshd.add("mtype", "GET");
 		jshd.add("colNames", jsColNames);

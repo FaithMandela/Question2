@@ -387,7 +387,7 @@ CREATE TABLE casual_application (
 	work_duration			integer default 1 not null,
 	approved_pay_rate		real,
 	
-	approve_status			varchar(16) default 'draft' not null,
+	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
 	application_date		timestamp default now(),
 	action_date				timestamp,
@@ -401,22 +401,21 @@ CREATE INDEX casual_application_org_id ON casual_application(org_id);
 
 CREATE TABLE casuals (
 	casual_id				serial primary key,
-	entity_id				integer references entitys,
+	entity_id				integer references applicants,
 	casual_application_id	integer references casual_application,
 	org_id					integer references orgs,
 	start_date				date,
 	end_date				date,
 	duration				integer,
 	pay_rate				real,
-	amount_paid				real,
-	paid					boolean default false not null,
 
-	approve_status			varchar(16) default 'draft' not null,
+	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
 	application_date		timestamp default now(),
 	action_date				timestamp,
 
-	details					text
+	details					text,
+	UNIQUE(entity_id, casual_application_id)
 );
 CREATE INDEX casuals_entity_id ON casuals (entity_id);
 CREATE INDEX casuals_casual_application_id ON casuals (casual_application_id);
@@ -607,7 +606,8 @@ CREATE TABLE internships (
 	org_id					integer references orgs,
 	opening_date			date not null,
 	closing_date			date not null,
-	positions				int,
+	positions				integer,
+	duration				integer default 3,
 	location				varchar(50),
 	details					text
 );
@@ -1087,7 +1087,7 @@ CREATE VIEW vw_casuals AS
 		vw_casual_application.action_date as application_action_date, vw_casual_application.work_duration,
 		entitys.entity_id, entitys.entity_name, 
 		casuals.org_id, casuals.casual_id, casuals.start_date, casuals.end_date, casuals.duration, casuals.pay_rate, 
-		casuals.amount_paid, casuals.approve_status, casuals.action_date, casuals.paid, casuals.details
+		casuals.approve_status, casuals.action_date, casuals.details
 	FROM casuals INNER JOIN vw_casual_application ON casuals.casual_application_id = vw_casual_application.casual_application_id
 		INNER JOIN entitys ON casuals.entity_id = entitys.entity_id;
 
@@ -1135,14 +1135,13 @@ CREATE VIEW vw_intake AS
 		
 		locations.location_id, locations.location_name, pay_groups.pay_group_id, pay_groups.pay_group_name, 
 		pay_scales.pay_scale_id, pay_scales.pay_scale_name, 
-		orgs.org_name, orgs.details as org_detail,
+		orgs.org_name, orgs.details as org_details,
 		
 		intake.org_id, intake.intake_id, intake.opening_date, intake.closing_date, intake.positions, intake.contract, 
 		intake.contract_period, intake.details,
 		
 		(vw_department_roles.department_name || ', ' || vw_department_roles.department_role_name || ', ' || to_char(intake.opening_date, 'YYYY, Mon')) as intake_disp,
 		('<a href="index.jsp?view=14:0:0&data=' || intake.intake_id || '">Apply For Post</a>') as apply
-		
 		
 	FROM intake INNER JOIN vw_department_roles ON intake.department_role_id = vw_department_roles.department_role_id
 		INNER JOIN locations ON intake.location_id = locations.location_id
@@ -1155,7 +1154,7 @@ CREATE VIEW vw_applications AS
 		vw_intake.department_role_id, vw_intake.department_role_name, vw_intake.parent_role_name,
 		vw_intake.job_description, vw_intake.job_requirements, vw_intake.duties, vw_intake.performance_measures, 
 		vw_intake.intake_id, vw_intake.opening_date, vw_intake.closing_date, vw_intake.positions, 
-		vw_intake.org_name, vw_intake.org_detail,
+		vw_intake.org_name, vw_intake.org_details,
 		entitys.entity_id, entitys.entity_name, entitys.primary_email,
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		
@@ -1221,7 +1220,7 @@ CREATE VIEW vw_contracting AS
 CREATE VIEW vw_internships AS
 	SELECT departments.department_id, departments.department_name, internships.internship_id, internships.opening_date, 
 		orgs.org_id, orgs.org_name, orgs.details as org_details,
-		internships.closing_date, internships.positions, internships.location, internships.details
+		internships.closing_date, internships.positions, internships.location, internships.duration, internships.details
 	FROM internships INNER JOIN departments ON internships.department_id = departments.department_id
 		INNER JOIN orgs ON internships.org_id = orgs.org_id;
 
@@ -1401,23 +1400,6 @@ CREATE VIEW vw_employee_trainings AS
 	FROM employee_trainings INNER JOIN entitys ON employee_trainings.entity_id = entitys.entity_id
 		INNER JOIN trainings ON employee_trainings.training_id = trainings.training_id;
 
-CREATE VIEW vw_intern_evaluations AS 
-	SELECT vw_applicants.entity_id, vw_applicants.sys_country_name, vw_applicants.applicant_name, 
-		vw_applicants.applicant_age, vw_applicants.gender_name, vw_applicants.marital_status_name, vw_applicants.language, 
-		vw_applicants.objective, vw_applicants.interests, education.date_from, education.date_to, education.name_of_school, 
-		education.examination_taken, vw_internships.department_id, vw_internships.department_name, 
-		vw_internships.internship_id, vw_internships.positions, vw_internships.opening_date, vw_internships.closing_date, 
-
-		interns.intern_id, interns.payment_amount, interns.start_date, interns.end_date, interns.application_date, 
-		interns.approve_status, interns.action_date, interns.workflow_table_id, interns.applicant_comments, interns.review
-	FROM vw_applicants JOIN education ON vw_applicants.entity_id = education.entity_id
-		JOIN interns ON interns.entity_id = vw_applicants.entity_id
-		JOIN vw_internships ON interns.internship_id = vw_internships.internship_id
-		JOIN (SELECT education.entity_id, max(education.education_class_id) AS mx_class_id FROM education
-			WHERE education.entity_id IS NOT NULL
-			GROUP BY education.entity_id) a ON education.entity_id = a.entity_id AND education.education_class_id = a.mx_class_id
-		WHERE education.education_class_id > 6
-		ORDER BY vw_applicants.entity_id;
 
 ------- Functions
 
@@ -1636,6 +1618,8 @@ CREATE TRIGGER ins_job_reviews AFTER INSERT ON job_reviews
 
 CREATE OR REPLACE FUNCTION ins_applications(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
+	v_intake_id				integer;
+	v_org_id				integer;
 	v_entity_id				integer;
 	v_application_id		integer;
 	v_sys_email_id			integer;
@@ -1647,15 +1631,18 @@ DECLARE
 	msg 					varchar(120);
 BEGIN
 	SELECT application_id INTO v_application_id
-	FROM applications 
-	WHERE (intake_id = $1::int) AND (entity_id = $2::int);
+	FROM applications WHERE (intake_id = $1::int) AND (entity_id = $2::int);
 	
-	SELECT org_id, entity_id, currency_id, previous_salary, expected_salary INTO reca
+	SELECT intake_id, org_id INTO v_intake_id, v_org_id
+	FROM intake WHERE (intake_id = $1::int);
+	
+	SELECT entity_id, currency_id, previous_salary, expected_salary INTO reca
 	FROM applicants
 	WHERE (entity_id = $2::int);
+	
 	v_entity_id := reca.entity_id;
 	IF(reca.entity_id is null) THEN
-		SELECT org_id, entity_id, currency_id, basic_salary as previous_salary, basic_salary as expected_salary INTO reca
+		SELECT entity_id, currency_id, basic_salary as previous_salary, basic_salary as expected_salary INTO reca
 		FROM employees
 		WHERE (entity_id = $2::int);
 		v_entity_id := reca.entity_id;
@@ -1694,22 +1681,19 @@ BEGIN
 	ELSIF (c_education_id < 2) THEN
 		msg := 'You need to have at least two education levels added';
 		RAISE EXCEPTION '%', msg;
-	ELSIF (c_referees < 3) THEN
-		msg := 'You need to have at least three referees added';
-		RAISE EXCEPTION '%', msg;
-	ELSIF (c_files < 2) THEN
-		msg := 'CV and Cover Letter MUST be uploaded';
+	ELSIF (c_referees < 2) THEN
+		msg := 'You need to have at least two referees added';
 		RAISE EXCEPTION '%', msg;
 	ELSE
 		v_application_id := nextval('applications_application_id_seq');
 		INSERT INTO applications (application_id, intake_id, org_id, entity_id, currency_id, previous_salary, expected_salary, approve_status)
-		VALUES (v_application_id, $1::int, reca.org_id, reca.entity_id, reca.currency_id, reca.previous_salary, reca.expected_salary, 'Completed');
+		VALUES (v_application_id, v_intake_id, v_org_id, reca.entity_id, reca.currency_id, reca.previous_salary, reca.expected_salary, 'Completed');
 		
 		SELECT sys_email_id INTO v_sys_email_id FROM sys_emails
-		WHERE (use_type = 10) AND (org_id = reca.org_id);
+		WHERE (use_type = 10) AND (org_id = v_org_id);
 		
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name, email_type)
-		VALUES (v_sys_email_id, reca.org_id, v_application_id, 'applications', 10);
+		VALUES (v_sys_email_id, v_org_id, v_application_id, 'applications', 10);
 		
 		msg := 'Added Job application';
 	END IF;
@@ -1720,21 +1704,22 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION ins_interns(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
-	v_intern_id			integer;
-	v_org_id			integer;
-	v_sys_email_id		integer;
-	msg					varchar(120);
+	v_internship_id			integer;
+	v_intern_id				integer;
+	v_org_id				integer;
+	v_sys_email_id			integer;
+	msg						varchar(120);
 BEGIN
-	SELECT intern_id INTO v_intern_id FROM interns 
-	WHERE (internship_id = $1::int) AND (entity_id = $2::int);
+	SELECT internship_id, org_id INTO v_internship_id, v_org_id
+	FROM internships WHERE (internship_id = $1::int);
 	
-	SELECT org_id INTO v_org_id FROM internships 
-	WHERE (internship_id = $1::int);
-
+	SELECT intern_id INTO v_intern_id
+	FROM interns WHERE (internship_id = $1::int) AND (entity_id = $2::int);
+	
 	IF v_intern_id is null THEN
 		v_intern_id := nextval('interns_intern_id_seq');
 		INSERT INTO interns (intern_id, org_id, internship_id, entity_id, approve_status)
-		VALUES (v_intern_id, v_org_id, $1::int, $2::int, 'Completed');
+		VALUES (v_intern_id, v_org_id, v_internship_id, $2::int, 'Completed');
 		
 		SELECT sys_email_id INTO v_sys_email_id FROM sys_emails
 		WHERE (use_type = 11) AND (org_id = v_org_id);
@@ -2490,17 +2475,19 @@ DECLARE
 	v_entity_id				integer;
 	v_employee_id			integer;
 	v_intake_id				integer;
+	v_org_id				integer;
 	v_initial_salary		real;
 	msg		 				varchar(120);
 BEGIN
 
-	v_application_id := CAST($1 as int);
-	SELECT employees.entity_id, applications.employee_id, applications.intake_id, applications.initial_salary, applications.entity_id
-		INTO v_entity_id, v_employee_id, v_intake_id, v_initial_salary, v_applicant_id
+	v_application_id := $1::int;
+	SELECT employees.entity_id, applications.employee_id, applications.intake_id, applications.initial_salary, 
+			applications.entity_id, applications.org_id
+		INTO v_entity_id, v_employee_id, v_intake_id, v_initial_salary, v_applicant_id, v_org_id
 	FROM applications LEFT JOIN employees ON applications.entity_id = employees.entity_id
 	WHERE (application_id = v_application_id);
 
-	IF(v_employee_id is null) AND (v_entity_id is null)THEN
+	IF(v_employee_id is null) AND (v_entity_id is null)THEN	
 		INSERT INTO employees (org_id, currency_id, bank_branch_id,
 			department_role_id, pay_scale_id, pay_group_id, location_id,  
 			person_title, surname, first_name, middle_name,
@@ -2517,9 +2504,9 @@ BEGIN
 			
 			intake.contract, applications.contract_date, applications.contract_start, 
 			applications.contract_period, applications.initial_salary
-		FROM orgs INNER JOIN applicants ON orgs.org_id = applicants.org_id
-			INNER JOIN applications ON applicants.entity_id = applications.entity_id
+		FROM applicants INNER JOIN applications ON applicants.entity_id = applications.entity_id
 			INNER JOIN intake ON applications.intake_id = intake.intake_id
+			INNER JOIN orgs ON intake.org_id = orgs.org_id
 			
 		WHERE (applications.application_id = v_application_id);
 		
@@ -2533,7 +2520,7 @@ BEGIN
 			table_name, table_id, post_office_box, postal_code, premises, 
 			street, town, phone_number, extension, mobile, fax, email, website, 
 			is_default, first_password, details, company_name, position_held)
-		SELECT address_type_id, sys_country_id, org_id, address_name, 
+		SELECT address_type_id, sys_country_id, v_org_id, address_name, 
 			'employees', v_entity_id, post_office_box, postal_code, premises, 
 			street, town, phone_number, extension, mobile, fax, email, website, 
 			is_default, first_password, details, company_name, position_held
@@ -2543,32 +2530,32 @@ BEGIN
 		--- Copy education
 		INSERT INTO education(entity_id, education_class_id, org_id, date_from, 
 			date_to, name_of_school, examination_taken, grades_obtained, certificate_number, details)
-		SELECT v_entity_id, education_class_id, org_id, date_from, 
+		SELECT v_entity_id, education_class_id, v_org_id, date_from, 
 			date_to, name_of_school, examination_taken, grades_obtained, certificate_number, details
 		FROM education
 		WHERE (entity_id = v_applicant_id);
 		
 		--- Copy employment
 		INSERT INTO employment(entity_id, org_id, date_from, date_to, employers_name, position_held, details)
-		SELECT v_entity_id, org_id, date_from, date_to, employers_name, position_held, details
+		SELECT v_entity_id, v_org_id, date_from, date_to, employers_name, position_held, details
 		FROM employment
 		WHERE (entity_id = v_applicant_id);
 		
 		--- Copy Seminars
 		INSERT INTO cv_seminars(entity_id, org_id, cv_seminar_name, cv_seminar_date, details)
-		SELECT v_entity_id, org_id, cv_seminar_name, cv_seminar_date, details
+		SELECT v_entity_id, v_org_id, cv_seminar_name, cv_seminar_date, details
 		FROM cv_seminars
 		WHERE (entity_id = v_applicant_id);
 
 		INSERT INTO cv_projects(entity_id, org_id, cv_project_name, cv_project_date, details)
-		SELECT v_entity_id, org_id, cv_project_name, cv_project_date, details
+		SELECT v_entity_id, v_org_id, cv_project_name, cv_project_date, details
 		FROM cv_projects
 		WHERE (entity_id = v_applicant_id);
 
 		--- Copy skills
 		INSERT INTO skills(entity_id, skill_type_id, skill_level_id, org_id, state_skill, 
 			aquired, training_date, trained, training_institution, training_cost, details)
-		SELECT v_entity_id, skill_type_id, skill_level_id, org_id, state_skill, 
+		SELECT v_entity_id, skill_type_id, skill_level_id, v_org_id, state_skill, 
 			aquired, training_date, trained, training_institution, training_cost, details
 		FROM skills
 		WHERE (entity_id = v_applicant_id);
@@ -2578,7 +2565,7 @@ BEGIN
 			table_name, table_id, post_office_box, postal_code, premises, 
 			street, town, phone_number, extension, mobile, fax, email, website, 
 			details, company_name, position_held)
-		SELECT address_type_id, sys_country_id, org_id, address_name, 
+		SELECT address_type_id, sys_country_id, v_org_id, address_name, 
 			'referees', v_entity_id, post_office_box, postal_code, premises, 
 			street, town, phone_number, extension, mobile, fax, email, website, 
 			details, company_name, position_held

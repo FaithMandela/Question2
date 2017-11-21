@@ -36,7 +36,6 @@
 
 	BWeb web = new BWeb(dbconfig, xmlfile);
 	web.init(request);
-
 	web.setMainPage(String.valueOf(pageContext.getAttribute("mainPage")));
 
 	String entryformid = null;

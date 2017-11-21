@@ -684,16 +684,18 @@
 		</FORMVIEW>
 	</DESK>
 	<DESK w="700" name="Vacancies" key="14" h="550">
-		<GRID name="Available Positions" keyfield="intake_id" table="vw_intake" noorgs="true" where="(closing_date >= current_date)">
+		<GRID name="Available Positions" keyfield="intake_id" table="vw_intake" noorg="true" where="(closing_date >= current_date)">
+			<TEXTLINK w="45" title="Post ID">intake_id</TEXTLINK>
 			<TEXTFIELD w="75" title="Organisation">org_name</TEXTFIELD>
-			<TEXTLINK w="75" title="Role">department_role_name</TEXTLINK>
+			<TEXTFIELD w="75" title="Role">department_role_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
 			<TEXTDATE w="75" title="Closing Date">closing_date</TEXTDATE>
 			<TEXTFIELD w="50" title="Positions">positions</TEXTFIELD>
 			<TEXTFIELD w="75" title="Location">location_name</TEXTFIELD>
 			<TEXTFIELD w="175" title="Details">details</TEXTFIELD>
-			<FORMVIEW tw="570" name="Role Details" keyfield="intake_id" linkfield="intake_id" table="vw_intake" noorgs="true">
+			<FORMVIEW tw="570" name="Role Details" keyfield="intake_id" linkfield="intake_id" table="vw_intake" noorg="true">
 				<ACTION fnct="Ins_applications" title="Apply" action="Apply For Post" jumpview="14:1">intake_id</ACTION>
+				<TEXTFIELD w="75" title="Post ID">intake_id</TEXTFIELD>
 				<TEXTFIELD w="410" title="Organisation">org_name</TEXTFIELD>
 				<TEXTFIELD w="410" title="Organisation Details">org_details</TEXTFIELD>
 				<TEXTFIELD w="410" title="Department">department_name</TEXTFIELD>
@@ -703,17 +705,15 @@
 				<TEXTFIELD w="75" title="Location">location_name</TEXTFIELD>
 				<TEXTFIELD w="550" title="Job Description">job_description</TEXTFIELD>
 			</FORMVIEW>
-			<ACTIONS>
-				<ACTION fnct="Ins_applications">Apply For Post</ACTION>
-			</ACTIONS>
 		</GRID>
-		<GRID name="Positions Applied" keyfield="application_id" orderby="opening_date" table="vw_applications" user="entity_id">
+		<GRID name="Positions Applied" keyfield="application_id" orderby="opening_date" table="vw_applications" noorg="true" user="entity_id">
+			<TEXTFIELD w="45" title="Post ID">intake_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Organisation">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Role">department_role_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Closing Date">closing_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Positions">positions</TEXTFIELD>
 			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
-			<TEXTFIELD w="75" title="Application Status">approve_status</TEXTFIELD>
 		</GRID>
 		<GRID name="Contract" keyfield="application_id" role="staff" table="vw_contracting" user="entity_id">
 			<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
@@ -728,15 +728,17 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Internships" key="15" h="550">
-		<GRID name="Internships Posts" keyfield="internship_id" table="vw_internships" noorgs="true" where="(closing_date >= current_date)">
+		<GRID name="Internships Posts" keyfield="internship_id" table="vw_internships" noorg="true" where="(closing_date >= current_date)">
+			<TEXTLINK w="45" title="Internship ID">internship_id</TEXTLINK>
 			<TEXTFIELD w="75" title="Organization">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
-			<TEXTLINK w="50" title="Positions">positions</TEXTLINK>
+			<TEXTFIELD w="50" title="Positions">positions</TEXTFIELD>
 			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
 			<TEXTDATE w="75" title="Closing Date">closing_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Location">location</TEXTFIELD>
-			<FORMVIEW name="Internships Posts" keyfield="internship_id" table="vw_internships" noorgs="true" where="(closing_date >= current_date)">
+			<FORMVIEW name="Internships Posts" keyfield="internship_id" table="vw_internships" noorg="true" where="(closing_date >= current_date)">
 				<ACTION fnct="Ins_interns" title="Apply" action="Apply For Internship" jumpview="15:1">internship_id</ACTION>
+				<TEXTFIELD w="75" title="Internship ID">internship_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Organization">org_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Organization Details">org_details</TEXTFIELD>
 				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
@@ -747,7 +749,8 @@
 				<TEXTFIELD w="175" title="Details">details</TEXTFIELD>
 			</FORMVIEW>
 		</GRID>
-		<GRID name="Internships Applied" keyfield="department_name" table="vw_interns" user="entity_id">
+		<GRID name="Internships Applied" keyfield="department_name" table="vw_interns" noorg="true" user="entity_id">
+			<TEXTFIELD w="45" title="Internship ID">internship_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Organization">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Positions">positions</TEXTFIELD>
@@ -756,7 +759,6 @@
 			<TEXTDECIMAL w="75" title="Payment Amount">payment_amount</TEXTDECIMAL>
 			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
-			<TEXTFIELD w="75" title="Application Status">approve_status</TEXTFIELD>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Pay Slip" key="16" h="550">
@@ -1870,26 +1872,30 @@
 			<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
 			<TEXTFIELD w="75" title="Work Duration">work_duration</TEXTFIELD>
 			<GRID name="Casuals" keyfield="casual_id" linkfield="casual_application_id" table="vw_casuals">
-				<TEXTFIELD w="75" title="ID">entity_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="ID">casual_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Worker Name">entity_name</TEXTFIELD>
 				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
 				<TEXTFIELD w="75" title="Duration">duration</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Pay Rate">pay_rate</TEXTDECIMAL>
 				<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="Amount Paid">amount_paid</TEXTDECIMAL>
 				<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
-				<CHECKBOX w="75" title="Paid">paid</CHECKBOX>
 				<FORM name="Casuals" keyfield="casual_id" linkfield="casual_application_id" table="casuals">
-					<COMBOBOX w="430" title="Worker" lptable="entitys" where="(entity_type_id=4)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<COMBOBOX w="430" title="Worker" lptable="vw_applicants" y="10" h="20" x="10" lpfield="applicant_name">entity_id</COMBOBOX>
 					<TEXTDATE w="150" title="Start Date" y="30" h="20" x="10">start_date</TEXTDATE>
 					<TEXTDATE w="150" title="End Date" y="30" h="20" x="290">end_date</TEXTDATE>
 					<TEXTFIELD w="150" title="Duration" y="50" h="20" x="10">duration</TEXTFIELD>
 					<TEXTDECIMAL w="150" title="Pay Rate" y="50" h="20" x="290">pay_rate</TEXTDECIMAL>
-					<TEXTDECIMAL w="150" title="Amount Paid" y="70" h="20" x="10">amount_paid</TEXTDECIMAL>
-					<CHECKBOX w="150" title="Paid" y="70" h="20" x="290">paid</CHECKBOX>
 					<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
 				</FORM>
+				<GRID name="Casuals Month" keyfield="casuals_month_id" linkfield="casual_id" table="vw_casuals_month">
+					<TEXTFIELD w="75" fnct="to_char('YYYY, MMMM', start_date)" title="Month">year_month</TEXTFIELD>
+					<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+					<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
+					<TEXTDECIMAL w="75" title="Amount Paid">amount_paid</TEXTDECIMAL>
+					<CHECKBOX w="75" title="Paid">paid</CHECKBOX>
+					<TEXTDATE w="75" title="Pay Date">pay_date</TEXTDATE>
+				</GRID>
 			</GRID>
 			<FORM name="Casual Application" keyfield="casual_application_id" table="casual_application">
 				<USERFIELD>entity_id</USERFIELD>
@@ -1901,6 +1907,33 @@
 				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<JASPER name="Casuals" reportfile="vw_casuals.jasper"></JASPER>
+		</GRID>
+		<GRID name="Payments" keyfield="period_id" orderby="start_date desc" table="vw_periods" where="(closed = false)">
+			<TEXTFIELD w="45" title="Period ID">period_id</TEXTFIELD>
+			<TEXTFIELD w="45" title="Period Code">period_code</TEXTFIELD>
+			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+			<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
+			<GRID name="Casuals Paments" keyfield="casuals_month_id" linkfield="period_id" table="vw_casuals_month">
+				<TEXTFIELD w="75" title="Casual Category">casual_category_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Amount Paid">amount_paid</TEXTDECIMAL>
+				<CHECKBOX w="75" title="Paid">paid</CHECKBOX>
+				<TEXTDATE w="75" title="Pay Date">pay_date</TEXTDATE>
+				<FORM name="Casuals Month" keyfield="casuals_month_id" linkfield="period_id" table="casuals_month">
+					<COMBOBOX w="430" title="Casual" lptable="vw_casuals" cmb_fnct="casual_id || ', ' || entity_name" y="10" h="20" x="10" lpfield="casual_disp">casual_id</COMBOBOX>
+					<COMBOBOX w="150" title="Currency" lptable="currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+					<TEXTDECIMAL w="150" title="Exchange Rate" y="30" h="20" x="10">exchange_rate</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Amount Paid" y="50" h="20" x="10">amount_paid</TEXTDECIMAL>
+					<TEXTDATE w="150" title="Accrued Date" y="50" h="20" x="290">accrued_date</TEXTDATE>
+					<CHECKBOX w="150" title="Paid" y="70" h="20" x="10">paid</CHECKBOX>
+					<TEXTDATE w="150" title="Pay Date" y="70" h="20" x="290">pay_date</TEXTDATE>
+					<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
 		</GRID>
 		<GRID name="Casual Category" keyfield="casual_category_id" table="casual_category">
 			<TEXTFIELD w="75" title="Casual Category ID">casual_category_id</TEXTFIELD>
@@ -2063,7 +2096,7 @@
 			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Positions">positions</TEXTFIELD>
 			<CHECKBOX w="75" title="Contract">contract</CHECKBOX>
-			<GRID name="Applications" keyfield="application_id" linkfield="intake_id" table="vw_applications" params="entity_id" noorg="true" where="(short_listed = 0)" ssort="true">
+			<GRID name="Applications" keyfield="application_id" linkfield="intake_id" table="vw_applications" params="entity_id" where="(short_listed = 0)" ssort="true">
 				<TEXTFIELD w="75" title="Applicant Name">entity_name</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
 				<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
@@ -2079,7 +2112,6 @@
 					<ACTION fnct="add_shortlist" approval="1">Short List</ACTION>
 				</ACTIONS>
 				<FORM name="Applications" keyfield="application_id" linkfield="intake_id" table="applications" th="210">
-					<COMBOBOX w="430" title="Applicant" lptable="entitys" where="((use_key_id = 1) OR (use_key_id = 4))" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<TEXTDATE w="150" title="Contract Date" y="30" h="20" x="10">contract_date</TEXTDATE>
 					<TEXTDATE w="150" title="Contract Close" y="30" h="20" x="290">contract_close</TEXTDATE>
 					<TEXTDATE w="150" title="Contract Start" y="50" h="20" x="10">contract_start</TEXTDATE>
@@ -2096,7 +2128,7 @@
 					<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 				</FILES>
 			</GRID>
-			<GRID name="Short Listed" keyfield="application_id" linkfield="intake_id" table="vw_applications" params="entity_id" noorg="true" where="(short_listed = 1)" ssort="true">
+			<GRID name="Short Listed" keyfield="application_id" linkfield="intake_id" table="vw_applications" params="entity_id" where="(short_listed = 1)" ssort="true">
 				<TEXTFIELD w="75" title="Applicant Name">entity_name</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
 				<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
@@ -2111,7 +2143,6 @@
 					<ACTION fnct="add_shortlist" approval="2">Un Short List</ACTION>
 				</ACTIONS>
 				<FORM name="Applications" keyfield="application_id" linkfield="intake_id" table="applications" th="210">
-					<COMBOBOX w="430" title="Applicant" lptable="entitys" where="((use_key_id = 1) OR (use_key_id = 4))" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<TEXTDATE w="150" title="Contract Date" y="30" h="20" x="10">contract_date</TEXTDATE>
 					<TEXTDATE w="150" title="Contract Close" y="30" h="20" x="290">contract_close</TEXTDATE>
 					<TEXTDATE w="150" title="Contract Start" y="50" h="20" x="10">contract_start</TEXTDATE>
@@ -2234,24 +2265,14 @@
 				<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
 				<TEXTFIELD w="75" title="EMail">primary_email</TEXTFIELD>
 				<TEXTFIELD w="75" title="Telephone">primary_telephone</TEXTFIELD>
+				<JASPER name="CV" reportfile="cv_applicant_i.jasper"></JASPER>
 				<FORM tw="210" name="Interns" keyfield="intern_id" linkfield="internship_id" table="interns">
-					<COMBOBOX w="430" title="Applicant" lptable="entitys" where="(entity_type_id=4)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<TEXTDATE w="150" title="Start Date" y="30" h="20" x="10">start_date</TEXTDATE>
 					<TEXTDATE w="150" title="End Date" y="30" h="20" x="290">end_date</TEXTDATE>
 					<TEXTDECIMAL w="150" title="Payment Amount" y="50" h="20" x="10">payment_amount</TEXTDECIMAL>
 					<TEXTAREA w="530" title="Comments" y="1" h="170" x="10">applicant_comments</TEXTAREA>
 					<TEXTAREA w="530" title="Review" y="1" h="170" x="10">review</TEXTAREA>
 				</FORM>
-			</GRID>
-			<GRID name="Evaluations" keyfield="entity_id" linkfield="internship_id" table="vw_intern_evaluations">
-				<TEXTFIELD w="75" title="ID">intern_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="Applicant Name">applicant_name</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="Payment Amount">payment_amount</TEXTDECIMAL>
-				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
-				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
-				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
-				<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
-				<JASPER name="CV" org.table="vw_applicants" reportfile="cv_applicant.jasper"></JASPER>
 			</GRID>
 			<FORM name="Internships" keyfield="internship_id" table="internships">
 				<COMBOBOX w="430" title="Department" lptable="departments" y="10" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
