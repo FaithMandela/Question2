@@ -811,3 +811,131 @@ CREATE OR REPLACE VIEW vw_mother_mpp AS
      JOIN surveys ON mother_mpp.survey_id = surveys.survey_id
   ORDER BY mother_mpp.mother_mpp_id;
 
+----========================================
+--- 513 indicators view update
+
+CREATE OR REPLACE VIEW vw_ref_513 AS 
+SELECT 
+survey_513_info_def.survey_513_def_id,survey_513_info_def.question,survey_513_info_def.details,
+    survey_513.survey_id,survey_513_data.survey_513_id, survey_513_data.response,
+        CASE 
+		---HH Members in Age Cohort
+		 WHEN (survey_513_info_def.survey_513_def_id = 1) AND survey_513_data.response = 1 THEN '0 - 28 days'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 1) AND survey_513_data.response = 2 THEN '29 days - 11 months'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 1) AND survey_513_data.response = 3 THEN '2 - 59 months'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 1) AND survey_513_data.response = 4 THEN '5 - 12 years'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 1) AND survey_513_data.response = 5 THEN '13 - 24 girls'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 1) AND survey_513_data.response = 6 THEN '13 - 24 boys'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 1) AND survey_513_data.response = 7 THEN '25 -59 years'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 1) AND survey_513_data.response = 8 THEN '60 years and above'::text
+		 ---Relationship to HHH
+		 WHEN (survey_513_info_def.survey_513_def_id = 2) AND survey_513_data.response = 1 THEN 'HHH'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 2) AND survey_513_data.response = 2 THEN 'Spouse'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 2) AND survey_513_data.response = 3 THEN 'Child (B)'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 2) AND survey_513_data.response = 4 THEN 'Child (R)'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 2) AND survey_513_data.response = 5 THEN 'Grand Child'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 2) AND survey_513_data.response = 6 THEN 'Brother/Sister'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 2) AND survey_513_data.response = 7 THEN 'Others'::text
+		 ---Orphan
+		 WHEN (survey_513_info_def.survey_513_def_id = 3) AND survey_513_data.response = 1 THEN 'Yes'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 3) AND survey_513_data.response = 2 THEN 'No'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 3) AND survey_513_data.response = 3 THEN 'N/A'::text
+		 ---Birth certificate
+		 WHEN (survey_513_info_def.survey_513_def_id = 4) AND survey_513_data.response = 1 THEN 'Yes'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 4) AND survey_513_data.response = 2 THEN 'No'::text
+		 ---"In school"
+		 WHEN (survey_513_info_def.survey_513_def_id = 5) AND survey_513_data.response = 1 THEN 'Yes'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 5) AND survey_513_data.response = 2 THEN 'No'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 5) AND survey_513_data.response = 3 THEN 'N/A'::text
+		 ---"Pregnant"
+		 WHEN (survey_513_info_def.survey_513_def_id = 6) AND survey_513_data.response = 1 THEN 'Yes'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 6) AND survey_513_data.response = 2 THEN 'No'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 6) AND survey_513_data.response = 3 THEN 'N/A'::text
+		 ---"Mother and Child Health Booklet"
+		 WHEN (survey_513_info_def.survey_513_def_id = 7) AND survey_513_data.response = 1 THEN 'Yes'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 7) AND survey_513_data.response = 2 THEN 'No'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 7) AND survey_513_data.response = 3 THEN 'N/A'::text
+		 ---"ANC (at least 4 visits)"
+		 WHEN (survey_513_info_def.survey_513_def_id = 8) AND survey_513_data.response = 1 THEN 'Yes'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 8) AND survey_513_data.response = 2 THEN 'No'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 8) AND survey_513_data.response = 3 THEN 'N/A'::text
+		 ---"Delivered by Skilled Birth Attendant"
+		 WHEN (survey_513_info_def.survey_513_def_id = 9) AND survey_513_data.response = 1 THEN 'Yes'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 9) AND survey_513_data.response = 2 THEN 'No'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 9) AND survey_513_data.response = 3 THEN 'N/A'::text
+		 ---"Exclusive breastfeeding "
+		 WHEN (survey_513_info_def.survey_513_def_id = 10) AND survey_513_data.response = 1 THEN 'Yes'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 10) AND survey_513_data.response = 2 THEN 'No'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 10) AND survey_513_data.response = 3 THEN 'N/A'::text
+		 ---"Using Family Planning Methods"
+		 WHEN (survey_513_info_def.survey_513_def_id = 11) AND survey_513_data.response = 1 THEN 'None'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 11) AND survey_513_data.response = 2 THEN 'Modern'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 11) AND survey_513_data.response = 3 THEN 'Traditional/Natural'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 11) AND survey_513_data.response = 4 THEN 'N/A'::text
+		 ---"Penta 1 Given"
+		 WHEN (survey_513_info_def.survey_513_def_id = 12) AND survey_513_data.response = 1 THEN 'Yes'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 12) AND survey_513_data.response = 2 THEN 'No'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 12) AND survey_513_data.response = 3 THEN 'N/A'::text
+		 ---"Penta 2 Given"
+		 WHEN (survey_513_info_def.survey_513_def_id = 13) AND survey_513_data.response = 1 THEN 'Yes'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 13) AND survey_513_data.response = 2 THEN 'No'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 13) AND survey_513_data.response = 3 THEN 'N/A'::text
+		 ---"Measles Given"
+		 WHEN (survey_513_info_def.survey_513_def_id = 14) AND survey_513_data.response = 1 THEN 'Yes'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 14) AND survey_513_data.response = 2 THEN 'No'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 14) AND survey_513_data.response = 3 THEN 'N/A'::text
+		 ---"Fully Immunized"
+		 WHEN (survey_513_info_def.survey_513_def_id = 15) AND survey_513_data.response = 1 THEN 'Yes'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 15) AND survey_513_data.response = 2 THEN 'No'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 15) AND survey_513_data.response = 3 THEN 'N/A'::text
+		 ---"Vitamin A Given"
+		 WHEN (survey_513_info_def.survey_513_def_id = 16) AND survey_513_data.response = 1 THEN 'Yes'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 16) AND survey_513_data.response = 2 THEN 'No'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 16) AND survey_513_data.response = 3 THEN 'N/A'::text
+		 ---"Children 6-23 months received 3 or more food groups three times a day"
+		 WHEN (survey_513_info_def.survey_513_def_id = 17) AND survey_513_data.response = 1 THEN 'Yes'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 17) AND survey_513_data.response = 2 THEN 'No'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 17) AND survey_513_data.response = 3 THEN 'N/A'::text
+		 ---"Severely Malnourished (MAUC indicating Yellow)"
+		 WHEN (survey_513_info_def.survey_513_def_id = 18) AND survey_513_data.response = 1 THEN 'Yes'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 18) AND survey_513_data.response = 2 THEN 'No'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 18) AND survey_513_data.response = 3 THEN 'N/A'::text
+		 ---19;"LLIN use"
+		 WHEN (survey_513_info_def.survey_513_def_id = 19) AND survey_513_data.response = 1 THEN 'Yes'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 19) AND survey_513_data.response = 2 THEN 'No'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 19) AND survey_513_data.response = 3 THEN 'N/A'::text
+		 ---"Known chronic illness "
+		 WHEN (survey_513_info_def.survey_513_def_id = 20) AND survey_513_data.response = 1 THEN 'NONE'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 20) AND survey_513_data.response = 2 THEN 'DIABETES'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 20) AND survey_513_data.response = 3 THEN 'CANCERS'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 20) AND survey_513_data.response = 4 THEN 'MENTAL ILLNESS'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 20) AND survey_513_data.response = 5 THEN 'HYPERTENSION'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 20) AND survey_513_data.response = 6 THEN 'CHRONIC RESPIRATORY DISEASES'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 20) AND survey_513_data.response = 7 THEN 'OTHER'::text
+		 ---"Cough (2 Weeks and above) ""
+		 WHEN (survey_513_info_def.survey_513_def_id = 21) AND survey_513_data.response = 1 THEN 'Yes'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 21) AND survey_513_data.response = 2 THEN 'No'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 21) AND survey_513_data.response = 3 THEN 'N/A'::text
+		 ---"Knows HIV status"
+		 WHEN (survey_513_info_def.survey_513_def_id = 22) AND survey_513_data.response = 1 THEN 'Yes'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 22) AND survey_513_data.response = 2 THEN 'No'::text
+		 ---"Disability "
+		 WHEN (survey_513_info_def.survey_513_def_id = 23) AND survey_513_data.response = 1 THEN 'None'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 23) AND survey_513_data.response = 2 THEN 'Visual'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 23) AND survey_513_data.response = 3 THEN 'Hearing'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 23) AND survey_513_data.response = 4 THEN 'Speech'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 23) AND survey_513_data.response = 5 THEN 'Physical'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 23) AND survey_513_data.response = 6 THEN 'Mental'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 23) AND survey_513_data.response = 7 THEN 'Other'::text
+		 ---"Moderately Malnourished (MAUC indicating Yellow)"
+		 WHEN (survey_513_info_def.survey_513_def_id = 30) AND survey_513_data.response = 1 THEN 'Yes'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 30) AND survey_513_data.response = 2 THEN 'No'::text
+		 WHEN (survey_513_info_def.survey_513_def_id = 30) AND survey_513_data.response = 3 THEN 'N/A'::text
+            
+        END AS response_name,
+    survey_513_data.uid
+   FROM survey_513_data
+     JOIN survey_513_info_def ON survey_513_data.survey_513_def_id = survey_513_info_def.survey_513_def_id
+     JOIN survey_513 ON survey_513_data.survey_id = survey_513.survey_id;
+
+
