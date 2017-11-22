@@ -15,8 +15,7 @@ $('.clock-in-btn')
         var btnClockStatus = $('.clock-in-status-btn');
         var msg = 'Clocked In Time : 8:00am ';
         btnClock.button('loading');
-        postAjax(btnClock , btnClockStatus, msg);
-
+        postAjax(btnClock, btnClockStatus, msg);
     });
 
 /**
@@ -29,8 +28,7 @@ $('.lunch-break-btn')
         var btnClockStatus = $('.lunch-break-status-btn');
         var msg = 'Lunch End : 2:00pm ';
         btnClock.button('loading');
-        postAjax(btnClock , btnClockStatus, msg);
-
+        postAjax(btnClock, btnClockStatus, msg);
     });
 
 /**
@@ -42,8 +40,7 @@ $('.break-btn')
         var btnClockStatus = $('.break-status-btn');
         var msg = 'Break End : 4:30pm ';
         btnClock.button('loading');
-        postAjax(btnClock , btnClockStatus, msg);
-
+        postAjax(btnClock, btnClockStatus, msg);
     });
 
 /**
@@ -53,19 +50,18 @@ $('.break-btn')
  * @param msg
  */
 function postAjax(btnEnrtryCss, btnStatusCss, msg){
-    var  btnClock  = $(btnEnrtryCss);
+    var btnClock  = $(btnEnrtryCss);
     var btnClockStatus = $(btnStatusCss);
     var jsonData =                 {
         name: "Donald Duck",
         city: "Duckburg"
     };
 
-
     $.ajax({
-        url: 'hcm/entry', // url where to submit the request
+        url: 'ajax', // url where to submit the request
         type : "POST", // type of action POST || GET
         dataType : 'json', // data type
-        data : {"tag":"authenticate","json":JSON.stringify(jsonData)}, // post data || get data
+        data : {"fnct":"attendance","json":JSON.stringify(jsonData)}, // post data || get data
         beforeSend: function() {//calls the loader id tag
             $(".submit i").removeAttr('class').addClass("fa fa-refresh fa-spin fa-3x fa-fw  text-center").css({"color":"#fff",});
         },

@@ -134,6 +134,9 @@ public class Bajax extends HttpServlet {
 		} else if("jsdelete".equals(fnct)) {
 			resp = jsGrid(fnct, request);
 			response.setContentType("application/json;charset=\"utf-8\"");
+		} else if("attendance".equals(fnct)) {
+			resp = attendance(request);
+			response.setContentType("application/json;charset=\"utf-8\"");
 		}
 		
 		web.close();			// close DB commections
@@ -448,4 +451,13 @@ System.out.println("BASE 1025 : " + upSql);
 		
 		return resp;
 	}
+	
+	public String attendance(HttpServletRequest request) {
+		String resp = "";
+		
+System.out.println("BASE 2020 : ");
+		
+		return resp;
+	}
+	
 }
