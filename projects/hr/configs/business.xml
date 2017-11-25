@@ -302,12 +302,14 @@
 	</DESK>
 	<DESK w="700" name="Sales" key="2" h="500">
 		<GRID name="Sales Quotation" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 14)">
-			<TEXTFIELD w="75" title="Doc. No.">document_number</TEXTFIELD>
+			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Client">entity_name</TEXTFIELD>
-			<TEXTDATE w="75" title="Date">transaction_date</TEXTDATE>
-			<TEXTDECIMAL w="75" title="Amount">transaction_amount</TEXTDECIMAL>
+			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
+			<TEXTDECIMAL w="45" title="Amount">transaction_net_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="45" title="Tax">transaction_tax_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="45" title="Total">transaction_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
-			<TEXTFIELD w="75" title="Approval Status">approve_status</TEXTFIELD>
+			<TEXTFIELD w="45" title="Approval Status">approve_status</TEXTFIELD>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 			<ACTIONS>
 				<ACTION fnct="complete_transaction" approval="1">Complete</ACTION>
@@ -343,12 +345,14 @@
 			<JASPER name="Sales Quotation" reportfile="vw_trx.jasper"></JASPER>
 		</GRID>
 		<GRID name="Sales Order" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 1)">
-			<TEXTFIELD w="75" title="Doc. No.">document_number</TEXTFIELD>
+			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Client">entity_name</TEXTFIELD>
-			<TEXTDATE w="75" title="Date">transaction_date</TEXTDATE>
-			<TEXTDECIMAL w="75" title="Amount">transaction_amount</TEXTDECIMAL>
+			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
+			<TEXTDECIMAL w="45" title="Amount">transaction_net_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="45" title="Tax">transaction_tax_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="45" title="Total">transaction_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
-			<TEXTFIELD w="75" title="Approval Status">approve_status</TEXTFIELD>
+			<TEXTFIELD w="45" title="Approval Status">approve_status</TEXTFIELD>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 			<ACTIONS>
 				<ACTION fnct="complete_transaction" approval="1">Complete</ACTION>
@@ -384,9 +388,9 @@
 			<JASPER name="Sales Order" reportfile="vw_trx.jasper"></JASPER>
 		</GRID>
 		<GRID name="Delivery Note" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 11)">
-			<TEXTFIELD w="75" title="Doc. No.">document_number</TEXTFIELD>
+			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Client">entity_name</TEXTFIELD>
-			<TEXTDATE w="75" title="Date">transaction_date</TEXTDATE>
+			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
 			<TEXTFIELD w="75" title="Approval Status">approve_status</TEXTFIELD>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
@@ -432,13 +436,15 @@
 			<JASPER name="Delivery Note" reportfile="vw_trxd.jasper"></JASPER>
 		</GRID>
 		<GRID name="Invoice" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 2)">
-			<TEXTFIELD w="75" title="Doc. No.">document_number</TEXTFIELD>
+			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Client">entity_name</TEXTFIELD>
-			<TEXTDATE w="75" title="Date">transaction_date</TEXTDATE>
-			<TEXTDECIMAL w="75" title="Amount">transaction_amount</TEXTDECIMAL>
+			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
+			<TEXTDECIMAL w="45" title="Amount">transaction_net_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="45" title="Tax">transaction_tax_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="45" title="Total">transaction_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
-			<TEXTFIELD w="75" title="Approval Status">approve_status</TEXTFIELD>
-			<TEXTFIELD w="75" title="Posted">posted</TEXTFIELD>
+			<TEXTFIELD w="45" title="Approval Status">approve_status</TEXTFIELD>
+			<TEXTFIELD w="45" title="Posted">posted</TEXTFIELD>
 			<ACTIONS>
 				<ACTION fnct="complete_transaction" approval="1">Complete</ACTION>
 				<ACTION fnct="process_transaction" approval="7">Receive Payment</ACTION>
@@ -474,9 +480,9 @@
 			<JASPER name="Sales Invoice" reportfile="vw_trx.jasper"></JASPER>
 		</GRID>
 		<GRID name="Receipts" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 7)">
-			<TEXTFIELD w="75" title="Doc. No.">document_number</TEXTFIELD>
+			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Client">entity_name</TEXTFIELD>
-			<TEXTDATE w="75" title="Date">transaction_date</TEXTDATE>
+			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
 			<TEXTDECIMAL w="75" title="Amount">transaction_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
 			<TEXTFIELD w="75" title="Approval Status">approve_status</TEXTFIELD>
@@ -504,13 +510,15 @@
 			<JASPER name="Receipts" reportfile="vw_trxr.jasper"></JASPER>
 		</GRID>
 		<GRID name="Credit Note" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 9)">
-			<TEXTFIELD w="75" title="Doc. No.">document_number</TEXTFIELD>
+			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Client">entity_name</TEXTFIELD>
-			<TEXTDATE w="75" title="Date">transaction_date</TEXTDATE>
-			<TEXTDECIMAL w="75" title="Amount">transaction_amount</TEXTDECIMAL>
+			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
+			<TEXTDECIMAL w="45" title="Amount">transaction_net_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="45" title="Tax">transaction_tax_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="45" title="Total">transaction_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
-			<TEXTFIELD w="75" title="Approval Status">approve_status</TEXTFIELD>
-			<TEXTFIELD w="75" title="Posted">posted</TEXTFIELD>
+			<TEXTFIELD w="45" title="Approval Status">approve_status</TEXTFIELD>
+			<TEXTFIELD w="45" title="Posted">posted</TEXTFIELD>
 			<ACTIONS>
 				<ACTION fnct="complete_transaction" approval="1">Complete</ACTION>
 				<ACTION fnct="post_transaction" approval="1">Post</ACTION>
@@ -546,12 +554,14 @@
 	</DESK>
 	<DESK w="700" name="Purchase" key="27" h="500">
 		<GRID name="Purchase Quotation" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 15)">
-			<TEXTFIELD w="75" title="Doc. No.">document_number</TEXTFIELD>
+			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Supplier">entity_name</TEXTFIELD>
-			<TEXTDATE w="75" title="Date">transaction_date</TEXTDATE>
-			<TEXTDECIMAL w="75" title="Amount">transaction_amount</TEXTDECIMAL>
+			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
+			<TEXTDECIMAL w="45" title="Amount">transaction_net_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="45" title="Tax">transaction_tax_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="45" title="Total">transaction_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
-			<TEXTFIELD w="75" title="Approval Status">approve_status</TEXTFIELD>
+			<TEXTFIELD w="45" title="Approval Status">approve_status</TEXTFIELD>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 			<ACTIONS>
 				<ACTION fnct="complete_transaction" approval="1">Complete</ACTION>
@@ -587,12 +597,14 @@
 			<JASPER name="Purchase Quotation" reportfile="vw_trx.jasper"></JASPER>
 		</GRID>
 		<GRID name="Purchase Order" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 4)">
-			<TEXTFIELD w="75" title="Doc. No.">document_number</TEXTFIELD>
+			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Supplier">entity_name</TEXTFIELD>
-			<TEXTDATE w="75" title="Date">transaction_date</TEXTDATE>
-			<TEXTDECIMAL w="75" title="Amount">transaction_amount</TEXTDECIMAL>
+			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
+			<TEXTDECIMAL w="45" title="Amount">transaction_net_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="45" title="Tax">transaction_tax_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="45" title="Total">transaction_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
-			<TEXTFIELD w="75" title="Approval Status">approve_status</TEXTFIELD>
+			<TEXTFIELD w="45" title="Approval Status">approve_status</TEXTFIELD>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 			<ACTIONS>
 				<ACTION fnct="complete_transaction" approval="1">Complete</ACTION>
@@ -639,9 +651,9 @@
 			<JASPER name="Purchase Order" reportfile="vw_trx.jasper"></JASPER>
 		</GRID>
 		<GRID name="Goods Receipt Note" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 12)">
-			<TEXTFIELD w="75" title="Doc. No.">document_number</TEXTFIELD>
+			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Supplier">entity_name</TEXTFIELD>
-			<TEXTDATE w="75" title="Date">transaction_date</TEXTDATE>
+			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
 			<TEXTFIELD w="75" title="Approval Status">approve_status</TEXTFIELD>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
@@ -686,13 +698,15 @@
 			<JASPER name="Receipt Note" reportfile="vw_trxd.jasper"></JASPER>
 		</GRID>
 		<GRID name="Invoice" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 5)">
-			<TEXTFIELD w="75" title="Doc. No.">document_number</TEXTFIELD>
+			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Supplier">entity_name</TEXTFIELD>
-			<TEXTDATE w="75" title="Date">transaction_date</TEXTDATE>
-			<TEXTDECIMAL w="75" title="Amount">transaction_amount</TEXTDECIMAL>
+			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
+			<TEXTDECIMAL w="45" title="Amount">transaction_net_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="45" title="Tax">transaction_tax_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="45" title="Total">transaction_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
-			<TEXTFIELD w="75" title="Approval Status">approve_status</TEXTFIELD>
-			<TEXTFIELD w="75" title="Posted">posted</TEXTFIELD>
+			<TEXTFIELD w="45" title="Approval Status">approve_status</TEXTFIELD>
+			<TEXTFIELD w="45" title="Posted">posted</TEXTFIELD>
 			<ACTIONS>
 				<ACTION fnct="complete_transaction" approval="1">Complete</ACTION>
 				<ACTION fnct="process_transaction" approval="8">Make Payment</ACTION>
@@ -728,9 +742,9 @@
 			<JASPER name="Purchase Invoice" reportfile="vw_trx.jasper"></JASPER>
 		</GRID>
 		<GRID name="Payments" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 8)">
-			<TEXTFIELD w="75" title="Doc. No.">document_number</TEXTFIELD>
+			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Supplier">entity_name</TEXTFIELD>
-			<TEXTDATE w="75" title="Date">transaction_date</TEXTDATE>
+			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
 			<TEXTDECIMAL w="75" title="Amount">transaction_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
 			<TEXTFIELD w="75" title="Approval Status">approve_status</TEXTFIELD>
@@ -758,13 +772,15 @@
 			<JASPER name="Payment" reportfile="vw_trxr.jasper"></JASPER>
 		</GRID>
 		<GRID name="Debit Note" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 10)">
-			<TEXTFIELD w="75" title="Doc. No.">document_number</TEXTFIELD>
+			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Supplier">entity_name</TEXTFIELD>
-			<TEXTDATE w="75" title="Date">transaction_date</TEXTDATE>
-			<TEXTDECIMAL w="75" title="Amount">transaction_amount</TEXTDECIMAL>
+			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
+			<TEXTDECIMAL w="45" title="Amount">transaction_net_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="45" title="Tax">transaction_tax_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="45" title="Total">transaction_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
-			<TEXTFIELD w="75" title="Approval Status">approve_status</TEXTFIELD>
-			<TEXTFIELD w="75" title="Posted">posted</TEXTFIELD>
+			<TEXTFIELD w="45" title="Approval Status">approve_status</TEXTFIELD>
+			<TEXTFIELD w="45" title="Posted">posted</TEXTFIELD>
 			<ACTIONS>
 				<ACTION fnct="complete_transaction" approval="1">Complete</ACTION>
 				<ACTION fnct="post_transaction" approval="1">Post</ACTION>

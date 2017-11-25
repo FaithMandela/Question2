@@ -410,6 +410,7 @@ CREATE VIEW vw_transactions AS
 		transactions.application_date, transactions.approve_status, transactions.workflow_table_id, transactions.action_date, 
 		transactions.narrative, transactions.document_number, transactions.payment_number, transactions.order_number,
 		transactions.exchange_rate, transactions.payment_terms, transactions.job, transactions.details, transactions.notes,
+		(transactions.transaction_amount - transactions.transaction_tax_amount) as transaction_net_amount,
 		(CASE WHEN transactions.journal_id is null THEN 'Not Posted' ELSE 'Posted' END) as posted,
 		(CASE WHEN (transactions.transaction_type_id = 2) or (transactions.transaction_type_id = 8) or (transactions.transaction_type_id = 10) or (transactions.transaction_type_id = 21)  
 			THEN transactions.transaction_amount ELSE 0 END) as debit_amount,
@@ -447,10 +448,11 @@ CREATE VIEW vw_trx AS
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		departments.department_id, departments.department_name,
 		transactions.journal_id, transactions.bank_account_id, transactions.ledger_type_id,
-		transactions.transaction_id, transactions.transaction_date, transactions.transaction_amount,
+		transactions.transaction_id, transactions.transaction_date, transactions.transaction_amount, transactions.transaction_tax_amount,
 		transactions.application_date, transactions.approve_status, transactions.workflow_table_id, transactions.action_date, 
 		transactions.narrative, transactions.document_number, transactions.payment_number, transactions.order_number,
 		transactions.exchange_rate, transactions.payment_terms, transactions.job, transactions.details, transactions.notes,
+		(transactions.transaction_amount - transactions.transaction_tax_amount) as transaction_net_amount,
 		(CASE WHEN transactions.journal_id is null THEN 'Not Posted' ELSE 'Posted' END) as posted,
 		(CASE WHEN (transactions.transaction_type_id = 2) or (transactions.transaction_type_id = 8) or (transactions.transaction_type_id = 10)
 			THEN transactions.transaction_amount ELSE 0 END) as debit_amount,
@@ -851,8 +853,8 @@ DECLARE
 	msg varchar(120);
 BEGIN
 
-	INSERT INTO transactions (org_id, department_id, entity_id, currency_id, transaction_type_id, transaction_date, order_number, payment_terms, job, narrative, details)
-	SELECT org_id, department_id, entity_id, currency_id, transaction_type_id, CURRENT_DATE, order_number, payment_terms, job, narrative, details
+	INSERT INTO transactions (org_id, department_id, entity_id, currency_id, transaction_type_id, transaction_date, order_number, payment_terms, job, narrative, details, notes)
+	SELECT org_id, department_id, entity_id, currency_id, transaction_type_id, CURRENT_DATE, order_number, payment_terms, job, narrative, details, notes
 	FROM transactions
 	WHERE (transaction_id = CAST($1 as integer));
 
