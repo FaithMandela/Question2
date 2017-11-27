@@ -1,4 +1,4 @@
-
+---- Shifts, Time and attendance management
 CREATE TABLE shifts (
 	shift_id				serial primary key,
 	project_id				integer references projects,

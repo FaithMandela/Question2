@@ -1,4 +1,4 @@
-
+---- Core HR tables for applicants, employee, leave, appraisals
 ALTER TABLE address	ADD company_name	varchar(150);
 ALTER TABLE address	ADD position_held	varchar(150);
 
