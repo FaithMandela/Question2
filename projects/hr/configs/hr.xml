@@ -114,7 +114,10 @@
 				<TEXTDATE w="75" title="Leave To">leave_to</TEXTDATE>
 			</TILELIST>
 			<ATTENDANCE></ATTENDANCE>
-			<TASK></TASK>
+			<TASK name="Open Tasks" keyfield="task_id" table="vw_tasks" where="(task_completed = false)" user="entity_id">
+				<TEXTFIELD w="75" title="Task Id">task_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Task Name">task_name</TEXTFIELD>
+			</TASK>
 		</DASHBOARD>
 	</DESK>
 	<DESK w="700" name="Registration" key="2" h="500">

@@ -63,8 +63,8 @@ public class BWeb {
 	List<BElement> views;
 	List<String> viewKeys;
 	List<String> viewData;
-	List<String> dashboardItems;
 	Map<String, String> params;
+	Map<String, String> dashboardItems;
 
 	boolean selectAll = false;
 	boolean isLicense = true;
@@ -689,9 +689,10 @@ public class BWeb {
 		if((root == null) || (db == null)) return "";	// error check
 		
 		String body = "";
+		String taskList = "";
 		
 		BWebDashboard webDashboard = new BWebDashboard(db);
-		dashboardItems = new ArrayList<String>();
+		dashboardItems = new HashMap<String, String>();
 		
 		body += "<div class='row margin-top-5'>\n";
 		for(BElement el : view.getElements()) {
@@ -710,8 +711,16 @@ public class BWeb {
 		for(BElement el : view.getElements()) {
 			boolean hasAccess  = checkAccess(el.getAttribute("role"));
 			if(hasAccess) {
-				if(el.getName().equals("ATTENDANCE")) dashboardItems.add("ATTENDANCE");
-				else if(el.getName().equals("TASK")) dashboardItems.add("TASK");
+				if(el.getName().equals("ATTENDANCE")) {
+					dashboardItems.put("ATTENDANCE", "true");
+				} else if(el.getName().equals("TASK")) {
+					BQuery tlRs = new BQuery(db, el, null, null, false);
+					while(tlRs.moveNext()) {
+						taskList += "\n<option value='" + tlRs.getString("task_id") + "'>" + tlRs.getString("task_name") + "</option>";
+					}
+					dashboardItems.put("TASK", "true");
+					dashboardItems.put("taskList", taskList);
+				}
 			}
 		}
 		
@@ -2231,7 +2240,9 @@ log.severe("BASE : " + mysql);
 	public String executeQuery(String mysql) { return db.executeQuery(mysql); }
 	
 	public BQuery getQuery(String mysql) { return new BQuery(db, mysql); }
-	public boolean hasDashboardItem(String dashboardItem) {return dashboardItems.contains(dashboardItem); }
+	
+	public boolean hasDashboardItem(String dashboardItem) {return dashboardItems.containsKey(dashboardItem); }
+	public String getDashboardItem(String dashboardItem) { return dashboardItems.get(dashboardItem); }
 
 	public BElement getRoot() { return root; }
 	public BElement getView() { return view; }

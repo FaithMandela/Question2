@@ -137,6 +137,9 @@ public class Bajax extends HttpServlet {
 		} else if("attendance".equals(fnct)) {
 			resp = attendance(request);
 			response.setContentType("application/json;charset=\"utf-8\"");
+		} else if("task".equals(fnct)) {
+			resp = tasks(request);
+			response.setContentType("application/json;charset=\"utf-8\"");
 		}
 		
 		web.close();			// close DB commections
@@ -237,8 +240,8 @@ public class Bajax extends HttpServlet {
 		oldPass = oldPass.replaceAll("'", "''");
 		newPass = newPass.replaceAll("'", "''");
 		
-		String mysql = "SELECT " + fnct + "('" + web.getUserID() + "', '" + oldPass + "','" + newPass + "')";
-		String myoutput = web.executeFunction(mysql);
+		String mySql = "SELECT " + fnct + "('" + web.getUserID() + "', '" + oldPass + "','" + newPass + "')";
+		String myoutput = web.executeFunction(mySql);
 		
 		if(myoutput == null) resp = "{\"success\": 0, \"message\": \"Old Password Is incorrect\"}";
 		else resp = "{\"success\": 1, \"message\": \"Password Changed Successfully\"}";
@@ -454,8 +457,46 @@ System.out.println("BASE 1025 : " + upSql);
 	
 	public String attendance(HttpServletRequest request) {
 		String resp = "";
-		
+		String myOutput = null;
 System.out.println("BASE 2020 : ");
+
+		String jsonField = request.getParameter("json");
+		if(jsonField != null) {
+			JsonReader jsonReader = Json.createReader(new StringReader(jsonField));
+			JsonObject jObj = jsonReader.readObject();
+
+			String mySql = "SELECT add_access_logs(" + db.getUserID() + "," + jObj.getString("log_type")
+				+ ",'" + jObj.getString("log_in_out") + "', '" + request.getRemoteAddr() + "');";
+System.out.println("BASE 2030 : " + mySql);
+		
+			myOutput = db.executeFunction(mySql);
+		}
+		
+		if(myOutput == null) resp = "{\"success\": 0, \"message\": \"Old Password Is incorrect\"}";
+		else resp = "{\"success\": 1, \"message\": \"Password Changed Successfully\"}";
+		
+		return resp;
+	}
+	
+	public String tasks(HttpServletRequest request) {
+		String resp = "";
+		String myOutput = null;
+System.out.println("BASE 2120 : ");
+
+		String jsonField = request.getParameter("json");
+		if(jsonField != null) {
+			JsonReader jsonReader = Json.createReader(new StringReader(jsonField));
+			JsonObject jObj = jsonReader.readObject();
+			
+			String mySql = "SELECT add_timesheet(" + jObj.getString("task_name")
+				+ "," + jObj.getString("start") + ", '" + jObj.getString("task_narrative") + "');";
+System.out.println("BASE 2130 : " + mySql);
+
+			myOutput = db.executeFunction(mySql);
+		}
+		
+		if(myOutput == null) resp = "{\"success\": 0, \"message\": \"Old Password Is incorrect\"}";
+		else resp = "{\"success\": 1, \"message\": \"Password Changed Successfully\"}";
 		
 		return resp;
 	}

@@ -15,8 +15,7 @@
                             <div class="col-sm-10 col-xs-12">
                                 <select class="form-control tasks-manage" id="task_name" name="task_name" data-placeholder="Select Task">
                                     <option value=""></option>
-                                    <option value="DE">Develop Openbaraza Website</option>
-                                    <option value="IV">Improve Voucher UI</option>
+                                    <%=web.getDashboardItem("taskList")%>
                                 </select>
                             </div>
                         </div>
