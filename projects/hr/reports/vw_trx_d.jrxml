@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_trx" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="07ed0f29-1247-45fa-9fcf-875d7ddf1b00">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_trx_d" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="07ed0f29-1247-45fa-9fcf-875d7ddf1b00">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="96"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -194,7 +194,7 @@ $P!{organd}]]>
 				<textFieldExpression><![CDATA[$F{order_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="0" y="297" width="44" height="15" forecolor="#000000" uuid="07c2b76d-70ea-44e4-871f-d48dbddb120a"/>
+				<reportElement style="Column header" x="0" y="297" width="57" height="15" forecolor="#000000" uuid="07c2b76d-70ea-44e4-871f-d48dbddb120a"/>
 				<box>
 					<topPen lineWidth="0.75" lineStyle="Solid"/>
 					<leftPen lineWidth="0.75" lineStyle="Solid"/>
@@ -206,7 +206,7 @@ $P!{organd}]]>
 				<text><![CDATA[Job :]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="44" y="297" width="508" height="15" uuid="a385a690-c96b-4299-8d9b-ed78e7c73295"/>
+				<reportElement style="Detail" x="57" y="297" width="495" height="15" uuid="a385a690-c96b-4299-8d9b-ed78e7c73295"/>
 				<box>
 					<topPen lineWidth="0.75" lineStyle="Solid"/>
 					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
@@ -333,7 +333,7 @@ $P!{organd}]]>
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_transaction_details.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_transaction_details_d.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</detail>

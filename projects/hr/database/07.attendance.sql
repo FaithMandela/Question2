@@ -86,6 +86,7 @@ CREATE TABLE access_logs (
 	attendance_id			integer references attendance,
 	org_id					integer references orgs,
 	log_time				timestamp default current_timestamp not null,
+	log_time_out			timestamp,
 	log_ip					varchar(32),
 	log_location			point,
 	log_name				varchar(50),

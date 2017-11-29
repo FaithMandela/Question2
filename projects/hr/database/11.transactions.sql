@@ -264,6 +264,7 @@ CREATE TABLE transaction_details (
 	quantity				integer not null,
     amount 					real default 0 not null,
 	tax_amount				real default 0 not null,
+	discount				real default 0 not null CHECK (discount BETWEEN 0 AND 100),
 	narrative				varchar(240),
 	purpose					varchar(320),
 	details					text
@@ -467,9 +468,10 @@ CREATE VIEW vw_trx AS
 
 CREATE VIEW vw_trx_sum AS
 	SELECT transaction_details.transaction_id, 
-		SUM(transaction_details.quantity * transaction_details.amount) as total_amount,
-		SUM(transaction_details.quantity * transaction_details.tax_amount) as total_tax_amount,
-		SUM(transaction_details.quantity * (transaction_details.amount + transaction_details.tax_amount)) as total_sale_amount
+		SUM(transaction_details.quantity * transaction_details.amount * (100 - transaction_details.discount) / 100) as total_amount,
+		SUM(transaction_details.quantity * transaction_details.tax_amount * (100 - transaction_details.discount) / 100) as total_tax_amount,
+		SUM(transaction_details.quantity * ((100 - transaction_details.discount) / 100) * 
+			(transaction_details.amount + transaction_details.tax_amount)) as total_sale_amount
 	FROM transaction_details
 	GROUP BY transaction_details.transaction_id;
 
@@ -487,19 +489,21 @@ CREATE VIEW vw_transaction_details AS
 		vw_items.for_sale, vw_items.for_purchase, vw_items.for_stock, vw_items.inventory,
 		
 		transaction_details.transaction_detail_id, transaction_details.org_id, transaction_details.quantity, 
-		transaction_details.amount, transaction_details.tax_amount, transaction_details.narrative, transaction_details.details,
+		transaction_details.amount, transaction_details.tax_amount, transaction_details.discount,
+		transaction_details.narrative, transaction_details.details,
 		COALESCE(transaction_details.narrative, vw_items.item_name) as item_description,
-		(transaction_details.quantity * transaction_details.amount) as full_amount,
-		(transaction_details.quantity * transaction_details.tax_amount) as full_tax_amount,
-		(transaction_details.quantity * (transaction_details.amount + transaction_details.tax_amount)) as full_total_amount,
+		(transaction_details.quantity * ((100 - transaction_details.discount) / 100) * transaction_details.amount) as full_amount,
+		(transaction_details.quantity * ((100 - transaction_details.discount) / 100) * transaction_details.tax_amount) as full_tax_amount,
+		(transaction_details.quantity * ((100 - transaction_details.discount) / 100) * 
+			(transaction_details.amount + transaction_details.tax_amount)) as full_total_amount,
 		(CASE WHEN (vw_transactions.transaction_type_id = 5) or (vw_transactions.transaction_type_id = 9) 
-			THEN (transaction_details.quantity * transaction_details.tax_amount) ELSE 0 END) as tax_debit_amount,
+			THEN (transaction_details.quantity * ((100 - transaction_details.discount) / 100) * transaction_details.tax_amount) ELSE 0 END) as tax_debit_amount,
 		(CASE WHEN (vw_transactions.transaction_type_id = 2) or (vw_transactions.transaction_type_id = 10) 
-			THEN (transaction_details.quantity * transaction_details.tax_amount) ELSE 0 END) as tax_credit_amount,
+			THEN (transaction_details.quantity * ((100 - transaction_details.discount) / 100) * transaction_details.tax_amount) ELSE 0 END) as tax_credit_amount,
 		(CASE WHEN (vw_transactions.transaction_type_id = 5) or (vw_transactions.transaction_type_id = 9) 
-			THEN (transaction_details.quantity * transaction_details.amount) ELSE 0 END) as full_debit_amount,
+			THEN (transaction_details.quantity * ((100 - transaction_details.discount) / 100) * transaction_details.amount) ELSE 0 END) as full_debit_amount,
 		(CASE WHEN (vw_transactions.transaction_type_id = 2) or (vw_transactions.transaction_type_id = 10) 
-			THEN (transaction_details.quantity * transaction_details.amount)  ELSE 0 END) as full_credit_amount,
+			THEN (transaction_details.quantity * ((100 - transaction_details.discount) / 100) * transaction_details.amount)  ELSE 0 END) as full_credit_amount,
 		(CASE WHEN (vw_transactions.transaction_type_id = 2) or (vw_transactions.transaction_type_id = 9) 
 			THEN vw_items.sales_account_id ELSE vw_items.purchase_account_id END) as trans_account_id
 	FROM transaction_details INNER JOIN vw_transactions ON transaction_details.transaction_id = vw_transactions.transaction_id
@@ -720,13 +724,17 @@ DECLARE
 BEGIN
 
 	IF(TG_OP = 'DELETE')THEN
-		SELECT SUM(quantity * (amount + tax_amount)), SUM(quantity *  tax_amount) INTO v_amount, v_tax_amount
+		SELECT SUM(quantity * (amount + tax_amount) * ((100 - discount) / 100)), 
+			SUM(quantity *  tax_amount * ((100 - discount) / 100)) 
+			INTO v_amount, v_tax_amount
 		FROM transaction_details WHERE (transaction_id = OLD.transaction_id);
 		
 		UPDATE transactions SET transaction_amount = v_amount, transaction_tax_amount = v_tax_amount
 		WHERE (transaction_id = OLD.transaction_id);	
 	ELSE
-		SELECT SUM(quantity * (amount + tax_amount)), SUM(quantity *  tax_amount) INTO v_amount, v_tax_amount
+		SELECT SUM(quantity * (amount + tax_amount) * ((100 - discount) / 100)), 
+			SUM(quantity *  tax_amount * ((100 - discount) / 100)) 
+			INTO v_amount, v_tax_amount
 		FROM transaction_details WHERE (transaction_id = NEW.transaction_id);
 		
 		UPDATE transactions SET transaction_amount = v_amount, transaction_tax_amount = v_tax_amount
@@ -858,8 +866,8 @@ BEGIN
 	FROM transactions
 	WHERE (transaction_id = CAST($1 as integer));
 
-	INSERT INTO transaction_details (org_id, transaction_id, account_id, item_id, quantity, amount, tax_amount, narrative, details)
-	SELECT org_id, currval('transactions_transaction_id_seq'), account_id, item_id, quantity, amount, tax_amount, narrative, details
+	INSERT INTO transaction_details (org_id, transaction_id, account_id, item_id, quantity, amount, tax_amount, narrative, details, discount)
+	SELECT org_id, currval('transactions_transaction_id_seq'), account_id, item_id, quantity, amount, tax_amount, narrative, details, discount
 	FROM transaction_details
 	WHERE (transaction_id = CAST($1 as integer));
 
