@@ -334,15 +334,17 @@
 					<TEXTAREA w="320" title="Details" y="150" h="70" x="10" rows="5">details</TEXTAREA>
 				</FORM>
 				<GRID name="Quotation Details" keyfield="transaction_detail_id" linkfield="transaction_id" table="transaction_details" th="300" collapse="in">
-					<COMBOBOX w="175" title="Item" lptable="items" where="(for_sale=true)" lpfield="item_name">item_id</COMBOBOX>
+					<COMBOBOX w="125" title="Item" lptable="items" where="(for_sale=true)" lpfield="item_name">item_id</COMBOBOX>
 					<TEXTNUMBER w="50" title="Quantity" default="1" required="true">quantity</TEXTNUMBER>
 					<TEXTDECIMAL w="50" title="Amount" required="true">amount</TEXTDECIMAL>
-					<FUNCTION w="50" fnct="(quantity * amount)" title="Total" format="double">total_amount</FUNCTION>
-					<FUNCTION w="50" fnct="(quantity * tax_amount)" title="Tax" format="double">total_tax_amount</FUNCTION>
-					<TEXTAREA w="175" title="Narrative">narrative</TEXTAREA>
+					<TEXTDECIMAL w="50" title="Discount" required="true">discount</TEXTDECIMAL>
+					<FUNCTION w="50" fnct="(quantity * amount * (100 - discount) / 100)" title="Total" format="double">total_amount</FUNCTION>
+					<FUNCTION w="50" fnct="(quantity * tax_amount * (100 - discount) / 100)" title="Tax" format="double">total_tax_amount</FUNCTION>
+					<TEXTAREA w="125" title="Narrative">narrative</TEXTAREA>
 				</GRID>
 			</ACCORDION>
 			<JASPER name="Sales Quotation" reportfile="vw_trx.jasper"></JASPER>
+			<JASPER name="Sales Quotation - Discount" reportfile="vw_trx_d.jasper"></JASPER>
 		</GRID>
 		<GRID name="Sales Order" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 1)">
 			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
@@ -377,15 +379,17 @@
 					<TEXTAREA w="320" title="Details" y="150" h="70" x="10" rows="5">details</TEXTAREA>
 				</FORM>
 				<GRID name="Order Details" keyfield="transaction_detail_id" linkfield="transaction_id" table="transaction_details" collapse="in">
-					<COMBOBOX w="175" title="Item" lptable="items" where="(for_sale=true)" lpfield="item_name">item_id</COMBOBOX>
+					<COMBOBOX w="125" title="Item" lptable="items" where="(for_sale=true)" lpfield="item_name">item_id</COMBOBOX>
 					<TEXTNUMBER w="50" title="Quantity" default="1" required="true">quantity</TEXTNUMBER>
 					<TEXTDECIMAL w="50" title="Amount" required="true">amount</TEXTDECIMAL>
-					<FUNCTION w="50" fnct="(quantity * amount)" title="Total" format="double">total_amount</FUNCTION>
-					<FUNCTION w="50" fnct="(quantity * tax_amount)" title="Tax" format="double">total_tax_amount</FUNCTION>
-					<TEXTAREA w="175" title="Narrative">narrative</TEXTAREA>
+					<TEXTDECIMAL w="50" title="Discount" required="true">discount</TEXTDECIMAL>
+					<FUNCTION w="50" fnct="(quantity * amount * (100 - discount) / 100)" title="Total" format="double">total_amount</FUNCTION>
+					<FUNCTION w="50" fnct="(quantity * tax_amount * (100 - discount) / 100)" title="Tax" format="double">total_tax_amount</FUNCTION>
+					<TEXTAREA w="125" title="Narrative">narrative</TEXTAREA>
 				</GRID>
 			</ACCORDION>
 			<JASPER name="Sales Order" reportfile="vw_trx.jasper"></JASPER>
+			<JASPER name="Sales Order - Discount" reportfile="vw_trx_d.jasper"></JASPER>
 		</GRID>
 		<GRID name="Delivery Note" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 11)">
 			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
@@ -427,7 +431,6 @@
 				<TEXTDATE w="75" title="Transaction Date">transaction_date</TEXTDATE>
 				<TEXTFIELD w="175" title="Item Name">item_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Quantity">quantity</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 				<TEXTFIELD w="175" title="Narrative">narrative</TEXTFIELD>
 				<ACTIONS>
 					<ACTION fnct="add_tx_link">Add to Delivery</ACTION>
@@ -469,15 +472,17 @@
 					<TEXTAREA w="320" title="Details" y="150" h="70" x="10" rows="5">details</TEXTAREA>
 				</FORM>
 				<GRID name="Invoice Details" keyfield="transaction_detail_id" linkfield="transaction_id" table="transaction_details" collapse="in">
-					<COMBOBOX w="175" title="Item" lptable="items" where="(for_sale=true)" lpfield="item_name">item_id</COMBOBOX>
+					<COMBOBOX w="125" title="Item" lptable="items" where="(for_sale=true)" lpfield="item_name">item_id</COMBOBOX>
 					<TEXTNUMBER w="50" title="Quantity" default="1" required="true">quantity</TEXTNUMBER>
 					<TEXTDECIMAL w="50" title="Amount" required="true">amount</TEXTDECIMAL>
-					<FUNCTION w="50" fnct="(quantity * amount)" title="Total" format="double">total_amount</FUNCTION>
-					<FUNCTION w="50" fnct="(quantity * tax_amount)" title="Tax" format="double">total_tax_amount</FUNCTION>
-					<TEXTAREA w="175" title="Narrative">narrative</TEXTAREA>
+					<TEXTDECIMAL w="50" title="Discount" required="true">discount</TEXTDECIMAL>
+					<FUNCTION w="50" fnct="(quantity * amount * (100 - discount) / 100)" title="Total" format="double">total_amount</FUNCTION>
+					<FUNCTION w="50" fnct="(quantity * tax_amount * (100 - discount) / 100)" title="Tax" format="double">total_tax_amount</FUNCTION>
+					<TEXTAREA w="125" title="Narrative">narrative</TEXTAREA>
 				</GRID>
 			</ACCORDION>
 			<JASPER name="Sales Invoice" reportfile="vw_trx.jasper"></JASPER>
+			<JASPER name="Sales Invoice - Discount" reportfile="vw_trx_d.jasper"></JASPER>
 		</GRID>
 		<GRID name="Receipts" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 7)">
 			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
@@ -541,15 +546,17 @@
 					<TEXTAREA w="320" title="Details" y="150" h="70" x="10" rows="5">details</TEXTAREA>
 				</FORM>
 				<GRID name="Credit Note Details" keyfield="transaction_detail_id" linkfield="transaction_id" table="transaction_details" collapse="in">
-					<COMBOBOX w="175" title="Item" lptable="items" where="(for_sale=true)" lpfield="item_name">item_id</COMBOBOX>
+					<COMBOBOX w="125" title="Item" lptable="items" where="(for_sale=true)" lpfield="item_name">item_id</COMBOBOX>
 					<TEXTNUMBER w="50" title="Quantity" default="1" required="true">quantity</TEXTNUMBER>
 					<TEXTDECIMAL w="50" title="Amount" required="true">amount</TEXTDECIMAL>
-					<FUNCTION w="50" fnct="(quantity * amount)" title="Total" format="double">total_amount</FUNCTION>
-					<FUNCTION w="50" fnct="(quantity * tax_amount)" title="Tax" format="double">total_tax_amount</FUNCTION>
-					<TEXTAREA w="175" title="Narrative">narrative</TEXTAREA>
+					<TEXTDECIMAL w="50" title="Discount" required="true">discount</TEXTDECIMAL>
+					<FUNCTION w="50" fnct="(quantity * amount * (100 - discount) / 100)" title="Total" format="double">total_amount</FUNCTION>
+					<FUNCTION w="50" fnct="(quantity * tax_amount * (100 - discount) / 100)" title="Tax" format="double">total_tax_amount</FUNCTION>
+					<TEXTAREA w="125" title="Narrative">narrative</TEXTAREA>
 				</GRID>
 			</ACCORDION>
 			<JASPER name="Credit Note" reportfile="vw_trx.jasper"></JASPER>
+			<JASPER name="Credit Note - Discount" reportfile="vw_trx_d.jasper"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Purchase" key="27" h="500">
@@ -586,15 +593,16 @@
 					<TEXTAREA w="320" title="Details" y="150" h="70" x="10" rows="5">details</TEXTAREA>
 				</FORM>
 				<GRID name="Quotation Details" keyfield="transaction_detail_id" linkfield="transaction_id" table="transaction_details" collapse="in">
-					<COMBOBOX w="175" title="Item" lptable="items" where="(for_purchase=true)" lpfield="item_name">item_id</COMBOBOX>
+					<COMBOBOX w="125" title="Item" lptable="items" where="(for_sale=true)" lpfield="item_name">item_id</COMBOBOX>
 					<TEXTNUMBER w="50" title="Quantity" default="1" required="true">quantity</TEXTNUMBER>
 					<TEXTDECIMAL w="50" title="Amount" required="true">amount</TEXTDECIMAL>
-					<FUNCTION w="50" fnct="(quantity * amount)" title="Total" format="double">total_amount</FUNCTION>
-					<FUNCTION w="50" fnct="(quantity * tax_amount)" title="Tax" format="double">total_tax_amount</FUNCTION>
-					<TEXTAREA w="175" title="Narrative">narrative</TEXTAREA>
+					<TEXTDECIMAL w="50" title="Discount" required="true">discount</TEXTDECIMAL>
+					<FUNCTION w="50" fnct="(quantity * amount * (100 - discount) / 100)" title="Total" format="double">total_amount</FUNCTION>
+					<FUNCTION w="50" fnct="(quantity * tax_amount * (100 - discount) / 100)" title="Tax" format="double">total_tax_amount</FUNCTION>
+					<TEXTAREA w="125" title="Narrative">narrative</TEXTAREA>
 				</GRID>
 			</ACCORDION>
-			<JASPER name="Purchase Quotation" reportfile="vw_trx.jasper"></JASPER>
+			<JASPER name="Purchase Quotation" reportfile="vw_trx_d.jasper"></JASPER>
 		</GRID>
 		<GRID name="Purchase Order" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 4)">
 			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
@@ -629,12 +637,13 @@
 					<TEXTAREA w="320" title="Details" y="150" h="70" x="10" rows="5">details</TEXTAREA>
 				</FORM>
 				<GRID name="Order Details" keyfield="transaction_detail_id" linkfield="transaction_id" table="transaction_details" collapse="in">
-					<COMBOBOX w="175" title="Item" lptable="items" where="(for_purchase=true)" lpfield="item_name">item_id</COMBOBOX>
+					<COMBOBOX w="125" title="Item" lptable="items" where="(for_sale=true)" lpfield="item_name">item_id</COMBOBOX>
 					<TEXTNUMBER w="50" title="Quantity" default="1" required="true">quantity</TEXTNUMBER>
 					<TEXTDECIMAL w="50" title="Amount" required="true">amount</TEXTDECIMAL>
-					<FUNCTION w="50" fnct="(quantity * amount)" title="Total" format="double">total_amount</FUNCTION>
-					<FUNCTION w="50" fnct="(quantity * tax_amount)" title="Tax" format="double">total_tax_amount</FUNCTION>
-					<TEXTAREA w="175" title="Narrative">narrative</TEXTAREA>
+					<TEXTDECIMAL w="50" title="Discount" required="true">discount</TEXTDECIMAL>
+					<FUNCTION w="50" fnct="(quantity * amount * (100 - discount) / 100)" title="Total" format="double">total_amount</FUNCTION>
+					<FUNCTION w="50" fnct="(quantity * tax_amount * (100 - discount) / 100)" title="Tax" format="double">total_tax_amount</FUNCTION>
+					<TEXTAREA w="125" title="Narrative">narrative</TEXTAREA>
 				</GRID>
 			</ACCORDION>
 			<GRID name="Convert Requisition" keyfield="transaction_detail_id" table="vw_transaction_details" where="(transaction_type_id = 16)">
@@ -648,7 +657,7 @@
 					<ACTION fnct="add_tx_link">Add to PO</ACTION>
 				</ACTIONS>
 			</GRID>
-			<JASPER name="Purchase Order" reportfile="vw_trx.jasper"></JASPER>
+			<JASPER name="Purchase Order" reportfile="vw_trx_d.jasper"></JASPER>
 		</GRID>
 		<GRID name="Goods Receipt Note" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 12)">
 			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
@@ -689,7 +698,6 @@
 				<TEXTDATE w="75" title="Transaction Date">transaction_date</TEXTDATE>
 				<TEXTFIELD w="175" title="Item Name">item_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Quantity">quantity</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 				<TEXTFIELD w="175" title="Narrative">narrative</TEXTFIELD>
 				<ACTIONS>
 					<ACTION fnct="add_tx_link">Add to Receipt</ACTION>
@@ -731,15 +739,16 @@
 					<TEXTAREA w="320" title="Details" y="150" h="70" x="10" rows="5">details</TEXTAREA>
 				</FORM>
 				<GRID name="Invoice Details" keyfield="transaction_detail_id" linkfield="transaction_id" table="transaction_details" collapse="in">
-					<COMBOBOX w="175" title="Item" lptable="items" where="(for_purchase=true)" lpfield="item_name">item_id</COMBOBOX>
+					<COMBOBOX w="125" title="Item" lptable="items" where="(for_sale=true)" lpfield="item_name">item_id</COMBOBOX>
 					<TEXTNUMBER w="50" title="Quantity" default="1" required="true">quantity</TEXTNUMBER>
 					<TEXTDECIMAL w="50" title="Amount" required="true">amount</TEXTDECIMAL>
-					<FUNCTION w="50" fnct="(quantity * amount)" title="Total" format="double">total_amount</FUNCTION>
-					<FUNCTION w="50" fnct="(quantity * tax_amount)" title="Tax" format="double">total_tax_amount</FUNCTION>
-					<TEXTAREA w="175" title="Narrative">narrative</TEXTAREA>
+					<TEXTDECIMAL w="50" title="Discount" required="true">discount</TEXTDECIMAL>
+					<FUNCTION w="50" fnct="(quantity * amount * (100 - discount) / 100)" title="Total" format="double">total_amount</FUNCTION>
+					<FUNCTION w="50" fnct="(quantity * tax_amount * (100 - discount) / 100)" title="Tax" format="double">total_tax_amount</FUNCTION>
+					<TEXTAREA w="125" title="Narrative">narrative</TEXTAREA>
 				</GRID>
 			</ACCORDION>
-			<JASPER name="Purchase Invoice" reportfile="vw_trx.jasper"></JASPER>
+			<JASPER name="Purchase Invoice" reportfile="vw_trx_d.jasper"></JASPER>
 		</GRID>
 		<GRID name="Payments" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 8)">
 			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
@@ -803,15 +812,16 @@
 					<TEXTAREA w="320" title="Details" y="150" h="70" x="10" rows="5">details</TEXTAREA>
 				</FORM>
 				<GRID name="Debit Note Details" keyfield="transaction_detail_id" linkfield="transaction_id" table="transaction_details" collapse="in">
-					<COMBOBOX w="175" title="Item" lptable="items" where="(for_purchase=true)" lpfield="item_name">item_id</COMBOBOX>
+					<COMBOBOX w="125" title="Item" lptable="items" where="(for_sale=true)" lpfield="item_name">item_id</COMBOBOX>
 					<TEXTNUMBER w="50" title="Quantity" default="1" required="true">quantity</TEXTNUMBER>
 					<TEXTDECIMAL w="50" title="Amount" required="true">amount</TEXTDECIMAL>
-					<FUNCTION w="50" fnct="(quantity * amount)" title="Total" format="double">total_amount</FUNCTION>
-					<FUNCTION w="50" fnct="(quantity * tax_amount)" title="Tax" format="double">total_tax_amount</FUNCTION>
-					<TEXTAREA w="175" title="Narrative">narrative</TEXTAREA>
+					<TEXTDECIMAL w="50" title="Discount" required="true">discount</TEXTDECIMAL>
+					<FUNCTION w="50" fnct="(quantity * amount * (100 - discount) / 100)" title="Total" format="double">total_amount</FUNCTION>
+					<FUNCTION w="50" fnct="(quantity * tax_amount * (100 - discount) / 100)" title="Tax" format="double">total_tax_amount</FUNCTION>
+					<TEXTAREA w="125" title="Narrative">narrative</TEXTAREA>
 				</GRID>
 			</ACCORDION>
-			<JASPER name="Debit Note" reportfile="vw_trx.jasper"></JASPER>
+			<JASPER name="Debit Note" reportfile="vw_trx_r.jasper"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Issue Tracking" key="95" h="550">

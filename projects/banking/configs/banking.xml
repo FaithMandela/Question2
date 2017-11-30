@@ -23,7 +23,7 @@
 		<MENU name="Configurations" role="admin">
 			<MENU name="Products">110</MENU>
 			<MENU name="Organisation" role="admin">12</MENU>
-			<MENU name="Subscriptions">260</MENU>
+			<MENU name="Subscriptions" role="master">260</MENU>
 			<MENU name="Banks">25</MENU>
 			<MENU name="Items">30</MENU>
 			<MENU name="Chat of Accounts">5</MENU>
