@@ -54,66 +54,8 @@ CREATE INDEX payments_journal_id ON payments(journal_id);
 CREATE INDEX payments_sys_audit_trail_id ON payments(sys_audit_trail_id);
 CREATE INDEX payments_org_id ON payments(org_id);
 
----associative functions
-CREATE OR REPLACE FUNCTION payment_number() 
-  RETURNS trigger AS $$
-DECLARE
-	rnd 			integer;
-	receipt_no  	varchar(12);
-BEGIN
-	receipt_no := trunc(random()*1000);
-	rnd := trunc(65+random()*25);
-	receipt_no := receipt_no || chr(rnd);
-	receipt_no := receipt_no || trunc(random()*1000);
-	rnd := trunc(65+random()*25);
-	receipt_no := receipt_no || chr(rnd);
-	rnd := trunc(65+random()*25);
-	receipt_no := receipt_no || chr(rnd);
 
-	NEW.payment_number:=receipt_no;
-	---RAISE EXCEPTION '%',receipt_no;
-	RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
- CREATE TRIGGER payment_number BEFORE INSERT ON payments
- FOR EACH ROW
- EXECUTE PROCEDURE payment_number();
-
-CREATE OR REPLACE FUNCTION ins_payments() RETURNS trigger AS $$
-DECLARE
-	rec					RECORD;
-BEGIN
-	
-	IF(NEW.payment_id is not null AND NEW.tx_type = 1)THEN
-		SELECT sum(account_credit - account_debit) INTO NEW.balance
-		FROM payments
-		WHERE (payment_id < NEW.payment_id) AND (rental_id = NEW.rental_id);
-	ELSIF(NEW.payment_id is not null AND NEW.tx_type = -1)THEN
-		SELECT sum(account_debit - account_credit) INTO NEW.balance
-		FROM payments
-		WHERE (payment_id < NEW.payment_id) AND (entity_id = NEW.entity_id);
-	END IF;
-
-	IF(NEW.balance is null)THEN
-		NEW.balance := 0;
-	END IF;
-
-	IF(NEW.payment_id is not null AND NEW.tx_type = 1)THEN
-		NEW.balance := NEW.balance + (NEW.account_credit - NEW.account_debit);
-	ELSIF (NEW.payment_id is not null AND NEW.tx_type = -1)THEN
-		NEW.balance := NEW.balance + (NEW.account_debit - NEW.account_credit);
-	END IF;
-	
-	RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER ins_payments BEFORE INSERT OR UPDATE ON payments
-    FOR EACH ROW EXECUTE PROCEDURE ins_payments();
-
-
-CREATE VIEW vw_tenant_payments AS
+CREATE OR REPLACE VIEW vw_tenant_payments AS
 SELECT payment_types.account_id, payment_types.use_key_id, payment_types.payment_type_name, payment_types.is_active,
 	
 	payments.payment_id,payments.payment_type_id, payments.currency_id, payments.period_id, payments.entity_id, 
@@ -136,7 +78,7 @@ SELECT payment_types.account_id, payment_types.use_key_id, payment_types.payment
 		WHERE tx_type=1; 
 
 
-CREATE VIEW vw_client_bill AS
+CREATE OR REPLACE VIEW vw_client_bill AS
 		SELECT payment_types.account_id, payment_types.use_key_id, payment_types.payment_type_name, payment_types.is_active,
 		
 		payments.payment_id,payments.payment_type_id, payments.currency_id, payments.period_id, payments.entity_id, 
@@ -147,7 +89,7 @@ CREATE VIEW vw_client_bill AS
 		currency.currency_name, currency.currency_symbol,
 
 		vw_property.client_id, vw_property.client_name,vw_property.property_type_id,vw_property.property_type_name,vw_property.property_id,
-		vw_property.property_name,vw_property.estate,vw_property.plot_no,vw_property.units,
+		vw_property.property_name,vw_property.estate,vw_property.plot_no,
 
 		vw_periods.period_disp, vw_periods.period_month
 		
@@ -217,7 +159,7 @@ CREATE OR REPLACE FUNCTION amount_in_words(n BIGINT) RETURNS TEXT AS
 		END;
 	$$ LANGUAGE PLPGSQL;
 
-CREATE VIEW vw_receipt AS
+CREATE OR REPLACE VIEW vw_receipt AS
 	SELECT payment_types.account_id, payment_types.use_key_id, payment_types.payment_type_name, payment_types.is_active,
 		
 		payments.payment_id,payments.payment_type_id, payments.currency_id, payments.period_id, 
@@ -239,7 +181,7 @@ CREATE VIEW vw_receipt AS
 			INNER JOIN vw_periods ON vw_periods.period_id = payments.period_id
 			WHERE tx_type=1; 
 
-CREATE VIEW vw_tenant_statement AS
+CREATE OR REPLACE VIEW vw_tenant_statement AS
 	SELECT rental_id, tenant_name,(property_name||','||property_type_name||','||estate)AS property_info ,hse_no,
 
 		payment_date,payment_number,(activity_name||','||hse_no||','||period_disp)AS details,
@@ -249,7 +191,8 @@ CREATE VIEW vw_tenant_statement AS
 					ORDER BY payment_id ASC;
 
 
-CREATE VIEW vw_tenant_invoice AS
+
+CREATE OR REPLACE VIEW vw_tenant_invoice AS
 	SELECT (vw_period_rentals.period_year||'-'||vw_period_rentals.period_month)AS period_disp, 
 		(vw_period_rentals.property_name||' '|| vw_period_rentals.property_type_name||' '|| vw_period_rentals.estate)AS property_details, vw_period_rentals.tenant_name, 
 		vw_period_rentals.hse_no, vw_period_rentals.rental_amount, vw_period_rentals.service_fees, vw_period_rentals.commision, 
@@ -269,8 +212,7 @@ CREATE VIEW vw_tenant_invoice AS
 		INNER JOIN vw_orgs ON vw_orgs.org_id = payments.org_id
 		where tx_type = 1 and payment_type_id = 5 ;
 
-
-CREATE VIEW vw_receipts AS
+CREATE OR REPLACE VIEW vw_receipts AS
 	SELECT org_id,rental_id,period_id,payment_id,payment_type_id, payment_number,payment_date,account_credit,balance,currency_symbol,
 	(property_name||','||property_type_name||','||estate)AS property,(tenant_name||'-'||hse_no)AS tenant_details,period_disp,period_month
 		FROM vw_tenant_payments
