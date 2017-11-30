@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vws_subscriptions" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#736343" fontName="Times New Roman" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Times New Roman" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="filterid" class="java.lang.String">
+		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgid" class="java.lang.String">
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT vws_subscriptions.subscription_id, vws_subscriptions.business_name, vws_subscriptions.city, vws_subscriptions.country_id, vws_subscriptions.number_of_employees, vws_subscriptions.telephone, vws_subscriptions.website, vws_subscriptions.primary_contact, vws_subscriptions.job_title, vws_subscriptions.primary_email, vws_subscriptions.approve_status, vws_subscriptions.employee_count, vws_subscriptions.leave_count, vws_subscriptions.period_count
+FROM vws_subscriptions]]>
+	</queryString>
+	<field name="subscription_id" class="java.lang.Integer"/>
+	<field name="business_name" class="java.lang.String"/>
+	<field name="city" class="java.lang.String"/>
+	<field name="country_id" class="java.lang.String"/>
+	<field name="number_of_employees" class="java.lang.Integer"/>
+	<field name="telephone" class="java.lang.String"/>
+	<field name="website" class="java.lang.String"/>
+	<field name="primary_contact" class="java.lang.String"/>
+	<field name="job_title" class="java.lang.String"/>
+	<field name="primary_email" class="java.lang.String"/>
+	<field name="approve_status" class="java.lang.String"/>
+	<field name="employee_count" class="java.lang.Long"/>
+	<field name="leave_count" class="java.lang.Long"/>
+	<field name="period_count" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="71" splitType="Stretch">
+			<staticText>
+				<reportElement style="Title" x="66" y="0" width="446" height="62"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[Vws Subscriptions Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="16" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="802" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement style="Column header" x="1" y="0" width="55" height="15" forecolor="#000000"/>
+				<textElement>
+					<font size="10" fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Subscription ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="56" y="0" width="55" height="15" forecolor="#000000"/>
+				<textElement>
+					<font size="10" fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Business Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="111" y="0" width="55" height="15" forecolor="#000000"/>
+				<textElement>
+					<font size="10" fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[City]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="166" y="0" width="55" height="15" forecolor="#000000"/>
+				<textElement>
+					<font size="10" fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Country ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="221" y="0" width="55" height="15" forecolor="#000000"/>
+				<textElement>
+					<font size="10" fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Number Of Employees]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="276" y="0" width="55" height="15" forecolor="#000000"/>
+				<textElement>
+					<font size="10" fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Telephone]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="331" y="0" width="55" height="15" forecolor="#000000"/>
+				<textElement>
+					<font size="10" fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Website]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="386" y="0" width="55" height="15" forecolor="#000000"/>
+				<textElement>
+					<font size="10" fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Primary Contact]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="441" y="0" width="55" height="15" forecolor="#000000"/>
+				<textElement>
+					<font size="10" fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Job Title]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="496" y="0" width="55" height="15" forecolor="#000000"/>
+				<textElement>
+					<font size="10" fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Primary Email]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="551" y="0" width="55" height="15" forecolor="#000000"/>
+				<textElement>
+					<font size="10" fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Approve Status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="606" y="0" width="55" height="15" forecolor="#000000"/>
+				<textElement>
+					<font size="10" fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Employee Count]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="661" y="0" width="55" height="15" forecolor="#000000"/>
+				<textElement>
+					<font size="10" fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Leave Count]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="716" y="0" width="55" height="15" forecolor="#000000"/>
+				<textElement>
+					<font size="10" fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Period Count]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<frame>
+				<reportElement style="Row" mode="Opaque" x="0" y="0" width="802" height="15"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1" y="0" width="55" height="15"/>
+					<textElement>
+						<font size="10" fontName="Times New Roman"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{subscription_id}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="56" y="0" width="55" height="15"/>
+					<textElement>
+						<font size="10" fontName="Times New Roman"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{business_name}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="111" y="0" width="55" height="15"/>
+					<textElement>
+						<font size="10" fontName="Times New Roman"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{city}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="166" y="0" width="55" height="15"/>
+					<textElement>
+						<font size="10" fontName="Times New Roman"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{country_id}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="221" y="0" width="55" height="15"/>
+					<textElement>
+						<font size="10" fontName="Times New Roman"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$F{number_of_employees}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="276" y="0" width="55" height="15"/>
+					<textElement>
+						<font size="10" fontName="Times New Roman"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{telephone}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="331" y="0" width="55" height="15"/>
+					<textElement>
+						<font size="10" fontName="Times New Roman"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{website}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="386" y="0" width="55" height="15"/>
+					<textElement>
+						<font size="10" fontName="Times New Roman"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{primary_contact}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="441" y="0" width="55" height="15"/>
+					<textElement>
+						<font size="10" fontName="Times New Roman"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{job_title}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="496" y="0" width="55" height="15"/>
+					<textElement>
+						<font size="10" fontName="Times New Roman"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{primary_email}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="551" y="0" width="55" height="15"/>
+					<textElement>
+						<font size="10" fontName="Times New Roman"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{approve_status}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="606" y="0" width="55" height="15"/>
+					<textElement>
+						<font size="10" fontName="Times New Roman"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Long"><![CDATA[$F{employee_count}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="661" y="0" width="55" height="15"/>
+					<textElement>
+						<font size="10" fontName="Times New Roman"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Long"><![CDATA[$F{leave_count}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="716" y="0" width="55" height="15"/>
+					<textElement>
+						<font size="10" fontName="Times New Roman"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Long"><![CDATA[$F{period_count}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="15" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="802" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="-21" y="1" width="841" height="24" forecolor="#D0B48E" backcolor="#F2EBDF"/>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="771" y="1" width="40" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="691" y="1" width="80" height="20" forecolor="#736343"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE, d MMMMM yyyy HH:mm:ss Z">
+					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

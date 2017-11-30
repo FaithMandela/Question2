@@ -155,6 +155,24 @@ CREATE VIEW vws_productions AS
 		products.is_montly_bill, products.montly_cost, products.is_annual_bill, products.annual_cost,
 		products.details,
 		productions.is_renewed, productions.expiry_date;
+		
+CREATE VIEW vws_subscriptions AS
+	SELECT subscriptions.subscription_id, subscriptions.org_id, subscriptions.business_name,
+		subscriptions.business_address, subscriptions.city, subscriptions.state,
+		subscriptions.country_id, subscriptions.number_of_employees,
+		subscriptions.telephone, subscriptions.website,
+		subscriptions.primary_contact, subscriptions.job_title, subscriptions.primary_email,
+		subscriptions.approve_status,
+		ab.employee_count, ac.leave_count, ad.period_count
+		
+	FROM subscriptions 
+	LEFT JOIN (SELECT org_id, count(entity_id) as employee_count FROM employees GROUP BY org_id) as ab
+		ON subscriptions.org_id = ab.org_id
+	LEFT JOIN (SELECT org_id, count(employee_leave_id) as leave_count FROM employee_leave GROUP BY org_id) as ac
+		ON subscriptions.org_id = ac.org_id
+	LEFT JOIN (SELECT org_id, count(period_id) as period_count FROM periods GROUP BY org_id) as ad
+		ON subscriptions.org_id = ad.org_id;
+		
 
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON subscriptions
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
