@@ -713,13 +713,23 @@ public class BWeb {
 			if(hasAccess) {
 				if(el.getName().equals("ATTENDANCE")) {
 					dashboardItems.put("ATTENDANCE", "true");
+					
+					BQuery alRs = new BQuery(db, el.getElementByName("ACCESSLOG"), null, null);
+					dashboardItems.put("accessLog", alRs.getJSON());
+					alRs.close();
 				} else if(el.getName().equals("TASK")) {
-					BQuery tlRs = new BQuery(db, el, null, null, false);
+					dashboardItems.put("TASK", "true");
+					
+					BQuery tlRs = new BQuery(db, el.getElementByName("TASKLIST"), null, null, false);
 					while(tlRs.moveNext()) {
 						taskList += "\n<option value='" + tlRs.getString("task_id") + "'>" + tlRs.getString("task_name") + "</option>";
 					}
-					dashboardItems.put("TASK", "true");
 					dashboardItems.put("taskList", taskList);
+					tlRs.close();
+					
+					BQuery tsRs = new BQuery(db, el.getElementByName("TIMESHEET"), null, null);
+					dashboardItems.put("timeSheet", tsRs.getJSON());
+					tsRs.close();
 				}
 			}
 		}

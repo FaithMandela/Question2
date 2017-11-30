@@ -113,10 +113,29 @@
 				<TEXTDATE w="75" title="Leave From">leave_from</TEXTDATE>
 				<TEXTDATE w="75" title="Leave To">leave_to</TEXTDATE>
 			</TILELIST>
-			<ATTENDANCE></ATTENDANCE>
-			<TASK name="Open Tasks" keyfield="task_id" table="vw_tasks" where="(task_completed = false)" user="entity_id">
-				<TEXTFIELD w="75" title="Task Id">task_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="Task Name">task_name</TEXTFIELD>
+			<ATTENDANCE>
+				<ACCESSLOG name="Access Logs" keyfield="access_log_id" table="access_logs" where="(log_time_out is null)" user="entity_id">
+					<TEXTFIELD w="75" title="Access Log ID">access_log_id</TEXTFIELD>
+					<TEXTTIMESTAMP w="75" title="Log Time">log_time</TEXTTIMESTAMP>
+					<TEXTTIMESTAMP w="75" title="Log Time Out">log_time_out</TEXTTIMESTAMP>
+					<TEXTFIELD w="75" title="Log In Out">log_in_out</TEXTFIELD>
+					<TEXTFIELD w="75" title="Log Type">log_type</TEXTFIELD>
+				</ACCESSLOG>
+			</ATTENDANCE>
+			<TASK name="Tasks">
+				<TASKLIST name="Open Tasks" keyfield="task_id" table="vw_tasks" where="(task_completed = false)" user="entity_id">
+					<TEXTFIELD w="75" title="Task Id">task_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Task Name">task_name</TEXTFIELD>
+				</TASKLIST>
+				<TIMESHEET name="Timesheet" keyfield="timesheet_id" table="vw_timesheet" where="(ts_completed = false)" user="entity_id">
+					<TEXTFIELD w="75" title="Timesheet Id">timesheet_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Task Id">task_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Task Name">task_name</TEXTFIELD>
+					<TEXTDATE w="75" title="Date">ts_date</TEXTDATE>
+					<SPINTIME w="75" title="Start Time">ts_start_time</SPINTIME>
+					<SPINTIME w="75" title="End Time">ts_end_time</SPINTIME>
+					<TEXTFIELD w="275" title="Narrative">ts_narrative</TEXTFIELD>
+				</TIMESHEET>
 			</TASK>
 		</DASHBOARD>
 	</DESK>
