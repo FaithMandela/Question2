@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_tenant_statement" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cca16d81-47ae-4232-996f-69df5c4c66cd">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_tenant_statement" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cca16d81-47ae-4232-996f-69df5c4c66cd">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -57,7 +57,7 @@ $P!{organd}AND (CAST(start_date AS Date) BETWEEN '$P!{minDate}' AND '$P!{maxDate
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
-				<text><![CDATA[Client Statement]]></text>
+				<text><![CDATA[Property Owner  Statement]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -84,7 +84,7 @@ $P!{organd}AND (CAST(start_date AS Date) BETWEEN '$P!{minDate}' AND '$P!{maxDate
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<text><![CDATA[Client]]></text>
+				<text><![CDATA[Property Owner ]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="211" y="0" width="161" height="15" forecolor="#000000" uuid="7b6552d3-0865-42f6-a282-54e91a1935ac"/>
