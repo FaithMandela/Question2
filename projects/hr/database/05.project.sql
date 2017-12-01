@@ -290,7 +290,7 @@ CREATE VIEW vw_tasks AS
 		INNER JOIN vw_phases ON tasks.phase_id = vw_phases.phase_id;
 		
 CREATE VIEW vw_timesheet AS
-		SELECT vw_tasks.client_id, vw_tasks.client_name, vw_tasks.project_type_id, vw_tasks.project_type_name, 
+	SELECT vw_tasks.client_id, vw_tasks.client_name, vw_tasks.project_type_id, vw_tasks.project_type_name, 
 		vw_tasks.project_id, vw_tasks.project_name, vw_tasks.signed, vw_tasks.contract_ref, 
 		vw_tasks.monthly_amount, vw_tasks.full_amount, vw_tasks.project_cost, vw_tasks.narrative, 
 		vw_tasks.start_date, vw_tasks.ending_date,
@@ -300,7 +300,7 @@ CREATE VIEW vw_timesheet AS
 		vw_tasks.task_id, vw_tasks.task_name, 
 		vw_tasks.task_start_date, vw_tasks.task_dead_line, vw_tasks.task_end_date, vw_tasks.task_completed, 
 		timesheet.org_id, timesheet.timesheet_id, timesheet.ts_date, timesheet.ts_start_time, timesheet.ts_end_time, 
-		timesheet.ts_narrative, timesheet.details,
+		timesheet.ts_completed, timesheet.ts_narrative, timesheet.details,
 		(EXTRACT(HOURS from timesheet.ts_end_time - timesheet.ts_start_time) +
 		EXTRACT(MINUTES from timesheet.ts_end_time - timesheet.ts_start_time) / 60) as ts_hours
 	FROM timesheet INNER JOIN vw_tasks ON timesheet.task_id = vw_tasks.task_id;

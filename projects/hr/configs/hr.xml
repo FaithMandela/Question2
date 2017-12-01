@@ -57,6 +57,7 @@
 			<MENU name="Aptitude Test Report">185</MENU>
 		</MENU>
 		<MENU name="Reports" role="admin,hr,reports">
+			<MENU name="Subscriptions" role="master">225</MENU>
 			<MENU name="Summary Reports" role="hr">150</MENU>
 			<MENU name="Employee List" role="hr">106</MENU>
 			<MENU name="Banks" role="hr,reports">101</MENU>
@@ -4655,5 +4656,8 @@
 			<JASPER name="Leave Approvals" org.table="vw_employee_leave" reportfile="employee_leave.jasper"></JASPER>
 			<JASPER name="Leave Staff Summary" reportfile="employee_leave_report.jasper"></JASPER>
 		</FILTER>
+	</DESK>
+	<DESK w="700" name="Subscriptions" key="225" h="550">
+		<JASPER name="Subscriptions" reportfile="vws_subscriptions.jasper"></JASPER>
 	</DESK>
 </APP>
