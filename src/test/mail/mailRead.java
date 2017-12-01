@@ -7,13 +7,15 @@
  * Version 3.0 ; you may use this file in compliance with the License.
  */
 
+import java.util.logging.Logger;
 import java.util.Properties;
 import java.util.Map;
 import java.util.Date;
-import java.util.logging.Logger;
+import java.util.Vector;
 import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
+
 import java.net.InetAddress;
 import javax.mail.*;
 import javax.mail.internet.MimeMessage;
@@ -28,7 +30,20 @@ import com.sun.mail.smtp.SMTPSendFailedException;
 import com.sun.mail.smtp.SMTPAddressFailedException;
 import com.sun.mail.smtp.SMTPAddressSucceededException;
 
-public class mailRead {
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.BorderLayout;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+
+
+public class mailRead implements ActionListener {
 	Logger log = Logger.getLogger(mailRead.class.getName());
 	Session session = null;
 	Store store = null;
@@ -39,17 +54,66 @@ public class mailRead {
 	private String inbox = null;
 	private String attachFile = null;
 	private String attachDir = "./attach/";
-	private boolean saveAttachments = true;
- 	private int attnum = 1;	
+ 	private int attnum = 1;
+ 	
+	Vector<Vector<String>> rowData;
+	Vector<String> columnNames;
+
+	DefaultTableModel tableModel;
+	JTable table;
+	JTextField txtMailHost, txtUserName, txtPassword;
+	JButton btSearch, btSave;
+
 
 	public static void main(String args[]) {
-		if(args.length == 3) {
-			mailRead mr = new mailRead(args[0], args[1], args[2]);
-			mr.getmail("DewCis/Official", true, "advice");
-		}
+		mailRead mr = new mailRead();
+	}
+	
+	public mailRead() {
+		JPanel headerPanel = new JPanel();
+		JLabel lblMailHost = new JLabel("Mail host : ");
+		headerPanel.add(lblMailHost);
+		txtMailHost = new JTextField(10);
+		headerPanel.add(txtMailHost);
+		JLabel lblUserName = new JLabel("Username : ");
+		headerPanel.add(lblUserName);
+		txtUserName = new JTextField(10);
+		headerPanel.add(txtUserName);
+		JLabel lblPassword = new JLabel("Password : ");
+		headerPanel.add(lblPassword);
+		txtPassword = new JTextField(10);
+		headerPanel.add(txtPassword);
+		btSearch = new JButton("Search");
+		btSearch.addActionListener(this);
+		headerPanel.add(btSearch);
+		btSave = new JButton("Save");
+		btSave.addActionListener(this);
+		headerPanel.add(btSave);
+		
+		rowData = new Vector<Vector<String>>();
+		columnNames = new Vector<String>();
+		columnNames.add("From"); columnNames.add("To"); columnNames.add("Subject"); 
+		columnNames.add("Date"); columnNames.add("Flag");
+		
+		tableModel = new DefaultTableModel(rowData, columnNames);
+		table = new JTable(tableModel);
+		JScrollPane scrollPane = new JScrollPane(table);
+		table.setFillsViewportHeight(true);
+		
+		/* for dennis */
+		txtMailHost.setText("mail.dewcis.com");
+		txtUserName.setText("dgichangi");
+		txtPassword.setText("");
+			
+		JFrame frame = new JFrame("FrameDemo");
+		frame.getContentPane().add(headerPanel, BorderLayout.PAGE_START);
+		frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(900, 800);
+		frame.setVisible(true);
 	}
 
-	public mailRead(String host, String mailUser, String mailPassword) {
+	public void mailConnect(String host, String mailUser, String mailPassword) {
 		String imaphost = host;
 		int imapPort = 143;
 		String smtppauth = "true";
@@ -291,15 +355,15 @@ public class mailRead {
 		return sent;
 	}
 
-	public boolean getmail(boolean readmail) {
-		return getmail(inbox, readmail, null);
+	public boolean getMails(boolean readMail) {
+		return getMails(inbox, null, readMail, false);
 	}
 
-	public boolean getmail(String mailbox, boolean readmail) {
-		return getmail(mailbox, readmail, null);
+	public boolean getMails(String mailbox, boolean readMail) {
+		return getMails(mailbox, null, readMail, false);
 	}
 
-	public boolean getmail(String mailbox, boolean readmail, String searchPhrase) {
+	public boolean getMails(String mailbox, String searchPhrase, boolean readMail, boolean saveAttachment) {
 		boolean mailstatus = false;
 		try {
 			Folder folder = store.getDefaultFolder();
@@ -316,8 +380,7 @@ public class mailRead {
 				int newMessages = folder.getNewMessageCount();
 				mailstatus = true;
 
-				if(readmail) readmail(folder, searchPhrase);
-				else readHeaders(folder, searchPhrase);
+				getMails(folder, searchPhrase, readMail, saveAttachment);
 				folder.close(false);
 			}
 		} catch (Exception ex) {
@@ -329,9 +392,10 @@ public class mailRead {
 		return mailstatus;
 	}
 
-	public void readHeaders(Folder folder, String searchPhrase) {
+	public void getMails(Folder folder, String searchPhrase, boolean readMail, boolean saveAttachment) {
 		try {
 			// Attributes & Flags for all messages ..
+			rowData = new Vector<Vector<String>>();
 			Message[] msgs = folder.getMessages();
 
 			// Use a suitable FetchProfile
@@ -345,10 +409,12 @@ public class mailRead {
 				String subject = msgs[i].getSubject();
 				if(searchPhrase == null) {
 					log.info("\nMESSAGE #" + (i + 1) + ":");
-					dumpEnvelope(msgs[i]);	// Read the headers
+					rowData.add(dumpEnvelope(msgs[i]));	// Read the headers
+					if(readMail) dumpPart(msgs[i], saveAttachment);		// read the message
 				} else if(subject.toLowerCase().indexOf(searchPhrase) >= 0) {
 					log.info("\nMESSAGE #" + (i + 1) + ":");
-					dumpEnvelope(msgs[i]);	// Read the headers
+					rowData.add(dumpEnvelope(msgs[i]));	// Read the headers
+					if(readMail) dumpPart(msgs[i], saveAttachment);		// read the message
 				}
 		    }
 		} catch (Exception ex) {
@@ -358,68 +424,54 @@ public class mailRead {
 		}
 	}
 
-	public void readmail(Folder folder, String searchPhrase) {
-		try {
-			// Attributes & Flags for all messages ..
-			Message[] msgs = folder.getMessages();
-
-			// Use a suitable FetchProfile
-			FetchProfile fp = new FetchProfile();
-			fp.add(FetchProfile.Item.ENVELOPE);
-			fp.add(FetchProfile.Item.FLAGS);
-			fp.add("X-Mailer");
-			folder.fetch(msgs, fp);
-
-			for (int i = 0; i < msgs.length; i++) {
-				String subject = msgs[i].getSubject();
-				if(searchPhrase == null) {
-					log.info("\nMESSAGE #" + (i + 1) + ":");
-					dumpEnvelope(msgs[i]);	// Read the headers
-					dumpPart(msgs[i]);		// read the message
-				} else if(subject.toLowerCase().indexOf(searchPhrase) >= 0) {
-					log.info("\nMESSAGE #" + (i + 1) + ":");
-					dumpEnvelope(msgs[i]);	// Read the headers
-					dumpPart(msgs[i]);		// read the message
-				}
-		    }
-		} catch (Exception ex) {
-			mailActive = false;
-			log.severe("Oops, got mail exception! " + ex.getMessage());
-    		ex.printStackTrace();
-		}
-	}
-
-	public void dumpEnvelope(Message m) {
+	public Vector<String> dumpEnvelope(Message m) {
+		Vector<String> mailEnv = new Vector<String>();
 		try {
 			log.fine("This is the message envelope");
 	
 			// FROM 
+			String from = null;
 			Address[] a = m.getFrom();		
 			if (a != null) {
-				for (int j = 0; j < a.length; j++)
-					System.out.println("FROM: " + a[j].toString());
+				for (int j = 0; j < a.length; j++) {
+					if(from == null) from = a[j].toString();
+					else from += "," + a[j].toString();
+				}
 			}
+			mailEnv.add(from);
+			System.out.println("FROM: " + from);
 	
 			// TO
+			String to = null;
 			a = m.getRecipients(Message.RecipientType.TO);
 			if (a != null) {
 				for (int j = 0; j < a.length; j++) {
-					System.out.println("TO: " + a[j].toString());
+					if(to == null) to = a[j].toString();
+					else to += "," + a[j].toString();
+					
 					InternetAddress ia = (InternetAddress)a[j];
 					if (ia.isGroup()) {
 						InternetAddress[] aa = ia.getGroup(false);
-						for (int k = 0; k < aa.length; k++)
-							System.out.println("  GROUP: " + aa[k].toString());
+						for (int k = 0; k < aa.length; k++) {
+							if(to == null) to = aa[k].toString();
+							else to += "," + aa[k].toString();
+						}
 					}
 				}
 			}
+			mailEnv.add(to);
+			System.out.println("TO: " + to);
 	
 			// SUBJECT
+			mailEnv.add(m.getSubject());
 			System.out.println("SUBJECT: " + m.getSubject());
 	
 			// DATE
 			Date d = m.getSentDate();
-			if(d!=null) System.out.println("SendDate: " + d.toString());
+			if(d != null) {
+				mailEnv.add(d.toString());
+				System.out.println("SendDate: " + d.toString());
+			}
 	
 			// FLAGS
 			Flags flags = m.getFlags();
@@ -450,6 +502,7 @@ public class mailRead {
 				else sb.append(' ');
 				sb.append(uf[i]);
 			}
+			mailEnv.add(sb.toString());
 			System.out.println("FLAGS: " + sb.toString());
 	
 			// X-MAILER
@@ -462,9 +515,13 @@ public class mailRead {
 			mailActive = false;
 			System.out.println("Message reading error " + ex);
 		}
+		
+		return mailEnv;
     }
 
-	public void dumpPart(Part p) {
+	public String dumpPart(Part p, boolean saveAttachment) {
+		String mail = "";
+		
 		try {
 			if (p instanceof Message) dumpEnvelope((Message)p);
 			String ct = p.getContentType();
@@ -482,53 +539,49 @@ public class mailRead {
 			if (p.isMimeType("text/plain")) {
 				System.out.println("This is plain text");
 				System.out.println("---------------------------");
-				if (!saveAttachments) System.out.println((String)p.getContent());
+				mail += (String)p.getContent();
 			} else if (p.isMimeType("multipart/*")) {
 				System.out.println("This is a Multipart");
 				System.out.println("---------------------------");
 				Multipart mp = (Multipart)p.getContent();
 				int count = mp.getCount();
-				for (int i = 0; i < count; i++) dumpPart(mp.getBodyPart(i));
+				for (int i = 0; i < count; i++) dumpPart(mp.getBodyPart(i), saveAttachment);
 			} else if (p.isMimeType("message/rfc822")) {
 				System.out.println("This is a Nested Message");
 				System.out.println("---------------------------");
-				dumpPart((Part)p.getContent());
+				dumpPart((Part)p.getContent(), saveAttachment);
 			} else {
-				if (saveAttachments) {
-					/** If we actually want to see the data, and it's not a
-					* MIME type we know, fetch it and check its Java type. */
-					Object o = p.getContent();
-					if (o instanceof String) {
-						System.out.println("This is a string");
-						System.out.println("---------------------------");
-						System.out.println((String)o);
-					} else if (o instanceof InputStream) {
-						System.out.println("This is just an input stream");
-						System.out.println("---------------------------");
-						InputStream is = (InputStream)o;
-						int c;
-						while ((c = is.read()) != -1) System.out.write(c);
-					} else {
-						System.out.println("This is an unknown type");
-						System.out.println("---------------------------");
-						System.out.println(o.toString());
-					}
-				} else { // just a separator
+				/** If we actually want to see the data, and it's not a
+				* MIME type we know, fetch it and check its Java type. 
+				Object o = p.getContent();
+				if (o instanceof String) {
+					System.out.println("This is a string");
 					System.out.println("---------------------------");
-				}
+					System.out.println((String)o);
+				} else if (o instanceof InputStream) {
+					System.out.println("This is just an input stream");
+					System.out.println("---------------------------");
+					InputStream is = (InputStream)o;
+					int c;
+					while ((c = is.read()) != -1) System.out.write(c);
+				} else {
+					System.out.println("This is an unknown type");
+					System.out.println("---------------------------");
+					System.out.println(o.toString()); 
+				} */
 			}
 	
 			/** If we're saving attachments, write out anything that
 			* looks like an attachment into an appropriately named
 			* file.  Don't overwrite existing files to prevent mistakes. */
-			if (saveAttachments && !p.isMimeType("multipart/*")) {
+			if (saveAttachment && !p.isMimeType("multipart/*")) {
 				String disp = p.getDisposition();
 				// many mailers don't include a Content-Disposition
 				if (disp == null || disp.equalsIgnoreCase(Part.ATTACHMENT)) {
 					if (filename == null) filename = "Attachment" + attnum++;
 					System.out.println("Saving attachment to file " + filename);
 					try {
-						File f = new File(filename);
+						File f = new File(attachDir + filename);
 						if (f.exists())		// XXX - could try a series of names
 							throw new IOException("file exists");
 						((MimeBodyPart)p).saveFile(f);
@@ -541,6 +594,27 @@ public class mailRead {
 		} catch (Exception ex) {
 			mailActive = false;
 			System.out.println("Read message error " + ex);
+		}
+		
+		return mail;
+	}
+	
+	public void actionPerformed(ActionEvent ev) {
+		System.out.println("BASE click : " + ev.getActionCommand());
+	
+		String host = txtMailHost.getText();
+		String mailUser = txtUserName.getText();
+		String mailPassword = "";
+		
+		if(ev.getActionCommand().equals("Search")) {
+			mailConnect(host, mailUser, mailPassword);
+			getMails("DewCis/Official", "advice", false, false);
+			
+			tableModel.setDataVector(rowData, columnNames);
+			tableModel.fireTableDataChanged();
+		} else if(ev.getActionCommand().equals("Save")) {
+			mailConnect(host, mailUser, mailPassword);
+			getMails("DewCis/Official", "advice", true, true);
 		}
 	}
 
