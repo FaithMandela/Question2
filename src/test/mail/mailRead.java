@@ -41,7 +41,11 @@ import javax.swing.JTable;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.JPasswordField;
 
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 
 public class mailRead implements ActionListener {
 	Logger log = Logger.getLogger(mailRead.class.getName());
@@ -61,8 +65,9 @@ public class mailRead implements ActionListener {
 
 	DefaultTableModel tableModel;
 	JTable table;
-	JTextField txtMailHost, txtUserName, txtPassword;
-	JButton btSearch, btSave;
+	JTextField txtMailHost, txtUserName, txtSearchWord;
+	JPasswordField txtPassword;
+	JButton btSearch, btSave, btAnalyse;
 
 
 	public static void main(String args[]) {
@@ -71,17 +76,17 @@ public class mailRead implements ActionListener {
 	
 	public mailRead() {
 		JPanel headerPanel = new JPanel();
-		JLabel lblMailHost = new JLabel("Mail host : ");
+		JLabel lblMailHost = new JLabel("Mail host :");
 		headerPanel.add(lblMailHost);
 		txtMailHost = new JTextField(10);
 		headerPanel.add(txtMailHost);
-		JLabel lblUserName = new JLabel("Username : ");
+		JLabel lblUserName = new JLabel("Username :");
 		headerPanel.add(lblUserName);
 		txtUserName = new JTextField(10);
 		headerPanel.add(txtUserName);
-		JLabel lblPassword = new JLabel("Password : ");
+		JLabel lblPassword = new JLabel("Password :");
 		headerPanel.add(lblPassword);
-		txtPassword = new JTextField(10);
+		txtPassword = new JPasswordField(10);
 		headerPanel.add(txtPassword);
 		btSearch = new JButton("Search");
 		btSearch.addActionListener(this);
@@ -89,6 +94,13 @@ public class mailRead implements ActionListener {
 		btSave = new JButton("Save");
 		btSave.addActionListener(this);
 		headerPanel.add(btSave);
+		JLabel lblSearchWord = new JLabel("Search :");
+		headerPanel.add(lblSearchWord);
+		txtSearchWord = new JTextField(10);
+		headerPanel.add(txtSearchWord);
+		btAnalyse = new JButton("Analyse");
+		btAnalyse.addActionListener(this);
+		headerPanel.add(btAnalyse);
 		
 		rowData = new Vector<Vector<String>>();
 		columnNames = new Vector<String>();
@@ -109,7 +121,7 @@ public class mailRead implements ActionListener {
 		frame.getContentPane().add(headerPanel, BorderLayout.PAGE_START);
 		frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(900, 800);
+		frame.setSize(1100, 800);
 		frame.setVisible(true);
 	}
 
@@ -604,7 +616,8 @@ public class mailRead implements ActionListener {
 	
 		String host = txtMailHost.getText();
 		String mailUser = txtUserName.getText();
-		String mailPassword = "";
+		String searchWord = txtSearchWord.getText();
+		String mailPassword = new String(txtPassword.getPassword());
 		
 		if(ev.getActionCommand().equals("Search")) {
 			mailConnect(host, mailUser, mailPassword);
@@ -615,6 +628,30 @@ public class mailRead implements ActionListener {
 		} else if(ev.getActionCommand().equals("Save")) {
 			mailConnect(host, mailUser, mailPassword);
 			getMails("DewCis/Official", "advice", true, true);
+		} else if(ev.getActionCommand().equals("Analyse")) {
+			Analyse(searchWord);
+		}
+	}
+	
+	public void Analyse(String keyWord) {
+	
+		try {
+			File folder = new File(attachDir);
+			File[] listOfFiles = folder.listFiles();
+
+			for (int i = 0; i < listOfFiles.length; i++) {
+				if (listOfFiles[i].isFile()) {
+					System.out.println("File " + listOfFiles[i].getName());
+					PdfReader reader = new PdfReader(attachDir + listOfFiles[i].getName());
+					String data = PdfTextExtractor.getTextFromPage(reader, 1);
+					
+					System.out.println(data);
+				} else if (listOfFiles[i].isDirectory()) {
+					System.out.println("Directory " + listOfFiles[i].getName());
+				}
+			}
+		} catch(IOException ex) {
+			System.out.println("IO error on reading PDF " + ex);
 		}
 	}
 
