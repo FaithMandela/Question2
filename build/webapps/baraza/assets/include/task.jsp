@@ -9,6 +9,7 @@
                     </div>
                 </div>
                 <div class="portlet-body">
+				<!-- TASK FORM-->
                     <form class="task-manage-form form-horizontal" id="task-manage" method="post">
                         <div class="form-group">
                             <label class="control-label col-sm-2 font-600" for="task_name">Task</label>
@@ -38,7 +39,30 @@
                         </div>
                         </div>
                     </form>
-                </div>
+                <!-- TASK FORM-->
+				<!-- DISPLAY TASK-->
+                    <div class="table-scrollable" id="display-task">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Task Name</th>
+                                    <th>Status</th>
+                                    <th>Operation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Sprint Planning Meeting</td>
+                                    <td><span class="label label-sm label-success">In Progress</span></td>
+                                    <td>
+                                        <a href="javascript:;" class="btn btn-xs red">Stop Task <i class="fa  fa-hand-o-up"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+				<!-- DISPLAY TASK-->
+				</div>
             </div>
         </div>
 

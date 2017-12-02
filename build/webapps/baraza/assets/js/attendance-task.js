@@ -129,9 +129,9 @@ $('#start-task')
                 $(".start-task i").removeAttr('class').addClass("fa fa-refresh fa-spin fa-3x fa-fw  text-center").css({"color":"#fff",});
             },
             success : function(result) {
-                var btnMsg = "<i class='fa fa-check  text-center'></i> Saved Successfully";
-                colorChange(btnId, '', btnId, btnrmvClass, '',
-                    '', btnaddClass, '', btnMsg, '');
+                    //If successfull hide the form display the display
+                $('.task-manage-form').hide();
+                $('#display-task').show();
             },
             error: function(xhr, resp, text) {
                 var btnMsg = "<i class='fa fa-warning text-center'></i> Save Failed";
