@@ -634,25 +634,34 @@ public class mailRead implements ActionListener {
 	}
 	
 	public void Analyse(String keyWord) {
-	
-		try {
-			File folder = new File(attachDir);
-			File[] listOfFiles = folder.listFiles();
+		File folder = new File(attachDir);
+		File[] listOfFiles = folder.listFiles();
 
-			for (int i = 0; i < listOfFiles.length; i++) {
-				if (listOfFiles[i].isFile()) {
-					System.out.println("File " + listOfFiles[i].getName());
-					PdfReader reader = new PdfReader(attachDir + listOfFiles[i].getName());
-					String data = PdfTextExtractor.getTextFromPage(reader, 1);
-					
-					System.out.println(data);
-				} else if (listOfFiles[i].isDirectory()) {
-					System.out.println("Directory " + listOfFiles[i].getName());
-				}
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) {
+				boolean found = AnalysePDF(attachDir + listOfFiles[i].getName(), keyWord);
+				if(found) System.out.println("File " + listOfFiles[i].getName());
+			} else if (listOfFiles[i].isDirectory()) {
+				System.out.println("Directory " + listOfFiles[i].getName());
+			}
+		}
+	}
+	
+	public boolean AnalysePDF(String fileName, String keyWord) {
+		boolean found = false;
+		try {
+			PdfReader reader = new PdfReader(fileName);
+			String data = PdfTextExtractor.getTextFromPage(reader, 1);
+			
+			if(data.toLowerCase().indexOf(keyWord) >= 0) {
+				found = true;
+				//System.out.println(data);
 			}
 		} catch(IOException ex) {
-			System.out.println("IO error on reading PDF " + ex);
+			System.out.println("IO error on reading PDF " + fileName + " ERROR " + ex );
 		}
+		
+		return found;
 	}
 
 	public boolean getActive() {
