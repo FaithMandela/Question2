@@ -36,6 +36,11 @@ BEGIN
 		SELECT interest_rate, activity_frequency_id, min_opening_balance, lockin_period_frequency,
 			minimum_balance, maximum_balance INTO myrec
 		FROM products WHERE product_id = NEW.product_id;
+		
+		IF(NEW.customer_id is null)THEN
+			SELECT customer_id INTO NEW.customer_id
+			FROM entitys WHERE (entity_id = NEW.entity_id);
+		END IF;
 	
 		NEW.account_number := '4' || lpad(NEW.org_id::varchar, 2, '0')  || lpad(NEW.customer_id::varchar, 4, '0') || lpad(NEW.deposit_account_id::varchar, 2, '0');
 		
@@ -91,7 +96,8 @@ BEGIN
 	SELECT periods.period_id INTO NEW.period_id
 	FROM periods
 	WHERE (opened = true) AND (activated = true) AND (closed = false)
-		AND (start_date <= NEW.activity_date) AND (end_date >= NEW.activity_date);
+		AND (start_date <= NEW.activity_date) AND (end_date >= NEW.activity_date)
+		AND (org_id = NEW.org_id);
 	IF(NEW.period_id is null)THEN
 		RAISE EXCEPTION 'The transaction needs to be in an open and active period';
 	END IF;
@@ -384,6 +390,11 @@ BEGIN
 		SELECT interest_rate, activity_frequency_id, min_opening_balance, lockin_period_frequency,
 			minimum_balance, maximum_balance INTO myrec
 		FROM products WHERE product_id = NEW.product_id;
+		
+		IF(NEW.customer_id is null)THEN
+			SELECT customer_id INTO NEW.customer_id
+			FROM entitys WHERE (entity_id = NEW.entity_id);
+		END IF;
 	
 		NEW.account_number := '5' || lpad(NEW.org_id::varchar, 2, '0')  || lpad(NEW.customer_id::varchar, 4, '0') || lpad(NEW.loan_id::varchar, 2, '0');
 			
@@ -445,7 +456,6 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_loans BEFORE INSERT OR UPDATE ON loans
 	FOR EACH ROW EXECUTE PROCEDURE ins_loans();
-	
 	
 CREATE OR REPLACE FUNCTION compute_loans(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE

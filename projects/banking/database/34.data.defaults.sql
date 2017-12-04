@@ -99,7 +99,7 @@ SELECT products.product_id, activity_types.activity_type_id, charge_activity.act
 	ad.activity_frequency_id, 1, ad.account_defination_name, 
 	ad.start_date, ad.end_date, ad.fee_amount, 
 	ad.fee_ps, ad.has_charge, ad.is_active, 
-	ad.account_number	
+	(ad.account_number::integer - 400000000)::varchar(32)
 FROM vw_account_definations as ad INNER JOIN products ON ad.product_no = products.product_no
 	INNER JOIN activity_types ON ad.activity_type_no = activity_types.activity_type_no
 	INNER JOIN activity_types as charge_activity ON ad.charge_activity_no = charge_activity.activity_type_no
@@ -112,9 +112,10 @@ FROM sys_emails
 WHERE org_id = 0;
 
 INSERT INTO workflows (link_copy, org_id, source_entity_id, workflow_name, table_name, approve_email, reject_email) 
-SELECT aa.workflow_id, bb.org_id, bb.entity_type_id, aa.workflow_name, aa.table_name, aa.approve_email, aa.reject_email
-FROM workflows aa INNER JOIN entity_types bb ON aa.source_entity_id = bb.use_key_id
-WHERE aa.org_id = 0 AND bb.org_id = 1
+SELECT aa.workflow_id, cc.org_id, cc.entity_type_id, aa.workflow_name, aa.table_name, aa.approve_email, aa.reject_email
+FROM workflows aa INNER JOIN entity_types bb ON aa.source_entity_id = bb.entity_type_id
+	INNER JOIN entity_types cc ON bb.use_key_id = cc.use_key_id
+WHERE aa.org_id = 0 AND cc.org_id = 1
 ORDER BY aa.workflow_id;
 
 INSERT INTO workflow_phases (org_id, workflow_id, approval_entity_id, approval_level, return_level, 

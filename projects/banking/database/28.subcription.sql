@@ -118,9 +118,11 @@ DECLARE
 	v_org_id				integer;
 	v_currency_id			integer;
 	v_customer_id			integer;
+	v_account_number		varchar(32);
 	v_product_id			integer;
 	v_department_id			integer;
 	v_bank_id				integer;
+	v_deposit_account		integer;
 	v_tax_type_id			integer;
 	v_workflow_id			integer;
 	v_org_suffix			char(2);
@@ -146,6 +148,8 @@ BEGIN
 	ELSIF(NEW.approve_status = 'Approved')THEN
 
 		NEW.org_id := nextval('orgs_org_id_seq');
+		v_customer_id := nextval('customers_customer_id_seq');
+		v_deposit_account := nextval('deposit_accounts_deposit_account_id_seq');
 		INSERT INTO orgs(org_id, currency_id, org_name, org_full_name, org_sufix, default_country_id, logo)
 		VALUES(NEW.org_id, 1, NEW.business_name, NEW.business_name, NEW.org_id, NEW.country_id, 'logo.png');
 		
@@ -244,19 +248,23 @@ BEGIN
 			INNER JOIN accounts cra ON vw_activity_types.cr_account_no = cra.account_no
 		WHERE (dra.org_id = NEW.org_id) AND (cra.org_id = NEW.org_id) AND (vw_activity_types.org_id = 1)
 		ORDER BY vw_activity_types.activity_type_id;
+		
+		v_account_number := '4' || lpad(NEW.org_id::varchar, 2, '0')  || lpad(v_customer_id::varchar, 4, '0');
 
-		INSERT INTO interest_methods (activity_type_id, org_id, interest_method_name, reducing_balance, reducing_payments, formural, account_number, interest_method_no)
+		INSERT INTO interest_methods (activity_type_id, org_id, interest_method_name, reducing_balance, reducing_payments, formural, interest_method_no, account_number)
 		SELECT oa.activity_type_id, oa.org_id, interest_methods.interest_method_name, 
 			interest_methods.reducing_balance, interest_methods.reducing_payments, 
-			interest_methods.formural, interest_methods.account_number, interest_methods.interest_method_no
+			interest_methods.formural, interest_methods.interest_method_no,
+			v_account_number || lpad((v_deposit_account + 3)::varchar, 2, '0') 
 		FROM interest_methods INNER JOIN activity_types ON interest_methods.activity_type_id = activity_types.activity_type_id
 			INNER JOIN activity_types oa ON activity_types.activity_type_no = oa.activity_type_no
 		WHERE (activity_types.org_id = 1) AND (oa.org_id = NEW.org_id)
 		ORDER BY interest_methods.interest_method_id;
 		
-		INSERT INTO penalty_methods(activity_type_id, org_id, penalty_method_name, formural, account_number, penalty_method_no)
-		SELECT oa.activity_type_id, oa.org_id, penalty_methods.penalty_method_name, penalty_methods.formural, 
-			penalty_methods.account_number, penalty_methods.penalty_method_no
+		INSERT INTO penalty_methods(activity_type_id, org_id, penalty_method_name, formural, penalty_method_no, account_number)
+		SELECT oa.activity_type_id, oa.org_id, penalty_methods.penalty_method_name, 
+			penalty_methods.formural, penalty_methods.penalty_method_no,
+			v_account_number || lpad((v_deposit_account + 4)::varchar, 2, '0') 
 		FROM penalty_methods INNER JOIN activity_types ON penalty_methods.activity_type_id = activity_types.activity_type_id
 			INNER JOIN activity_types oa ON activity_types.activity_type_no = oa.activity_type_no
 		WHERE (activity_types.org_id = 1) AND (oa.org_id = NEW.org_id)
@@ -285,7 +293,7 @@ BEGIN
 			ad.activity_frequency_id, NEW.org_id, ad.account_defination_name, 
 			ad.start_date, ad.end_date, ad.fee_amount, 
 			ad.fee_ps, ad.has_charge, ad.is_active, 
-			ad.account_number	
+			v_account_number || lpad((v_deposit_account + ad.account_number::integer)::varchar, 2, '0')
 		FROM vw_account_definations as ad INNER JOIN products ON ad.product_no = products.product_no
 			INNER JOIN activity_types ON ad.activity_type_no = activity_types.activity_type_no
 			INNER JOIN activity_types as charge_activity ON ad.charge_activity_no = charge_activity.activity_type_no
@@ -294,8 +302,7 @@ BEGIN
 
 		SELECT product_id INTO v_product_id
 		FROM products WHERE (product_no = 0) AND (org_id = NEW.org_id);
-
-		v_customer_id := nextval('customers_customer_id_seq');
+		
 		INSERT INTO customers (customer_id, org_id, business_account, customer_name, identification_number, identification_type, client_email, telephone_number, date_of_birth, nationality, approve_status)
 		VALUES (v_customer_id, NEW.org_id, 2, 'OpenBaraza Bank', '0', 'Org', 'info@openbaraza.org', '+254', current_date, 'KE', 'Approved');
 

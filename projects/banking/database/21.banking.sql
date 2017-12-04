@@ -455,6 +455,24 @@ CREATE VIEW vw_deposit_accounts AS
 		INNER JOIN vw_products ON deposit_accounts.product_id = vw_products.product_id
 		INNER JOIN activity_frequency ON deposit_accounts.activity_frequency_id = activity_frequency.activity_frequency_id
 		LEFT JOIN vw_deposit_balance ON deposit_accounts.deposit_account_id = vw_deposit_balance.deposit_account_id;
+		
+CREATE VIEW vw_entity_accounts AS
+	SELECT vw_deposit_accounts.customer_id, vw_deposit_accounts.customer_name, vw_deposit_accounts.business_account,
+		vw_deposit_accounts.product_id, vw_deposit_accounts.product_name, 
+		vw_deposit_accounts.currency_id, vw_deposit_accounts.currency_name, vw_deposit_accounts.currency_symbol,
+		vw_deposit_accounts.activity_frequency_id, vw_deposit_accounts.activity_frequency_name, 
+		vw_deposit_accounts.org_id, vw_deposit_accounts.deposit_account_id, vw_deposit_accounts.is_active, 
+		vw_deposit_accounts.account_number, vw_deposit_accounts.narrative, vw_deposit_accounts.last_closing_date, 
+		vw_deposit_accounts.credit_limit, vw_deposit_accounts.minimum_balance, vw_deposit_accounts.maximum_balance, 
+		vw_deposit_accounts.interest_rate, vw_deposit_accounts.lockin_period_frequency, vw_deposit_accounts.opening_date,
+		vw_deposit_accounts.lockedin_until_date, vw_deposit_accounts.application_date, vw_deposit_accounts.approve_status, 
+		vw_deposit_accounts.workflow_table_id, vw_deposit_accounts.action_date, vw_deposit_accounts.details,
+		
+		vw_deposit_accounts.current_balance, vw_deposit_accounts.cleared_balance, vw_deposit_accounts.unprocessed_credit,
+		vw_deposit_accounts.available_balance,
+		entitys.entity_id, entitys.user_name, entitys.entity_name
+		
+	FROM vw_deposit_accounts INNER JOIN entitys ON vw_deposit_accounts.customer_id = entitys.customer_id;
 
 CREATE VIEW vw_account_notes AS
 	SELECT vw_deposit_accounts.customer_id, vw_deposit_accounts.customer_name, 

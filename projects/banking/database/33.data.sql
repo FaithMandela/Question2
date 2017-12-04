@@ -142,7 +142,9 @@ INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, tab
 (22, 0, 0, 'Loan Application', 'loans', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL),
 (23, 0, 0, 'Guarantees Application', 'guarantees', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL),
 (24, 0, 0, 'Collaterals Application', 'collaterals', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL),
-(25, 0, 0, 'Customer Application', 'applicants', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
+(25, 0, 0, 'Customer Application', 'applicants', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL),
+(26, 0, 6, 'Account opening - Customer', 'deposit_accounts', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL),
+(27, 0, 6, 'Loan Application - Customer', 'loans', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
 SELECT pg_catalog.setval('workflows_workflow_id_seq', 30, true);
 
 INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES
@@ -151,7 +153,9 @@ INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_en
 (22, 0, 22, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL),
 (23, 0, 23, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL),
 (24, 0, 24, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL),
-(25, 0, 25, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+(25, 0, 25, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL),
+(26, 0, 26, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL),
+(27, 0, 27, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
 SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 30, true);
 
 

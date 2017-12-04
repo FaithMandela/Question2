@@ -138,6 +138,8 @@ public class BWeb {
 		webSession.setAttribute("viewkey", viewKey);
 		
 		dataItem = request.getParameter("data");
+		if(checkInjection(dataItem)) dataItem = "";
+		
 		if(webSession.getAttribute("loaddata") != null) {
 			dataItem = (String)webSession.getAttribute("loaddata");
 			webSession.removeAttribute("loaddata");
@@ -199,6 +201,7 @@ public class BWeb {
 		webSession.setAttribute("viewkey", viewKey);
 		
 		dataItem = request.getParameter("data");
+		if(checkInjection(dataItem)) dataItem = "";
 		if(dataItem != null) webSession.setAttribute("d" + viewKey, dataItem);
 		else if(webSession.getAttribute("d" + viewKey) != null) 
 			dataItem = (String)webSession.getAttribute("d" + viewKey);
@@ -765,11 +768,7 @@ public class BWeb {
 		if(filterName == null) return "";
 		if(filterType == null) return "";
 		if(filterValue == null) return "";
-		if(filterValue.equals("")) return "";
-		if(filterValue.toLowerCase().contains("select")) return "";
-		if(filterValue.toLowerCase().contains("update")) return "";
-		if(filterValue.toLowerCase().contains("insert")) return "";
-		if(filterValue.toLowerCase().contains("delete")) return "";
+		if(checkInjection(filterValue)) return "";
 		if(filterAnd == null) filterAnd = "false";
 		if(filterOr == null) filterOr = "false";
 		
@@ -2168,6 +2167,15 @@ log.severe("BASE : " + mysql);
 		}
 		
 		return filterStatus;
+	}
+	
+	public boolean checkInjection(String filterValue) {
+		if(filterValue == null) return false;
+		if(filterValue.toLowerCase().contains("select")) return true;
+		if(filterValue.toLowerCase().contains("update")) return true;
+		if(filterValue.toLowerCase().contains("insert")) return true;
+		if(filterValue.toLowerCase().contains("delete")) return true;
+		return false;
 	}
 	
 	public boolean isDiary() {
