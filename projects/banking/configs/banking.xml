@@ -2,13 +2,14 @@
 	<MENU name="Banking">
 		<MENU name="My Accounts" role="client">117</MENU>
 		<MENU name="My Loans" role="client">122</MENU>
+		<MENU name="Transfers" role="client">270</MENU>
 		<MENU name="Transactions" role="manager,operations">115</MENU>
 		<MENU name="Loans" role="manager,operations">120</MENU>
 		<MENU name="Customers" role="manager">105</MENU>
+		<MENU name="Applicants" role="manager">265</MENU>
 		<MENU name="Processing" role="manager">125</MENU>
-		<MENU name="Service" role="manager,operations">
+		<MENU name="Service">
 			<MENU name="Client Forms">22</MENU>
-			<MENU name="Applicants">265</MENU>
 			<MENU name="Approvals">83</MENU>
 		</MENU>
 		<MENU name="Operations" role="manager">
@@ -1545,7 +1546,7 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Deposit Accounts" key="115" h="550">
+	<DESK w="700" name="Transactions" key="115" h="550">
 		<GRID name="Deposit Accounts" keyfield="deposit_account_id" table="vw_deposit_accounts" where="(approve_status = 'Approved')">
 			<TEXTLINK w="75" title="Account Number">account_number</TEXTLINK>
 			<TEXTFIELD w="75" title="Customer">customer_name</TEXTFIELD>
@@ -1809,6 +1810,78 @@
 					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Transfer" key="270" h="550">
+		<GRID user_field="customer_id" name="Transfer" keyfield="transfer_activity_id" linkfield="transfer_beneficiary_id" user_fnct="get_customer_id" table="vw_transfer_activity" where="(approve_status='Draft')">
+			<TEXTFIELD w="75" title="Beneficiary Name">beneficiary_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Beneficiary Account Number">beneficiary_account_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Product Name">product_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Account Number">account_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Account Currency">account_currency_symbol</TEXTFIELD>
+			<TEXTFIELD w="75" title="Activity Frequency">activity_frequency_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Activity Type">activity_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Transfer Amount">transfer_amount</TEXTDECIMAL>
+			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+			<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
+			<ACTIONS>
+				<ACTION fnct="transfer_approval" approval="1">Approve</ACTION>
+				<ACTION fnct="transfer_approval" approval="2">Decline</ACTION>
+			</ACTIONS>
+		</GRID>
+		<GRID user_field="account_customer_id" name="New Transfer" keyfield="transfer_beneficiary_id" user_fnct="get_customer_id" table="vw_transfer_beneficiary" where="(approve_status = 'Approved')">
+			<TEXTLINK w="75" title="Account Number">account_number</TEXTLINK>
+			<TEXTFIELD w="75" title="Customer Name">customer_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Currency Symbol">currency_symbol</TEXTFIELD>
+			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+			<TEXTFIELD w="75" title="Account Status">account_status</TEXTFIELD>
+			<TEXTFIELD w="75" title="Beneficiary Name">beneficiary_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Allow Transfer">allow_transfer</CHECKBOX>
+			<GRID name="Transfer" keyfield="transfer_activity_id" linkfield="transfer_beneficiary_id" table="vw_transfer_activity" where="(approve_status='Draft')">
+				<TEXTFIELD w="75" title="Beneficiary Name">beneficiary_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Beneficiary Account Number">beneficiary_account_number</TEXTFIELD>
+				<TEXTFIELD w="75" title="Product Name">product_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Account Number">account_number</TEXTFIELD>
+				<TEXTFIELD w="75" title="Account Currency">account_currency_symbol</TEXTFIELD>
+				<TEXTFIELD w="75" title="Activity Frequency">activity_frequency_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Activity Type">activity_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Transfer Amount">transfer_amount</TEXTDECIMAL>
+				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+				<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
+				<FORM name="Transfer Activity" keyfield="transfer_activity_id" edit="false" delete="false" linkfield="transfer_beneficiary_id" table="transfer_activity">
+					<USERFIELD>entity_id</USERFIELD>
+					<DEFAULT default="1">activity_frequency_id</DEFAULT>
+					<COMBOBOX w="430" title="From" lptable="vw_entity_accounts" user="entity_id" y="10" h="20" x="10" lpfield="deposit_account_disp">deposit_account_id</COMBOBOX>
+					<COMBOBOX w="430" title="Activity" lptable="activity_types" where="(use_key_id = 104)" y="30" h="20" x="10" lpfield="activity_type_name">activity_type_id</COMBOBOX>
+					<COMBOBOX w="430" title="Currency" lptable="currency" y="50" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+					<TEXTDECIMAL w="150" title="Transfer Amount" y="70" h="20" x="10">transfer_amount</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+		</GRID>
+		<GRID user_field="account_customer_id" name="New Beneficiary" keyfield="transfer_beneficiary_id" user_fnct="get_customer_id" table="vw_transfer_beneficiary" where="(approve_status != 'Approved')">
+			<TEXTFIELD w="75" title="Customer ID">customer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Customer Name">customer_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Currency Symbol">currency_symbol</TEXTFIELD>
+			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+			<TEXTFIELD w="75" title="Account Status">account_status</TEXTFIELD>
+			<TEXTFIELD w="75" title="Beneficiary Name">beneficiary_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Account Number">account_number</TEXTFIELD>
+			<CHECKBOX w="75" title="Allow Transfer">allow_transfer</CHECKBOX>
+			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+			<ACTIONS>
+				<ACTION fnct="apply_approval" approval="7">Approve</ACTION>
+			</ACTIONS>
+			<FORM name="Transfer Beneficiary" keyfield="transfer_beneficiary_id" table="transfer_beneficiary">
+				<USERFIELD>entity_id</USERFIELD>
+				<TEXTFIELD w="150" title="Beneficiary Name" y="10" h="20" x="10">beneficiary_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Account Number" y="30" h="20" x="10">account_number</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
+			</FORM>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Processing" key="125" h="500">

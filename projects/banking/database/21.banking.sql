@@ -235,13 +235,16 @@ CREATE TABLE transfer_beneficiary (
 	
 	beneficiary_name		varchar(150) not null,
 	account_number			varchar(32) not null,
+	allow_transfer			boolean default true not null,
 	
 	application_date		timestamp default now(),
 	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
 	action_date				timestamp,	
 	
-	details					text
+	details					text,
+	
+	UNIQUE(customer_id, deposit_account_id)
 );
 CREATE INDEX transfer_beneficiary_customer_id ON transfer_beneficiary(customer_id);
 CREATE INDEX transfer_beneficiary_deposit_account_id ON transfer_beneficiary(deposit_account_id);
@@ -258,7 +261,6 @@ CREATE TABLE account_activity (
 	currency_id				integer references currency,
 	period_id				integer references periods,
 	entity_id 				integer references entitys,
-	transfer_beneficiary_id	integer references transfer_beneficiary,
 	org_id					integer references orgs,
 	
 	link_activity_id		integer not null,
@@ -275,7 +277,7 @@ CREATE TABLE account_activity (
 	application_date		timestamp default now(),
 	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
-	action_date				timestamp,	
+	action_date				timestamp,
 	
 	details					text
 );
@@ -287,7 +289,6 @@ CREATE INDEX account_activity_activity_type_id ON account_activity(activity_type
 CREATE INDEX account_activity_currency_id ON account_activity(currency_id);
 CREATE INDEX account_activity_link_activity_id ON account_activity(link_activity_id);
 CREATE INDEX account_activity_entity_id ON account_activity(entity_id);
-CREATE INDEX account_activity_transfer_beneficiary_id ON account_activity(transfer_beneficiary_id);
 CREATE INDEX account_activity_org_id ON account_activity(org_id);
 
 CREATE SEQUENCE link_activity_id_seq START 101;
@@ -331,6 +332,35 @@ CREATE TABLE account_activity_log (
 );
 CREATE INDEX account_activity_log_account_activity_id ON account_activity_log(account_activity_id);
 CREATE INDEX account_activity_log_org_id ON account_activity_log(org_id);
+
+CREATE TABLE transfer_activity (
+	transfer_activity_id	serial primary key,
+	transfer_beneficiary_id	integer references transfer_beneficiary,
+	deposit_account_id		integer references deposit_accounts,
+	activity_type_id		integer references activity_types,
+	activity_frequency_id	integer references activity_frequency,
+	currency_id				integer references currency,
+	entity_id 				integer references entitys,
+	account_activity_id		integer references account_activity,
+	org_id					integer references orgs,
+	
+	transfer_amount			real not null,
+	
+	application_date		timestamp default now(),
+	approve_status			varchar(16) default 'Draft' not null,
+	workflow_table_id		integer,
+	action_date				timestamp,
+	
+	details					text
+);
+CREATE INDEX transfer_activity_transfer_beneficiary_id ON transfer_activity(transfer_beneficiary_id);
+CREATE INDEX transfer_activity_deposit_account_id ON transfer_activity(deposit_account_id);
+CREATE INDEX transfer_activity_activity_type_id ON transfer_activity(activity_type_id);
+CREATE INDEX transfer_activity_activity_frequency_id ON transfer_activity(activity_frequency_id);
+CREATE INDEX transfer_activity_currency_id ON transfer_activity(currency_id);
+CREATE INDEX transfer_activity_entity_id ON transfer_activity(entity_id);
+CREATE INDEX transfer_activity_account_activity_id ON transfer_activity(account_activity_id);
+CREATE INDEX transfer_activity_org_id ON transfer_activity(org_id);
 
 CREATE TABLE sms (
 	sms_id					serial primary key,
@@ -466,7 +496,8 @@ CREATE VIEW vw_deposit_accounts AS
 		vw_products.product_id, vw_products.product_name, 
 		vw_products.currency_id, vw_products.currency_name, vw_products.currency_symbol,
 		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
-		deposit_accounts.org_id, deposit_accounts.deposit_account_id, deposit_accounts.is_active, 
+		orgs.org_id, orgs.org_name,
+		deposit_accounts.deposit_account_id, deposit_accounts.is_active, 
 		deposit_accounts.account_number, deposit_accounts.narrative, deposit_accounts.last_closing_date, 
 		deposit_accounts.credit_limit, deposit_accounts.minimum_balance, deposit_accounts.maximum_balance, 
 		deposit_accounts.interest_rate, deposit_accounts.lockin_period_frequency, deposit_accounts.opening_date,
@@ -478,6 +509,7 @@ CREATE VIEW vw_deposit_accounts AS
 	FROM deposit_accounts INNER JOIN customers ON deposit_accounts.customer_id = customers.customer_id
 		INNER JOIN vw_products ON deposit_accounts.product_id = vw_products.product_id
 		INNER JOIN activity_frequency ON deposit_accounts.activity_frequency_id = activity_frequency.activity_frequency_id
+		INNER JOIN orgs ON deposit_accounts.org_id = orgs.org_id
 		LEFT JOIN vw_deposit_balance ON deposit_accounts.deposit_account_id = vw_deposit_balance.deposit_account_id;
 		
 CREATE VIEW vw_entity_accounts AS
@@ -492,25 +524,53 @@ CREATE VIEW vw_entity_accounts AS
 		vw_deposit_accounts.lockedin_until_date, vw_deposit_accounts.application_date, vw_deposit_accounts.approve_status, 
 		vw_deposit_accounts.workflow_table_id, vw_deposit_accounts.action_date, vw_deposit_accounts.details,
 		
-		vw_deposit_accounts.current_balance, vw_deposit_accounts.cleared_balance, vw_deposit_accounts.unprocessed_credit,
-		vw_deposit_accounts.available_balance,
-		entitys.entity_id, entitys.user_name, entitys.entity_name
+		vw_deposit_accounts.current_balance, vw_deposit_accounts.cleared_balance, 
+		vw_deposit_accounts.unprocessed_credit,	vw_deposit_accounts.available_balance,
+		entitys.entity_id, entitys.user_name, entitys.entity_name,
+		(vw_deposit_accounts.product_name || ', ' || vw_deposit_accounts.account_number || ', ' ||
+			vw_deposit_accounts.currency_symbol || ', ' || 
+			trim(to_char(COALESCE(vw_deposit_accounts.available_balance, 0), '999,999,999,999'))) as deposit_account_disp
 		
 	FROM vw_deposit_accounts INNER JOIN entitys ON vw_deposit_accounts.customer_id = entitys.customer_id;
 	
 CREATE VIEW vw_transfer_beneficiary AS
-	SELECT customers.customer_id, customers.customer_name, 
-		deposit_accounts.deposit_account_id, deposit_accounts.deposit_account_name, 
-		entitys.entity_id, entitys.entity_name, 
+	SELECT vw_deposit_accounts.customer_id, vw_deposit_accounts.customer_name, vw_deposit_accounts.business_account,
+		vw_deposit_accounts.product_id, vw_deposit_accounts.product_name, 
+		vw_deposit_accounts.currency_id, vw_deposit_accounts.currency_name, vw_deposit_accounts.currency_symbol,
+		vw_deposit_accounts.activity_frequency_id, vw_deposit_accounts.activity_frequency_name, 
+		vw_deposit_accounts.deposit_account_id, vw_deposit_accounts.is_active, 
+		vw_deposit_accounts.approve_status as account_status, 
 		
-		transfer_beneficiary.org_id, transfer_beneficiary.transfer_beneficiary_id, transfer_beneficiary.beneficiary_name, 
-		transfer_beneficiary.account_number, transfer_beneficiary.application_date, 
-		transfer_beneficiary.approve_status, transfer_beneficiary.workflow_table_id, 
-		transfer_beneficiary.action_date, transfer_beneficiary.details
-	FROM transfer_beneficiary INNER JOIN customers ON transfer_beneficiary.customer_id = customers.customer_id
-	INNER JOIN deposit_accounts ON transfer_beneficiary.deposit_account_id = deposit_accounts.deposit_account_id
-	INNER JOIN entitys ON transfer_beneficiary.entity_id = entitys.entity_id
-	;
+		transfer_beneficiary.customer_id as account_customer_id,
+		transfer_beneficiary.org_id, transfer_beneficiary.transfer_beneficiary_id, 
+		transfer_beneficiary.beneficiary_name, transfer_beneficiary.account_number, transfer_beneficiary.allow_transfer,
+		transfer_beneficiary.application_date, transfer_beneficiary.approve_status, 
+		transfer_beneficiary.workflow_table_id, transfer_beneficiary.action_date, 
+		transfer_beneficiary.details
+	FROM transfer_beneficiary INNER JOIN vw_deposit_accounts ON transfer_beneficiary.deposit_account_id = vw_deposit_accounts.deposit_account_id;
+
+CREATE VIEW vw_transfer_activity AS
+	SELECT vw_transfer_beneficiary.transfer_beneficiary_id, vw_transfer_beneficiary.customer_name as beneficiary_name, 
+		vw_transfer_beneficiary.account_number as beneficiary_account_number,
+	
+		vw_deposit_accounts.deposit_account_id, vw_deposit_accounts.product_id, vw_deposit_accounts.product_name, 
+		vw_deposit_accounts.customer_id, vw_deposit_accounts.account_number,
+		vw_deposit_accounts.currency_name as account_currency_name, vw_deposit_accounts.currency_symbol as account_currency_symbol,
+		
+		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
+		activity_types.activity_type_id, activity_types.activity_type_name, 
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
+		  
+		transfer_activity.org_id, transfer_activity.transfer_activity_id, 
+		transfer_activity.account_activity_id, transfer_activity.entity_id,
+		transfer_activity.transfer_amount, transfer_activity.application_date, transfer_activity.approve_status, 
+		transfer_activity.workflow_table_id, transfer_activity.action_date, transfer_activity.details
+	
+	FROM transfer_activity INNER JOIN vw_transfer_beneficiary ON transfer_activity.transfer_beneficiary_id = vw_transfer_beneficiary.transfer_beneficiary_id
+		INNER JOIN vw_deposit_accounts ON transfer_activity.deposit_account_id = vw_deposit_accounts.deposit_account_id
+		INNER JOIN activity_frequency ON transfer_activity.activity_frequency_id = activity_frequency.activity_frequency_id
+		INNER JOIN activity_types ON transfer_activity.activity_type_id = activity_types.activity_type_id
+		INNER JOIN currency ON transfer_activity.currency_id = currency.currency_id;
 
 CREATE VIEW vw_account_notes AS
 	SELECT vw_deposit_accounts.customer_id, vw_deposit_accounts.customer_name, 
@@ -541,7 +601,7 @@ CREATE VIEW vw_account_activity AS
 		vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.fiscal_year_id, vw_periods.fiscal_year,
 		
 		account_activity.org_id, account_activity.account_activity_id, account_activity.activity_date, 
-		account_activity.transfer_beneficiary_id, account_activity.value_date, account_activity.transfer_account_no,
+		account_activity.value_date, account_activity.transfer_account_no,
 		account_activity.account_credit, account_activity.account_debit, account_activity.balance, 
 		account_activity.exchange_rate, account_activity.application_date, account_activity.approve_status, 
 		account_activity.workflow_table_id, account_activity.action_date, account_activity.details,
@@ -565,6 +625,9 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON products
 	FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON deposit_accounts
+	FOR EACH ROW EXECUTE PROCEDURE upd_action();
+	
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON transfer_beneficiary
 	FOR EACH ROW EXECUTE PROCEDURE upd_action();
     
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON account_activity

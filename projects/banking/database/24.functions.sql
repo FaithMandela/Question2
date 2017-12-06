@@ -24,6 +24,11 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER aft_customers AFTER INSERT OR UPDATE ON customers
 	FOR EACH ROW EXECUTE PROCEDURE aft_customers();
+	
+	
+CREATE OR REPLACE FUNCTION get_customer_id(integer) RETURNS integer AS $$
+	SELECT customer_id FROM entitys WHERE (entity_id = $1);
+$$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION ins_deposit_accounts() RETURNS trigger AS $$
 DECLARE
@@ -73,6 +78,36 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_deposit_accounts BEFORE INSERT OR UPDATE ON deposit_accounts
 	FOR EACH ROW EXECUTE PROCEDURE ins_deposit_accounts();
+	
+CREATE OR REPLACE FUNCTION ins_transfer_beneficiary() RETURNS trigger AS $$
+DECLARE
+	v_customer_id			integer;
+BEGIN
+
+	SELECT customer_id INTO NEW.customer_id
+	FROM entitys WHERE (entity_id = NEW.entity_id);
+	
+	SELECT deposit_account_id, customer_id INTO NEW.deposit_account_id, v_customer_id
+	FROM deposit_accounts
+	WHERE (is_active = true) AND (approve_status = 'Approved')
+		AND (account_number = NEW.account_number);
+		
+	IF(NEW.deposit_account_id is null)THEN
+		RAISE EXCEPTION 'The account needs to exist and be active';
+	ELSIF(NEW.customer_id = v_customer_id)THEN
+		RAISE EXCEPTION 'You cannot add your own account as a beneficiary account';
+	END IF;
+	
+	IF(TG_OP = 'INSERT')THEN
+		NEW.approve_status = 'Completed';
+	END IF;
+	
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_transfer_beneficiary BEFORE INSERT OR UPDATE ON transfer_beneficiary
+	FOR EACH ROW EXECUTE PROCEDURE ins_transfer_beneficiary();
 
 CREATE OR REPLACE FUNCTION ins_account_activity() RETURNS trigger AS $$
 DECLARE
@@ -363,6 +398,43 @@ BEGIN
 		WHERE (collateral_id = $1::integer) AND (approve_status = 'Draft');
 		
 		msg := 'Applied for collateral approval';
+	ELSIF($3 = '7')THEN
+		UPDATE transfer_beneficiary SET approve_status = 'Approved' 
+		WHERE (transfer_beneficiary_id = $1::integer) AND (approve_status = 'Completed');
+		
+		msg := 'Applied for beneficiary application submited';
+	END IF;
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION transfer_approval(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg							varchar(120);
+	v_account_activity_id		integer;
+BEGIN
+
+	IF($3 = '1')THEN
+		v_account_activity_id := nextval('account_activity_account_activity_id_seq');
+		INSERT INTO account_activity (account_activity_id, org_id, entity_id, activity_frequency_id, activity_type_id, 
+			activity_status_id, currency_id, transfer_account_no, deposit_account_id,
+			activity_date, value_date, account_debit, exchange_rate)
+		SELECT v_account_activity_id, org_id, entity_id, activity_frequency_id, activity_type_id, 
+			1, currency_id, beneficiary_account_number, deposit_account_id,
+			current_date, current_date, transfer_amount, 1
+		FROM vw_transfer_activity
+		WHERE (transfer_activity_id = $1::integer);
+		
+		UPDATE transfer_activity SET approve_status = 'Approved', account_activity_id = v_account_activity_id
+		WHERE (transfer_activity_id = $1::integer);
+		
+		msg := 'Approved transfer';
+	ELSIF($3 = '2')THEN
+		UPDATE transfer_activity SET approve_status = 'Declined' 
+		WHERE (transfer_activity_id = $1::integer);
+		
+		msg := 'Reject transfer';
 	END IF;
 
 	RETURN msg;

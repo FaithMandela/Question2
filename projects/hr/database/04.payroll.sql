@@ -1239,8 +1239,8 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION ins_period_tax_types() RETURNS trigger AS $$
 BEGIN
-	INSERT INTO period_tax_rates (org_id, period_tax_type_id, tax_range, tax_rate, employer_rate)
-	SELECT NEW.org_id, NEW.period_tax_type_id, tax_range, tax_rate, employer_rate
+	INSERT INTO period_tax_rates (org_id, period_tax_type_id, tax_range, tax_rate, employer_rate, rate_relief)
+	SELECT NEW.org_id, NEW.period_tax_type_id, tax_range, tax_rate, employer_rate, rate_relief
 	FROM tax_rates
 	WHERE (tax_type_id = NEW.tax_type_id);
 
