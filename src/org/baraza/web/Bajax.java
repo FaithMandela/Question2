@@ -471,9 +471,14 @@ System.out.println("BASE 2030 : " + mySql);
 		
 			myOutput = db.executeFunction(mySql);
 		}
-		
-		if(myOutput == null) resp = "{\"success\": 0, \"message\": \"Old Password Is incorrect\"}";
-		else resp = "{\"success\": 1, \"message\": \"Password Changed Successfully\"}";
+			
+		if(myOutput == null) {
+			resp = "{\"success\": 0, \"message\": \"Attendnace not added\"}";
+		} else {
+			BQuery alRs = new BQuery(db, web.getView().getElementByName("ATTENDANCE").getElementByName("ACCESSLOG"), null, null);
+			resp = alRs.getJSON();
+			alRs.close();
+		}
 		
 		return resp;
 	}
@@ -495,8 +500,13 @@ System.out.println("BASE 2130 : " + mySql);
 			myOutput = db.executeFunction(mySql);
 		}
 		
-		if(myOutput == null) resp = "{\"success\": 0, \"message\": \"Old Password Is incorrect\"}";
-		else resp = "{\"success\": 1, \"message\": \"Password Changed Successfully\"}";
+		if(myOutput == null) {
+			resp = "{\"success\": 0, \"message\": \"Task not added\"}";
+		} else {
+			BQuery alRs = new BQuery(db, web.getView().getElementByName("TASK").getElementByName("TASKLIST"), null, null);
+			resp = alRs.getJSON();
+			alRs.close();
+		}
 		
 		return resp;
 	}
