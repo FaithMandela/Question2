@@ -1659,6 +1659,16 @@
 				<TEXTDECIMAL w="75" title="Debit">account_debit</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Balance">balance</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
+				<FORM name="Transfer" keyfield="account_activity_id" edit="false" delete="false" linkfield="deposit_account_id" table="account_activity">
+					<USERFIELD>entity_id</USERFIELD>
+					<DEFAULT default="1">activity_frequency_id</DEFAULT>
+					<DEFAULT default="1">activity_status_id</DEFAULT>
+					<COMBOBOX w="430" title="To" lptable="vw_entity_accounts" lpkey="deposit_account_id" user="entity_id" y="10" h="20" x="10" lpfield="deposit_account_disp">transfer_link_id</COMBOBOX>
+					<COMBOBOX w="430" title="Type" lptable="activity_types" where="(use_key_id = 104)" y="30" h="20" x="10" lpfield="activity_type_name">activity_type_id</COMBOBOX>
+					<COMBOBOX w="430" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="50" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+					<TEXTDECIMAL w="150" title="Amount" y="70" h="20" x="10">account_debit</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+				</FORM>
 			</GRID>
 		</GRID>
 		<GRID name="New Accounts" keyfield="deposit_account_id" table="vw_entity_accounts" where="(approve_status != 'Approved')" user="entity_id">
@@ -1813,7 +1823,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Transfer" key="270" h="550">
-		<GRID user_field="customer_id" name="Transfer" keyfield="transfer_activity_id" linkfield="transfer_beneficiary_id" user_fnct="get_customer_id" table="vw_transfer_activity" where="(approve_status='Draft')">
+		<GRID user_field="customer_id" name="Pending Transfer" keyfield="transfer_activity_id" linkfield="transfer_beneficiary_id" user_fnct="get_customer_id" table="vw_transfer_activity" where="(approve_status='Draft')">
 			<TEXTFIELD w="75" title="Beneficiary Name">beneficiary_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Beneficiary Account Number">beneficiary_account_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Product Name">product_name</TEXTFIELD>
@@ -1824,8 +1834,6 @@
 			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Transfer Amount">transfer_amount</TEXTDECIMAL>
 			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
-			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
-			<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
 			<ACTIONS>
 				<ACTION fnct="transfer_approval" approval="1">Approve</ACTION>
 				<ACTION fnct="transfer_approval" approval="2">Decline</ACTION>
@@ -1850,8 +1858,6 @@
 				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Transfer Amount">transfer_amount</TEXTDECIMAL>
 				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
-				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
-				<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
 				<FORM name="Transfer Activity" keyfield="transfer_activity_id" edit="false" delete="false" linkfield="transfer_beneficiary_id" table="transfer_activity">
 					<USERFIELD>entity_id</USERFIELD>
 					<DEFAULT default="1">activity_frequency_id</DEFAULT>
@@ -1882,6 +1888,20 @@
 				<TEXTFIELD w="150" title="Account Number" y="30" h="20" x="10">account_number</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
 			</FORM>
+		</GRID>
+		<GRID user_field="customer_id" name="Transfer History" keyfield="transfer_activity_id" orderby="transfer_activity_id desc" linkfield="transfer_beneficiary_id" user_fnct="get_customer_id" table="vw_transfer_activity">
+			<TEXTFIELD w="75" title="Beneficiary Name">beneficiary_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Beneficiary Account Number">beneficiary_account_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Product Name">product_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Account Number">account_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Account Currency">account_currency_symbol</TEXTFIELD>
+			<TEXTFIELD w="75" title="Activity Frequency">activity_frequency_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Activity Type">activity_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Transfer Amount">transfer_amount</TEXTDECIMAL>
+			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+			<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Processing" key="125" h="500">

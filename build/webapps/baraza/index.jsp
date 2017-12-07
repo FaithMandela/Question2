@@ -561,6 +561,10 @@
 
 <script>
 
+	var attendanceList = <%=web.getDashboardItem("accessLog")%>;
+
+	var timeSheet = <%=web.getDashboardItem("timeSheet")%>;
+
 	<%= web.getAccordionJs() %>
 
 </script>

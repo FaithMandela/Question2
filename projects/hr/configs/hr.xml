@@ -4658,6 +4658,7 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Subscriptions" key="225" h="550">
+		<JASPER name="Approved Subscriptions" reportfile="vws_subscriptionsa.jasper"></JASPER>
 		<JASPER name="Subscriptions" reportfile="vws_subscriptions.jasper"></JASPER>
 	</DESK>
 </APP>

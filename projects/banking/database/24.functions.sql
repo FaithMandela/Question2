@@ -141,6 +141,17 @@ BEGIN
 		NEW.link_activity_id := nextval('link_activity_id_seq');
 	END IF;
 	
+	IF(NEW.transfer_link_id is not null)THEN
+		SELECT account_number INTO NEW.transfer_account_no
+		FROM deposit_accounts WHERE (deposit_account_id = NEW.transfer_link_id);
+		NEW.activity_date := current_date;
+		NEW.value_date := current_date;
+		NEW.exchange_rate := 1;
+		IF(NEW.transfer_account_no is null)THEN
+			RAISE EXCEPTION 'Enter the correct transfer account';
+		END IF;
+	END IF;
+	
 	IF(TG_OP = 'INSERT')THEN
 		IF(NEW.deposit_account_id is not null)THEN
 			SELECT sum(account_credit - account_debit) INTO NEW.balance
@@ -329,14 +340,14 @@ BEGIN
 		transfer_account_id, activity_type_id, activity_frequency_id, 
 		activity_status_id, currency_id, period_id, entity_id,
 		loan_id, transfer_loan_id, org_id, link_activity_id, deposit_account_no, 
-		transfer_account_no, activity_date, value_date, account_credit, 
+		transfer_link_id, transfer_account_no, activity_date, value_date, account_credit, 
 		account_debit, balance, exchange_rate, application_date, approve_status, 
 		workflow_table_id, action_date, details)
     VALUES (NEW.account_activity_id, NEW.deposit_account_id, 
 		NEW.transfer_account_id, NEW.activity_type_id, NEW.activity_frequency_id, 
 		NEW.activity_status_id, NEW.currency_id, NEW.period_id, NEW.entity_id,
 		NEW.loan_id, NEW.transfer_loan_id, NEW.org_id, NEW.link_activity_id, NEW.deposit_account_no, 
-		NEW.transfer_account_no, NEW.activity_date, NEW.value_date, NEW.account_credit, 
+		NEW.transfer_link_id, NEW.transfer_account_no, NEW.activity_date, NEW.value_date, NEW.account_credit, 
 		NEW.account_debit, NEW.balance, NEW.exchange_rate, NEW.application_date, NEW.approve_status, 
 		NEW.workflow_table_id, NEW.action_date, NEW.details);
 

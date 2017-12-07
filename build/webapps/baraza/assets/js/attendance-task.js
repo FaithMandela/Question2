@@ -6,6 +6,7 @@ var btnaddClassWarning = 'btn-warning';
 var labelrmvClass = 'label-primary';
 var labeladdClass = 'label-success';
 var labeladdClassError = 'label-danger';
+
 /**
  * Clock In Button JS
  **/

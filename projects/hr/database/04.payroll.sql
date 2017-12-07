@@ -1181,7 +1181,6 @@ BEGIN
 	WHERE (period_id = v_period_id) AND (org_id = v_org_id);
 
 	IF(v_period_tax_type_id is null) AND (v_employee_month_id is null)THEN
-
 		INSERT INTO period_tax_types (period_id, org_id, tax_type_id, period_tax_type_name, formural, tax_relief, percentage, linear, employer, employer_ps, tax_type_order, in_tax, account_id, employer_formural, employer_relief, limit_employee, limit_employer)
 		SELECT v_period_id, org_id, tax_type_id, tax_type_name, formural, tax_relief, percentage, linear, employer, employer_ps, tax_type_order, in_tax, account_id, employer_formural, employer_relief, limit_employee, limit_employer
 		FROM tax_types
@@ -1353,12 +1352,12 @@ BEGIN
 		WHERE (get_tax_min(tax_range, reca.period_tax_type_id, $3) <= $1) 
 			AND (employer_rate = $3) AND (period_tax_type_id = reca.period_tax_type_id);
 	ELSIF(reca.linear = false) AND (reca.percentage = false)THEN 
-		SELECT max(tax_rate) INTO tax
+		SELECT max(tax_rate) - max(rate_relief) INTO tax
 		FROM period_tax_rates 
 		WHERE (get_tax_min(tax_range, reca.period_tax_type_id, $3) < $1) AND (tax_range >= $1) 
 			AND (employer_rate = $3) AND (period_tax_type_id = reca.period_tax_type_id);
 	ELSIF(reca.linear = false) AND (reca.percentage = true)THEN 
-		SELECT max(tax_rate) * $1 INTO tax
+		SELECT (max(tax_rate) * $1)  - max(rate_relief) INTO tax
 		FROM period_tax_rates 
 		WHERE (get_tax_min(tax_range, reca.period_tax_type_id, $3) < $1) AND (tax_range >= $1) 
 			AND (employer_rate = $3) AND (period_tax_type_id = reca.period_tax_type_id);

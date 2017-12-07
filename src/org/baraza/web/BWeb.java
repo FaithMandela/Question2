@@ -121,6 +121,7 @@ public class BWeb {
 		viewKeys = new ArrayList<String>();
 		viewData = new ArrayList<String>();
 		params = new HashMap<String, String>();
+		dashboardItems = new HashMap<String, String>();
 
 		webSession = request.getSession(true);
 		viewKey = request.getParameter("view");
@@ -195,6 +196,7 @@ public class BWeb {
 		views = new ArrayList<BElement>();
 		viewKeys = new ArrayList<String>();
 		viewData = new ArrayList<String>();
+		dashboardItems = new HashMap<String, String>();
 
 		webSession = request.getSession(true);
 		viewKey = newview;
@@ -695,7 +697,6 @@ public class BWeb {
 		String taskList = "";
 		
 		BWebDashboard webDashboard = new BWebDashboard(db);
-		dashboardItems = new HashMap<String, String>();
 		
 		body += "<div class='row margin-top-5'>\n";
 		for(BElement el : view.getElements()) {
@@ -2260,7 +2261,10 @@ log.severe("BASE : " + mysql);
 	public BQuery getQuery(String mysql) { return new BQuery(db, mysql); }
 	
 	public boolean hasDashboardItem(String dashboardItem) {return dashboardItems.containsKey(dashboardItem); }
-	public String getDashboardItem(String dashboardItem) { return dashboardItems.get(dashboardItem); }
+	public String getDashboardItem(String dashboardItem) {
+		if(!dashboardItems.containsKey(dashboardItem)) return "{}";
+		return dashboardItems.get(dashboardItem); 
+	}
 
 	public BElement getRoot() { return root; }
 	public BElement getView() { return view; }

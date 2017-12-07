@@ -10,9 +10,9 @@
 			<MENU name="Attendance">15</MENU>
 			<MENU name="Attendance Import">17</MENU>
 		</MENU>
-		<MENU name="Travel">
-			<MENU name="Employee Travels">35</MENU>
-			<MENU name="Travel Definations">40</MENU>
+		<MENU name="Travel" role="finance,business">
+			<MENU name="Employee Travels" role="finance,business">35</MENU>
+			<MENU name="Travel Definations" role="finance,business">40</MENU>
 		</MENU>
 		<MENU name="Reports">
 			<MENU name="Project Types">101</MENU>
@@ -879,11 +879,57 @@
 	<DESK w="700" name="Travel" key="120" h="550">
 		<FILTER w="700" name="Travel" split="150" type="vert" h="550">
 			<FILTERFORM name="Date Range">
-				<TEXTDATE w="150" title="Starting From" y="10" h="20" default_fnct="get_start_year" x="10">startrange</TEXTDATE>
-				<TEXTDATE w="150" title="Ending At" y="10" h="20" default_fnct="get_end_year" x="290">endrange</TEXTDATE>
+				<TEXTDATE w="150" filterfield="departure_date" title="Starting From" filtertype=">=" y="10" h="20" default_fnct="get_start_year" x="10">startrange</TEXTDATE>
+				<TEXTDATE w="150" filterfield="departure_date" title="Ending At" filtertype="&lt;=" y="10" h="20" default_fnct="get_end_year" x="290">endrange</TEXTDATE>
 			</FILTERFORM>
 			<JASPER name="Travel List" reportfile="vw_employee_travels_a.jasper"></JASPER>
 			<JASPER name="Travel" reportfile="vw_employee_travels.jasper"></JASPER>
+			<GRID name="Travel List" keyfield="travel_type_id" orderby="employee_travel_id desc" table="vw_employee_travels">
+				<TEXTFIELD w="75" title="ID">employee_travel_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Staff">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Travel Type">travel_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Project">project_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Travel Funding">travel_funding_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Funding Details">funding_details</TEXTFIELD>
+				<TEXTFIELD w="75" title="Purpose Of Trip">purpose_of_trip</TEXTFIELD>
+				<TEXTFIELD w="75" title="Travel Agent">travel_agent</TEXTFIELD>
+				<TEXTFIELD w="75" title="Ticket From">ticket_from</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Ticket Cost">ticket_cost</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Requested Amount">t_requested_amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Amount">t_amount</TEXTDECIMAL>
+				<TEXTDATE w="75" title="Departure Date">departure_date</TEXTDATE>
+				<TEXTDATE w="75" title="Arrival Date">arrival_date</TEXTDATE>
+				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+				<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
+			</GRID>
+			<GRID name="Unreconciled Travel" keyfield="travel_type_id" orderby="employee_travel_id desc" table="vw_employee_travels" where="(un_reconciled > 0)">
+				<TEXTFIELD w="75" title="ID">employee_travel_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Staff">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Travel Type">travel_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Project">project_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Travel Funding">travel_funding_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Funding Details">funding_details</TEXTFIELD>
+				<TEXTFIELD w="75" title="Purpose Of Trip">purpose_of_trip</TEXTFIELD>
+				<TEXTFIELD w="75" title="Travel Agent">travel_agent</TEXTFIELD>
+				<TEXTFIELD w="75" title="Ticket From">ticket_from</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Ticket Cost">ticket_cost</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Requested Amount">t_requested_amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Amount">t_amount</TEXTDECIMAL>
+				<TEXTDATE w="75" title="Departure Date">departure_date</TEXTDATE>
+				<TEXTDATE w="75" title="Arrival Date">arrival_date</TEXTDATE>
+				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+				<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
+			</GRID>
+		</FILTER>
+		<FILTER w="700" name="Travel Days" split="150" type="horl" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_period_year" listfield="period_year" pos="top"></DRILLDOWN>
+			<JASPER name="Travel Days" reportfile="vw_travel_summary.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 </APP>

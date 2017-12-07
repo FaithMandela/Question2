@@ -264,6 +264,7 @@ CREATE TABLE account_activity (
 	org_id					integer references orgs,
 	
 	link_activity_id		integer not null,
+	transfer_link_id		integer,
 	deposit_account_no		varchar(32),
 	transfer_account_no		varchar(32),
 	activity_date			date default current_date not null,
@@ -312,6 +313,7 @@ CREATE TABLE account_activity_log (
 	org_id					integer references orgs,
 	
 	link_activity_id		integer not null,
+	transfer_link_id		integer,
 	deposit_account_no		varchar(32),
 	transfer_account_no		varchar(32),
 	activity_date			date default current_date not null,
@@ -601,7 +603,7 @@ CREATE VIEW vw_account_activity AS
 		vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.fiscal_year_id, vw_periods.fiscal_year,
 		
 		account_activity.org_id, account_activity.account_activity_id, account_activity.activity_date, 
-		account_activity.value_date, account_activity.transfer_account_no,
+		account_activity.value_date, account_activity.transfer_account_no, account_activity.transfer_link_id,
 		account_activity.account_credit, account_activity.account_debit, account_activity.balance, 
 		account_activity.exchange_rate, account_activity.application_date, account_activity.approve_status, 
 		account_activity.workflow_table_id, account_activity.action_date, account_activity.details,
