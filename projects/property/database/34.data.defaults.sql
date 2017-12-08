@@ -45,6 +45,15 @@ SELECT b.org_id, a.use_key_id, b.account_id
 FROM default_accounts a INNER JOIN accounts b ON a.account_id = b.account_no
 WHERE (a.org_id = 0) AND (b.org_id = 1);
 
+---default users
+INSERT INTO entitys (entity_id, org_id, entity_type_id, use_key_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password,function_role)
+VALUES (2, 0, 0, 0, 'admin', 'admin', 'admin@admin.com', true, false, false, 'baraza','admin');
+INSERT INTO entitys (entity_id, org_id, entity_type_id, use_key_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password,function_role)
+VALUES (3, 0, 0, 2, 'client', 'client', 'client@client.com', true, false, false, 'baraza','client');
+INSERT INTO entitys (entity_id, org_id, entity_type_id, use_key_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password,function_role)
+VALUES (4, 0, 0, 6, 'tenant', 'tenant', 'tenant@tenant.com', true, false, false, 'baraza','tenants');
+SELECT pg_catalog.setval('entitys_entity_id_seq', 4, true); 
+
 
 INSERT INTO workflows (link_copy, org_id, source_entity_id, workflow_name, table_name, approve_email, reject_email) 
 SELECT aa.workflow_id, bb.org_id, bb.entity_type_id, aa.workflow_name, aa.table_name, aa.approve_email, aa.reject_email
@@ -68,5 +77,4 @@ FROM sys_emails
 WHERE org_id = 0;
 
 UPDATE transaction_counters SET document_number = '10001';
-
 

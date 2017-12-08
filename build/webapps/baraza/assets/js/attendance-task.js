@@ -6,6 +6,7 @@ var btnaddClassWarning = 'btn-warning';
 var labelrmvClass = 'label-primary';
 var labeladdClass = 'label-success';
 var labeladdClassError = 'label-danger';
+
 /**
  * Clock In Button JS
  **/
@@ -15,8 +16,7 @@ $('.clock-in-btn')
         var btnClockStatus = $('.clock-in-status-btn');
         var msg = 'Clocked In Time : 8:00am ';
         btnClock.button('loading');
-        postAjax(btnClock , btnClockStatus, msg);
-
+        postAjax(btnClock, btnClockStatus, msg, '1', 'IN');
     });
 
 /**
@@ -29,8 +29,7 @@ $('.lunch-break-btn')
         var btnClockStatus = $('.lunch-break-status-btn');
         var msg = 'Lunch End : 2:00pm ';
         btnClock.button('loading');
-        postAjax(btnClock , btnClockStatus, msg);
-
+        postAjax(btnClock, btnClockStatus, msg, '4', 'LUNCH OUT');
     });
 
 /**
@@ -42,8 +41,7 @@ $('.break-btn')
         var btnClockStatus = $('.break-status-btn');
         var msg = 'Break End : 4:30pm ';
         btnClock.button('loading');
-        postAjax(btnClock , btnClockStatus, msg);
-
+        postAjax(btnClock, btnClockStatus, msg, '7', 'BREAK OUT');
     });
 
 /**
@@ -52,20 +50,19 @@ $('.break-btn')
  * @param btnStatusCss
  * @param msg
  */
-function postAjax(btnEnrtryCss, btnStatusCss, msg){
-    var  btnClock  = $(btnEnrtryCss);
+function postAjax(btnEnrtryCss, btnStatusCss, msg, logType, logInOut){
+    var btnClock  = $(btnEnrtryCss);
     var btnClockStatus = $(btnStatusCss);
     var jsonData =                 {
-        name: "Donald Duck",
-        city: "Duckburg"
+        log_type: logType,
+        log_in_out: logInOut
     };
 
-
     $.ajax({
-        url: 'hcm/entry', // url where to submit the request
+        url: 'ajax', // url where to submit the request
         type : "POST", // type of action POST || GET
         dataType : 'json', // data type
-        data : {"tag":"authenticate","json":JSON.stringify(jsonData)}, // post data || get data
+        data : {"fnct":"attendance","json":JSON.stringify(jsonData)}, // post data || get data
         beforeSend: function() {//calls the loader id tag
             $(".submit i").removeAttr('class').addClass("fa fa-refresh fa-spin fa-3x fa-fw  text-center").css({"color":"#fff",});
         },
@@ -118,24 +115,24 @@ $('#start-task')
         var btnRId = $('#start-task');
         var json = $('#task-manage').serializeArray();
         console.log(" select " + json);
-        var jsonData = {};
+        var jsonData = {start:"true"};
         $.each(json, function(i, field){
             jsonData [field.name] = field.value;
         });
         $.ajax({
 
-            url: '/tasks-start', // url where to submit the request
+            url: 'ajax', // url where to submit the request
             type : "POST", // type of action POST || GET
             dataType : 'json', // data type
-            data : {"tag":"authenticate","json":JSON.stringify(jsonData)}, // post data || get data
+            data : {"fnct":"task","json":JSON.stringify(jsonData)}, // post data || get data
             beforeSend: function() {//calls the loader id tag
                 //                $("#loader").show();
                 $(".start-task i").removeAttr('class').addClass("fa fa-refresh fa-spin fa-3x fa-fw  text-center").css({"color":"#fff",});
             },
             success : function(result) {
-                var btnMsg = "<i class='fa fa-check  text-center'></i> Saved Successfully";
-                colorChange(btnId, '', btnId, btnrmvClass, '',
-                    '', btnaddClass, '', btnMsg, '');
+                    //If successfull hide the form display the display
+                $('.task-manage-form').hide();
+                $('#display-task').show();
             },
             error: function(xhr, resp, text) {
                 var btnMsg = "<i class='fa fa-warning text-center'></i> Save Failed";
@@ -156,17 +153,16 @@ $('#end-task')
         var btnId = $('.end-task');
         var json = $('#task-manage').serializeArray();
         console.log(" select " + json);
-        var jsonData = {};
+        var jsonData = {start:"false"};
         $.each(json, function(i, field){
             jsonData [field.name] = field.value;
         });
 
         $.ajax({
-
-            url: '/tasks-end', // url where to submit the request
+            url: 'ajax', // url where to submit the request
             type : "POST", // type of action POST || GET
             dataType : 'json', // data type
-            data : {"tag":"authenticate","json":JSON.stringify(jsonData)}, // post data || get data
+            data : {"fnct":"task","json":JSON.stringify(jsonData)}, // post data || get data
             beforeSend: function() {//calls the loader id tag
                 $('#start-task').hide();
                 $(".end-task i").removeAttr('class').addClass("fa fa-refresh fa-spin fa-3x fa-fw  text-center").css({"color":"#fff",});

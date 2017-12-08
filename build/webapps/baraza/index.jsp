@@ -36,7 +36,6 @@
 
 	BWeb web = new BWeb(dbconfig, xmlfile);
 	web.init(request);
-
 	web.setMainPage(String.valueOf(pageContext.getAttribute("mainPage")));
 
 	String entryformid = null;
@@ -283,6 +282,7 @@
 	<% if(web.hasDashboardItem("ATTENDANCE")) {%>
 		<%@ include file="./assets/include/attendance.jsp" %>
 	<% } %>
+
 	<% if(web.hasDashboardItem("TASK")) {%>
 		<%@ include file="./assets/include/task.jsp" %>
 	<% } %>
@@ -321,8 +321,6 @@
 								<%= web.getBody(request, reportPath) %>
 							<% } %>
 						</div>
-
-						<%= web.getFilters() %>
 
 						<% actionOp = web.getOperations();
 						if(actionOp != null) {	%>
@@ -562,6 +560,10 @@
 </script>
 
 <script>
+
+	var attendanceList = <%=web.getDashboardItem("accessLog")%>;
+
+	var timeSheet = <%=web.getDashboardItem("timeSheet")%>;
 
 	<%= web.getAccordionJs() %>
 

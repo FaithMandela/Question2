@@ -1,4 +1,4 @@
-
+---- Shifts, Time and attendance management
 CREATE TABLE shifts (
 	shift_id				serial primary key,
 	project_id				integer references projects,
@@ -81,17 +81,21 @@ CREATE INDEX attendance_org_id ON attendance (org_id);
 CREATE INDEX attendance_attendance_date ON attendance (attendance_date);
 
 CREATE TABLE access_logs (
-	access_log_id			integer primary key,
+	access_log_id			serial primary key,
 	entity_id				integer references entitys,
 	attendance_id			integer references attendance,
 	org_id					integer references orgs,
-	log_time				timestamp not null,
+	log_time				timestamp default current_timestamp not null,
+	log_time_out			timestamp,
+	log_ip					varchar(32),
+	log_location			point,
 	log_name				varchar(50),
 	log_machine				varchar(50),
 	log_access				varchar(50),
 	log_id					varchar(50),
 	log_area				varchar(50),
 	log_in_out				varchar(50),
+	log_type				integer,
 
 	is_picked				boolean default false,
 	narrative				varchar(240)
@@ -459,3 +463,21 @@ CREATE OR REPLACE FUNCTION sum_attendance_hours(integer, integer) RETURNS interv
 	FROM vw_week_attendance
 	WHERE (vw_week_attendance.entity_id = $1) AND (vw_week_attendance.period_id = $2)
 $$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION add_access_logs(int, int, varchar(32), varchar(32)) RETURNS varchar(120) AS $$
+DECLARE
+	v_org_id				integer;
+	msg		 				varchar(120);
+BEGIN
+
+	SELECT org_id INTO v_org_id
+	FROM entitys WHERE entity_id = $1;
+
+	INSERT INTO access_logs (entity_id, org_id, log_type, log_in_out, log_ip)
+	VALUES ($1, v_org_id, $2, $3, $4);
+
+	msg := 'ok';
+	
+	return msg;
+END;
+$$ LANGUAGE plpgsql;

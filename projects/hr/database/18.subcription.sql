@@ -155,6 +155,24 @@ CREATE VIEW vws_productions AS
 		products.is_montly_bill, products.montly_cost, products.is_annual_bill, products.annual_cost,
 		products.details,
 		productions.is_renewed, productions.expiry_date;
+		
+CREATE VIEW vws_subscriptions AS
+	SELECT subscriptions.subscription_id, subscriptions.org_id, subscriptions.business_name,
+		subscriptions.business_address, subscriptions.city, subscriptions.state,
+		subscriptions.country_id, subscriptions.number_of_employees,
+		subscriptions.telephone, subscriptions.website,
+		subscriptions.primary_contact, subscriptions.job_title, subscriptions.primary_email,
+		subscriptions.approve_status,
+		ab.employee_count, ac.leave_count, ad.period_count
+		
+	FROM subscriptions 
+	LEFT JOIN (SELECT org_id, count(entity_id) as employee_count FROM employees GROUP BY org_id) as ab
+		ON subscriptions.org_id = ab.org_id
+	LEFT JOIN (SELECT org_id, count(employee_leave_id) as leave_count FROM employee_leave GROUP BY org_id) as ac
+		ON subscriptions.org_id = ac.org_id
+	LEFT JOIN (SELECT org_id, count(period_id) as period_count FROM periods GROUP BY org_id) as ad
+		ON subscriptions.org_id = ad.org_id;
+		
 
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON subscriptions
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
@@ -195,8 +213,8 @@ BEGIN
 		INSERT INTO orgs(org_id, currency_id, org_name, org_full_name, org_sufix, default_country_id, logo)
 		VALUES(NEW.org_id, 2, NEW.business_name, NEW.business_name, NEW.org_id, NEW.country_id, 'logo.png');
 		
-		INSERT INTO address (address_name, sys_country_id, table_name, table_id, premises, town, phone_number, website, is_default) 
-		VALUES (NEW.business_name, NEW.country_id, 'orgs', NEW.org_id, NEW.business_address, NEW.city, NEW.telephone, NEW.website, true);
+		INSERT INTO address (org_id, address_name, sys_country_id, table_name, table_id, premises, town, phone_number, website, is_default) 
+		VALUES (NEW.org_id, NEW.business_name, NEW.country_id, 'orgs', NEW.org_id, NEW.business_address, NEW.city, NEW.telephone, NEW.website, true);
 		
 		v_currency_id := nextval('currency_currency_id_seq');
 		INSERT INTO currency (org_id, currency_id, currency_name, currency_symbol) VALUES (NEW.org_id, v_currency_id, 'Default Currency', 'DC');
@@ -312,7 +330,7 @@ BEGIN
 		FROM entity_types 
 		WHERE (org_id = NEW.org_id) AND (use_key_id = 0);
 				
-		UPDATE entitys SET org_id = NEW.org_id, entity_type_id = v_entity_type_id, function_role='subscription,admin,staff,finance'
+		UPDATE entitys SET org_id = NEW.org_id, entity_type_id = v_entity_type_id, function_role='subscription,admin,staff,finance,hr'
 		WHERE entity_id = NEW.entity_id;
 		
 		UPDATE entity_subscriptions SET org_id = NEW.org_id, entity_type_id = v_entity_type_id

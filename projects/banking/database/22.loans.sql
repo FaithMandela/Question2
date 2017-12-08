@@ -142,6 +142,21 @@ CREATE VIEW vw_loans AS
 		INNER JOIN activity_frequency ON loans.activity_frequency_id = activity_frequency.activity_frequency_id
 		LEFT JOIN vw_loan_balance ON loans.loan_id = vw_loan_balance.loan_id;
 		
+CREATE VIEW vw_entity_loans AS
+	SELECT vw_loans.customer_id, vw_loans.customer_name, vw_loans.business_account,
+		vw_loans.product_id, vw_loans.product_name, 
+		vw_loans.currency_id, vw_loans.currency_name, vw_loans.currency_symbol,
+		vw_loans.activity_frequency_id, vw_loans.activity_frequency_name, 
+		vw_loans.org_id, vw_loans.loan_id, vw_loans.account_number, vw_loans.principal_amount, vw_loans.interest_rate, 
+		vw_loans.repayment_amount, vw_loans.disbursed_date, vw_loans.expected_matured_date, vw_loans.matured_date, 
+		vw_loans.repayment_period, vw_loans.expected_repayment, vw_loans.disburse_account,
+		vw_loans.application_date, vw_loans.approve_status, vw_loans.workflow_table_id, vw_loans.action_date, vw_loans.details,
+		
+		vw_loans.loan_balance, vw_loans.actual_balance, vw_loans.committed_balance,
+		entitys.entity_id, entitys.user_name, entitys.entity_name
+		
+	FROM vw_loans INNER JOIN entitys ON vw_loans.customer_id = entitys.customer_id;
+		
 CREATE VIEW vw_guarantees AS
 	SELECT vw_loans.customer_id, vw_loans.customer_name, vw_loans.product_id, vw_loans.product_name, 
 		vw_loans.loan_id, vw_loans.principal_amount, vw_loans.interest_rate, 

@@ -1,46 +1,45 @@
-	<div class="col-md-6 col-sm-12">
+<div class="col-md-6 col-sm-12">
 	<!-- BEGIN PORTLET-->
-<div class="portlet light tasks-widget">
-        <div class="portlet-title" style="display:none;">
-        <div class="caption caption-md">
-        <i class="icon-bar-chart theme-font-color hide"></i>
-        <span class="caption-subject theme-font-color bold uppercase">Attendance</span>
-        </div>
-        </div>
-        <div class="portlet-body">
-        <div class="row">
-        <div class="col-md-6 col-xs-6">
-        <button type="button" data-loading-text="Updating..." class="clock-in-btn btn-block btn-sm btn-primary">
-        Clock In
-        </button>
-        </div>
-        <div class="col-md-6 col-xs-6 margin-top-5" >
-        <span class="label label-primary clock-in-status-btn" style="width:100%;padding: 2px 21px 4px 21px;">Current Time : 8:00am </span>
-        </div>
-        </div>
-        <hr class="margin-10">
-        <div class="row">
-        <div class="col-md-6 col-xs-6">
-        <button type="button" data-loading-text="Updating..." class="lunch-break-btn btn-block btn-sm btn-primary">
-        Lunch Break
-        </button>
-        </div>
-        <div class="col-md-6 col-xs-6 margin-top-5">
-        <span class="label label-primary lunch-break-status-btn" style="width:100%;padding: 2px 21px 4px 21px;">Lunch Time : 1:00pm </span>
-        </div>
-        </div>
-        <hr class="margin-10">
-        <div class="row">
-        <div class="col-md-6 col-xs-6">
-        <button type="button" data-loading-text="Updating..." class="break-btn btn-block btn-sm btn-primary">
-        Break
-        </button>
-        </div>
-        <div class="col-md-6 col-xs-6 margin-top-5">
-        <span class="label label-primary break-status-btn" style="width:100%;padding: 2px 21px 4px 21px;">Break Time : 4:00pm </span>
-        </div>
-        </div>
-        </div>
-        </div>
-		        </div>
-
+	<div class="portlet light tasks-widget">
+		<div class="portlet-title" style="display:none;">
+			<div class="caption caption-md">
+			<i class="icon-bar-chart theme-font-color hide"></i>
+			<span class="caption-subject theme-font-color bold uppercase">Attendance</span>
+			</div>
+		</div>
+		<div class="portlet-body">
+			<div class="row">
+				<div class="col-md-6 col-xs-6">
+				<button type="button" data-loading-text="Updating..." class="clock-in-btn btn-block btn-sm btn-primary">
+				Clock In
+				</button>
+				</div>
+				<div class="col-md-6 col-xs-6 margin-top-5" >
+				<span class="label label-primary clock-in-status-btn" style="width:100%;padding: 2px 21px 4px 21px;">Current Time : 8:00am </span>
+				</div>
+			</div>
+			<hr class="margin-10">
+			<div class="row">
+				<div class="col-md-6 col-xs-6">
+				<button type="button" data-loading-text="Updating..." class="lunch-break-btn btn-block btn-sm btn-primary">
+				Lunch Break
+				</button>
+				</div>
+				<div class="col-md-6 col-xs-6 margin-top-5">
+				<span class="label label-primary lunch-break-status-btn" style="width:100%;padding: 2px 21px 4px 21px;">Lunch Time : 1:00pm </span>
+				</div>
+				</div>
+				<hr class="margin-10">
+				<div class="row">
+				<div class="col-md-6 col-xs-6">
+				<button type="button" data-loading-text="Updating..." class="break-btn btn-block btn-sm btn-primary">
+				Break
+				</button>
+				</div>
+				<div class="col-md-6 col-xs-6 margin-top-5">
+				<span class="label label-primary break-status-btn" style="width:100%;padding: 2px 21px 4px 21px;">Break Time : 4:00pm </span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

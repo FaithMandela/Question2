@@ -28,7 +28,6 @@
 FROM cv_projects
 
 WHERE (cv_projects.entity_id = '$P!{filterid}')
-$P!{organd}
 
 ORDER BY cv_projects.cv_project_date]]>
 	</queryString>

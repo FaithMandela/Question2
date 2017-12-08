@@ -26,7 +26,7 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_products.product_id, vw_products.product_name, vw_products.description, vw_products.loan_account, vw_products.is_active, vw_products.interest_rate, vw_products.min_opening_balance, vw_products.minimum_balance, vw_products.currency_symbol, vw_products.interest_method_name, vw_products.penalty_method_name
+		<![CDATA[SELECT vw_products.product_id, vw_products.product_name, vw_products.description, vw_products.loan_account, vw_products.is_active, vw_products.interest_rate, vw_products.min_opening_balance, vw_products.minimum_balance, vw_products.currency_symbol, vw_products.penalty_method_name
 
 FROM vw_products
 
@@ -43,7 +43,6 @@ ORDER BY vw_products.product_id]]>
 	<field name="min_opening_balance" class="java.lang.Float"/>
 	<field name="minimum_balance" class="java.lang.Float"/>
 	<field name="currency_symbol" class="java.lang.String"/>
-	<field name="interest_method_name" class="java.lang.String"/>
 	<field name="penalty_method_name" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
@@ -71,90 +70,13 @@ ORDER BY vw_products.product_id]]>
 				</graphicElement>
 			</line>
 			<staticText>
-<<<<<<< HEAD
-				<reportElement style="Column header" x="0" y="0" width="60" height="15" forecolor="#000000" uuid="ae2dbbf2-9261-401d-9f76-2f8fc50d346b"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12"/>
-=======
 				<reportElement style="Column header" x="1" y="0" width="21" height="15" forecolor="#000000" uuid="ae2dbbf2-9261-401d-9f76-2f8fc50d346b"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
->>>>>>> 0a938eade4ef6f82f09feaa33b0fb59bc6dada90
 				</textElement>
 				<text><![CDATA[ID]]></text>
 			</staticText>
 			<staticText>
-<<<<<<< HEAD
-				<reportElement style="Column header" x="63" y="0" width="87" height="29" forecolor="#000000" uuid="0110fa5c-c3b4-45c4-b68a-809cd3488c3b"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12"/>
-				</textElement>
-				<text><![CDATA[Product Name]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="153" y="0" width="84" height="15" forecolor="#000000" uuid="b37bcef2-60bb-41e6-84bc-7166ede54031"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12"/>
-				</textElement>
-				<text><![CDATA[Description]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="239" y="0" width="51" height="15" forecolor="#000000" uuid="ecbc8d0c-40f4-4c6d-868b-21ab21e3d1d7"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12"/>
-				</textElement>
-				<text><![CDATA[Loan Account]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="291" y="0" width="55" height="15" forecolor="#000000" uuid="5149e489-3536-45f1-a348-d06cb37b4ce7"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12"/>
-				</textElement>
-				<text><![CDATA[Active]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="351" y="0" width="70" height="15" forecolor="#000000" uuid="a438e2b6-845e-4953-9e9c-a6c955e5fddc"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12"/>
-				</textElement>
-				<text><![CDATA[Interest Rate]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="427" y="0" width="70" height="29" forecolor="#000000" uuid="68ba0c59-9df1-4220-be29-f8e5626f2236"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12"/>
-				</textElement>
-				<text><![CDATA[Min Opening Balance]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="507" y="0" width="70" height="29" forecolor="#000000" uuid="d63528d1-ec99-4d17-8c03-6232c0c970b9"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12"/>
-				</textElement>
-				<text><![CDATA[Minimum Balance]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="582" y="0" width="60" height="29" forecolor="#000000" uuid="7ef79da4-f80c-4980-90c9-ebff82eb2b64"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12"/>
-				</textElement>
-				<text><![CDATA[Currency Symbol]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="644" y="0" width="84" height="29" forecolor="#000000" uuid="b8d1540d-27d1-4cff-a7b9-0c59d23b3a61"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12"/>
-				</textElement>
-				<text><![CDATA[Interest Method Name]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="732" y="0" width="70" height="15" forecolor="#000000" uuid="5dc77675-e97e-4d71-a130-a1f4540ed70e"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12"/>
-				</textElement>
-				<text><![CDATA[Penalty Method Name]]></text>
-			</staticText>
-=======
 				<reportElement style="Column header" x="22" y="0" width="100" height="15" forecolor="#000000" uuid="0110fa5c-c3b4-45c4-b68a-809cd3488c3b"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
@@ -174,7 +96,7 @@ ORDER BY vw_products.product_id]]>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<text><![CDATA[Interest Rate]]></text>
+					<text><![CDATA[Penalty Rate]]></text>
 				</staticText>
 				<staticText>
 					<reportElement style="Column header" x="257" y="0" width="35" height="15" forecolor="#000000" uuid="5149e489-3536-45f1-a348-d06cb37b4ce7"/>
@@ -205,7 +127,7 @@ ORDER BY vw_products.product_id]]>
 					<text><![CDATA[Opening Balance]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="677" y="0" width="125" height="15" forecolor="#000000" uuid="5dc77675-e97e-4d71-a130-a1f4540ed70e"/>
+					<reportElement style="Column header" x="552" y="0" width="125" height="15" forecolor="#000000" uuid="5dc77675-e97e-4d71-a130-a1f4540ed70e"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
@@ -218,15 +140,7 @@ ORDER BY vw_products.product_id]]>
 					</textElement>
 					<text><![CDATA[Loan]]></text>
 				</staticText>
-				<staticText>
-					<reportElement style="Column header" x="552" y="0" width="125" height="15" forecolor="#000000" uuid="b8d1540d-27d1-4cff-a7b9-0c59d23b3a61"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<text><![CDATA[Interest Method]]></text>
-				</staticText>
 			</elementGroup>
->>>>>>> 0a938eade4ef6f82f09feaa33b0fb59bc6dada90
 		</band>
 	</columnHeader>
 	<detail>
@@ -234,55 +148,35 @@ ORDER BY vw_products.product_id]]>
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="802" height="15" uuid="42728dfa-250c-4a87-b9cc-55a4bfdc3ea3"/>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-<<<<<<< HEAD
-					<reportElement style="Detail" x="0" y="0" width="60" height="15" uuid="84284091-8c2e-4bb7-8937-85ce4ad751c2"/>
-=======
 					<reportElement style="Detail" x="1" y="0" width="21" height="15" uuid="84284091-8c2e-4bb7-8937-85ce4ad751c2"/>
->>>>>>> 0a938eade4ef6f82f09feaa33b0fb59bc6dada90
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{product_id}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-<<<<<<< HEAD
-					<reportElement style="Detail" x="63" y="0" width="87" height="15" uuid="f74e86be-22ab-469d-9e2e-bb3b37413a15"/>
-=======
 					<reportElement style="Detail" x="22" y="0" width="100" height="15" uuid="f74e86be-22ab-469d-9e2e-bb3b37413a15"/>
->>>>>>> 0a938eade4ef6f82f09feaa33b0fb59bc6dada90
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{product_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-<<<<<<< HEAD
-					<reportElement style="Detail" x="153" y="0" width="84" height="15" uuid="c7469b27-ab64-49a4-a12e-12237ee42ad9"/>
-=======
 					<reportElement style="Detail" x="122" y="0" width="100" height="15" uuid="c7469b27-ab64-49a4-a12e-12237ee42ad9"/>
->>>>>>> 0a938eade4ef6f82f09feaa33b0fb59bc6dada90
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-<<<<<<< HEAD
-					<reportElement style="Detail" x="239" y="0" width="51" height="15" uuid="6d8b3bf5-a993-4ffb-9b31-c98b96ff7d42"/>
-=======
 					<reportElement style="Detail" x="222" y="0" width="35" height="15" uuid="6d8b3bf5-a993-4ffb-9b31-c98b96ff7d42"/>
->>>>>>> 0a938eade4ef6f82f09feaa33b0fb59bc6dada90
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{loan_account}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-<<<<<<< HEAD
-					<reportElement style="Detail" x="291" y="0" width="55" height="15" uuid="183d54a8-f122-43c5-a0e8-94669a0220ed"/>
-=======
 					<reportElement style="Detail" x="257" y="0" width="35" height="15" uuid="183d54a8-f122-43c5-a0e8-94669a0220ed"/>
->>>>>>> 0a938eade4ef6f82f09feaa33b0fb59bc6dada90
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
@@ -317,22 +211,7 @@ ORDER BY vw_products.product_id]]>
 					<textFieldExpression><![CDATA[$F{currency_symbol}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-<<<<<<< HEAD
-					<reportElement style="Detail" x="644" y="0" width="84" height="15" uuid="19329c3e-1ce1-4c26-a814-fded30bb8775"/>
-=======
-					<reportElement style="Detail" x="552" y="0" width="125" height="15" uuid="19329c3e-1ce1-4c26-a814-fded30bb8775"/>
->>>>>>> 0a938eade4ef6f82f09feaa33b0fb59bc6dada90
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{interest_method_name}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-<<<<<<< HEAD
-					<reportElement style="Detail" x="732" y="0" width="70" height="15" uuid="05c21afd-2d9f-4d17-a82b-d709ce2e2ecb"/>
-=======
-					<reportElement style="Detail" x="677" y="0" width="125" height="15" uuid="05c21afd-2d9f-4d17-a82b-d709ce2e2ecb"/>
->>>>>>> 0a938eade4ef6f82f09feaa33b0fb59bc6dada90
+					<reportElement style="Detail" x="552" y="0" width="125" height="15" uuid="05c21afd-2d9f-4d17-a82b-d709ce2e2ecb"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>

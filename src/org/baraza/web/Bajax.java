@@ -106,7 +106,7 @@ public class Bajax extends HttpServlet {
 		} else if("calmove".equals(fnct)) {
 			resp = calMove(id, startDate, startTime, endDate, endTime);
 		} else if("filter".equals(fnct)) {
-			resp = filterJSON(request);
+			resp = web.getFilterWhere(request);
 		} else if("operation".equals(fnct)) {
 			resp = calOperation(id, ids, request);
 			response.setContentType("application/json;charset=\"utf-8\"");
@@ -133,6 +133,12 @@ public class Bajax extends HttpServlet {
 			response.setContentType("application/json;charset=\"utf-8\"");
 		} else if("jsdelete".equals(fnct)) {
 			resp = jsGrid(fnct, request);
+			response.setContentType("application/json;charset=\"utf-8\"");
+		} else if("attendance".equals(fnct)) {
+			resp = attendance(request);
+			response.setContentType("application/json;charset=\"utf-8\"");
+		} else if("task".equals(fnct)) {
+			resp = tasks(request);
 			response.setContentType("application/json;charset=\"utf-8\"");
 		}
 		
@@ -224,57 +230,7 @@ public class Bajax extends HttpServlet {
 		
 		return resp;
 	}
-	
-	public String filterJSON(HttpServletRequest request) {
-		String filterName = request.getParameter("filtername");
-		String filterType = request.getParameter("filtertype");
-		String filterValue = request.getParameter("filtervalue");
-		String filterAnd = request.getParameter("filterand");
-		String filterOr = request.getParameter("filteror");
-		
-		if(filterValue == null) return "";
-		if(filterValue.equals("")) return "";
-		if(filterValue.toLowerCase().contains("select ")) return "";
-		if(filterValue.toLowerCase().contains("update ")) return "";
-		if(filterValue.toLowerCase().contains("insert ")) return "";
-		if(filterAnd == null) filterAnd = "false";
-		if(filterOr == null) filterOr = "false";
-		
-		String filterSN = "F" + web.getViewKey();
-System.out.println("BASE 3010 : " + filterSN);
-System.out.println("BASE 3020 : " + web.getDataItem());
-		
-		// Only postgres supports ilike so for the others turn to like
-		String wheresql = "";
-		if((db.getDBType()!=1) && (filterType.startsWith("ilike"))) filterType = "like";
 
-		if(filterType.startsWith("like")) {
-			if(db.getDBType()==1) wheresql += "(cast(" + filterName + " as varchar) " + filterType + " '%" + filterValue + "%')";
-			else wheresql += "(lower(" + filterName + ") " + filterType + " lower('%" + filterValue + "%'))";
-		} else if(filterType.startsWith("ilike")) {
-			wheresql += "(cast(" + filterName + " as varchar) " + filterType + " '%" + filterValue + "%')";
-		} else {
-			wheresql += "(" + filterName + " " + filterType + " '" + filterValue + "')";
-		}
-		
-		HttpSession webSession = request.getSession(true);
-		if(webSession.getAttribute(filterSN) != null) {
-			if(filterAnd.equals("true")) {
-				wheresql = (String)webSession.getAttribute(filterSN) + " AND " + wheresql;
-			} else if(filterOr.equals("true")) {
-				wheresql = (String)webSession.getAttribute(filterSN) + " OR " + wheresql;
-			}
-		}
-		
-		
-		webSession.setAttribute(filterSN, wheresql);
-		if(web.getDataItem() != null) webSession.setAttribute("K" + filterSN, web.getDataItem());
-		else webSession.setAttribute("K" + filterSN, "");
-		System.out.println(wheresql + " : " + filterAnd);
-		
-		return wheresql;
-	}
-	
 	public String changePassword(String oldPass, String newPass) {
 		String resp = "";
 				
@@ -284,8 +240,8 @@ System.out.println("BASE 3020 : " + web.getDataItem());
 		oldPass = oldPass.replaceAll("'", "''");
 		newPass = newPass.replaceAll("'", "''");
 		
-		String mysql = "SELECT " + fnct + "('" + web.getUserID() + "', '" + oldPass + "','" + newPass + "')";
-		String myoutput = web.executeFunction(mysql);
+		String mySql = "SELECT " + fnct + "('" + web.getUserID() + "', '" + oldPass + "','" + newPass + "')";
+		String myoutput = web.executeFunction(mySql);
 		
 		if(myoutput == null) resp = "{\"success\": 0, \"message\": \"Old Password Is incorrect\"}";
 		else resp = "{\"success\": 1, \"message\": \"Password Changed Successfully\"}";
@@ -498,4 +454,61 @@ System.out.println("BASE 1025 : " + upSql);
 		
 		return resp;
 	}
+	
+	public String attendance(HttpServletRequest request) {
+		String resp = "";
+		String myOutput = null;
+System.out.println("BASE 2020 : ");
+
+		String jsonField = request.getParameter("json");
+		if(jsonField != null) {
+			JsonReader jsonReader = Json.createReader(new StringReader(jsonField));
+			JsonObject jObj = jsonReader.readObject();
+
+			String mySql = "SELECT add_access_logs(" + db.getUserID() + "," + jObj.getString("log_type")
+				+ ",'" + jObj.getString("log_in_out") + "', '" + request.getRemoteAddr() + "');";
+System.out.println("BASE 2030 : " + mySql);
+		
+			myOutput = db.executeFunction(mySql);
+		}
+			
+		if(myOutput == null) {
+			resp = "{\"success\": 0, \"message\": \"Attendnace not added\"}";
+		} else {
+			BQuery alRs = new BQuery(db, web.getView().getElementByName("ATTENDANCE").getElementByName("ACCESSLOG"), null, null);
+			resp = alRs.getJSON();
+			alRs.close();
+		}
+		
+		return resp;
+	}
+	
+	public String tasks(HttpServletRequest request) {
+		String resp = "";
+		String myOutput = null;
+System.out.println("BASE 2120 : ");
+
+		String jsonField = request.getParameter("json");
+		if(jsonField != null) {
+			JsonReader jsonReader = Json.createReader(new StringReader(jsonField));
+			JsonObject jObj = jsonReader.readObject();
+			
+			String mySql = "SELECT add_timesheet(" + jObj.getString("task_name")
+				+ "," + jObj.getString("start") + ", '" + jObj.getString("task_narrative") + "');";
+System.out.println("BASE 2130 : " + mySql);
+
+			myOutput = db.executeFunction(mySql);
+		}
+		
+		if(myOutput == null) {
+			resp = "{\"success\": 0, \"message\": \"Task not added\"}";
+		} else {
+			BQuery alRs = new BQuery(db, web.getView().getElementByName("TASK").getElementByName("TASKLIST"), null, null);
+			resp = alRs.getJSON();
+			alRs.close();
+		}
+		
+		return resp;
+	}
+	
 }

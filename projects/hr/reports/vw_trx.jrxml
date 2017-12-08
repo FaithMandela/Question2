@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_trx" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="07ed0f29-1247-45fa-9fcf-875d7ddf1b00">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="49"/>
+	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -87,7 +87,7 @@ $P!{organd}]]>
 	<title>
 		<band height="328" splitType="Stretch">
 			<image>
-				<reportElement x="205" y="14" width="145" height="97" uuid="d98409bc-71d2-4902-a153-d0c9b4bd8eda"/>
+				<reportElement x="212" y="0" width="145" height="97" uuid="d98409bc-71d2-4902-a153-d0c9b4bd8eda"/>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + $F{org_logo}]]></imageExpression>
 			</image>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -113,49 +113,49 @@ $P!{organd}]]>
 				<textFieldExpression><![CDATA[" Tel: " + $F{org_phone_number} + "  EMail: " + $F{org_email} + "  Website: " + $F{org_website}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="107" y="171" width="116" height="15" uuid="ea722d60-2b88-421f-8c60-fd159629bf55"/>
+				<reportElement style="Detail" x="93" y="171" width="222" height="15" uuid="ea722d60-2b88-421f-8c60-fd159629bf55"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{entity_number}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="14" y="186" width="209" height="15" uuid="f3c53736-20e4-48f1-b601-a075f7fd9a1f"/>
+				<reportElement style="Detail" x="0" y="186" width="315" height="15" uuid="f3c53736-20e4-48f1-b601-a075f7fd9a1f"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="14" y="216" width="209" height="15" uuid="7ca8fb0e-333c-402a-96a9-a38677707617"/>
+				<reportElement style="Detail" x="0" y="216" width="315" height="15" uuid="7ca8fb0e-333c-402a-96a9-a38677707617"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{postal_address}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="14" y="201" width="209" height="15" uuid="12c9dafd-a1c3-4acc-8323-d58b1f1d098e"/>
+				<reportElement style="Detail" x="0" y="201" width="315" height="15" uuid="12c9dafd-a1c3-4acc-8323-d58b1f1d098e"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{street_address}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="14" y="231" width="209" height="15" uuid="dda915f1-fffe-4d87-a013-3cbf240b4167"/>
+				<reportElement style="Detail" x="0" y="231" width="315" height="15" uuid="dda915f1-fffe-4d87-a013-3cbf240b4167"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{city_location}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="14" y="246" width="209" height="15" uuid="c45bc8c4-57ed-4cad-b9a4-f273d335131b"/>
+				<reportElement style="Detail" x="0" y="246" width="315" height="15" uuid="c45bc8c4-57ed-4cad-b9a4-f273d335131b"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{phone_number}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="14" y="261" width="209" height="15" uuid="b83ba38e-aa5d-42ef-9584-2eeeb0724549"/>
+				<reportElement style="Detail" x="0" y="261" width="315" height="15" uuid="b83ba38e-aa5d-42ef-9584-2eeeb0724549"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
@@ -194,7 +194,7 @@ $P!{organd}]]>
 				<textFieldExpression><![CDATA[$F{order_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="14" y="297" width="44" height="15" forecolor="#000000" uuid="07c2b76d-70ea-44e4-871f-d48dbddb120a"/>
+				<reportElement style="Column header" x="0" y="297" width="44" height="15" forecolor="#000000" uuid="07c2b76d-70ea-44e4-871f-d48dbddb120a"/>
 				<box>
 					<topPen lineWidth="0.75" lineStyle="Solid"/>
 					<leftPen lineWidth="0.75" lineStyle="Solid"/>
@@ -206,7 +206,7 @@ $P!{organd}]]>
 				<text><![CDATA[Job :]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="58" y="297" width="494" height="15" uuid="a385a690-c96b-4299-8d9b-ed78e7c73295"/>
+				<reportElement style="Detail" x="44" y="297" width="508" height="15" uuid="a385a690-c96b-4299-8d9b-ed78e7c73295"/>
 				<box>
 					<topPen lineWidth="0.75" lineStyle="Solid"/>
 					<bottomPen lineWidth="0.75" lineStyle="Solid"/>
@@ -228,21 +228,21 @@ $P!{organd}]]>
 				<textFieldExpression><![CDATA[$F{payment_terms}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="298" y="171" width="252" height="15" uuid="3fdb2e64-e98f-448b-bc29-b290bc33caae"/>
+				<reportElement style="Detail" x="343" y="171" width="207" height="15" uuid="3fdb2e64-e98f-448b-bc29-b290bc33caae"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{transaction_status_id} == 1 ? "PROFORMA " + $F{transaction_type_name} : $F{transaction_type_name})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="14" y="276" width="209" height="15" uuid="27d2f3ae-84a6-4409-95ea-d3589fac1cc7"/>
+				<reportElement style="Detail" x="0" y="276" width="315" height="15" uuid="27d2f3ae-84a6-4409-95ea-d3589fac1cc7"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{attention}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="298" y="216" width="151" height="15" forecolor="#000000" uuid="e27132f1-740d-4e5e-9e5c-948295f03056"/>
+				<reportElement style="Column header" x="343" y="216" width="106" height="15" forecolor="#000000" uuid="e27132f1-740d-4e5e-9e5c-948295f03056"/>
 				<box>
 					<bottomPen lineWidth="0.75"/>
 				</box>
@@ -252,7 +252,7 @@ $P!{organd}]]>
 				<text><![CDATA[DATE :]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="298" y="231" width="151" height="15" forecolor="#000000" uuid="81398238-04d1-4624-a4b9-a7185be84f48">
+				<reportElement style="Column header" x="343" y="231" width="106" height="15" forecolor="#000000" uuid="81398238-04d1-4624-a4b9-a7185be84f48">
 					<printWhenExpression><![CDATA[$F{order_number} != null]]></printWhenExpression>
 				</reportElement>
 				<box>
@@ -264,7 +264,7 @@ $P!{organd}]]>
 				<text><![CDATA[YOUR ORDER #:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="298" y="246" width="151" height="15" forecolor="#000000" uuid="ffd3dfc9-5bf3-44a9-b18b-4057ae39673d"/>
+				<reportElement style="Column header" x="343" y="246" width="106" height="15" forecolor="#000000" uuid="ffd3dfc9-5bf3-44a9-b18b-4057ae39673d"/>
 				<box>
 					<bottomPen lineWidth="0.75"/>
 				</box>
@@ -274,7 +274,7 @@ $P!{organd}]]>
 				<text><![CDATA[TERMS :]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="298" y="261" width="151" height="15" forecolor="#000000" uuid="6e5fc750-c5ad-4303-9c8d-4efc380c76cb"/>
+				<reportElement style="Column header" x="343" y="261" width="106" height="15" forecolor="#000000" uuid="6e5fc750-c5ad-4303-9c8d-4efc380c76cb"/>
 				<box>
 					<bottomPen lineWidth="0.75"/>
 				</box>
@@ -294,7 +294,7 @@ $P!{organd}]]>
 				<textFieldExpression><![CDATA[$F{currency_symbol}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="298" y="201" width="151" height="15" uuid="cb6ad241-ae5f-4a99-a2d9-2cff1cddb6ad"/>
+				<reportElement style="Detail" x="343" y="201" width="106" height="15" uuid="cb6ad241-ae5f-4a99-a2d9-2cff1cddb6ad"/>
 				<box>
 					<bottomPen lineWidth="0.75"/>
 				</box>
@@ -304,14 +304,14 @@ $P!{organd}]]>
 				<textFieldExpression><![CDATA[$F{doc_name} + " #:"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="14" y="156" width="57" height="15" uuid="e755c68e-d015-423c-aaed-d07f1a8d0f30"/>
+				<reportElement style="Detail" x="0" y="156" width="57" height="15" uuid="e755c68e-d015-423c-aaed-d07f1a8d0f30"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{for_sales} == true ? "To :" : "From :")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="14" y="171" width="93" height="15" uuid="66fee1ae-aa90-4ce1-b46e-86f6d2bbc628"/>
+				<reportElement style="Detail" x="0" y="171" width="93" height="15" uuid="66fee1ae-aa90-4ce1-b46e-86f6d2bbc628"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" isBold="true"/>
 				</textElement>
@@ -328,7 +328,7 @@ $P!{organd}]]>
 	<detail>
 		<band height="33" splitType="Stretch">
 			<subreport>
-				<reportElement x="0" y="0" width="532" height="30" uuid="8f5bf839-9c59-4f28-80a1-01776e0b4e8c"/>
+				<reportElement x="0" y="0" width="555" height="30" uuid="8f5bf839-9c59-4f28-80a1-01776e0b4e8c"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -414,7 +414,7 @@ $P!{organd}]]>
 				<text><![CDATA[TAX :]]></text>
 			</staticText>
 			<rectangle radius="10">
-				<reportElement x="1" y="40" width="342" height="130" uuid="6a9c664a-b91d-4de6-9ef1-2514115b786d"/>
+				<reportElement x="1" y="47" width="342" height="123" uuid="6a9c664a-b91d-4de6-9ef1-2514115b786d"/>
 			</rectangle>
 			<staticText>
 				<reportElement style="Column header" x="384" y="47" width="80" height="20" forecolor="#000000" uuid="65b94aba-f2b1-453d-a9cf-2e932ffe02c7"/>
@@ -427,7 +427,7 @@ $P!{organd}]]>
 				<text><![CDATA[AMOUNT DUE :]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="14" y="40" width="315" height="130" uuid="ade383ce-038c-4ba4-acaf-6d108d927a90"/>
+				<reportElement x="14" y="47" width="315" height="123" uuid="ade383ce-038c-4ba4-acaf-6d108d927a90"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>

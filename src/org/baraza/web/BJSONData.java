@@ -10,6 +10,7 @@ package org.baraza.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 import java.util.Enumeration;
 import java.util.logging.Logger;
 
@@ -63,19 +64,9 @@ public class BJSONData extends HttpServlet {
 		}
 		System.out.println("JSON sort : " + sortby);
 		
-		String wheresql = null;
-		String filterSN = "F" + web.getViewKey();
-		if(webSession.getAttribute(filterSN) != null) {
-			String filterKSN = "";
-			if(webSession.getAttribute("K" + filterSN) != null) filterKSN = (String)webSession.getAttribute("K" + filterSN);
-			String wDataItem = "";
-			if(web.getDataItem() != null) wDataItem = web.getDataItem();
-			
-			if(filterKSN.equals(wDataItem)) wheresql = (String)webSession.getAttribute(filterSN);
-			else webSession.removeAttribute(filterSN);
-		}
-		wheresql = web.getJSONWhere(request, wheresql);
-		System.out.println("JSON Where :" + filterSN + ": " + wheresql);
+		Map<String, String> whereParams = web.getWhere(request);
+		String wheresql = whereParams.get("wheresql");
+		System.out.println("JSON Where :" + wheresql);
 		
 		String pageNum = request.getParameter("page");
 		if(pageNum == null) pageNum = "0";
@@ -93,8 +84,16 @@ public class BJSONData extends HttpServlet {
 			if(!web.getUser().getSuperUser()) return;
 		}
 		
+		boolean secured = true;
+		String rUrl = request.getRequestURI();
+		if(rUrl == null) rUrl = "";
+		if(rUrl.contains("jsongeneral")) {
+			if(!view.getAttribute("secured", "false").equals("true")) secured = false;
+		}
+		
 		BJSONQuery JSONQuery = new BJSONQuery(web.getDB(), view, wheresql, sortby, pageStart, pageSize);
-		String JSONStr = JSONQuery.getJSONData(web.getViewKey(), false);
+		String JSONStr = "";
+		if(secured) JSONStr = JSONQuery.getJSONData(web.getViewKey(), false);
 
 		try {
 			PrintWriter out = response.getWriter();

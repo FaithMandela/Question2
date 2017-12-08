@@ -421,23 +421,27 @@
 				<TEXTFIELD w="75" title="ID">tax_rate_id</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Deduction Range">tax_range</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Deduction Rate">tax_rate</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Rate Relief">rate_relief</TEXTDECIMAL>
 				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 				<FORM name="Deduction Rate" keyfield="tax_rate_id" linkfield="tax_type_id" table="tax_rates">
 					<TEXTDECIMAL w="150" title="Deduction Range" y="10" h="20" x="10">tax_range</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Deduction Rate" y="10" h="20" x="290">tax_rate</TEXTDECIMAL>
-					<TEXTFIELD w="430" title="Narrative" y="30" h="20" x="10">narrative</TEXTFIELD>
+					<TEXTDECIMAL w="150" title="Rate Relief" y="30" h="20" x="10">rate_relief</TEXTDECIMAL>
+					<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">narrative</TEXTFIELD>
 				</FORM>
 			</GRID>
 			<GRID name="Employer Rates" keyfield="tax_rate_id" orderby="tax_range" linkfield="tax_type_id" table="vw_tax_rates" where="(employer_rate = 1)">
 				<TEXTFIELD w="75" title="ID">tax_rate_id</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Deduction Range">tax_range</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Deduction Rate">tax_rate</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Rate Relief">rate_relief</TEXTDECIMAL>
 				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 				<FORM name="Deduction Rate" keyfield="tax_rate_id" linkfield="tax_type_id" table="tax_rates">
 					<DEFAULT default="1">employer_rate</DEFAULT>
 					<TEXTDECIMAL w="150" title="Deduction Range" y="10" h="20" x="10">tax_range</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Deduction Rate" y="10" h="20" x="290">tax_rate</TEXTDECIMAL>
-					<TEXTFIELD w="430" title="Narrative" y="30" h="20" x="10">narrative</TEXTFIELD>
+					<TEXTDECIMAL w="150" title="Rate Relief" y="30" h="20" x="10">rate_relief</TEXTDECIMAL>
+					<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">narrative</TEXTFIELD>
 				</FORM>
 			</GRID>
 			<FORM cols="2" name="Deduction Type" keyfield="tax_type_id" table="tax_types">
@@ -1046,31 +1050,35 @@
 					</FORM>
 				</GRID>
 			</GRID>
-			<GRID name="Tax Types" keyfield="period_tax_type_id" linkfield="period_id" table="vw_period_tax_types" where="(use_function = 1)">
+			<GRID name="Statutory Types" keyfield="period_tax_type_id" linkfield="period_id" table="vw_period_tax_types" where="(use_function = 1)">
 				<TEXTFIELD w="75" title="ID">tax_type_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="Tax Type">period_tax_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Statutory Type">period_tax_type_name</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Tax Relief">tax_relief</TEXTDECIMAL>
 				<CHECKBOX w="75" title="Linear">linear</CHECKBOX>
 				<CHECKBOX w="75" title="Percentage">percentage</CHECKBOX>
-				<GRID name="Tax Rates" keyfield="period_tax_rate_id" linkfield="period_tax_type_id" table="period_tax_rates" where="(employer_rate = 0)">
+				<GRID name="Deduction Rates" keyfield="period_tax_rate_id" linkfield="period_tax_type_id" table="period_tax_rates" where="(employer_rate = 0)">
 					<TEXTDECIMAL w="75" title="Tax Range">tax_range</TEXTDECIMAL>
 					<TEXTDECIMAL w="75" title="Tax Rate">tax_rate</TEXTDECIMAL>
+					<TEXTDECIMAL w="75" title="Rate Relief">rate_relief</TEXTDECIMAL>
 					<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
-					<FORM name="Tax Rate" keyfield="period_tax_rate_id" linkfield="period_tax_type_id" table="period_tax_rates">
+					<FORM name="Deduction Rate" keyfield="period_tax_rate_id" linkfield="period_tax_type_id" table="period_tax_rates">
 						<TEXTDECIMAL w="150" title="Tax Range" y="10" h="20" x="10">tax_range</TEXTDECIMAL>
 						<TEXTDECIMAL w="150" title="Tax Rate" y="10" h="20" x="290">tax_rate</TEXTDECIMAL>
-						<TEXTFIELD w="430" title="Narrative" y="30" h="20" x="10">narrative</TEXTFIELD>
+						<TEXTDECIMAL w="150" title="Rate Relief" y="30" h="20" x="10">rate_relief</TEXTDECIMAL>
+						<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">narrative</TEXTFIELD>
 					</FORM>
 				</GRID>
 				<GRID name="Employer Rates" keyfield="period_tax_rate_id" linkfield="period_tax_type_id" table="period_tax_rates" where="(employer_rate = 1)">
 					<TEXTDECIMAL w="75" title="Tax Range">tax_range</TEXTDECIMAL>
 					<TEXTDECIMAL w="75" title="Tax Rate">tax_rate</TEXTDECIMAL>
+					<TEXTDECIMAL w="75" title="Rate Relief">rate_relief</TEXTDECIMAL>
 					<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 					<FORM name="Tax Rate" keyfield="period_tax_rate_id" linkfield="period_tax_type_id" table="period_tax_rates">
 						<DEFAULT default="1">employer_rate</DEFAULT>
 						<TEXTDECIMAL w="150" title="Tax Range" y="10" h="20" x="10">tax_range</TEXTDECIMAL>
 						<TEXTDECIMAL w="150" title="Tax Rate" y="10" h="20" x="290">tax_rate</TEXTDECIMAL>
-						<TEXTFIELD w="430" title="Narrative" y="30" h="20" x="10">narrative</TEXTFIELD>
+						<TEXTDECIMAL w="150" title="Rate Relief" y="30" h="20" x="10">rate_relief</TEXTDECIMAL>
+						<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">narrative</TEXTFIELD>
 					</FORM>
 				</GRID>
 				<FORM cols="2" name="Tax Type" keyfield="period_tax_type_id" linkfield="period_id" table="period_tax_types">
@@ -1100,6 +1108,20 @@
 				<TEXTFIELD w="75" title="Bank Branch Code">bank_branch_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Bank Account">bank_account</TEXTFIELD>
 				<TEXTDECIMAL w="75" fnct="round(cast(banked as numeric), 1)" title="Banked">banked_amount</TEXTDECIMAL>
+			</GRID>
+			<GRID name="Intern Month" keyfield="intern_month_id" linkfield="period_id" table="vw_intern_month">
+				<TEXTFIELD w="75" title="Intern ID">entity_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Intern">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Currency Symbol">currency_symbol</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Month Allowance">month_allowance</TEXTDECIMAL>
+				<FORM name="Intern Month" keyfield="intern_month_id" linkfield="period_id" table="intern_month">
+					<COMBOBOX w="430" title="Intern" lptable="vw_interns" lpkey="intern_id" y="10" h="20" x="10" lpfield="entity_name">intern_id</COMBOBOX>
+					<COMBOBOX w="430" title="Currency" lptable="currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+					<TEXTDECIMAL w="150" title="Exchange Rate" y="50" h="20" x="10">exchange_rate</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Month Allowance" y="50" h="20" x="290">month_allowance</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+				</FORM>
 			</GRID>
 			<FORM tw="570" name="Period" keyfield="period_id" table="periods" th="210">
 				<TEXTDATE w="150" title="Start Date" y="10" h="20" x="10">start_date</TEXTDATE>
@@ -2093,7 +2115,7 @@
 			<TEXTFIELD w="75" title="Designation">designation</TEXTFIELD>
 			<TEXTFIELD w="75" title="NoRecordBatch">no_of_records</TEXTFIELD>
 			<TEXTFIELD w="75" title="TotIncomeBatch">total_income</TEXTFIELD>
-			<JASPER name="IR56A" reportfile="vw_employee_year.jasper"></JASPER>
+			<JASPER name="IR56A" reportfile="IR56A.jasper"></JASPER>
 		</GRID>
 		<FILTER w="700" name="IR56B Report" split="250" h="550">
 			<FILTERFORM name="Employees">

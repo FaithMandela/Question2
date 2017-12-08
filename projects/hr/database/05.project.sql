@@ -158,6 +158,7 @@ CREATE TABLE timesheet (
 	ts_start_time			time not null,
 	ts_end_time				time not null,
 	ts_narrative			varchar(320),
+	ts_completed			boolean default true not null,
 	details					text
 );
 CREATE INDEX timesheet_task_id ON timesheet(task_id);
@@ -289,7 +290,7 @@ CREATE VIEW vw_tasks AS
 		INNER JOIN vw_phases ON tasks.phase_id = vw_phases.phase_id;
 		
 CREATE VIEW vw_timesheet AS
-		SELECT vw_tasks.client_id, vw_tasks.client_name, vw_tasks.project_type_id, vw_tasks.project_type_name, 
+	SELECT vw_tasks.client_id, vw_tasks.client_name, vw_tasks.project_type_id, vw_tasks.project_type_name, 
 		vw_tasks.project_id, vw_tasks.project_name, vw_tasks.signed, vw_tasks.contract_ref, 
 		vw_tasks.monthly_amount, vw_tasks.full_amount, vw_tasks.project_cost, vw_tasks.narrative, 
 		vw_tasks.start_date, vw_tasks.ending_date,
@@ -299,7 +300,7 @@ CREATE VIEW vw_timesheet AS
 		vw_tasks.task_id, vw_tasks.task_name, 
 		vw_tasks.task_start_date, vw_tasks.task_dead_line, vw_tasks.task_end_date, vw_tasks.task_completed, 
 		timesheet.org_id, timesheet.timesheet_id, timesheet.ts_date, timesheet.ts_start_time, timesheet.ts_end_time, 
-		timesheet.ts_narrative, timesheet.details,
+		timesheet.ts_completed, timesheet.ts_narrative, timesheet.details,
 		(EXTRACT(HOURS from timesheet.ts_end_time - timesheet.ts_start_time) +
 		EXTRACT(MINUTES from timesheet.ts_end_time - timesheet.ts_start_time) / 60) as ts_hours
 	FROM timesheet INNER JOIN vw_tasks ON timesheet.task_id = vw_tasks.task_id;
@@ -390,11 +391,17 @@ CREATE TRIGGER aft_task_types AFTER INSERT ON task_types
 	FOR EACH ROW EXECUTE PROCEDURE aft_task_types();
 
 CREATE OR REPLACE FUNCTION ins_tasks() RETURNS trigger AS $$
+DECLARE
+	v_task_entity_cost				real;
+	v_task_entity_price				real;
 BEGIN
 
-	SELECT task_entity_cost, task_entity_price INTO NEW.task_cost, NEW.task_price
+	SELECT task_entity_cost, task_entity_price INTO v_task_entity_cost, v_task_entity_price
 	FROM task_entitys
 	WHERE (task_type_id = NEW.task_type_id) AND (entity_id = NEW.entity_id);
+
+	IF(v_task_entity_cost is not null) THEN NEW.task_cost := v_task_entity_cost; END IF;
+	IF(v_task_entity_price is not null) THEN NEW.task_price := v_task_entity_price; END IF;
 	
 	RETURN NEW;
 END;
@@ -434,4 +441,29 @@ BEGIN
 	return msg;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION add_timesheet(int, boolean, varchar(320)) RETURNS varchar(120) AS $$
+DECLARE
+	v_org_id				integer;
+	msg		 				varchar(120);
+BEGIN
+
+	SELECT org_id INTO v_org_id
+	FROM tasks WHERE task_id = $1;
+
+	IF($2 = true)THEN
+		INSERT INTO timesheet (task_id, org_id, ts_date, ts_start_time, ts_end_time, ts_completed, ts_narrative)
+		VALUES ($1, v_org_id, current_date, current_time, current_time, false, $3);
+	ELSE
+		UPDATE timesheet SET ts_end_time = current_time, ts_completed = true 
+		WHERE (ts_completed = false) AND (task_id = $1);
+	END IF;
+
+	msg := 'ok';
+	
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+
 

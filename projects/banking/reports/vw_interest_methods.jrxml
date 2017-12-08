@@ -43,10 +43,10 @@ ORDER BY vw_interest_methods.interest_method_id]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="64" splitType="Stretch">
+		<band height="71" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="0" y="8" width="525" height="53" uuid="38d65627-4907-429f-bbfa-aa57ede0ecae"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<reportElement style="Title" x="66" y="0" width="446" height="62" uuid="38d65627-4907-429f-bbfa-aa57ede0ecae"/>
+				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
 				<text><![CDATA[Interest Methods Report]]></text>
@@ -65,22 +65,14 @@ ORDER BY vw_interest_methods.interest_method_id]]>
 				</graphicElement>
 			</line>
 			<staticText>
-<<<<<<< HEAD
-				<reportElement style="Column header" x="1" y="0" width="86" height="15" forecolor="#000000" uuid="7d271de6-4782-45ee-bbf3-cd717dfd0f63"/>
-=======
 				<reportElement style="Column header" x="1" y="0" width="26" height="15" forecolor="#000000" uuid="7d271de6-4782-45ee-bbf3-cd717dfd0f63"/>
->>>>>>> 0a938eade4ef6f82f09feaa33b0fb59bc6dada90
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[ID]]></text>
 			</staticText>
 			<staticText>
-<<<<<<< HEAD
-				<reportElement style="Column header" x="94" y="0" width="105" height="15" forecolor="#000000" uuid="b2c318da-b606-4471-ac92-f1125ec86b9f"/>
-=======
 				<reportElement style="Column header" x="27" y="0" width="184" height="15" forecolor="#000000" uuid="b2c318da-b606-4471-ac92-f1125ec86b9f"/>
->>>>>>> 0a938eade4ef6f82f09feaa33b0fb59bc6dada90
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
@@ -114,22 +106,14 @@ ORDER BY vw_interest_methods.interest_method_id]]>
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="15" uuid="987eaa23-5cae-4e8b-a4cb-ede2f9b4205a"/>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-<<<<<<< HEAD
-					<reportElement style="Detail" x="1" y="0" width="86" height="15" uuid="adbc9b39-4a0b-4c39-832a-74f93fd2874d"/>
-=======
 					<reportElement style="Detail" x="1" y="0" width="26" height="15" uuid="adbc9b39-4a0b-4c39-832a-74f93fd2874d"/>
->>>>>>> 0a938eade4ef6f82f09feaa33b0fb59bc6dada90
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{interest_method_id}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-<<<<<<< HEAD
-					<reportElement style="Detail" x="94" y="0" width="105" height="15" uuid="13572d65-dc31-4ae1-ae52-56c937e8925a"/>
-=======
 					<reportElement style="Detail" x="27" y="0" width="184" height="15" uuid="13572d65-dc31-4ae1-ae52-56c937e8925a"/>
->>>>>>> 0a938eade4ef6f82f09feaa33b0fb59bc6dada90
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
@@ -160,7 +144,7 @@ ORDER BY vw_interest_methods.interest_method_id]]>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="5" splitType="Stretch">
+		<band height="15" splitType="Stretch">
 			<line>
 				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="470bb46d-01f3-46bb-9018-b29451c22e28"/>
 				<graphicElement>

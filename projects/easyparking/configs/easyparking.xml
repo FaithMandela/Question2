@@ -5,22 +5,11 @@
 		<MENU name="Processing">125</MENU>
 		<MENU name="Service">
 			<MENU name="Client Forms">22</MENU>
-			<MENU name="Applicants">265</MENU>
 			<MENU name="Approvals">83</MENU>
-		</MENU>
-		<MENU name="Operations">
-			<MENU name="Clients and Suppliers">17</MENU>
-			<MENU name="Sales">2</MENU>
-			<MENU name="Purchase">27</MENU>
-			<MENU name="Transaction Ledger">32</MENU>
-			<MENU name="Fiscal Years">10</MENU>
-			<MENU name="Journals">35</MENU>
-			<MENU name="Petty Cash">90</MENU>
-			<MENU name="Petty Cash Request">92</MENU>
-			<MENU name="Issue Tracking">95</MENU>
 		</MENU>
 		<MENU name="Configurations" role="admin">
 			<MENU name="Products">110</MENU>
+			<MENU name="Fiscal Years">10</MENU>
 			<MENU name="Organisation" role="admin">12</MENU>
 			<MENU name="Banks">25</MENU>
 			<MENU name="Items">30</MENU>
@@ -39,20 +28,6 @@
 			<MENU name="Customers">250</MENU>
 			<MENU name="Deposit accounts">230</MENU>
 			<MENU name="Configuration">255</MENU>
-		</MENU>
-		<MENU name="Operations Reports">
-			<MENU name="Operational Entitys">220</MENU>
-			<MENU name="Bank Accounts">225</MENU>
-			<MENU name="Tax Types">135</MENU>
-			<MENU name="Items">140</MENU>
-			<MENU name="Chart of Accounts">205</MENU>
-			<MENU name="Transaction Ledger">145</MENU>
-			<MENU name="Journals">210</MENU>
-			<MENU name="Trial Balance">150</MENU>
-			<MENU name="income and Expenditure">155</MENU>
-			<MENU name="Balance Sheet">160</MENU>
-			<MENU name="Statement">170</MENU>
-			<MENU name="Issues">180</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
@@ -912,7 +887,7 @@
 			<ACTIONS>
 				<ACTION fnct="apply_approval" approval="1">Approval Application</ACTION>
 			</ACTIONS>
-			<JASPER name="Personal" reportfile="customers_cd.jasper"></JASPER>
+			<JASPER name="Personal" reportfile="customers_pd.jasper"></JASPER>
 			<GRID name="Deposit Accounts" keyfield="deposit_account_id" linkfield="entity_id" table="vw_deposit_accounts">
 				<TEXTFIELD w="75" title="Deposit Account ID">deposit_account_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>
@@ -994,10 +969,7 @@
 				<CHECKBOX w="150" title="Employed" y="170" h="20" x="10" span="true">employed</CHECKBOX>
 				<CHECKBOX w="150" title="Self Employed" y="170" h="20" x="290">self_employed</CHECKBOX>
 				<TEXTFIELD w="150" title="Employer Name" y="190" h="20" x="10">employer_name</TEXTFIELD>
-				<TEXTDECIMAL w="150" title="Monthly Salary" y="210" h="20" x="10" span="true">monthly_salary</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Monthly Net Income" y="210" h="20" x="290">monthly_net_income</TEXTDECIMAL>
 				<TEXTAREA w="150" title="Employer Address" y="230" h="30" x="10" span="true" rows="3">employer_address</TEXTAREA>
-				<TEXTFIELD w="150" title="Introduced By" y="230" h="20" x="290">introduced_by</TEXTFIELD>
 				<PICTURE w="550" tab="Picture" access="ob" y="1" h="150" x="10">picture_file</PICTURE>
 				<TEXTAREA w="430" tab="Details" y="340" h="70" x="10">details</TEXTAREA>
 			</FORM>
@@ -1074,9 +1046,6 @@
 				<TEXTFIELD w="150" title="Zip Code" required="true" y="110" h="20" x="290">zip_code</TEXTFIELD>
 				<TEXTDATE w="150" title="Date Of Registration" y="130" h="20" x="10" span="true">date_of_birth</TEXTDATE>
 				<COMBOBOX w="150" title="Country" lptable="sys_countrys" default_org_fnct="get_default_country" noorg="true" lpkey="sys_country_id" y="130" h="20" x="290" lpfield="sys_country_name">nationality</COMBOBOX>
-				<TEXTDECIMAL w="150" title="Annual Turnover" y="150" h="20" x="10" span="true">annual_turnover</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Annual Net Income" y="150" h="20" x="290">annual_net_income</TEXTDECIMAL>
-				<TEXTFIELD w="150" title="Introduced By" y="190" h="20" x="10">introduced_by</TEXTFIELD>
 				<TEXTAREA w="430" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
@@ -2783,7 +2752,6 @@
 	<DESK w="700" name="Configuration" key="255" h="550">
 		<JASPER name="Products" reportfile="vw_products.jasper"></JASPER>
 		<JASPER name="Activity Types" reportfile="vw_activity_types.jasper"></JASPER>
-		<JASPER name="Interest Methods" reportfile="vw_interest_methods.jasper"></JASPER>
 		<JASPER name="Penalty Methods" reportfile="vw_penalty_methods.jasper"></JASPER>
 		<JASPER name="Product Defination" reportfile="vw_products_d.jasper"></JASPER>
 	</DESK>

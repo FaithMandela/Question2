@@ -106,7 +106,7 @@ CREATE TABLE tax_types (
 	employer_formural		varchar(320),
 	employer_account		varchar(32),
 	limit_employer			real,
-	active					boolean default true,
+	active					boolean default true not null,
 	Details					text,
 	
 	UNIQUE(tax_type_name, org_id, sys_country_id)
@@ -124,6 +124,7 @@ CREATE TABLE tax_rates (
 	tax_range				float not null,
 	tax_rate				float not null,
 	employer_rate			integer default 0 not null,
+	rate_relief				real default 0 not null,
 	narrative				varchar(240)
 );
 CREATE INDEX tax_rates_tax_type_id ON tax_rates (tax_type_id);
@@ -170,6 +171,7 @@ CREATE TABLE period_tax_rates (
 	tax_range				float not null,
 	tax_rate				float not null,
 	employer_rate			integer default 0 not null,
+	rate_relief				real default 0 not null,
 	narrative				varchar(240),
 	
 	UNIQUE(period_tax_type_id, tax_rate_id)
@@ -319,7 +321,7 @@ CREATE VIEW vw_tax_types AS
 CREATE VIEW vw_tax_rates AS
 	SELECT tax_types.tax_type_id, tax_types.tax_type_name, tax_types.tax_relief, tax_types.linear, tax_types.percentage,
 		tax_rates.org_id, tax_rates.tax_rate_id, tax_rates.tax_range, tax_rates.tax_rate, tax_rates.employer_rate,
-		tax_rates.narrative
+		tax_rates.rate_relief, tax_rates.narrative
 	FROM tax_rates INNER JOIN tax_types ON tax_rates.tax_type_id = tax_types.tax_type_id;
 
 CREATE VIEW vw_period_tax_types AS
@@ -346,7 +348,7 @@ CREATE VIEW vw_period_tax_rates AS
 		period_tax_types.period_id, period_tax_rates.period_tax_rate_id, 
 		get_tax_min(period_tax_rates.tax_range, period_tax_types.period_tax_type_id, 0) as min_range, 
 		period_tax_rates.org_id, period_tax_rates.tax_range as max_range, period_tax_rates.tax_rate, 
-		period_tax_rates.employer_rate, period_tax_rates.narrative
+		period_tax_rates.employer_rate, period_tax_rates.rate_relief, period_tax_rates.narrative
 	FROM period_tax_rates INNER JOIN period_tax_types ON period_tax_rates.period_tax_type_id = period_tax_types.period_tax_type_id;
 	
 CREATE VIEW vw_default_tax_types AS

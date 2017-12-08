@@ -63,8 +63,8 @@ public class BWeb {
 	List<BElement> views;
 	List<String> viewKeys;
 	List<String> viewData;
-	List<String> dashboardItems;
 	Map<String, String> params;
+	Map<String, String> dashboardItems;
 
 	boolean selectAll = false;
 	boolean isLicense = true;
@@ -121,6 +121,7 @@ public class BWeb {
 		viewKeys = new ArrayList<String>();
 		viewData = new ArrayList<String>();
 		params = new HashMap<String, String>();
+		dashboardItems = new HashMap<String, String>();
 
 		webSession = request.getSession(true);
 		viewKey = request.getParameter("view");
@@ -138,6 +139,8 @@ public class BWeb {
 		webSession.setAttribute("viewkey", viewKey);
 		
 		dataItem = request.getParameter("data");
+		if(checkInjection(dataItem)) dataItem = "";
+		
 		if(webSession.getAttribute("loaddata") != null) {
 			dataItem = (String)webSession.getAttribute("loaddata");
 			webSession.removeAttribute("loaddata");
@@ -193,12 +196,14 @@ public class BWeb {
 		views = new ArrayList<BElement>();
 		viewKeys = new ArrayList<String>();
 		viewData = new ArrayList<String>();
+		dashboardItems = new HashMap<String, String>();
 
 		webSession = request.getSession(true);
 		viewKey = newview;
 		webSession.setAttribute("viewkey", viewKey);
 		
 		dataItem = request.getParameter("data");
+		if(checkInjection(dataItem)) dataItem = "";
 		if(dataItem != null) webSession.setAttribute("d" + viewKey, dataItem);
 		else if(webSession.getAttribute("d" + viewKey) != null) 
 			dataItem = (String)webSession.getAttribute("d" + viewKey);
@@ -589,7 +594,9 @@ public class BWeb {
 				buttons += "<a class='btn blue btn-sm' title='Add New' href='?view=" + viewKey + ":" + String.valueOf(fv) + "&data={new}'><i class='fa fa-plus'></i>   " + newBtn + "</a>\n";
 			}
 			buttons += "<a class='btn green btn-sm' href='?view=" + viewKey + did + "&refresh=true'><i class='fa fa-refresh'></i>   Refresh</a>\n";
-			buttons += "<a class='btn green btn-sm' target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'><i class='fa fa-file-excel-o'></i>   Export</a>\n";
+			
+			if(view.getAttribute("grid.export", "true").equals("true"))
+				buttons += "<a class='btn green btn-sm' target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'><i class='fa fa-file-excel-o'></i>   Export</a>\n";
 			
 			if(view.getAttribute("grid.print", "false").equals("true"))
 				buttons += "<a class='btn green btn-sm' target='_blank' href='b_print.jsp?view=" + viewKey + did + "&action=print'><i class='fa fa-print'></i>   Print</a>\n";
@@ -687,9 +694,9 @@ public class BWeb {
 		if((root == null) || (db == null)) return "";	// error check
 		
 		String body = "";
+		String taskList = "";
 		
 		BWebDashboard webDashboard = new BWebDashboard(db);
-		dashboardItems = new ArrayList<String>();
 		
 		body += "<div class='row margin-top-5'>\n";
 		for(BElement el : view.getElements()) {
@@ -708,8 +715,26 @@ public class BWeb {
 		for(BElement el : view.getElements()) {
 			boolean hasAccess  = checkAccess(el.getAttribute("role"));
 			if(hasAccess) {
-				if(el.getName().equals("ATTENDANCE")) dashboardItems.add("ATTENDANCE");
-				else if(el.getName().equals("TASK")) dashboardItems.add("TASK");
+				if(el.getName().equals("ATTENDANCE")) {
+					dashboardItems.put("ATTENDANCE", "true");
+					
+					BQuery alRs = new BQuery(db, el.getElementByName("ACCESSLOG"), null, null);
+					dashboardItems.put("accessLog", alRs.getJSON());
+					alRs.close();
+				} else if(el.getName().equals("TASK")) {
+					dashboardItems.put("TASK", "true");
+					
+					BQuery tlRs = new BQuery(db, el.getElementByName("TASKLIST"), null, null, false);
+					while(tlRs.moveNext()) {
+						taskList += "\n<option value='" + tlRs.getString("task_id") + "'>" + tlRs.getString("task_name") + "</option>";
+					}
+					dashboardItems.put("taskList", taskList);
+					tlRs.close();
+					
+					BQuery tsRs = new BQuery(db, el.getElementByName("TIMESHEET"), null, null);
+					dashboardItems.put("timeSheet", tsRs.getJSON());
+					tsRs.close();
+				}
 			}
 		}
 		
@@ -734,61 +759,92 @@ public class BWeb {
 		return hasAccess;
 	}
 	
-	public String getWhere(HttpServletRequest request) {
-		String linkData = "";
-			
-		String wherefilter = request.getParameter("wherefilter");
-		String sortfilter = request.getParameter("sortfilter");
-		if(request.getParameter("and") != null) {
-			if(wherefilter != null) wheresql = wherefilter;
-			if(sortfilter != null) sortby = sortfilter;
-		} else if(request.getParameter("or") != null) {
-			if(wherefilter != null) wheresql = wherefilter;
-			if(sortfilter != null) sortby = sortfilter;
+	public String getFilterWhere(HttpServletRequest request) {
+		String filterName = request.getParameter("filtername");
+		String filterType = request.getParameter("filtertype");
+		String filterValue = request.getParameter("filtervalue");
+		String filterAnd = request.getParameter("filterand");
+		String filterOr = request.getParameter("filteror");
+		
+		if(filterName == null) return "";
+		if(filterType == null) return "";
+		if(filterValue == null) return "";
+		if(checkInjection(filterValue)) return "";
+		if(filterAnd == null) filterAnd = "false";
+		if(filterOr == null) filterOr = "false";
+		
+		boolean isField = false;
+		for(BElement el : view.getElements()) {
+			if(filterName.equals(el.getValue())) isField = true;
 		}
+		if(!isField) return "";
+		
+		if("ilikelike=><<=>=".indexOf(filterType) < 0) return "";
+		
+		String filterSN = "F" + getViewKey();
+System.out.println("BASE 3010 : " + filterSN);
+System.out.println("BASE 3020 : " + dataItem);
+		
+		// Only postgres supports ilike so for the others turn to like
+		String filterSql = "";
+		if((db.getDBType()!=1) && (filterType.startsWith("ilike"))) filterType = "like";
 
-		if(request.getParameter("reportfilter") != null) {
-			if(!request.getParameter("reportfilter").equals("")) {
-				if(wheresql == null) {
-					wheresql = "";
-				} else {
-					if(request.getParameter("and") != null) wheresql += " AND ";
-					else if(request.getParameter("or") != null) wheresql += " OR ";
-				}
-
-				String fieldName = request.getParameter("fieldname");
-				String reportFilter = request.getParameter("reportfilter");
-				if(reportFilter == null) reportFilter = "";
-				reportFilter = reportFilter.toLowerCase();
-
-				String filterType = request.getParameter("filtertype");
-				if(view.getName().equals("GRID")) {
-					BElement el = view.getElement(fieldName);
-					if(el.getName().equals("CHECKBOX")) {
-						if(el.getAttribute("ischar") != null) {
-							if(reportFilter.equals("yes")) reportFilter = "1";
-							else reportFilter = "0";
-						}
-					}
-				}
-
-				// Only postgres supports ilike so for the others turn to like
-				if((db.getDBType()!=1) && (filterType.startsWith("ilike"))) filterType = "like";
-
-				if(filterType.startsWith("like"))
-					if(db.getDBType()==1) wheresql += "(cast(" + fieldName + " as varchar) " + filterType + " '%" + reportFilter + "%')";
-					else wheresql += "(lower(" + fieldName + ") " + filterType + " lower('%" + reportFilter + "%'))";
-				else if(filterType.startsWith("ilike"))
-					wheresql += "(cast(" + fieldName + " as varchar) " + filterType + " '%" + reportFilter + "%')";
-				else
-					wheresql += "(" + fieldName + " " + filterType + " '" + reportFilter + "')";
+		if(filterType.startsWith("like")) {
+			if(db.getDBType()==1) filterSql += "(cast(" + filterName + " as varchar) " + filterType + " '%" + filterValue + "%')";
+			else filterSql += "(lower(" + filterName + ") " + filterType + " lower('%" + filterValue + "%'))";
+		} else if(filterType.startsWith("ilike")) {
+			filterSql += "(cast(" + filterName + " as varchar) " + filterType + " '%" + filterValue + "%')";
+		} else {
+			filterSql += "(" + filterName + " " + filterType + " '" + filterValue + "')";
+		}
+		
+		if(webSession.getAttribute(filterSN) != null) {
+			if(filterAnd.equals("true")) {
+				filterSql = (String)webSession.getAttribute(filterSN) + " AND " + filterSql;
+			} else if(filterOr.equals("true")) {
+				filterSql = (String)webSession.getAttribute(filterSN) + " OR " + filterSql;
 			}
 		}
 		
+		webSession.setAttribute(filterSN, filterSql);
+		if(dataItem != null) webSession.setAttribute("K" + filterSN, dataItem);
+		else webSession.setAttribute("K" + filterSN, "");
+		System.out.println(filterSql + " : " + filterAnd);
+		
+		return filterSql;
+	}
+	
+	public Map<String, String> getWhere(HttpServletRequest request) {
+		Map<String, String> whereParams = new HashMap<String, String>();
+
+		String linkData = "";
+		String linkParam = null;
+		String formLinkData = "";
+		wheresql = null;
+		sortby = null;
+		
+		BElement sview = null;
+		comboField = request.getParameter("field");
+		if(comboField != null) sview = view.getElement(comboField).getElement(0);
+
+		String filterSN = "F" + viewKey;
+		if(webSession.getAttribute(filterSN) != null) {
+			String filterKSN = "";
+			if(webSession.getAttribute("K" + filterSN) != null) filterKSN = (String)webSession.getAttribute("K" + filterSN);
+			String wDataItem = "";
+			if(dataItem != null) wDataItem = dataItem;
+			
+			if(filterKSN.equals(wDataItem)) wheresql = (String)webSession.getAttribute(filterSN);
+			else webSession.removeAttribute(filterSN);
+			
+			System.out.println("Filter Where :" + filterSN + ": " + wheresql);
+		}
+
 		int vds = viewKeys.size();
 		if(vds > 2) {
 			linkData = viewData.get(vds - 1);
-
+			formLinkData = viewData.get(vds - 2);
+			
 			if((!linkData.equals("{new}")) && (comboField == null)) {
 				if(view.getName().equals("FORM")) {
 					if(wheresql != null) wheresql += " AND (";
@@ -800,35 +856,6 @@ public class BWeb {
 					wheresql += view.getAttribute("linkfield") + " = '" + linkData + "')";
 				}
 			}
-		}
-
-		return linkData;
-	}
-	
-	public String getBody(HttpServletRequest request, String reportPath) {
-		if((root == null) || (db == null)) return "";	// error check
-		
-		HttpSession session = request.getSession(true);
-		String body = "";
-		wheresql = null;
-		sortby = null;
-		
-		// Check for license
-		//if(!hasLicense()) return "";
-
-		BElement sview = null;
-		comboField = request.getParameter("field");
-		if(comboField != null) sview = view.getElement(comboField).getElement(0);
-		
-		// Call the where create function
-		String linkData = getWhere(request);
-		String linkParam = null;
-		String formLinkData = "";
-
-		int vds = viewKeys.size();
-		if(vds > 2) {
-			linkData = viewData.get(vds - 1);
-			formLinkData = viewData.get(vds - 2);
 
 			// Table linking on parameters
 			String paramLinkData = linkData;
@@ -861,10 +888,63 @@ public class BWeb {
 				else wheresql = "(" + tableFilter + "')";
 			}
 		}
+
+		if(views.size() > 1) {
+			BElement flt = views.get(views.size()-2);
+			if(flt.getName().equals("FILTER")) {
+				for(BElement sv : flt.getElements()) {
+					if(sv.getName().equals("FILTERGRID")) {
+						String myFilter = sv.getAttribute("filter", "filterid");
+						String myFilterField = sv.getAttribute("filterfield", myFilter);
+						getFilterParam(myFilter, myFilterField, " = ");
+					} else if(sv.getName().equals("DRILLDOWN")) {
+						String myFilter = sv.getAttribute("filter", "filterid");
+						String myFilterField = sv.getAttribute("filterfield", myFilter);
+						getFilterParam(myFilter, myFilterField, " = ");
+					} else if(sv.getName().equals("FILTERFORM")) {
+						for(BElement ffe : sv.getElements()) {
+							String myFilter = ffe.getValue();
+							String myFilterField = ffe.getAttribute("filterfield", myFilter);
+							String myFilterType = ffe.getAttribute("filtertype", "=");
+							getFilterParam(myFilter, myFilterField, myFilterType);
+						}
+					}
+				}
+			}
+		}
+
+		whereParams.put("linkData", linkData);
+		whereParams.put("linkParam", linkParam);
+		whereParams.put("formLinkData", formLinkData);
+		whereParams.put("wheresql", wheresql);
+		
+//System.out.println("BASE 3030 WHERE : " + wheresql);
+		
+		return whereParams;
+	}
+	
+	public String getBody(HttpServletRequest request, String reportPath) {
+		if((root == null) || (db == null)) return "";	// error check
+		
+		String body = "";
+		
+		// Check for license
+		//if(!hasLicense()) return "";
 		
 		// Save the parameters in filter is the session
-		setFilterParams(request);
-
+		List<String> filterList = setFilterParams(request);
+		
+		// Call the where create function
+		Map<String, String> whereParams = getWhere(request);
+		String linkData = whereParams.get("linkData");
+		String linkParam = whereParams.get("linkParam");
+		String formLinkData = whereParams.get("formLinkData");
+		
+		int vds = viewKeys.size();
+		BElement sview = null;
+		comboField = request.getParameter("field");
+		if(comboField != null) sview = view.getElement(comboField).getElement(0);
+		
 		if(view.getName().equals("GRID")) {
 			if(request.getParameter("refresh") != null) webSession.removeAttribute("F" + viewKey);
 		
@@ -929,41 +1009,18 @@ public class BWeb {
 			body += "	</div>\n";
 			body += "</div>\n";
 		} else if(view.getName().equals("JASPER")) {
-//System.out.println("BASE 1010 ");
 			BWebReport report = new BWebReport(view, db.getUserID(), null, request);
+			
 			BElement flt = views.get(views.size()-2);
-
-			if(flt.getName().equals("FILTER")) {
-				String reportFilters = "";
-				for(BElement sv : flt.getElements()) {
-					if(sv.getName().equals("FILTERGRID")) {
-						String myfilter = sv.getAttribute("filter", "filterid");
-						reportFilters += myfilter + ",";
-						String myvalue = request.getParameter(myfilter);
-						report.setParams(session, myfilter, myvalue);
-					} else if(sv.getName().equals("DRILLDOWN")) {
-						String myfilter = sv.getAttribute("filter", "filterid");
-						reportFilters += myfilter + ",";
-						String myvalue = request.getParameter(myfilter);
-						report.setParams(session, myfilter, myvalue);
-					} else if(sv.getName().equals("FILTERFORM")) {
-						for(BElement ffe : sv.getElements()) {
-							String myfilter = ffe.getValue();
-							reportFilters += myfilter + ",";
-							String myvalue = request.getParameter(myfilter);
-							myvalue = palseValue(ffe, myvalue);
-							report.setParams(session, myfilter, myvalue);
-						}
-					}
-				}
-				session.setAttribute("reportfilters", reportFilters);
-			} else {
-				String myfilter = view.getAttribute("linkfield", "filterid");
+			if(!flt.getName().equals("FILTER")) {
+				String myFilter = view.getAttribute("linkfield", "filterid");
 				if((linkParam != null) && (view.getAttribute("linkparams") != null)) linkData = linkParam;
-
-				report.setParams(session, myfilter, linkData);
-				session.setAttribute("reportfilters", myfilter + ",");
+				if(linkData != null) filterList.add(myFilter);
+				webSession.setAttribute(myFilter, linkData);
 			}
+			
+			webSession.setAttribute("reportfilters", filterList);
+			report.setParams(webSession);
 			body += report.getReport(db, linkData, request, reportPath);
 		} else if(view.getName().equals("FILTER")) {
 			boolean isFirst = true;
@@ -1050,7 +1107,8 @@ public class BWeb {
 	}
 	
 	/* Save the parameters in filter is the session */
-	public void setFilterParams(HttpServletRequest request) {
+	public List<String> setFilterParams(HttpServletRequest request) {
+		List<String> filterList = new ArrayList<String>();
 		if(views.size() > 1) {
 			BElement flt = views.get(views.size()-2);
 			if(flt.getName().equals("FILTER")) {
@@ -1058,21 +1116,34 @@ public class BWeb {
 					if(sv.getName().equals("FILTERGRID")) {
 						String myFilter = sv.getAttribute("filter", "filterid");
 						String myValue = request.getParameter(myFilter);
+						filterList.add(myFilter);
 						if(myValue != null) webSession.setAttribute(myFilter, myValue);
 					} else if(sv.getName().equals("DRILLDOWN")) {
 						String myFilter = sv.getAttribute("filter", "filterid");
 						String myValue = request.getParameter(myFilter);
+						filterList.add(myFilter);
 						if(myValue != null) webSession.setAttribute(myFilter, myValue);
 					} else if(sv.getName().equals("FILTERFORM")) {
 						for(BElement ffe : sv.getElements()) {
 							String myFilter = ffe.getValue();
 							String myValue = request.getParameter(myFilter);
+							filterList.add(myFilter);
 							if(myValue != null) webSession.setAttribute(myFilter, palseValue(ffe, myValue));
 					System.out.println("BASE 2005 : " + myFilter + " : " + myValue);
 						}
 					}
 				}
 			}
+		}
+		return filterList;
+	}
+	
+	private void getFilterParam(String myFilter, String myFilterField, String myFilterType) {
+		if(webSession.getAttribute(myFilter) != null) {
+			String myValue = (String)webSession.getAttribute(myFilter);
+			if(wheresql != null) wheresql += " AND (";
+			else wheresql = "(";
+			wheresql += myFilterField + " " + myFilterType + " '" + myValue + "')";
 		}
 	}
 
@@ -1547,17 +1618,6 @@ System.out.println("Reached ACCORDION " + vds + " : " + formlink);
 	public String getOrgID() { return db.getOrgID(); }
 	public String getUserOrg() { return db.getUserOrg(); }
 
-	public String getFilters() {
-		String filters = "";
-		if(wheresql != null) {
-			filters = "<input type='hidden' name='wherefilter' value=\"" + wheresql.replace("\"", "") + "\"/>";
-			if(sortby != null) filters += "<input type='hidden' name='sortfilter' value=\"" + sortby + "\"/>";
-		} else if(sortby != null) {
-			filters = "<input type='hidden' name='sortfilter' value=\"" + sortby + "\"/>";
-		}
-
-		return filters;
-	}
 
 	public String getHiddenValues() {
 		String HiddenValues = "";
@@ -1675,37 +1735,12 @@ log.severe("BASE : " + mysql);
 		sortby = null;
 
 		// Call the where create function
-		String linkData = getWhere(request);
-		String linkParam = null;
-		String formLinkData = "";
+		Map<String, String> whereParams = getWhere(request);
+		wheresql = whereParams.get("wheresql");
 		
 		BElement sview = null;
 		comboField = request.getParameter("field");
 		if(comboField != null) sview = view.getElement(comboField).getElement(0);
-		
-		if(webSession.getAttribute("F" + viewKey) != null) wheresql = (String)webSession.getAttribute("F" + viewKey);
-
-		int vds = viewKeys.size();
-		if(vds > 2) {
-			linkData = viewData.get(vds - 1);
-			formLinkData = viewData.get(vds - 2);
-			
-			// Table linking on parameters
-			String paramLinkData = linkData;
-			String linkParams = view.getAttribute("linkparams");
-			if(sview != null) { linkParams = sview.getAttribute("linkparams"); paramLinkData =  formLinkData; }
-			if(linkParams != null) {
-				BElement fView = views.get(vds - 2);
-				if(sview != null) fView = views.get(vds - 3);
-				String lp[] = linkParams.split("=");
-				linkParam = params.get(lp[0].trim());
-
-				if(wheresql != null) wheresql += " AND (";
-				else wheresql = "(";
-				if(linkParam == null) wheresql += lp[1] + " = null)";
-				else wheresql += lp[1] + " = '" + linkParam + "')";
-			}
-		}
 		
 		response.setContentType("text/x-csv");
 		response.setHeader("Content-Disposition", "attachment; filename=report.csv");
@@ -1729,7 +1764,8 @@ log.severe("BASE : " + mysql);
 		wheresql = null;
 		sortby = null;
 		
-		if(webSession.getAttribute("F" + viewKey) != null) wheresql = (String)webSession.getAttribute("F" + viewKey);
+		Map<String, String> whereParams = getWhere(request);
+		wheresql = whereParams.get("wheresql");
 		
 		response.setContentType("text/xml");
 		response.setHeader("Content-Disposition", "attachment; filename=report.xml");
@@ -2036,7 +2072,9 @@ log.severe("BASE : " + mysql);
 		jsColKF.add("hidden", true);
 		jsColModel.add(jsColKF);
 		
-		jshd.add("url", "jsondata");
+		String jUrl = view.getAttribute("url", "jsondata");
+		
+		jshd.add("url", jUrl);
 		jshd.add("datatype", "json");
 		jshd.add("mtype", "GET");
 		jshd.add("colNames", jsColNames);
@@ -2055,89 +2093,7 @@ log.severe("BASE : " + mysql);
 
 		return jsObj.toString();
 	}
-	
-	public String getJSONWhere(HttpServletRequest request, String JWheresql) {
-	
-		String linkData = "";
-		String linkParam = null;
-		String formLinkData = "";
-	
-		BElement sview = null;
-		String comboField = request.getParameter("field");
-		if(comboField != null) sview = view.getElement(comboField).getElement(0);
-				
-		int vds = viewKeys.size();
-		if(vds > 2) {
-			linkData = viewData.get(vds - 1);
-			formLinkData = viewData.get(vds - 2);
 
-			if((!linkData.equals("{new}")) && (comboField == null)) {
-				if(view.getName().equals("FORM")) {
-					if(JWheresql != null) JWheresql += " AND (";
-					else JWheresql = "(";
-					JWheresql += view.getAttribute("keyfield") + " = '" + linkData + "')";
-				} else if(view.getAttribute("linkfield") != null) {
-					if(JWheresql != null) JWheresql += " AND (";
-					else JWheresql = "(";
-					JWheresql += view.getAttribute("linkfield") + " = '" + linkData + "')";
-				}
-			}
-
-			// Table linking on parameters
-			String paramLinkData = linkData;
-			String linkParams = view.getAttribute("linkparams");
-			if(sview != null) { linkParams = sview.getAttribute("linkparams"); paramLinkData =  formLinkData; }
-			if(linkParams != null) {
-				BElement fView = views.get(vds - 2);
-				if(sview != null) fView = views.get(vds - 3);
-				String lp[] = linkParams.split("=");
-				linkParam = params.get(lp[0].trim());
-
-				if(JWheresql != null) JWheresql += " AND (";
-				else JWheresql = "(";
-				if(linkParam == null) JWheresql += lp[1] + " = null)";
-				else JWheresql += lp[1] + " = '" + linkParam + "')";
-			}
-		}
-		
-		if(views.size() > 1) {
-			BElement flt = views.get(views.size()-2);
-			if(flt.getName().equals("FILTER")) {
-				for(BElement sv : flt.getElements()) {
-					if(sv.getName().equals("FILTERGRID")) {
-						String myFilter = sv.getAttribute("filter", "filterid");
-						String myFilterField = sv.getAttribute("filterfield", myFilter);
-						JWheresql = getFilterParam(myFilter, myFilterField, " = ", JWheresql);
-					} else if(sv.getName().equals("DRILLDOWN")) {
-						String myFilter = sv.getAttribute("filter", "filterid");
-						String myFilterField = sv.getAttribute("filterfield", myFilter);
-						JWheresql = getFilterParam(myFilter, myFilterField, " = ", JWheresql);
-					} else if(sv.getName().equals("FILTERFORM")) {
-						for(BElement ffe : sv.getElements()) {
-							String myFilter = ffe.getValue();
-							String myFilterField = ffe.getAttribute("filterfield", myFilter);
-							String myFilterType = ffe.getAttribute("filtertype", "=");
-							JWheresql = getFilterParam(myFilter, myFilterField, myFilterType, JWheresql);
-						}
-					}
-				}
-				System.out.println("BASE 2010 FILTER : " + JWheresql);
-			}
-		}
-		
-		return JWheresql;
-	}
-	
-	private String getFilterParam(String myFilter, String myFilterField, String myFilterType, String JWhereSql) {
-		if(webSession.getAttribute(myFilter) != null) {
-			String myValue = (String)webSession.getAttribute(myFilter);
-			if(JWhereSql != null) JWhereSql += " AND (";
-			else JWhereSql = "(";
-			JWhereSql += myFilterField + " " + myFilterType + " '" + myValue + "')";
-		}
-		return JWhereSql;
-	}
-	
 	public String getViewName() {
 		if(view == null) return "";
 		return view.getAttribute("name", ""); 
@@ -2212,6 +2168,15 @@ log.severe("BASE : " + mysql);
 		}
 		
 		return filterStatus;
+	}
+	
+	public boolean checkInjection(String filterValue) {
+		if(filterValue == null) return false;
+		if(filterValue.toLowerCase().contains("select")) return true;
+		if(filterValue.toLowerCase().contains("update")) return true;
+		if(filterValue.toLowerCase().contains("insert")) return true;
+		if(filterValue.toLowerCase().contains("delete")) return true;
+		return false;
 	}
 	
 	public boolean isDiary() {
@@ -2294,7 +2259,12 @@ log.severe("BASE : " + mysql);
 	public String executeQuery(String mysql) { return db.executeQuery(mysql); }
 	
 	public BQuery getQuery(String mysql) { return new BQuery(db, mysql); }
-	public boolean hasDashboardItem(String dashboardItem) {return dashboardItems.contains(dashboardItem); }
+	
+	public boolean hasDashboardItem(String dashboardItem) {return dashboardItems.containsKey(dashboardItem); }
+	public String getDashboardItem(String dashboardItem) {
+		if(!dashboardItems.containsKey(dashboardItem)) return "{}";
+		return dashboardItems.get(dashboardItem); 
+	}
 
 	public BElement getRoot() { return root; }
 	public BElement getView() { return view; }
