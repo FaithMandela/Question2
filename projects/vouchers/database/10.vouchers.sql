@@ -1,4 +1,5 @@
 ---Project Database File
+ALTER TABLE entity_types ADD COLUMN org_id integer;
 
 CREATE TABLE asset_seasons (
     asset_season_id        serial primary key,
@@ -114,6 +115,43 @@ CREATE TABLE voucher_rates
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 
+CREATE TABLE client_requests (
+    client_request_id integer NOT NULL,
+    entity_id integer,
+    org_id integer,
+    request_date timestamp without time zone DEFAULT now(),
+    active boolean DEFAULT false,
+    finalised boolean DEFAULT false,
+    passanger character varying(240),
+    travel_date date,
+    return_date date,
+    origin character varying(50),
+    destination character varying(50),
+    budget real,
+    flight boolean DEFAULT true,
+    return boolean DEFAULT true,
+    hotel boolean DEFAULT true,
+    tour boolean DEFAULT true,
+    in_transfer boolean DEFAULT false,
+    out_transfer boolean DEFAULT false,
+    details text
+);
+
+
+CREATE TABLE request_responses (
+    request_response_id integer NOT NULL,
+    client_request_id integer,
+    entity_id integer,
+    org_id integer,
+    sent_date timestamp without time zone DEFAULT now(),
+    completed boolean DEFAULT false,
+    complete_date timestamp without time zone,
+    amount real,
+    commision real,
+    service_fee real,
+    details text
+);
+
 CREATE OR REPLACE VIEW vw_asset_seasons AS
 	SELECT asset_seasons.asset_season_id ,	asset_seasons.org_id, asset_seasons.asset_id ,  asset_seasons.season_id,
     asset_seasons.season_start, asset_seasons.season_end, asset_seasons.description, asset_seasons.season_code,
@@ -157,4 +195,61 @@ CREATE OR REPLACE VIEW vw_rates AS
     INNER JOIN entitys as vendor ON  vouchers.vendor_id=vendor.entity_id
     INNER JOIN room_types ON room_types.room_type_id = vouchers.room_type_id
     INNER JOIN assets ON assets.asset_id = vouchers.asset_id
-    INNER JOIN vw_rates ON vw_rates.rate_id = vouchers.rate_id
+    INNER JOIN vw_rates ON vw_rates.rate_id = vouchers.rate_id;
+
+    CREATE OR REPLACE VIEW vw_client_requests AS
+     SELECT entitys.entity_id AS client_id,
+        entitys.entity_name AS client_name,
+        client_requests.org_id,
+        client_requests.client_request_id,
+        client_requests.request_date,
+        client_requests.passanger,
+        client_requests.travel_date,
+        client_requests.return_date,
+        client_requests.origin,
+        client_requests.destination,
+        client_requests.flight,
+        client_requests.return,
+        client_requests.hotel,
+        client_requests.tour,
+        client_requests.in_transfer,
+        client_requests.out_transfer,
+        client_requests.active,
+        client_requests.finalised,
+        client_requests.details
+       FROM (client_requests
+         JOIN entitys ON ((client_requests.entity_id = entitys.entity_id)));
+
+ CREATE VIEW vw_request_responses AS
+  SELECT vw_client_requests.client_id,
+  request_responses.org_id,
+     vw_client_requests.client_name,
+     vw_client_requests.client_request_id,
+     vw_client_requests.request_date,
+     vw_client_requests.passanger,
+     vw_client_requests.travel_date,
+     vw_client_requests.return_date,
+     vw_client_requests.origin,
+     vw_client_requests.destination,
+     vw_client_requests.flight,
+     vw_client_requests.return,
+     vw_client_requests.hotel,
+     vw_client_requests.tour,
+     vw_client_requests.in_transfer,
+     vw_client_requests.out_transfer,
+     vw_client_requests.active,
+     vw_client_requests.finalised,
+     vw_client_requests.details AS request_details,
+     entitys.entity_id AS consultant_id,
+     entitys.entity_name AS consultant_name,
+     request_responses.request_response_id,
+     request_responses.sent_date,
+     request_responses.completed,
+     request_responses.complete_date,
+     request_responses.amount,
+     request_responses.commision,
+     request_responses.service_fee,
+     request_responses.details
+    FROM ((request_responses
+      JOIN vw_client_requests ON ((request_responses.client_request_id = vw_client_requests.client_request_id)))
+      JOIN entitys ON ((request_responses.entity_id = entitys.entity_id)));

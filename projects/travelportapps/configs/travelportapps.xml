@@ -1181,7 +1181,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Insurance" key="80">
-		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name=" All Insurance Sold" orderby="passenger_id DESC" where="(approved is true AND is_valid is true)" tab.count="count(passenger_id)" table="vw_allpassengers">
+		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name=" All Insurance Sold" orderby="policy_number DESC" where="(approved is true AND is_valid is true)" tab.count="count(passenger_id)" table="vw_allpassengers">
 			<TEXTLINK w="75" title="Policy Number">policy_number</TEXTLINK>
 			<TEXTFIELD w="75" title="Order ID">passenger_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
@@ -1204,12 +1204,13 @@
 			<JASPER reportfile="travelinsurance/letterToEmbassy.jasper" name="Letter to Embassy"></JASPER>
 			<JASPER reportfile="travelinsurance/policy_document.jasper" name="Policy Document"></JASPER>
 			<JASPER reportfile="travelinsurance/receipt.jasper" name="Receipt"></JASPER>
+			<JASPER reportfile="travelinsurance/invoice.jasper" name="Invoice"></JASPER>
 			<ACTIONS>
 				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
 			</ACTIONS>
 		</GRID>
 		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name="Broker Sales" orderby="passenger_id DESC " where="portal_id = 2 AND is_valid is true AND approved is true" tab.count="count(passenger_id)" table="vw_allpassengers">
-			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
+			<TEXTLINK w="75" title="Policy Number">policy_number</TEXTLINK>
 			<TEXTFIELD w="75" title="Order ID">passenger_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
@@ -1227,7 +1228,7 @@
 			</ACTIONS>
 		</GRID>
 		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name="Consultant Sales" orderby="passenger_id DESC " where="portal_id = 1 AND is_valid is true AND approved is true" tab.count="count(passenger_id)" table="vw_allpassengers">
-			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
+			<TEXTLINK w="75" title="Policy Number">policy_number</TEXTLINK>
 			<TEXTFIELD w="75" title="Order ID">passenger_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
@@ -1244,8 +1245,8 @@
 				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
 			</ACTIONS>
 		</GRID>
-		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name="Direct Sales" orderby="passenger_id DESC " where="portal_id = 3 AND is_valid is true AND approved is true" tab.count="count(passenger_id)" table="vw_allpassengers">
-			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
+		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name="Direct Sales" orderby="policy_number DESC " where="portal_id = 3 AND is_valid is true AND approved is true" tab.count="count(passenger_id)" table="vw_allpassengers">
+			<TEXTLINK w="75" title="Policy Number">policy_number</TEXTLINK>
 			<TEXTFIELD w="75" title="Order ID">passenger_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
@@ -1258,6 +1259,10 @@
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTFIELD w="75" title="Pin No">pin_no</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
+			<JASPER reportfile="travelinsurance/certificate.jasper" name="Certificate"></JASPER>
+			<JASPER reportfile="travelinsurance/letterToEmbassy.jasper" name="Letter to Embassy"></JASPER>
+			<JASPER reportfile="travelinsurance/policy_document.jasper" name="Policy Document"></JASPER>
+			<JASPER reportfile="travelinsurance/receipt.jasper" name="Receipt"></JASPER>
 			<ACTIONS>
 				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
 			</ACTIONS>

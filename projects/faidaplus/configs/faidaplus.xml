@@ -289,7 +289,7 @@
 				<ACTION approval="2" fnct="upd_applicants">Reject</ACTION>
 			</ACTIONS>
 		</GRID>
-		<GRID noorg="true" keyfield="entity_id" name="Active Consultants" orderby="entity_id desc" where="is_active='true'" tab.count="count(entity_id)" table="vw_consultant">
+		<GRID noorg="true" keyfield="entity_id" name="Active Consultants" orderby="entity_id desc" where="is_active='true' AND user_name !='root'" tab.count="count(entity_id)" table="vw_consultant">
 			<TEXTFIELD w="50" title="User ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="50" title="User">user_name</TEXTFIELD>
 			<TEXTFIELD w="75" fnc="application_date::date" title="Created">application_date</TEXTFIELD>
@@ -374,8 +374,9 @@
 				<ACTION approval="3" fnct="upd_applicants">Activate</ACTION>
 			</ACTIONS>
 		</GRID>
-		<GRID noorg="true" keyfield="entity_id" name="Purged Consultants" orderby="entity_id DESC" tab.count="count(entity_id)" table="vw_purged_consultant">
+		<GRID noorg="true" keyfield="entity_id" name="Purged Consultants" orderby="entity_id DESC" where="is_active is true AND user_name !='root'" tab.count="count(entity_id)" table="vw_purged_consultant">
 			<TEXTFIELD w="50" title="User ID">entity_id</TEXTFIELD>
+			<TEXTFIELD w="50" title="Org Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="50" title="User">user_name</TEXTFIELD>
 			<TEXTFIELD w="75" fnc="date_enroled::date" title="Created">date_enroled</TEXTFIELD>
 			<TEXTFIELD w="120" title="Email">primary_email</TEXTFIELD>
@@ -409,6 +410,9 @@
 				<TEXTFIELD w="250" h="20" x="10" y="90" title="Primary Telephone">primary_telephone</TEXTFIELD>
 				<TEXTDATE w="70" h="70" x="10" y="170" title="Date of Birth">birth_date</TEXTDATE>
 			</FORM>
+			<ACTIONS>
+				<ACTION approval="4" fnct="upd_applicants">Deactivate</ACTION>
+			</ACTIONS>
 		</GRID>
 		<GRID new="false" noorg="true" keyfield="applicant_id" name="Rejected Consultants" orderby="applicant_id" where="status='Rejected'" tab.count="count(applicant_id)" table="vw_applicants">
 			<TEXTFIELD w="50" title="Username">applicant_email</TEXTFIELD>

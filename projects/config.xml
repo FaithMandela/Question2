@@ -12,8 +12,9 @@
 	<APP path="banking" dbname="banking" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" dbpath="jdbc:postgresql://localhost/banking" key="banking" xmlfile="banking.xml">Banking</APP>
 	<APP path="property" dbname="property" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" dbpath="jdbc:postgresql://localhost/property" key="property" xmlfile="property.xml">Property</APP>
 	<APP path="hotel" dbname="hotel" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" dbpath="jdbc:postgresql://localhost/hotel" key="hotel" xmlfile="hotel.xml">Hotel</APP>
-	<APP path="evolve" dbname="evolve" dbclass="org.postgresql.Driver" dbusername="postgres" dbpath="jdbc:postgresql://localhost/evolve" xmlfile="evolve.xml" key="evolve">Evolve</APP>
+	<APP path="evolve" dbname="evolve" dbclass="org.postgresql.Driver" dbusername="postgres" dbpath="jdbc:postgresql://localhost/evolve" key="evolve" xmlfile="evolve.xml">Evolve</APP>
 	<APP path="vouchers" dbname="vouchers" dbclass="org.postgresql.Driver" dbusername="postgres" dbpath="jdbc:postgresql://localhost/vouchers" key="vouchers" xmlfile="vouchers.xml">Vouchers</APP>
+	
 	<APP path="sms" dbname="sms" dbclass="org.postgresql.Driver" dbusername="postgres" dbpath="jdbc:postgresql://localhost/sms" key="sms" xmlfile="sms.xml">SMS</APP>
 	<APP path="easyparking" dbname="easyparking" dbclass="org.postgresql.Driver" dbusername="postgres" dbpath="jdbc:postgresql://localhost/easyparking" key="easyparking" xmlfile="easyparking.xml">Easy Parking</APP>
 	<APP path="cases" dbname="cases" auth="entity" dbclass="org.postgresql.Driver" dbusername="postgres" dbpath="jdbc:postgresql://localhost/cases" xmlfile="cases.xml">Cases</APP>
@@ -27,6 +28,7 @@
 	<APP path="travelportcrm" dbname="travelportcrm" dbclass="org.postgresql.Driver" dbusername="postgres" dbpath="jdbc:postgresql://localhost/travelportcrm" key="travelportcrm" xmlfile="travelportcrm.xml">Travelport CRM</APP>
 	<APP path="faidaplus" dbname="faidaplus" dbclass="org.postgresql.Driver" dbusername="postgres" dbpath="jdbc:postgresql://localhost/faidaplus" xmlfile="faidaplus.xml">Faida Plus</APP>
 	<APP path="travelcreations" dbname="travelcreations" dbclass="org.postgresql.Driver" dbusername="postgres" dbpath="jdbc:postgresql://localhost/travelcreations" xmlfile="travelcreations.xml">Travel Creations</APP>
+	<APP path="incentive" dbname="incentive" dbclass="org.postgresql.Driver" dbusername="postgres" dbpath="jdbc:postgresql://localhost/incentive" xmlfile="incentive.xml" key="incentive">Incentive</APP>
 	<APP path="heritage" dbname="heritage" dbclass="org.postgresql.Driver" dbusername="postgres" dbpath="jdbc:postgresql://localhost/heritage" xmlfile="heritage.xml">Heritage</APP>
 	<APP path="acord" dbname="acord" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" dbpath="jdbc:postgresql://localhost/acord" key="acord" xmlfile="acord.xml">Acord</APP>
 	<APP path="travelinsurance" dbname="travelinsurance" dbclass="org.postgresql.Driver" dbusername="postgres" dbpath="jdbc:postgresql://localhost/travelinsurance" xmlfile="travelinsurance.xml">Travel Insurance</APP>

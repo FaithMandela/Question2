@@ -2,7 +2,8 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="certificate" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="495" leftMargin="50" rightMargin="50" topMargin="36" bottomMargin="36" uuid="bde80f65-3883-4a11-bf6d-677cc05588fd">
 	<property name="ireport.zoom" value="1.2078825000000004"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="48"/>
+	<property name="ireport.y" value="189"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -163,10 +164,10 @@ Fax: +1215 489 8525]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="83" y="160" width="398" height="20" uuid="fe773502-3d01-4d79-9389-87655b8bc2bb"/>
-				<textElement>
-					<font fontName="Times New Roman" size="11" isBold="true"/>
+				<textElement markup="html">
+					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{rate_plan_name}.toUpperCase()]]></textFieldExpression>
+				<textFieldExpression><![CDATA["<b>"+$F{rate_plan_name}.toUpperCase()+"</b>"]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="319" width="244" height="66" uuid="1cb73940-c278-4dcb-91c5-fd6898c4d062"/>

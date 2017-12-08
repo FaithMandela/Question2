@@ -193,11 +193,14 @@ CREATE TRIGGER ins_bookingEmailed AFTER INSERT ON bookings
 		paymentType			varchar(50),
 		amount_paid			real,
 		payment_date		timestamp default now(),
+		transaction_id		varchar(100),
+		status				varchar(50),
 		details				text
 	);
 	CREATE INDEX payments_paid_by ON payments(paid_by);
 	CREATE INDEX payments_booking_id ON payments(booking_id);
 
 CREATE OR REPLACE VIEW vw_payments AS
-	SELECT payments.payment_id, payments.booking_id, payments.paid_by,payments.amount_paid, payments.paymentType, payments.payment_date, payments.details
+	SELECT payments.payment_id, payments.booking_id, payments.paid_by,payments.amount_paid, payments.paymentType, payments.payment_date::date as payment_date, payments.details,
+	payments.transaction_id, payments.status
 	FROM payments;

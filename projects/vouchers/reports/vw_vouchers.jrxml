@@ -84,7 +84,7 @@ where (voucher_id='$P!{filterid}');]]>
 	<title>
 		<band height="96" splitType="Stretch">
 			<staticText>
-				<reportElement key="staticText" x="482" y="25" width="173" height="24" uuid="b0a10e86-9686-4800-a15e-a7eef629bc09"/>
+				<reportElement key="staticText" x="421" y="7" width="234" height="24" uuid="b0a10e86-9686-4800-a15e-a7eef629bc09"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -94,14 +94,14 @@ where (voucher_id='$P!{filterid}');]]>
 				<textElement textAlignment="Center">
 					<font fontName="Serif" size="18" isBold="true" pdfFontName="Times-Roman"/>
 				</textElement>
-				<text><![CDATA[VOUCHER]]></text>
+				<text><![CDATA[CLIENT VOUCHER]]></text>
 			</staticText>
 			<image>
 				<reportElement key="image-1" x="98" y="7" width="138" height="72" uuid="be3735f8-f90b-4441-b217-8937b67c7463"/>
-				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "/goodhope-logo.png"]]></imageExpression>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "/bunson.png"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement key="staticText-8" x="245" y="7" width="220" height="72" uuid="7e922af2-4b59-468b-a584-15c36408c0b5"/>
+				<reportElement key="staticText-8" x="245" y="7" width="176" height="72" uuid="7e922af2-4b59-468b-a584-15c36408c0b5"/>
 				<textElement>
 					<font fontName="Serif" size="8" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
@@ -1101,7 +1101,7 @@ Nairobi,   00100
 					<bottomPen lineWidth="0.0" lineColor="#D8CFCF"/>
 					<rightPen lineWidth="0.0" lineColor="#D8CFCF"/>
 				</box>
-				<textFieldExpression><![CDATA[$F{client1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{client_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="140" y="328" width="105" height="15" uuid="a74105dc-2f0f-45fe-ac13-54eb35694388"/>
