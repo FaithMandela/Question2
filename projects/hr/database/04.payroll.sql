@@ -1357,7 +1357,7 @@ BEGIN
 		WHERE (get_tax_min(tax_range, reca.period_tax_type_id, $3) < $1) AND (tax_range >= $1) 
 			AND (employer_rate = $3) AND (period_tax_type_id = reca.period_tax_type_id);
 	ELSIF(reca.linear = false) AND (reca.percentage = true)THEN 
-		SELECT (max(tax_rate) * $1)  - max(rate_relief) INTO tax
+		SELECT (max(tax_rate) * $1 / 100)  - max(rate_relief) INTO tax
 		FROM period_tax_rates 
 		WHERE (get_tax_min(tax_range, reca.period_tax_type_id, $3) < $1) AND (tax_range >= $1) 
 			AND (employer_rate = $3) AND (period_tax_type_id = reca.period_tax_type_id);

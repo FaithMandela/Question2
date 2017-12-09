@@ -57,9 +57,10 @@ WHERE (a.org_id = 0) AND (b.org_id = 1);
 
 
 INSERT INTO workflows (link_copy, org_id, source_entity_id, workflow_name, table_name, approve_email, reject_email) 
-SELECT aa.workflow_id, bb.org_id, bb.entity_type_id, aa.workflow_name, aa.table_name, aa.approve_email, aa.reject_email
-FROM workflows aa INNER JOIN entity_types bb ON aa.source_entity_id = bb.use_key_id
-WHERE aa.org_id = 0 AND bb.org_id = 1
+SELECT aa.workflow_id, cc.org_id, cc.entity_type_id, aa.workflow_name, aa.table_name, aa.approve_email, aa.reject_email
+FROM workflows aa INNER JOIN entity_types bb ON aa.source_entity_id = bb.entity_type_id
+	INNER JOIN entity_types cc ON bb.use_key_id = cc.use_key_id
+WHERE aa.org_id = 0 AND cc.org_id = 1
 ORDER BY aa.workflow_id;
 
 INSERT INTO workflow_phases (org_id, workflow_id, approval_entity_id, approval_level, return_level, 
@@ -71,6 +72,7 @@ SELECT bb.org_id, bb.workflow_id, cc.entity_type_id, aa.approval_level, aa.retur
 FROM workflow_phases aa INNER JOIN workflows bb ON aa.workflow_id = bb.link_copy
 	INNER JOIN entity_types cc ON aa.approval_entity_id = cc.use_key_id
 WHERE aa.org_id = 0 AND bb.org_id = 1 AND cc.org_id = 1;
+
 
 INSERT INTO sys_emails (org_id, use_type, sys_email_name, title, details)
 SELECT 1, use_type, sys_email_name, title, details

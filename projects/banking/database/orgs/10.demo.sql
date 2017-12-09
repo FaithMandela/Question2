@@ -29,7 +29,8 @@ CREATE OR REPLACE FUNCTION ins_orgs() RETURNS trigger AS $$
 BEGIN
 
 	NEW.parent_org_id := 1;
-
+	
+	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 

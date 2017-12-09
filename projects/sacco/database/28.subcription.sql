@@ -73,13 +73,14 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON subscriptions
     
 CREATE OR REPLACE FUNCTION ins_subscriptions() RETURNS trigger AS $$
 DECLARE
-	v_entity_id		integer;
-	v_org_id		integer;
-	v_currency_id	integer;
-	v_department_id	integer;
-	v_bank_id		integer;
-	v_org_suffix    char(2);
-	rec 			RECORD;
+	v_entity_id				integer;
+	v_entity_type_id		integer;
+	v_org_id				integer;
+	v_currency_id			integer;
+	v_department_id			integer;
+	v_bank_id				integer;
+	v_org_suffix			char(2);
+	rec 					RECORD;
 BEGIN
 
 	IF (TG_OP = 'INSERT') THEN
@@ -108,7 +109,11 @@ BEGIN
 		SELECT NEW.org_id, entity_type_name, entity_role, use_key_id
 		FROM entity_types WHERE org_id = 1;
 		
-		UPDATE entitys SET org_id = NEW.org_id, function_role='admin'
+		SELECT entity_type_id INTO v_entity_type_id
+		FROM entity_types 
+		WHERE (org_id = NEW.org_id) AND (use_key_id = 0);
+		
+		UPDATE entitys SET org_id = NEW.org_id, entity_type_id = v_entity_type_id, function_role='admin'
 		WHERE entity_id = NEW.entity_id;
 		
 		v_bank_id := nextval('banks_bank_id_seq');
@@ -144,6 +149,24 @@ BEGIN
 		
 		INSERT INTO departments (org_id, department_name) 
 		VALUES (NEW.org_id, 'Administration'); 
+		
+		INSERT INTO workflows (link_copy, org_id, source_entity_id, workflow_name, table_name, approve_email, reject_email) 
+		SELECT aa.workflow_id, cc.org_id, cc.entity_type_id, aa.workflow_name, aa.table_name, aa.approve_email, aa.reject_email
+		FROM workflows aa INNER JOIN entity_types bb ON aa.source_entity_id = bb.entity_type_id
+			INNER JOIN entity_types cc ON bb.use_key_id = cc.use_key_id
+		WHERE aa.org_id = 1 AND cc.org_id = NEW.org_id
+		ORDER BY aa.workflow_id;
+
+		INSERT INTO workflow_phases (org_id, workflow_id, approval_entity_id, approval_level, return_level, 
+			escalation_days, escalation_hours, required_approvals, advice, notice, 
+			phase_narrative, advice_email, notice_email) 
+		SELECT bb.org_id, bb.workflow_id, dd.entity_type_id, aa.approval_level, aa.return_level, 
+			aa.escalation_days, aa.escalation_hours, aa.required_approvals, aa.advice, aa.notice, 
+			aa.phase_narrative, aa.advice_email, aa.notice_email
+		FROM workflow_phases aa INNER JOIN workflows bb ON aa.workflow_id = bb.link_copy
+			INNER JOIN entity_types cc ON aa.approval_entity_id = cc.entity_type_id
+			INNER JOIN entity_types dd ON cc.use_key_id = dd.use_key_id
+		WHERE aa.org_id = 1 AND bb.org_id = NEW.org_id AND dd.org_id = NEW.org_id;
 	END IF;
 		
 	RETURN NEW;
