@@ -1641,6 +1641,7 @@
 	<DESK w="700" h="550" name="Quotationlogs" key="211">
 		<GRID noorg="true" keyfield="logsid" name="Quotationlogs" orderby="logsid desc" table="quotationlogs">
 			<TEXTFIELD w="75" title="Logsid">logsid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Name">f_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Email">email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Mobile No">mobile_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Type">rate_type</TEXTFIELD>

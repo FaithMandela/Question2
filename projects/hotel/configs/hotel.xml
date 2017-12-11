@@ -26,6 +26,7 @@
 			<MENU name="income and Expenditure">160</MENU>
 			<MENU name="Balance Sheet">165</MENU>
 			<MENU name="Issues">170</MENU>
+			<MENU name="Bookings">180</MENU>
 		</MENU>
 	</MENU>
 	<DESK access="open" w="700" h="500" name="Dashboard" key="1">
@@ -1766,5 +1767,8 @@
 	<DESK w="700" h="550" name="Issues" key="175">
 		<JASPER reportfile="vw_helpdesk.jasper" name="Open Issues"></JASPER>
 		<JASPER reportfile="vw_helpdesk_c.jasper" name="Closed Issues"></JASPER>
+	</DESK>
+	<DESK w="700" h="550" name="Bookings" key="180">
+		<JASPER reportfile="vw_bookings.jasper" name="Bookings"></JASPER>
 	</DESK>
 </APP>

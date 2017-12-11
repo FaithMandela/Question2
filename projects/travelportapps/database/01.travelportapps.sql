@@ -1600,7 +1600,8 @@ CREATE TABLE portal(
 		rate_plan varchar(50),
 		amount_1 real,
 		status text,
-		log_date timestamp default now() not null
+		log_date timestamp default now() not null,
+		f_name varchar(50)
 	);
 
 	CREATE  OR REPLACE VIEW vw_logs AS
