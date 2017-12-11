@@ -334,3 +334,6 @@ INSERT INTO travel_funding (org_id, travel_funding_name, require_details) VALUES
 INSERT INTO claim_types (adjustment_id, org_id, claim_type_name) VALUES
 (21, 0, 'Travel Claim');
 
+INSERT INTO travel_agencys (travel_agency_id, org_id, travel_agency_name) VALUES
+(0, 0, 'Others');
+
