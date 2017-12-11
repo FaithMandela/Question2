@@ -6,6 +6,18 @@ CREATE TABLE travel_types (
 );
 CREATE INDEX travel_types_org_id ON travel_types(org_id);
 
+CREATE TABLE travel_agencys (
+	travel_agency_id		serial primary key,
+	org_id					integer references orgs,
+	travel_agency_name		varchar(120),
+	travel_agency_phone		varchar(120),
+	travel_agency_contact	varchar(120),
+	travel_agency_email		varchar(120),
+	is_active				boolean default true not null,
+	details					text
+);
+CREATE INDEX travel_agencys_org_id ON travel_agencys(org_id);
+
 CREATE TABLE travel_funding (
 	travel_funding_id		serial primary key,
 	org_id					integer references orgs,
@@ -32,14 +44,14 @@ CREATE TABLE employee_travels (
 	entity_id				integer references entitys,
 	project_id				integer references projects,
 	travel_funding_id		integer references travel_funding,
+	travel_agency_id		integer references travel_agencys,
 	department_role_id		integer references department_roles,
 	org_id					integer references orgs,
 	
 	funding_details			varchar(320),
 	purpose_of_trip			varchar(320) not null,
 
-	travel_agent			varchar(120),
-	ticket_from				varchar(120),
+	other_travel_agency		varchar(120),
 	ticket_cost				real,
 	
 	application_date		timestamp default now(),
@@ -53,6 +65,7 @@ CREATE INDEX employee_travels_travel_type_id ON employee_travels(travel_type_id)
 CREATE INDEX employee_travels_entity_id ON employee_travels(entity_id);
 CREATE INDEX employee_travels_project_id ON employee_travels(project_id);
 CREATE INDEX employee_travels_travel_funding_id ON employee_travels(travel_funding_id);
+CREATE INDEX employee_travels_travel_travel_agency_id ON employee_travels(travel_agency_id);
 CREATE INDEX employee_travels_department_role_id ON employee_travels(department_role_id);
 CREATE INDEX employee_travels_org_id ON employee_travels(org_id);
 
@@ -117,7 +130,7 @@ CREATE TABLE claim_details (
 	receipt_number			varchar(50),
 	requested_amount		real not null,
 	amount					real default 0 not null,
-	exchange_rate			real default 1 not null,
+	exchange_rate			real default 1 not null check exchange_rate > 0,
 	expense_code			varchar(50),
 	
 	create_date				timestamp default now()
@@ -125,6 +138,37 @@ CREATE TABLE claim_details (
 CREATE INDEX claim_details_claim_id ON claim_details(claim_id);
 CREATE INDEX claim_details_currency_id ON claim_details(currency_id);
 CREATE INDEX claim_details_org_id ON claim_details(org_id);
+
+CREATE TABLE et_fields (
+	et_field_id				serial primary key,
+	org_id					integer references orgs,
+	et_field_name			varchar(120) not null,
+	table_table				varchar(64) not null,
+	table_code				integer not null,
+	table_link				integer
+);
+CREATE INDEX et_fields_org_id ON et_fields(org_id);
+CREATE INDEX et_fields_table_code ON et_fields(table_code);
+CREATE INDEX et_fields_table_link ON et_fields(table_link);
+
+CREATE TABLE e_fields (
+	e_field_id				serial primary key,
+	et_field_id				integer references et_fields,
+	org_id					integer references orgs,
+	table_id				integer,
+	e_field_value			varchar(320)
+);
+CREATE INDEX e_fields_et_field_id ON e_fields(et_field_id);
+CREATE INDEX e_fields_table_id ON e_fields(table_id);
+CREATE INDEX e_fields_org_id ON e_fields(org_id);
+
+CREATE VIEW vw_e_fields AS
+	SELECT orgs.org_id, orgs.org_name,
+		et_fields.et_field_id, et_fields.et_field_name, et_fields.table_name,
+		et_fields.table_code, et_fields.table_link, 
+		e_fields.e_field_id, e_fields.table_id, e_fields.e_field_value
+	FROM e_fields INNER JOIN orgs ON e_fields.org_id = orgs.org_id
+		INNER JOIN et_fields ON e_fields.et_field_id = et_fields.et_field_id;
 
 CREATE OR REPLACE FUNCTION get_itinerary_start(integer) RETURNS date AS $$
 	SELECT min(travel_date)
@@ -147,9 +191,10 @@ CREATE VIEW vw_employee_travels AS
 	SELECT travel_types.travel_type_id, travel_types.travel_type_name,
 		entitys.entity_id, entitys.entity_name,
 		vw_projects.project_id, vw_projects.project_name, vw_projects.client_name,
-		travel_funding.travel_funding_id, travel_funding.travel_funding_name, 
+		travel_funding.travel_funding_id, travel_funding.travel_funding_name,
+		travel_agencys.travel_agency_id, travel_agencys.travel_agency_name,
 		employee_travels.org_id, employee_travels.employee_travel_id, employee_travels.funding_details, 
-		employee_travels.purpose_of_trip, employee_travels.travel_agent, employee_travels.ticket_from, 
+		employee_travels.purpose_of_trip, employee_travels.other_travel_agency, 
 		employee_travels.ticket_cost, employee_travels.application_date, employee_travels.approve_status, 
 		employee_travels.workflow_table_id, employee_travels.action_date, employee_travels.details,
 		
@@ -163,6 +208,7 @@ CREATE VIEW vw_employee_travels AS
 		INNER JOIN entitys ON employee_travels.entity_id = entitys.entity_id
 		INNER JOIN vw_projects ON employee_travels.project_id = vw_projects.project_id
 		INNER JOIN travel_funding ON employee_travels.travel_funding_id = travel_funding.travel_funding_id
+		INNER JOIN travel_agencys ON employee_travels.travel_agency_id = travel_agencys.travel_agency_id
 		LEFT JOIN vw_claim_travel ON employee_travels.employee_travel_id = vw_claim_travel.employee_travel_id
 		LEFT JOIN vw_department_roles ON employee_travels.department_role_id = vw_department_roles.department_role_id
 		LEFT JOIN (SELECT employee_travel_id, count(claim_id) as unreconciled FROM claims
@@ -188,8 +234,9 @@ CREATE VIEW vw_employee_itinerary AS
 		vw_employee_travels.entity_id, vw_employee_travels.entity_name,
 		vw_employee_travels.project_id, vw_employee_travels.project_name, vw_employee_travels.client_name,
 		vw_employee_travels.travel_funding_id, vw_employee_travels.travel_funding_name, 
-		vw_employee_travels.employee_travel_id, vw_employee_travels.funding_details, 
-		vw_employee_travels.purpose_of_trip, vw_employee_travels.travel_agent, vw_employee_travels.ticket_from, 
+		vw_employee_travels.employee_travel_id, vw_employee_travels.funding_details,
+		vw_employee_travels.travel_agency_id, vw_employee_travels.travel_agency_name,
+		vw_employee_travels.purpose_of_trip, vw_employee_travels.other_travel_agency, 
 		vw_employee_travels.ticket_cost, vw_employee_travels.application_date, vw_employee_travels.approve_status, 
 		vw_employee_travels.workflow_table_id, vw_employee_travels.action_date, vw_employee_travels.details,
 		vw_employee_travels.departure_date, vw_employee_travels.arrival_date,
@@ -257,6 +304,32 @@ BEGIN
 	SELECT department_role_id INTO NEW.department_role_id
 	FROM employees
 	WHERE (entity_id = NEW.entity_id);
+	
+	INSERT INTO e_fields (
+	e_field_id				serial primary key,
+	et_field_id				integer references et_fields,
+	org_id					integer references orgs,
+	table_id
+
+	INSERT INTO e_fields (et_field_id, org_id, table_id)
+	SELECT et_fields.et_field_id, et_fields.org_id, NEW.employee_travel_id
+	FROM et_fields
+	WHERE (et_fields.org_id = NEW.org_id) AND (et_fields.table_link = )
+		AND (et_fields.table_code = 1);
+	
+	et_fields (
+	et_field_id				serial primary key,
+	org_id					integer references orgs,
+	et_field_name			varchar(120) not null,
+	table_table				varchar(64) not null,
+	table_code				integer not null,
+	table_link				integer
+);
+CREATE INDEX et_fields_org_id ON et_fields(org_id);
+CREATE INDEX et_fields_table_code ON et_fields(table_code);
+CREATE INDEX et_fields_table_link ON et_fields(table_link);
+
+
 	
 	RETURN NEW;
 END;

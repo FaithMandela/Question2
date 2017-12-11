@@ -2738,7 +2738,7 @@
 						<COMBOBOX w="100" title="Currency" lptable="currency" lpfield="currency_symbol">currency_id</COMBOBOX>
 						<TEXTFIELD w="150" title="Nature Of Expence">nature_of_expence</TEXTFIELD>
 						<TEXTDECIMAL w="100" title="Requested Amount">requested_amount</TEXTDECIMAL>
-						<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
+						<TEXTDECIMAL w="75" title="Exchange Rate" default="1">exchange_rate</TEXTDECIMAL>
 						<TEXTFIELD w="75" title="Expense Code">expense_code</TEXTFIELD>
 					</GRID>
 				</ACCORDION>
