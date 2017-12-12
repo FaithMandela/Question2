@@ -2,8 +2,16 @@
 
 SELECT sublevelid, sublevelname, org_id FROM sublevels ORDER BY sublevelid;
 
-SELECT qstudentid, studentdegreeid, studentid, org_id FROM qstudentview WHERE sublevelid = 'UGPM' AND quarterid = '2016/2017.2'
+SELECT sublevelid, sublevelname, org_id 
+FROM sublevels  WHERE (sublevelname ilike '%pre%');
+
+SELECT qstudentid, studentdegreeid, studentid, org_id FROM qstudentview WHERE sublevelid = 'UGPM' AND quarterid = '2017/2018.1'
 ORDER BY studentdegreeid;
+
+SELECT qstudentid, studentdegreeid, studentid, org_id FROM qstudentview WHERE sublevelid = 'UGPM' AND quarterid = '2017/2018.1M'
+ORDER BY studentdegreeid;
+
+
 
 SELECT qstudentview.qstudentid, qstudentview.studentdegreeid, qstudentview.studentid, qstudentview.org_id,
 qstudents.sublevelid, qstudents.financeclosed, qstudents.finaceapproval
