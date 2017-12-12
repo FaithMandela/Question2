@@ -130,7 +130,7 @@ CREATE TABLE claim_details (
 	receipt_number			varchar(50),
 	requested_amount		real not null,
 	amount					real default 0 not null,
-	exchange_rate			real default 1 not null check exchange_rate > 0,
+	exchange_rate			real default 1 not null check (exchange_rate > 0),
 	expense_code			varchar(50),
 	
 	create_date				timestamp default now()
@@ -143,7 +143,7 @@ CREATE TABLE et_fields (
 	et_field_id				serial primary key,
 	org_id					integer references orgs,
 	et_field_name			varchar(120) not null,
-	table_table				varchar(64) not null,
+	table_name				varchar(64) not null,
 	table_code				integer not null,
 	table_link				integer
 );
@@ -305,31 +305,22 @@ BEGIN
 	FROM employees
 	WHERE (entity_id = NEW.entity_id);
 	
-	INSERT INTO e_fields (
-	e_field_id				serial primary key,
-	et_field_id				integer references et_fields,
-	org_id					integer references orgs,
-	table_id
-
-	INSERT INTO e_fields (et_field_id, org_id, table_id)
-	SELECT et_fields.et_field_id, et_fields.org_id, NEW.employee_travel_id
-	FROM et_fields
-	WHERE (et_fields.org_id = NEW.org_id) AND (et_fields.table_link = )
-		AND (et_fields.table_code = 1);
-	
-	et_fields (
-	et_field_id				serial primary key,
-	org_id					integer references orgs,
-	et_field_name			varchar(120) not null,
-	table_table				varchar(64) not null,
-	table_code				integer not null,
-	table_link				integer
-);
-CREATE INDEX et_fields_org_id ON et_fields(org_id);
-CREATE INDEX et_fields_table_code ON et_fields(table_code);
-CREATE INDEX et_fields_table_link ON et_fields(table_link);
-
-
+	IF(TG_OP = 'INSERT')THEN
+		INSERT INTO e_fields (et_field_id, org_id, table_id)
+		SELECT et_fields.et_field_id, et_fields.org_id, NEW.employee_travel_id
+		FROM et_fields
+		WHERE (et_fields.org_id = NEW.org_id) AND (et_fields.table_link = NEW.travel_type_id)
+			AND (et_fields.table_code = 1);
+	ELSIF((NEW.approve_status = 'Draft') AND (OLD.employee_travel_id <> NEW.employee_travel_id))THEN
+		DELETE FROM e_fields WHERE table_id = NEW.employee_travel_id AND et_field_id IN
+		(SELECT et_field_id FROM et_fields WHERE (et_fields.org_id = NEW.org_id) AND (et_fields.table_code = 1));
+		
+		INSERT INTO e_fields (et_field_id, org_id, table_id)
+		SELECT et_fields.et_field_id, et_fields.org_id, NEW.employee_travel_id
+		FROM et_fields
+		WHERE (et_fields.org_id = NEW.org_id) AND (et_fields.table_link = NEW.travel_type_id)
+			AND (et_fields.table_code = 1);
+	END IF;
 	
 	RETURN NEW;
 END;

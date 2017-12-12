@@ -653,10 +653,17 @@
 		<GRID name="Travel Types" keyfield="travel_type_id" table="travel_types">
 			<TEXTFIELD w="75" title="Travel Type ID">travel_type_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Travel Type">travel_type_name</TEXTFIELD>
-			<FORM name="Travel Types" keyfield="travel_type_id" table="travel_types">
-				<TEXTFIELD w="150" title="Travel Type" y="10" h="20" x="10">travel_type_name</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
-			</FORM>
+			<ACCORDION name="Travel Types" keyfield="travel_type_id">
+				<FORM name="Travel Types" keyfield="travel_type_id" table="travel_types" collapse="in">
+					<TEXTFIELD w="150" title="Travel Type" y="10" h="20" x="10">travel_type_name</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="30" h="50" x="10" rows="5">details</TEXTAREA>
+				</FORM>
+				<GRID table_code="1" name="Travel Details" keyfield="et_field_id" linkfield="table_link" table="et_fields" collapse="in">
+					<DEFAULT default="1">table_code</DEFAULT>
+					<DEFAULT default="travel_types">table_name</DEFAULT>
+					<TEXTFIELD w="75" title="Travel Detail">et_field_name</TEXTFIELD>
+				</GRID>
+			</ACCORDION>
 		</GRID>
 		<GRID name="Travel Funding" keyfield="travel_funding_id" table="travel_funding">
 			<TEXTFIELD w="75" title="Travel Funding ID">travel_funding_id</TEXTFIELD>
@@ -677,6 +684,22 @@
 				<COMBOBOX w="430" title="Adjustment" lptable="adjustments" where="(adjustment_type = 3)" y="10" h="20" x="10" lpfield="adjustment_name">adjustment_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Claim Type" y="30" h="20" x="10">claim_type_name</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Travel Agencies" keyfield="travel_agency_id" table="travel_agencys">
+			<TEXTFIELD w="75" title="Travel Agency ID">travel_agency_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Travel Agency Name">travel_agency_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Travel Agency Phone">travel_agency_phone</TEXTFIELD>
+			<TEXTFIELD w="75" title="Travel Agency Contact">travel_agency_contact</TEXTFIELD>
+			<TEXTFIELD w="75" title="Travel Agency Email">travel_agency_email</TEXTFIELD>
+			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+			<FORM name="Travel Agency" keyfield="travel_agency_id" table="travel_agencys">
+				<TEXTFIELD w="430" title="Travel Agency Name" y="10" h="20" x="10">travel_agency_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Travel Agency Phone" y="30" h="20" x="10">travel_agency_phone</TEXTFIELD>
+				<TEXTFIELD w="430" title="Travel Agency Contact" y="50" h="20" x="10">travel_agency_contact</TEXTFIELD>
+				<TEXTFIELD w="430" title="Travel Agency Email" y="70" h="20" x="10">travel_agency_email</TEXTFIELD>
+				<CHECKBOX w="150" title="Active" y="90" h="20" x="10">is_active</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>
