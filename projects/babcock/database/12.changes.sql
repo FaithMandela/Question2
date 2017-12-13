@@ -1,79 +1,230 @@
 
+DROP VIEW vwstudentpayments;
+CREATE VIEW vwstudentpayments AS
+	SELECT students.studentid, students.studentname, students.accountnumber,
+		qstudents.qstudentid, qstudents.quarterid, qstudents.financeclosed, qstudents.org_id, 
+		qstudents.studylevel, qstudents.sublevelid,
+		studentpayments.studentpaymentid, studentpayments.applydate, studentpayments.amount, 
+		studentpayments.approved, studentpayments.approvedtime,
+		studentpayments.narrative, studentpayments.Picked, studentpayments.Pickeddate,
+		studentpayments.terminalid, phistory.phistoryid, phistory.phistoryname, 
+		students.emailuser || '@std.babcock.edu.ng' as student_email,
+		(CASE WHEN studentpayments.approved = false THEN 
+		'<a href="payments/paymentClient.jsp?TRANSACTION_ID='|| studentpayments.studentpaymentid
+		|| '" target="_blank"><IMG SRC="resources/images/etranzact.jpg" WIDTH=120 HEIGHT=24 ALT=""></a>'
+		ELSE 'The payment is completed and updated' END) as makepayment,
 
-DROP VIEW qprimajorinstructorview;
-DROP VIEW primajorinstructorview;
-DROP VIEW vw_majorstudents;
+		(CASE WHEN studentpayments.approved = false THEN 
+		'<a href="payments/paymentVisa.jsp?TRANSACTION_ID='|| studentpayments.studentpaymentid
+		|| '" target="_blank"><IMG SRC="resources/images/visa.jpeg" WIDTH=380 HEIGHT=29 ALT=""></a>'
+		ELSE 'The payment is completed and updated' END) as visapayment,
+		
+		(CASE WHEN studentpayments.approved = false THEN 
+		'<a href="payments/paymentBankit.jsp?TRANSACTION_ID='|| studentpayments.studentpaymentid
+		|| '" target="_blank"><IMG SRC="resources/images/bankit.png" WIDTH=198 HEIGHT=58 ALT=""></a>'
+		ELSE 'The payment is completed and updated' END) as bankit,
 
-CREATE VIEW vw_majorstudents AS
-	SELECT students.studentid, students.studentname, students.accountnumber, students.Nationality, students.Sex,
-		students.MaritalStatus, students.birthdate, students.onprobation, students.offcampus,
-		studentdegrees.studentdegreeid, studentdegrees.completed, studentdegrees.started, studentdegrees.graduated,
-		departments.departmentid, departments.departmentname, majors.majorid, majors.majorname
-	FROM students INNER JOIN studentdegrees ON students.studentid = studentdegrees.studentid
-		INNER JOIN departments ON students.departmentid = departments.departmentid
-		INNER JOIN studentmajors ON studentdegrees.studentdegreeid = studentmajors.studentdegreeid
-		INNER JOIN majors ON studentmajors.majorid = majors.majorid
-	WHERE (studentdegrees.completed = false)
-		AND (studentmajors.major = true) AND (studentmajors.primarymajor = true); 
-
-CREATE VIEW primajorinstructorview AS
-	SELECT instructors.instructorid, instructors.instructorname, vw_majorstudents.studentid, vw_majorstudents.studentname,
-		vw_majorstudents.accountnumber, vw_majorstudents.Nationality, vw_majorstudents.Sex, vw_majorstudents.MaritalStatus,
-		vw_majorstudents.birthdate, vw_majorstudents.onprobation, vw_majorstudents.offcampus,
-		vw_majorstudents.studentdegreeid, vw_majorstudents.completed, vw_majorstudents.started, vw_majorstudents.graduated,
-		vw_majorstudents.departmentid, vw_majorstudents.departmentname, vw_majorstudents.majorid, vw_majorstudents.majorname
-	FROM instructors INNER JOIN vw_majorstudents ON instructors.departmentid = vw_majorstudents.departmentid
-	WHERE (instructors.majoradvisor = true);
-
-CREATE VIEW qprimajorinstructorview AS
-	SELECT primajorinstructorview.instructorid, primajorinstructorview.instructorname, primajorinstructorview.studentid, primajorinstructorview.studentname,
-		primajorinstructorview.accountnumber, primajorinstructorview.Nationality, primajorinstructorview.Sex, primajorinstructorview.MaritalStatus,
-		primajorinstructorview.birthdate, primajorinstructorview.onprobation, primajorinstructorview.offcampus,
-		primajorinstructorview.studentdegreeid, primajorinstructorview.completed, primajorinstructorview.started, primajorinstructorview.graduated,
-		primajorinstructorview.departmentid, primajorinstructorview.departmentname, primajorinstructorview.majorid, primajorinstructorview.majorname,
-		qstudents.qstudentid, qstudents.quarterid, qstudents.majorapproval, qstudents.departapproval, qstudents.noapproval,	
-		qstudents.org_id
-	FROM primajorinstructorview INNER JOIN (qstudents INNER JOIN quarters ON qstudents.quarterid = quarters.quarterid)
-		ON primajorinstructorview.studentdegreeid = qstudents.studentdegreeid 
-	WHERE (quarters.active = true) AND (qstudents.finalised = true) AND (qstudents.majorapproval = false);
-
-CREATE OR REPLACE FUNCTION getcurrhours(int) RETURNS float AS $$
-	SELECT sum(qgrades.hours)
-	FROM qgrades
-	WHERE (qgrades.qstudentid = $1) AND (qgrades.dropped = false) AND (qgrades.gradeid <> 'W') AND (qgrades.gradeid <> 'AW');
-$$ LANGUAGE SQL;
-
-CREATE OR REPLACE FUNCTION getcurrcredit(int) RETURNS float AS $$
-	SELECT sum(qgrades.credit)
-	FROM qgrades INNER JOIN grades ON qgrades.gradeid = grades.gradeid
-	WHERE (qgrades.qstudentid = $1) AND (grades.gpacount = true) AND (qgrades.dropped = false) 
-		AND (qgrades.repeated = false) AND (qgrades.gradeid <> 'W') AND (qgrades.gradeid <> 'AW');
-$$ LANGUAGE SQL;
-	
-CREATE OR REPLACE FUNCTION approve_so(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(240) AS $$
-DECLARE
-	mystr VARCHAR(120);
+		(CASE WHEN studentpayments.approved = false THEN 
+		'<a href="payments/query.jsp?TRANSACTION_ID='|| studentpayments.studentpaymentid
+		|| '" target="_blank">Query Payment Status</a>'
+		ELSE 'Ok' END) as querypayment
+		
+	FROM (((students INNER JOIN studentdegrees ON students.studentid = studentdegrees.studentid)
+		INNER JOIN qstudents ON studentdegrees.studentdegreeid = qstudents.studentdegreeid)
+		INNER JOIN studentpayments ON studentpayments.qstudentid = qstudents.qstudentid)
+		INNER JOIN phistory ON phistory.phistoryid = studentpayments.phistoryid;
+		
+		
+CREATE OR REPLACE FUNCTION update_posting(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(50) AS $$
 BEGIN
-	IF($3 = '3')THEN
-		UPDATE qstudents SET so_approval = true, approved = true, printed = true
-		WHERE (qstudentid = $1::integer);
-		mystr := 'School officers approval';
-	ELSIF($3 = '4')THEN
-		UPDATE qstudents SET majorapproval = false WHERE (qstudentid = $1::integer);
-		mystr := 'Returned to major advisor';
-	END IF;
+	INSERT INTO qposting_logs (sys_audit_trail_id, posted_type_id, qstudentid, posted_amount, narrative)
+	SELECT CAST($4 as int), 1, qstudentid, fees, (majorid || ',' || studylevel || ',' || mealtype || ',' || residenceid)
+	FROM vwqstudentcharges
+	WHERE (quarterid = $1) AND (finaceapproval = true) AND (picked = false)
+		AND (sublevelid <> 'UGPM')
+	ORDER BY qstudentid;
+
+	UPDATE studentpayments SET Picked = true, Pickeddate  = now() FROM qstudents
+	WHERE (studentpayments.qstudentid = qstudents.qstudentid) 
+	AND (qstudents.quarterid = $1) AND (studentpayments.approved = true)
+	AND (qstudents.sublevelid <> 'UGPM') AND (studentpayments.Picked = false);
 	
-	RETURN mystr;
+	UPDATE qstudents SET Picked = true, Pickeddate  = now(), LRFPicked = true, LRFPickeddate  = now()
+	WHERE (quarterid = $1) AND (finaceapproval = true) AND (picked = false)
+	AND (sublevelid <> 'UGPM');
+
+	UPDATE scholarships SET posted = true, dateposted = now()
+	WHERE (quarterid = $1) AND (approved = true) AND (posted = false);
+	
+	RETURN 'Done';
 END;
 $$ LANGUAGE plpgsql;
 
-UPDATE qstudents SET printed = true WHERE approved = true;
+CREATE OR REPLACE FUNCTION update_posting_pm(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(50) AS $$
+BEGIN
+	INSERT INTO qposting_logs (sys_audit_trail_id, posted_type_id, qstudentid, posted_amount, narrative)
+	SELECT CAST($4 as int), 1, qstudentid, fees, (majorid || ',' || studylevel || ',' || mealtype || ',' || residenceid)
+	FROM vwqstudentcharges
+	WHERE (quarterid = $1) AND (finaceapproval = true) AND (picked = false)
+		AND (sublevelid = 'UGPM')
+	ORDER BY qstudentid;
 
+	UPDATE studentpayments SET Picked = true, Pickeddate  = now() FROM qstudents
+	WHERE (studentpayments.qstudentid = qstudents.qstudentid) 
+	AND (qstudents.quarterid = $1) AND (studentpayments.approved = true)
+	AND (qstudents.sublevelid = 'UGPM') AND (studentpayments.Picked = false);
+	
+	UPDATE qstudents SET Picked = true, Pickeddate  = now(), LRFPicked = true, LRFPickeddate  = now()
+	WHERE (quarterid = $1) AND (finaceapproval = true) AND (picked = false)
+	AND (sublevelid = 'UGPM');
 
-SELECT studentid, studentname, quarterid, applicationtime, firstclosetime
-FROM qstudentview
-WHERE (quarterid = '2016/2017.3') AND (studentid IN
-('12/0146', '12/3171', '12/0172', '12/1878', '06/0531'));
+	UPDATE scholarships SET posted = true, dateposted = now()
+	WHERE (quarterid = $1) AND (approved = true) AND (posted = false);
+	
+	RETURN 'Done';
+END;
+$$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION insQStudent(varchar(12), varchar(12), varchar(12)) RETURNS VARCHAR(120) AS $$
+DECLARE
+	mystud RECORD;
+	myrec RECORD;
+	mycourse RECORD;
+	myquarter RECORD;
+	mymajor RECORD;
+	mystr VARCHAR(120);
+	mydegreeid int;
+	creditcount real;
+	mycurrqs int;
+	mystudylevel int;
+	myqresidentid int;
+	mylatefees real;
+	mycurrbalance real;
+	mynarrative VARCHAR(120);
+BEGIN
+	SELECT s.org_id, s.onprobation, s.residenceid, s.blockname, s.roomnumber,
+		s.currentbalance, s.accountnumber, s.newstudent, 
+		s.sex, s.nationality, s.maritalstatus, s.birthdate, s.address, s.zipcode, s.town, s.countrycodeid, 
+		s.stateid, s.telno, s.mobile, s.email,  s.guardianname, s.gaddress, s.gzipcode, s.gtown, 
+		s.gcountrycodeid, s.gtelno, s.gemail, 
+		s.seeregistrar, s.seesecurity, s.seesss, s.seesdc, s.seehalls, s.seechaplain, 
+		entitys.entity_password, entitys.first_password
+		INTO mystud
+	FROM students as s INNER JOIN entitys ON s.studentid = entitys.user_name
+	WHERE (studentid = $2);
 
+	mydegreeid := getstudentdegreeid($2);
+	mystudylevel := getstudylevel(mydegreeid);
+	myqresidentid := get_qresidentid(mystud.residenceid, $1);
+	
+	SELECT majors.majorid, majors.minlevel, majors.maxlevel INTO mymajor
+	FROM majors INNER JOIN studentmajors ON majors.majorid = studentmajors.majorid
+	WHERE (studentmajors.studentdegreeid = mydegreeid);
+	
+	SELECT qstudents.qstudentid, studentdegrees.sublevelid INTO myrec
+	FROM qstudents INNER JOIN studentdegrees ON qstudents.studentdegreeid = studentdegrees.studentdegreeid
+	WHERE (qstudents.studentdegreeid = mydegreeid) AND (qstudents.quarterid = $1);
+	
+	SELECT qlatereg, qlastdrop, lateregistrationfee, getchargedays(qlatereg, current_date) as latedays,
+		lateregistrationfee * getchargedays(qlatereg, current_date) as latefees,
+		quarterid, substring(quarterid from 11 for 1) as quarter,
+		length(quarterid) as q_length
+	INTO myquarter
+	FROM quarters WHERE (quarterid = $1);
+	
+	IF (mystud.currentbalance IS NOT NULL) THEN
+		mycurrbalance := mystud.currentbalance;
+	ELSIF (mystud.newstudent = true) THEN
+		mycurrbalance := 0;
+	END IF;
+
+	mylatefees := 0;
+	mynarrative := '';
+	IF (myquarter.latefees > 0) AND ((mystud.newstudent = false) OR (myquarter.quarter != '1')) THEN 
+		mylatefees := myquarter.latefees;
+		mynarrative := 'Late Registration fees charges for ' || CAST(myquarter.latedays as text) || ' days at a rate of ' || CAST(myquarter.lateregistrationfee as text) || ' Per day.';
+	END IF;
+
+	IF (mystudylevel is null) AND (mymajor.minlevel is not null) THEN
+		mystudylevel := mymajor.minlevel;
+	ELSIF (mystudylevel is null) THEN
+		mystudylevel := 100;
+	ELSIF (substring($1 from 11 for 1) = '1') THEN
+			mystudylevel := mystudylevel + 100;
+	END IF;
+
+	IF (mymajor.maxlevel is not null) THEN
+		IF (mystudylevel > mymajor.maxlevel) THEN
+			mystudylevel := mymajor.maxlevel;
+		END IF;
+	ELSE
+		IF (mystudylevel > 500) THEN
+			mystudylevel := 500;
+		END IF;
+	END IF;
+
+	IF (myquarter.qlastdrop < current_date) THEN
+		RAISE EXCEPTION 'The registration is closed for this session.';
+	ELSIF (mystud.sex is null) or (mystud.nationality is null) or (mystud.maritalstatus is null) or (mystud.birthdate is null) THEN
+		RAISE EXCEPTION 'Your students details are in complete and need to be updated by registry';
+	ELSIF (mystud.address is null) or (mystud.town is null) or (mystud.countrycodeid is null) or (mystud.stateid is null) THEN
+		RAISE EXCEPTION 'Your students address details are in complete and need to be updated by registry';
+	ELSIF (mystud.telno is null) or (mystud.mobile is null) or (mystud.email is null) THEN
+		RAISE EXCEPTION 'Your students contact details are in complete and need to be updated by registry';
+	ELSIF (mystud.guardianname is null) THEN
+		RAISE EXCEPTION 'Your guardian details are in complete and need to be updated by registry';
+	ELSIF (mystud.gaddress is null) or (mystud.gzipcode is null) or (mystud.gtown is null) or (mystud.gcountrycodeid is null) or (mystud.gtelno is null) or (mystud.gemail is null) THEN
+		RAISE EXCEPTION 'Your guardian address details are in complete and need to be updated by registry';
+	ELSIF (mystud.onprobation = true) THEN
+		RAISE EXCEPTION 'Student on Probation cannot proceed.';
+	ELSIF (mystud.seeregistrar = true) THEN
+		RAISE EXCEPTION 'Cannot Proceed, See Registars office.';
+	ELSIF (mystud.seesecurity = true) THEN
+		RAISE EXCEPTION 'Cannot Proceed, See security office.';
+	ELSIF (mystud.seesss = true) THEN
+		RAISE EXCEPTION 'Cannot Proceed, See Student Support office.';
+	ELSIF (mystud.seesdc = true) THEN
+		RAISE EXCEPTION 'Cannot Proceed, See the dean of students.';
+	ELSIF (mystud.seehalls = true) THEN
+		RAISE EXCEPTION 'Cannot Proceed, See hall dean office.';
+	ELSIF (mystud.seechaplain = true) THEN
+		RAISE EXCEPTION 'Cannot Proceed, See the chaplain office.';
+	ELSIF (mystud.entity_password = md5(mystud.first_password)) THEN
+		RAISE EXCEPTION 'You must change your password first before proceeding.';
+	ELSIF (mystud.accountnumber IS NULL) THEN
+		RAISE EXCEPTION 'You must have an account number, contact Finance office.';
+	ELSIF (mydegreeid IS NULL) THEN
+		RAISE EXCEPTION 'No Degree Indicated contact Registrars Office';
+	ELSIF (getcoremajor(mydegreeid) IS NULL) THEN
+		RAISE EXCEPTION 'No Major Indicated contact Registrars Office';
+	ELSIF ((myrec.sublevelid = 'MEDI') AND (myquarter.q_length <> 12)) THEN
+		RAISE EXCEPTION 'Select the session with either 1M, 2M or 3M';
+	ELSIF (myrec.qstudentid IS NULL) THEN
+		INSERT INTO qstudents(quarterid, studentdegreeid, studylevel, currbalance, charges, financenarrative, paymenttype, org_id)
+		VALUES ($1, mydegreeid, mystudylevel, mycurrbalance, mylatefees, mynarrative, 1, mystud.org_id);
+		
+		mycurrqs := getqstudentid($2);
+		creditcount := 0;
+		FOR mycourse IN SELECT yeartaken, courseid, min(qcourseid) as qcourseid, max(credithours) as credithours
+			FROM qcoursecheckpass
+			WHERE (elective = false) AND (coursepased = false) AND (prereqpassed = true)
+				AND (yeartaken <= (mystudylevel/100)) AND (studentid = $2) AND (quarterid = $1)
+			GROUP BY yeartaken, courseid
+			ORDER BY yeartaken, courseid
+		LOOP
+			IF (creditcount < 16) THEN
+				INSERT INTO qgrades(qstudentid, qcourseid, hours, credit, approved) 
+				VALUES (mycurrqs, mycourse.qcourseid, mycourse.credithours, mycourse.credithours, true);
+				creditcount := creditcount + mycourse.credithours;
+			END IF;
+		END LOOP;
+		
+		mystr := 'Semester registered confirm course selection and awaiting approval';
+	ELSE
+		mystr := 'You are already registered for the Semester proceed with course selection';
+	END IF;
+
+    RETURN mystr;
+END;
+$$ LANGUAGE plpgsql;
 

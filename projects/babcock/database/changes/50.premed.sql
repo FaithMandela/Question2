@@ -11,7 +11,16 @@ ORDER BY studentdegreeid;
 SELECT qstudentid, studentdegreeid, studentid, org_id FROM qstudentview WHERE sublevelid = 'UGPM' AND quarterid = '2017/2018.1M'
 ORDER BY studentdegreeid;
 
+SELECT aa.qstudentid, aa.studentdegreeid, aa.org_id, ab.qstudentid, ab.studentdegreeid, ab.org_id
+FROM
+(SELECT qstudentid, studentdegreeid, org_id FROM qstudents
+WHERE quarterid = '2017/2018.1' AND sublevelid = 'UGPM') as aa
+INNER JOIN
+(SELECT qstudentid, studentdegreeid, org_id FROM qstudents
+WHERE quarterid = '2017/2018.1M' AND sublevelid = 'UGPM') as ab
+ON aa.studentdegreeid = ab.studentdegreeid
 
+ORDER BY aa.studentdegreeid;
 
 SELECT qstudentview.qstudentid, qstudentview.studentdegreeid, qstudentview.studentid, qstudentview.org_id,
 qstudents.sublevelid, qstudents.financeclosed, qstudents.finaceapproval

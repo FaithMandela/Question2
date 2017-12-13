@@ -1188,6 +1188,7 @@ CREATE VIEW vwbanks AS
 CREATE VIEW vwstudentpayments AS
 	SELECT students.studentid, students.studentname, students.accountnumber,
 		qstudents.qstudentid, qstudents.quarterid, qstudents.financeclosed, qstudents.org_id, 
+		qstudents.studylevel, qstudents.sublevelid,
 		studentpayments.studentpaymentid, studentpayments.applydate, studentpayments.amount, 
 		studentpayments.approved, studentpayments.approvedtime,
 		studentpayments.narrative, studentpayments.Picked, studentpayments.Pickeddate,
@@ -1216,7 +1217,7 @@ CREATE VIEW vwstudentpayments AS
 	FROM (((students INNER JOIN studentdegrees ON students.studentid = studentdegrees.studentid)
 		INNER JOIN qstudents ON studentdegrees.studentdegreeid = qstudents.studentdegreeid)
 		INNER JOIN studentpayments ON studentpayments.qstudentid = qstudents.qstudentid)
-		INNER JOIN PHistory ON PHistory.PHistoryid = studentpayments.PHistoryid;
+		INNER JOIN phistory ON phistory.phistoryid = studentpayments.phistoryid;
 
 CREATE VIEW vw_applicant_payments AS
 	SELECT registrations.registrationid, registrations.email, registrations.submitapplication, 

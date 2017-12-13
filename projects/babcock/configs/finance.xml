@@ -538,6 +538,16 @@
 				<ACTION fnct="update_posting" title="Clear Quarter Posting" auditid="sys_audit_trail_id">Clear Quarter Posting</ACTION>
 			</ACTIONS>
 		</GRID>
+		<GRID name="Pre-Medicine" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
+			<TEXTFIELD w="240" title="Quarter ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
+			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
+			<JASPER name="Student Charges" reportfile="sunchargepost_pm.jasper"></JASPER>
+			<JASPER name="Student Banking" reportfile="studentbankview_pm.jasper"></JASPER>
+			<ACTIONS>
+				<ACTION fnct="update_posting_pm" title="Clear Quarter Posting" auditid="sys_audit_trail_id">Clear Quarter Posting</ACTION>
+			</ACTIONS>
+		</GRID>
 		<GRID name="Analysis" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
 			<TEXTFIELD w="240" title="Quarter ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>

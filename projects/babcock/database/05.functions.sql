@@ -105,15 +105,17 @@ BEGIN
 	SELECT CAST($4 as int), 1, qstudentid, fees, (majorid || ',' || studylevel || ',' || mealtype || ',' || residenceid)
 	FROM vwqstudentcharges
 	WHERE (quarterid = $1) AND (finaceapproval = true) AND (picked = false)
+		AND (sublevelid <> 'UGPM')
 	ORDER BY qstudentid;
 
 	UPDATE studentpayments SET Picked = true, Pickeddate  = now() FROM qstudents
 	WHERE (studentpayments.qstudentid = qstudents.qstudentid) 
 	AND (qstudents.quarterid = $1) AND (studentpayments.approved = true)
-	AND (studentpayments.Picked = false);
+	AND (qstudents.sublevelid <> 'UGPM') AND (studentpayments.Picked = false);
 	
 	UPDATE qstudents SET Picked = true, Pickeddate  = now(), LRFPicked = true, LRFPickeddate  = now()
-	WHERE (quarterid = $1) AND (finaceapproval = true) AND (picked = false);
+	WHERE (quarterid = $1) AND (finaceapproval = true) AND (picked = false)
+	AND (sublevelid <> 'UGPM');
 
 	UPDATE scholarships SET posted = true, dateposted = now()
 	WHERE (quarterid = $1) AND (approved = true) AND (posted = false);
@@ -121,6 +123,32 @@ BEGIN
 	RETURN 'Done';
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION update_posting_pm(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(50) AS $$
+BEGIN
+	INSERT INTO qposting_logs (sys_audit_trail_id, posted_type_id, qstudentid, posted_amount, narrative)
+	SELECT CAST($4 as int), 1, qstudentid, fees, (majorid || ',' || studylevel || ',' || mealtype || ',' || residenceid)
+	FROM vwqstudentcharges
+	WHERE (quarterid = $1) AND (finaceapproval = true) AND (picked = false)
+		AND (sublevelid = 'UGPM')
+	ORDER BY qstudentid;
+
+	UPDATE studentpayments SET Picked = true, Pickeddate  = now() FROM qstudents
+	WHERE (studentpayments.qstudentid = qstudents.qstudentid) 
+	AND (qstudents.quarterid = $1) AND (studentpayments.approved = true)
+	AND (qstudents.sublevelid = 'UGPM') AND (studentpayments.Picked = false);
+	
+	UPDATE qstudents SET Picked = true, Pickeddate  = now(), LRFPicked = true, LRFPickeddate  = now()
+	WHERE (quarterid = $1) AND (finaceapproval = true) AND (picked = false)
+	AND (sublevelid = 'UGPM');
+
+	UPDATE scholarships SET posted = true, dateposted = now()
+	WHERE (quarterid = $1) AND (approved = true) AND (posted = false);
+	
+	RETURN 'Done';
+END;
+$$ LANGUAGE plpgsql;
+
 
 CREATE OR REPLACE FUNCTION delBankPicked(varchar(50), varchar(50)) RETURNS varchar(50) AS $$
 BEGIN
@@ -227,8 +255,6 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER upd_students AFTER UPDATE ON students
     FOR EACH ROW EXECUTE PROCEDURE upd_students();
     
-
-
 CREATE OR REPLACE FUNCTION insQStudent(varchar(12), varchar(12), varchar(12)) RETURNS VARCHAR(120) AS $$
 DECLARE
 	mystud RECORD;
@@ -341,8 +367,6 @@ BEGIN
 		RAISE EXCEPTION 'No Degree Indicated contact Registrars Office';
 	ELSIF (getcoremajor(mydegreeid) IS NULL) THEN
 		RAISE EXCEPTION 'No Major Indicated contact Registrars Office';
-	ELSIF ((myrec.sublevelid = 'UGPM') AND (myquarter.q_length <> 12)) THEN
-		RAISE EXCEPTION 'Select the session with either 1M, 2M or 3M';
 	ELSIF ((myrec.sublevelid = 'MEDI') AND (myquarter.q_length <> 12)) THEN
 		RAISE EXCEPTION 'Select the session with either 1M, 2M or 3M';
 	ELSIF (myrec.qstudentid IS NULL) THEN
