@@ -68,6 +68,24 @@ function postAjax(btnEnrtryCss, btnStatusCss, msg, logType, logInOut){
         },
         success : function(result) {
             var btnMsg = 'Check Out';
+            for(var data in result){
+                var log_type = result[data].log_type;
+                var msg = '';
+                if(log_type == 1){
+                    btnMsg = "CLOCK OUT";
+                    msg = 'Clocked In Time :'+result[data].log_time;
+                }
+                if(log_type == 4){
+                    btnMsg = "LUNCH OUT";
+                    msg = 'Lunch End :'+result[data].log_time;
+                }
+                if(log_type == 7){
+                    btnMsg = "BREAK OUT";
+                    msg = 'Break End :'+result[data].log_time;
+                }
+
+            }
+
             colorChange(btnClock, btnClockStatus, btnEnrtryCss, btnrmvClass, labelrmvClass,
                 btnStatusCss, btnaddClass, labeladdClass, btnMsg, msg);
 

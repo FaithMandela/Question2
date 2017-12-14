@@ -52,7 +52,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>Sprint Planning Meeting</td>
+                                    <td id="tsk_name">Sprint Planning Meeting</td>
                                     <td><span class="label label-sm label-success">In Progress</span></td>
                                     <td>
                                         <a href="javascript:;" class="btn btn-xs red">Stop Task <i class="fa  fa-hand-o-up"></i></a>
@@ -65,4 +65,3 @@
 				</div>
             </div>
         </div>
-

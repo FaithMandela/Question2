@@ -566,11 +566,51 @@
 	var timeSheet = <%=web.getDashboardItem("timeSheet")%>;
 
 	<%= web.getAccordionJs() %>
+	for(var key in attendanceList){
+		var log_type = attendanceList[key].log_type;
+		if(log_type == 1){
+			var btnClock = $(".clock-in-btn");
+			btnClock.removeAttr("disabled");
+			var btnClockStatus = $(".clock-in-status-btn");
+			colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
+                btnClockStatus, btnaddClass, labeladdClass, "Check Out", "Clocked In Time :"+attendanceList[key].log_time);
+		}
+
+		if(log_type == 4){
+			var btnClock = $(".lunch-break-btn");
+			btnClock.removeAttr("disabled");
+			var btnClockStatus = $(".lunch-break-status-btn");
+			colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
+                btnClockStatus, btnaddClass, labeladdClass, "LUNCH OUT", "Lunch End :"+attendanceList[key].log_time);
+		}
+
+		if(log_type == 7){
+			var btnClock = $(".break-btn");
+			btnClock.removeAttr("disabled");
+			var btnClockStatus = $(".break-status-btn");
+			colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
+                btnClockStatus, btnaddClass, labeladdClass, "BREAK OUT", "Break End :"+attendanceList[key].log_time);
+		}
+
+	}
+
+
+	if(timeSheet.length > 0){
+		$('.task-manage-form').hide();
+		$("#tsk_name").text(timeSheet[0].task_name);
+
+	}else{
+		$('#display-task').hide();
+
+	}
+	console.log(timeSheet);
+
+
 
 </script>
 
 <script>
-	
+
 	var jsonFieldUpdates = [];
 	$('#btProcess').click(function(){
         $.post("ajax?fnct=tableviewupdate", {jsonfield: JSON.stringify(jsonFieldUpdates)}, function(data) {

@@ -11,7 +11,7 @@
 			<div class="row">
 				<div class="col-md-6 col-xs-6">
 				<button type="button" data-loading-text="Updating..." class="clock-in-btn btn-block btn-sm btn-primary">
-				Clock In
+				CLOCK IN
 				</button>
 				</div>
 				<div class="col-md-6 col-xs-6 margin-top-5" >
@@ -22,7 +22,7 @@
 			<div class="row">
 				<div class="col-md-6 col-xs-6">
 				<button type="button" data-loading-text="Updating..." class="lunch-break-btn btn-block btn-sm btn-primary">
-				Lunch Break
+				LUNCH BREAK
 				</button>
 				</div>
 				<div class="col-md-6 col-xs-6 margin-top-5">
@@ -33,7 +33,7 @@
 				<div class="row">
 				<div class="col-md-6 col-xs-6">
 				<button type="button" data-loading-text="Updating..." class="break-btn btn-block btn-sm btn-primary">
-				Break
+				BREAK
 				</button>
 				</div>
 				<div class="col-md-6 col-xs-6 margin-top-5">
