@@ -1596,6 +1596,12 @@
 				<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
 				<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 			</FILES>
+			<ACCORDION name="Additional" keyfield="employee_id">
+				<GRID new="false" name="Additional" keyfield="e_field_id" orderby="et_field_id" linkfield="table_id" del="false" table="e_fields" where="(table_code = 101)" collapse="in">
+					<FUNCTION w="175" fnct="get_et_field_name(et_field_id)" title="Travel Detail">et_field_disp</FUNCTION>
+					<TEXTFIELD w="175" title="Value">e_field_value</TEXTFIELD>
+				</GRID>
+			</ACCORDION>
 			<JASPER name="CV" org.table="vw_employees" file.sql="SELECT entity_name FROM entitys WHERE entity_id = " reportfile="cv_employees.jasper"></JASPER>
 		</GRID>
 		<GRID name="Education Class" keyfield="education_class_id" table="education_class">
@@ -1644,6 +1650,14 @@
 				<TEXTFIELD w="150" title="Identification Type Name" y="10" h="20" x="10">identification_type_name</TEXTFIELD>
 				<CHECKBOX w="150" title="Passport" default="false" y="30" h="20" x="10">passport</CHECKBOX>
 				<TEXTAREA w="430" title="Details" y="40" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Additional Fields" keyfield="et_field_id" table="et_fields" where="(table_code = 101)">
+			<TEXTFIELD w="75" title="Field Name">et_field_name</TEXTFIELD>
+			<FORM name="Additional Fields" keyfield="et_field_id" table="et_fields">
+				<DEFAULT default="101">table_code</DEFAULT>
+				<DEFAULT default="employees">table_name</DEFAULT>
+				<TEXTFIELD w="430" title="Field Name" y="10" h="20" x="10">et_field_name</TEXTFIELD>
 			</FORM>
 		</GRID>
 	</DESK>
@@ -2696,14 +2710,14 @@
 				<FORM cols="2" name="Employee Travels" keyfield="employee_travel_id" table="employee_travels" collapse="in">
 					<USERFIELD>entity_id</USERFIELD>
 					<COMBOBOX w="150" title="Travel Type" lptable="travel_types" y="10" h="20" x="10" lpfield="travel_type_name">travel_type_id</COMBOBOX>
-					<COMBOBOX w="150" title="Project" lptable="vw_projects" y="50" h="20" x="10" span="true" lpfield="project_disp">project_id</COMBOBOX>
-					<TEXTFIELD w="150" title="Purpose Of Trip" y="110" h="20" x="10">purpose_of_trip</TEXTFIELD>
-					<COMBOBOX w="150" title="Travel Funding" lptable="travel_funding" y="70" h="20" x="10" span="true" lpfield="travel_funding_name">travel_funding_id</COMBOBOX>
-					<TEXTFIELD w="150" title="Funding Details" y="90" h="20" x="10">funding_details</TEXTFIELD>
-					<TEXTFIELD w="150" title="Travel Agent" y="130" h="20" x="10" span="true">travel_agent</TEXTFIELD>
-					<TEXTFIELD w="150" title="Ticket From" y="150" h="20" x="10">ticket_from</TEXTFIELD>
-					<TEXTDECIMAL w="150" title="Ticket Cost" y="170" h="20" x="10">ticket_cost</TEXTDECIMAL>
-					<TEXTAREA w="430" title="Details" y="190" h="70" x="10" rows="5">details</TEXTAREA>
+					<COMBOBOX w="150" title="Project" lptable="vw_projects" y="30" h="20" x="10" span="true" lpfield="project_disp">project_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Purpose Of Trip" required="true" y="30" h="20" x="290">purpose_of_trip</TEXTFIELD>
+					<COMBOBOX w="150" title="Travel Funding" lptable="travel_funding" y="50" h="20" x="10" span="true" lpfield="travel_funding_name">travel_funding_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Funding Details" y="50" h="20" x="290">funding_details</TEXTFIELD>
+					<COMBOBOX w="150" title="Travel Agency" lptable="travel_agencys" y="70" h="20" x="10" span="true" lpfield="travel_agency_name">travel_agency_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Other (Specify)" y="70" h="20" x="290">other_travel_agency</TEXTFIELD>
+					<TEXTDECIMAL w="150" title="Ticket Cost" y="90" h="20" x="10">ticket_cost</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="110" h="70" x="10" rows="4">details</TEXTAREA>
 				</FORM>
 				<GRID name="Employee Itinerary" keyfield="employee_itinerary_id" linkfield="employee_travel_id" table="employee_itinerary" collapse="in">
 					<TEXTDATE w="120" title="Travel Date" pattern="yyyy-MM-dd">travel_date</TEXTDATE>
@@ -2713,6 +2727,10 @@
 					<SPINTIME w="75" title="Arrival Time" pattern="hh:mm a">arrival_time</SPINTIME>
 					<TEXTFIELD w="100" title="Carrier">carrier</TEXTFIELD>
 					<TEXTFIELD w="75" title="Flight Number">flight_number</TEXTFIELD>
+				</GRID>
+				<GRID new="false" name="Travel Details" keyfield="e_field_id" orderby="et_field_id" linkfield="table_id" del="false" table="e_fields" where="(table_code = 111)" collapse="in">
+					<FUNCTION w="175" fnct="get_et_field_name(et_field_id)" title="Travel Detail">et_field_disp</FUNCTION>
+					<TEXTFIELD w="175" title="Value">e_field_value</TEXTFIELD>
 				</GRID>
 			</ACCORDION>
 			<GRID name="Claims" keyfield="claim_id" linkfield="employee_travel_id" table="vw_claims">

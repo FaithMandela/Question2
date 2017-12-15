@@ -25,7 +25,9 @@ BEGIN
 		LEFT JOIN adjustments ON leave_types.adjustment_id = adjustments.adjustment_id
 	WHERE (employee_leave.employee_leave_id = CAST($1 as int));
 	
-	SELECT leave_ending INTO v_leave_ending FROM employee_leave_types WHERE entity_id = rec.entity_id;
+	SELECT leave_ending INTO v_leave_ending 
+	FROM employee_leave_types 
+	WHERE (entity_id = rec.entity_id) AND (leave_type_id = rec.leave_type_id);
 
 	v_leave_balance := get_leave_balance(rec.entity_id, rec.leave_type_id);
 	

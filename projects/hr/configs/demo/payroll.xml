@@ -893,11 +893,13 @@
 					<TEXTFIELD w="75" title="Tax Type Name">tax_type_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Tax Identification">tax_identification</TEXTFIELD>
 					<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+					<TEXTDECIMAL w="75" title="Employer">employer</TEXTDECIMAL>
 					<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 					<FORM name="Statutory" keyfield="employee_tax_type_id" linkfield="employee_month_id" table="employee_tax_types">
 						<COMBOBOX w="430" title="Type Name Type" lptable="vw_tax_types" where="(use_function = 1)" y="10" h="20" x="10" lpfield="tax_type_name">tax_type_id</COMBOBOX>
 						<TEXTFIELD w="150" title="Tax Identification" y="30" h="20" x="10">tax_identification</TEXTFIELD>
 						<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="10">amount</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Employer" y="50" h="20" x="10">employer</TEXTDECIMAL>
 						<TEXTDECIMAL w="150" title="Additional" default="0" y="50" h="20" x="290">additional</TEXTDECIMAL>
 						<TEXTFIELD w="150" title="Exchange Rate" y="70" h="20" x="10">exchange_rate</TEXTFIELD>
 						<TEXTFIELD w="430" title="Narrative" y="90" h="20" x="10">narrative</TEXTFIELD>

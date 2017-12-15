@@ -329,6 +329,31 @@ CREATE INDEX sys_emailed_sys_email_id ON sys_emailed (sys_email_id);
 CREATE INDEX sys_emailed_org_id ON sys_emailed (org_id);
 CREATE INDEX sys_emailed_table_id ON sys_emailed (table_id);
 
+CREATE TABLE et_fields (
+	et_field_id				serial primary key,
+	org_id					integer references orgs,
+	et_field_name			varchar(120) not null,
+	table_name				varchar(64) not null,
+	table_code				integer not null,
+	table_link				integer
+);
+CREATE INDEX et_fields_org_id ON et_fields(org_id);
+CREATE INDEX et_fields_table_code ON et_fields(table_code);
+CREATE INDEX et_fields_table_link ON et_fields(table_link);
+
+CREATE TABLE e_fields (
+	e_field_id				serial primary key,
+	et_field_id				integer references et_fields,
+	org_id					integer references orgs,
+	table_code				integer not null,
+	table_id				integer,
+	e_field_value			varchar(320)
+);
+CREATE INDEX e_fields_et_field_id ON e_fields(et_field_id);
+CREATE INDEX e_fields_table_id ON e_fields(table_id);
+CREATE INDEX e_fields_table_code ON e_fields(table_code);
+CREATE INDEX e_fields_org_id ON e_fields(org_id);
+
 CREATE TABLE workflows (
 	workflow_id				serial primary key,
 	source_entity_id		integer not null references entity_types,
@@ -585,6 +610,13 @@ CREATE VIEW vw_reporting AS
 	FROM reporting INNER JOIN entitys ON reporting.entity_id = entitys.entity_id
 		INNER JOIN entitys as rpt ON reporting.report_to_id = rpt.entity_id;
 
+CREATE VIEW vw_e_fields AS
+	SELECT orgs.org_id, orgs.org_name,
+		et_fields.et_field_id, et_fields.et_field_name, et_fields.table_name, et_fields.table_link, 
+		e_fields.e_field_id, e_fields.table_code, e_fields.table_id, e_fields.e_field_value
+	FROM e_fields INNER JOIN orgs ON e_fields.org_id = orgs.org_id
+		INNER JOIN et_fields ON e_fields.et_field_id = et_fields.et_field_id;
+
 CREATE VIEW vw_workflows AS
 	SELECT entity_types.entity_type_id as source_entity_id, entity_types.entity_type_name as source_entity_name,
 		workflows.workflow_id, workflows.org_id, workflows.workflow_name, workflows.table_name, workflows.table_link_field,
@@ -704,7 +736,6 @@ CREATE VIEW vw_workflow_sql AS
 		approvals.forward_id, approvals.table_name, approvals.table_id, approvals.application_date, approvals.completion_date, 
 		approvals.action_date, approvals.approve_status, approvals.approval_narrative
 	FROM workflow_sql INNER JOIN approvals ON workflow_sql.workflow_phase_id = approvals.workflow_phase_id;
-
 
 CREATE VIEW tomcat_users AS
 	SELECT entitys.user_name, entitys.entity_password, entity_types.entity_role
@@ -830,7 +861,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_password BEFORE INSERT OR UPDATE ON entitys
-    FOR EACH ROW EXECUTE PROCEDURE ins_password();
+	FOR EACH ROW EXECUTE PROCEDURE ins_password();
 
 CREATE OR REPLACE FUNCTION ins_entitys() RETURNS trigger AS $$
 BEGIN
@@ -849,7 +880,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_entitys AFTER INSERT ON entitys
-    FOR EACH ROW EXECUTE PROCEDURE ins_entitys();
+	FOR EACH ROW EXECUTE PROCEDURE ins_entitys();
 
 CREATE OR REPLACE FUNCTION ins_sys_reset() RETURNS trigger AS $$
 DECLARE
@@ -876,10 +907,15 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_sys_reset AFTER INSERT ON sys_reset
-    FOR EACH ROW EXECUTE PROCEDURE ins_sys_reset();
+	FOR EACH ROW EXECUTE PROCEDURE ins_sys_reset();
 
 CREATE FUNCTION Emailed(integer, varchar(64)) RETURNS void AS $$
-    UPDATE sys_emailed SET emailed = true WHERE (sys_emailed_id = CAST($2 as int));
+	UPDATE sys_emailed SET emailed = true WHERE (sys_emailed_id = CAST($2 as int));
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_et_field_name(integer) RETURNS varchar(120) AS $$
+	SELECT et_field_name
+	FROM et_fields WHERE (et_field_id = $1);
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION upd_action() RETURNS trigger AS $$

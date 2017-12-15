@@ -1,30 +1,33 @@
 CREATE TABLE travel_types (
 	travel_type_id			serial primary key,
 	org_id					integer references orgs,
-	travel_type_name		varchar(50),
-	details					text
+	travel_type_name		varchar(50) not null,
+	details					text,
+	UNIQUE(org_id, travel_type_name)
 );
 CREATE INDEX travel_types_org_id ON travel_types(org_id);
 
 CREATE TABLE travel_agencys (
 	travel_agency_id		serial primary key,
 	org_id					integer references orgs,
-	travel_agency_name		varchar(120),
+	travel_agency_name		varchar(120) not null,
 	travel_agency_phone		varchar(120),
 	travel_agency_contact	varchar(120),
 	travel_agency_email		varchar(120),
 	is_active				boolean default true not null,
-	details					text
+	details					text,
+	UNIQUE(org_id, travel_agency_name)
 );
 CREATE INDEX travel_agencys_org_id ON travel_agencys(org_id);
 
 CREATE TABLE travel_funding (
 	travel_funding_id		serial primary key,
 	org_id					integer references orgs,
-	travel_funding_name		varchar(50),
+	travel_funding_name		varchar(50) not null,
 	require_details			boolean default false not null,
 	travel_funded			boolean default false not null,
-	details					text
+	details					text,
+	UNIQUE(org_id, travel_funding_name)
 );
 CREATE INDEX travel_funding_org_id ON travel_funding(org_id);
 
@@ -33,7 +36,8 @@ CREATE TABLE claim_types (
 	adjustment_id			integer references adjustments,
 	org_id					integer references orgs,
 	claim_type_name			varchar(50),
-	details					text
+	details					text,
+	UNIQUE(org_id, claim_type_name)
 );
 CREATE INDEX claim_types_adjustment_id ON claim_types(adjustment_id);
 CREATE INDEX claim_types_org_id ON claim_types(org_id);
@@ -139,36 +143,6 @@ CREATE INDEX claim_details_claim_id ON claim_details(claim_id);
 CREATE INDEX claim_details_currency_id ON claim_details(currency_id);
 CREATE INDEX claim_details_org_id ON claim_details(org_id);
 
-CREATE TABLE et_fields (
-	et_field_id				serial primary key,
-	org_id					integer references orgs,
-	et_field_name			varchar(120) not null,
-	table_name				varchar(64) not null,
-	table_code				integer not null,
-	table_link				integer
-);
-CREATE INDEX et_fields_org_id ON et_fields(org_id);
-CREATE INDEX et_fields_table_code ON et_fields(table_code);
-CREATE INDEX et_fields_table_link ON et_fields(table_link);
-
-CREATE TABLE e_fields (
-	e_field_id				serial primary key,
-	et_field_id				integer references et_fields,
-	org_id					integer references orgs,
-	table_id				integer,
-	e_field_value			varchar(320)
-);
-CREATE INDEX e_fields_et_field_id ON e_fields(et_field_id);
-CREATE INDEX e_fields_table_id ON e_fields(table_id);
-CREATE INDEX e_fields_org_id ON e_fields(org_id);
-
-CREATE VIEW vw_e_fields AS
-	SELECT orgs.org_id, orgs.org_name,
-		et_fields.et_field_id, et_fields.et_field_name, et_fields.table_name,
-		et_fields.table_code, et_fields.table_link, 
-		e_fields.e_field_id, e_fields.table_id, e_fields.e_field_value
-	FROM e_fields INNER JOIN orgs ON e_fields.org_id = orgs.org_id
-		INNER JOIN et_fields ON e_fields.et_field_id = et_fields.et_field_id;
 
 CREATE OR REPLACE FUNCTION get_itinerary_start(integer) RETURNS date AS $$
 	SELECT min(travel_date)
@@ -305,23 +279,6 @@ BEGIN
 	FROM employees
 	WHERE (entity_id = NEW.entity_id);
 	
-	IF(TG_OP = 'INSERT')THEN
-		INSERT INTO e_fields (et_field_id, org_id, table_id)
-		SELECT et_fields.et_field_id, et_fields.org_id, NEW.employee_travel_id
-		FROM et_fields
-		WHERE (et_fields.org_id = NEW.org_id) AND (et_fields.table_link = NEW.travel_type_id)
-			AND (et_fields.table_code = 1);
-	ELSIF((NEW.approve_status = 'Draft') AND (OLD.employee_travel_id <> NEW.employee_travel_id))THEN
-		DELETE FROM e_fields WHERE table_id = NEW.employee_travel_id AND et_field_id IN
-		(SELECT et_field_id FROM et_fields WHERE (et_fields.org_id = NEW.org_id) AND (et_fields.table_code = 1));
-		
-		INSERT INTO e_fields (et_field_id, org_id, table_id)
-		SELECT et_fields.et_field_id, et_fields.org_id, NEW.employee_travel_id
-		FROM et_fields
-		WHERE (et_fields.org_id = NEW.org_id) AND (et_fields.table_link = NEW.travel_type_id)
-			AND (et_fields.table_code = 1);
-	END IF;
-	
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -331,16 +288,35 @@ CREATE TRIGGER ins_employee_travels BEFORE INSERT OR UPDATE ON employee_travels
 	
 CREATE OR REPLACE FUNCTION aft_employee_travels() RETURNS trigger AS $$
 BEGIN
-	
-	IF((OLD.approve_status = 'Completed') AND (NEW.approve_status = 'Approved'))THEN
-		UPDATE claims SET approve_status = 'Approved' WHERE (employee_travel_id = NEW.employee_travel_id);
+
+	IF(TG_OP = 'INSERT')THEN
+		INSERT INTO e_fields (et_field_id, org_id, table_code, table_id)
+		SELECT et_fields.et_field_id, et_fields.org_id, et_fields.table_code, NEW.employee_travel_id
+		FROM et_fields
+		WHERE (et_fields.org_id = NEW.org_id) AND (et_fields.table_link = NEW.travel_type_id)
+			AND (et_fields.table_code = 111);
+	ELSE
+		IF((OLD.approve_status = 'Completed') AND (NEW.approve_status = 'Approved'))THEN
+			UPDATE claims SET approve_status = 'Approved' WHERE (employee_travel_id = NEW.employee_travel_id);
+		END IF;
+
+		IF((NEW.approve_status = 'Draft') AND (OLD.travel_type_id <> NEW.travel_type_id))THEN
+			DELETE FROM e_fields WHERE table_id = NEW.employee_travel_id AND et_field_id IN
+			(SELECT et_field_id FROM et_fields WHERE (et_fields.org_id = NEW.org_id) AND (et_fields.table_code = 1));
+			
+			INSERT INTO e_fields (et_field_id, org_id, table_code, table_id)
+			SELECT et_fields.et_field_id, et_fields.org_id, et_fields.table_code, NEW.employee_travel_id
+			FROM et_fields
+			WHERE (et_fields.org_id = NEW.org_id) AND (et_fields.table_link = NEW.travel_type_id)
+				AND (et_fields.table_code = 111);
+		END IF;
 	END IF;
 	
-	RETURN NEW;
+	RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER aft_employee_travels AFTER UPDATE ON employee_travels
+CREATE TRIGGER aft_employee_travels AFTER INSERT OR UPDATE ON employee_travels
 	FOR EACH ROW EXECUTE PROCEDURE aft_employee_travels();
 
 CREATE OR REPLACE FUNCTION ins_claims() RETURNS trigger AS $$

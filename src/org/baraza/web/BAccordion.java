@@ -211,6 +211,10 @@ public class BAccordion {
 			JsonObjectBuilder jsColEl = Json.createObjectBuilder();
 			jsColEl.add("width", 50);
 			jsColEl.add("type", "control");
+			
+			if(vw.getAttribute("del", "true").equals("false")) {
+				jsColEl.add("deleteButton", false);
+			}
 			jsColModel.add(jsColEl);
 		}
 		

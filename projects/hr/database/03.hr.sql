@@ -44,7 +44,7 @@ CREATE INDEX pay_scale_years_org_id ON pay_scale_years(org_id);
 CREATE TABLE pay_groups (
 	pay_group_id			serial primary key,
 	org_id					integer references orgs,
-	pay_group_name			varchar(50),
+	pay_group_name			varchar(50) not null,
 	gl_payment_account		varchar(16),
 	bank_header				text,
 	bank_address			text,
@@ -55,7 +55,7 @@ CREATE INDEX pay_groups_org_id ON pay_groups(org_id);
 CREATE TABLE locations ( 
 	location_id				serial primary key,
 	org_id					integer references orgs,
-	location_name			varchar(50),
+	location_name			varchar(50) not null,
 	details					text
 );
 CREATE INDEX locations_org_id ON locations(org_id);
@@ -63,7 +63,7 @@ CREATE INDEX locations_org_id ON locations(org_id);
 CREATE TABLE jobs_category (
 	jobs_category_id		serial primary key,
 	org_id					integer references orgs,
-	jobs_category			varchar(50),
+	jobs_category			varchar(50) not null,
 	details					text
 );
 CREATE INDEX jobs_category_org_id ON jobs_category(org_id);
@@ -1560,6 +1560,18 @@ BEGIN
 			SELECT org_id, sys_email_id, NEW.entity_id, 'entitys', 1
 			FROM sys_emails
 			WHERE (use_type = 2) AND (org_id = NEW.org_id);
+			
+			INSERT INTO e_fields (et_field_id, org_id, table_code, table_id)
+			SELECT et_fields.et_field_id, et_fields.org_id, et_fields.table_code, NEW.entity_id
+			FROM et_fields
+			WHERE (et_fields.org_id = NEW.org_id) AND (et_fields.table_code = 101);
+		ELSE
+			INSERT INTO e_fields (et_field_id, org_id, table_code, table_id)
+			SELECT et_fields.et_field_id, et_fields.org_id, et_fields.table_code, NEW.entity_id
+			FROM et_fields LEFT JOIN 
+			(SELECT et_field_id FROM e_fields WHERE (org_id = NEW.org_id) AND (table_id = NEW.entity_id)) as ef
+			ON et_fields.et_field_id = ef.et_field_id
+			WHERE (et_fields.org_id = NEW.org_id) AND (et_fields.table_code = 101) AND (ef.et_field_id is null);
 		END IF;
 
 		v_use_type := 2;
@@ -2154,7 +2166,9 @@ BEGIN
 		LEFT JOIN adjustments ON leave_types.adjustment_id = adjustments.adjustment_id
 	WHERE (employee_leave.employee_leave_id = CAST($1 as int));
 	
-	SELECT leave_ending INTO v_leave_ending FROM employee_leave_types WHERE entity_id = rec.entity_id;
+	SELECT leave_ending INTO v_leave_ending 
+	FROM employee_leave_types 
+	WHERE (entity_id = rec.entity_id) AND (leave_type_id = rec.leave_type_id);
 
 	v_leave_balance := get_leave_balance(rec.entity_id, rec.leave_type_id);
 	
