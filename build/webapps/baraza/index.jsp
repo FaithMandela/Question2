@@ -568,33 +568,64 @@
 	<%= web.getAccordionJs() %>
 	for(var key in attendanceList){
 		var log_type = attendanceList[key].log_type;
+		var log_time_out = attendanceList[key].log_time_out;
+
+
 		if(log_type == 1){
 			var btnClock = $(".clock-in-btn");
-			btnClock.removeAttr("disabled");
 			var btnClockStatus = $(".clock-in-status-btn");
-			colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
-                btnClockStatus, btnaddClass, labeladdClass, "Check Out", "Clocked In Time :"+attendanceList[key].log_time);
+			if(log_time_out == ""){
+				btnClock.removeAttr("disabled");
+				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
+					btnClockStatus, btnaddClass, labeladdClass, "CLOCK OUT", "Clocked In Time :"+attendanceList[key].log_time);
+			}
+			//If all details are filled disable the button
+			if(log_time_out != ""){
+				btnClock.addClass("disabled");
+				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
+				btnClockStatus, btnaddClass, labeladdClass, "DONE CLOCKING", "Clocked Out Time :"+attendanceList[key].log_time_out);
+			}
 		}
+
 
 		if(log_type == 4){
 			var btnClock = $(".lunch-break-btn");
-			btnClock.removeAttr("disabled");
 			var btnClockStatus = $(".lunch-break-status-btn");
-			colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
-                btnClockStatus, btnaddClass, labeladdClass, "LUNCH OUT", "Lunch End :"+attendanceList[key].log_time);
+
+			if(log_time_out == ""){
+				btnClock.removeAttr("disabled");
+				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
+				btnClockStatus, btnaddClass, labeladdClass, "LUNCH OUT", "Lunch Start Time:"+ attendanceList[key].log_time);
+			}
+			if(log_time_out != ""){
+				btnClock.addClass("disabled");
+				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
+				btnClockStatus, btnaddClass, labeladdClass, "DONE LUNCH", "Lunch End Time:"+ attendanceList[key].log_time_out);
+			}
 		}
 
 		if(log_type == 7){
 			var btnClock = $(".break-btn");
-			btnClock.removeAttr("disabled");
 			var btnClockStatus = $(".break-status-btn");
-			colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
-                btnClockStatus, btnaddClass, labeladdClass, "BREAK OUT", "Break End :"+attendanceList[key].log_time);
+
+			if(log_time_out == ""){
+				btnClock.removeAttr("disabled");
+				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
+				btnClockStatus, btnaddClass, labeladdClass, "BREAK OUT", "Break Start Time:"+attendanceList[key].log_time);
+
+			}
+
+			if(log_time_out != ""){
+				btnClock.addClass("disabled");
+				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
+				btnClockStatus, btnaddClass, labeladdClass, "DONE BREAK", "Break End Time:"+attendanceList[key].log_time_out);
+			}
+
 		}
 
 	}
 
-
+	//Task
 	if(timeSheet.length > 0){
 		$('.task-manage-form').hide();
 		$("#tsk_name").text(timeSheet[0].task_name);

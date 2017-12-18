@@ -20,6 +20,19 @@ $('.clock-in-btn')
     });
 
 /**
+ * Clock Out Button JS
+ **/
+$('.clock-out-btn')
+    .click(function () {
+        var btnClock = $(this);
+        var btnClockStatus = $('.clock-in-status-btn');
+        var msg = 'Clocked In Time : 8:00am ';
+        btnClock.button('loading');
+        postAjax(btnClock, btnClockStatus, msg, '1', 'DONE CLOCKING');
+    });
+
+
+/**
  *
  * Lunch Break Button JS
  **/
@@ -30,6 +43,19 @@ $('.lunch-break-btn')
         var msg = 'Lunch End : 2:00pm ';
         btnClock.button('loading');
         postAjax(btnClock, btnClockStatus, msg, '4', 'LUNCH OUT');
+    });
+
+/**
+ *
+ * Lunch Out Button JS
+ **/
+$('.lunch-break-out-btn')
+    .click(function () {
+        var btnClock = $(this);
+        var btnClockStatus = $('.lunch-break-status-btn');
+        var msg = 'Lunch End : 2:00pm ';
+        btnClock.button('loading');
+        postAjax(btnClock, btnClockStatus, msg, '4', 'DONE LUNCH');
     });
 
 /**
@@ -45,6 +71,18 @@ $('.break-btn')
     });
 
 /**
+ * Evening Break Out Button JS
+ **/
+$('.break-out-btn')
+    .click(function () {
+        var btnClock = $(this);
+        var btnClockStatus = $('.break-status-btn');
+        var msg = 'Break End : 4:30pm ';
+        btnClock.button('loading');
+        postAjax(btnClock, btnClockStatus, msg, '7', 'DONE BREAK');
+    });
+
+/**
  * Function for ajax and Color scheme
  * @param btnEnrtryCss
  * @param btnStatusCss
@@ -53,6 +91,8 @@ $('.break-btn')
 function postAjax(btnEnrtryCss, btnStatusCss, msg, logType, logInOut){
     var btnClock  = $(btnEnrtryCss);
     var btnClockStatus = $(btnStatusCss);
+    var oldBtnClass = '';
+    var outBtnNewClassName = '';
     var jsonData =                 {
         log_type: logType,
         log_in_out: logInOut
@@ -73,28 +113,34 @@ function postAjax(btnEnrtryCss, btnStatusCss, msg, logType, logInOut){
                 var msg = '';
                 if(log_type == 1){
                     btnMsg = "CLOCK OUT";
+                    outBtnNewClassName = 'clock-out-btn' ;
+                    oldBtnClass  = 'clock-in-btn';
                     msg = 'Clocked In Time :'+result[data].log_time;
                 }
                 if(log_type == 4){
                     btnMsg = "LUNCH OUT";
                     msg = 'Lunch End :'+result[data].log_time;
+                    outBtnNewClassName = 'lunch-break-out-btn';
+                    oldBtnClass  = 'lunch-break-btn';
                 }
                 if(log_type == 7){
                     btnMsg = "BREAK OUT";
+                    outBtnNewClassName = 'break-out-btn';
+                    oldBtnClass  = 'break-btn';
                     msg = 'Break End :'+result[data].log_time;
                 }
 
             }
 
-            colorChange(btnClock, btnClockStatus, btnEnrtryCss, btnrmvClass, labelrmvClass,
-                btnStatusCss, btnaddClass, labeladdClass, btnMsg, msg);
+            colorChange(btnClock, btnClockStatus, oldBtnClass, btnrmvClass, labelrmvClass,
+                btnStatusCss, btnaddClass, labeladdClass, btnMsg, msg, outBtnNewClassName);
 
         },
         error: function(xhr, resp, text) {
             var btnMsg = 'Contact System Admin';
             var labelMsg = 'An error Occured';
-            colorChange(btnClock, btnClockStatus, btnEnrtryCss, btnrmvClass, labelrmvClass,
-                btnStatusCss, btnaddClassError, labeladdClassError, btnMsg, labelMsg);
+            colorChange(btnClock, btnClockStatus, oldBtnClass, btnrmvClass, labelrmvClass,
+                btnStatusCss, btnaddClassError, labeladdClassError, btnMsg, labelMsg, '');
         }
 
     });
@@ -111,10 +157,10 @@ function postAjax(btnEnrtryCss, btnStatusCss, msg, logType, logInOut){
  * @param labeladdClass
  */
 function colorChange(btnClock , btnClockStatus, btnEnrtryCss, btnrmvClass, labelrmvClass,
-                     btnStatusCss, btnaddClass, labeladdClass, btnMsg, labelMsg){
+                     btnStatusCss, btnaddClass, labeladdClass, btnMsg, labelMsg, outBtnoldBtnClassName){
 //        btnClock.button('reset');
     btnClock.removeClass(btnEnrtryCss +' btn-block btn-sm '+ btnrmvClass);
-    btnClock.addClass(btnEnrtryCss +' btn-block btn-sm '+ btnaddClass);
+    btnClock.addClass(outBtnoldBtnClassName +' btn-block btn-sm '+ btnaddClass);
     btnClock.html(btnMsg);
 
     btnClockStatus.removeClass('label '+ labelrmvClass +' '+ btnStatusCss);
