@@ -569,19 +569,31 @@
 	for(var key in attendanceList){
 		var log_type = attendanceList[key].log_type;
 		var log_time_out = attendanceList[key].log_time_out;
+		var log_time_in = attendanceList[key].log_time;
+		var btnLunch = $(".lunch-break-btn");
+		var btnBreak = $(".break-btn");
+		var btnClockIn = $(".clock-in-btn");
 
 
 		if(log_type == 1){
 			var btnClock = $(".clock-in-btn");
 			var btnClockStatus = $(".clock-in-status-btn");
-			if(log_time_out == ""){
+	        //If default landing Page, disable lunch break buttons
+			if(log_time_in == "" && log_time_out == ""){
+				btnLunch.attr('disabled','disabled');
+				btnBreak.attr('disabled','disabled');
+			}
+			//If clock in is set retain status
+			if(log_time_in != "" && log_time_out == ""){
 				btnClock.removeAttr("disabled");
+				btnLunch.attr('disabled','disabled');
+				btnBreak.attr('disabled','disabled');
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
 					btnClockStatus, btnaddClass, labeladdClass, "CLOCK OUT", "Clocked In Time :"+attendanceList[key].log_time);
 			}
 			//If all details are filled disable the button
-			if(log_time_out != ""){
-				btnClock.addClass("disabled");
+			if(log_time_in != "" && log_time_out != ""){
+				btnClock.attr('disabled','disabled');
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
 				btnClockStatus, btnaddClass, labeladdClass, "DONE CLOCKING", "Clocked Out Time :"+attendanceList[key].log_time_out);
 			}
