@@ -1,27 +1,28 @@
 <APP password="change_password" color="blue" material="true" org="org_id" name="Mobile Health">
 	<MENU name="Mobile Health">
-		<MENU role="admin" icon="icon-book-open" name="Reports ( mDSS )">11</MENU>
-		<MENU role="admin,supervisor" icon="icon-book-open" name="Reports ( MOH 513 )">13</MENU>
-		<MENU role="admin,supervisor" icon="icon-book-open" name="Reports ( MOH 514 )">15</MENU>
-		<MENU role="admin,supervisor" icon="icon-book-open" name="Reports ( MOH 515 )">20</MENU>
-		<MENU role="admin,clinician,reviewer" icon="icon-book-open" name="MOH 100">40</MENU>
-		<MENU role="admin" icon="icon-book-open" name="Summary Reports">
-			<MENU icon="fa fa-building-o" name="Referral Reports">33</MENU>
-			<MENU icon="icon-users" name="CHV Performance">37</MENU>
-			<MENU icon="icon-users" name="Reviewers Report">93</MENU>
+		<MENU role="admin" icon="icon-book-open font-blue-sharp" name="Reports ( mDSS )">11</MENU>
+		<MENU role="admin,supervisor" icon="icon-book-open font-blue-sharp" name="Reports ( MOH 513 )">13</MENU>
+		<MENU role="admin,supervisor" icon="icon-book-open font-blue-sharp" name="Reports ( MOH 514 )">15</MENU>
+		<MENU role="admin,supervisor" icon="icon-book-open font-blue-sharp" name="Reports ( MOH 515 )">20</MENU>
+		<MENU role="admin,clinician,reviewer" icon="icon-book-open font-blue-sharp" name="MOH 100">40</MENU>
+		<MENU role="admin" icon="icon-book-open font-blue-sharp" name="Summary Reports">
+			<MENU icon="fa fa-building-o font-blue-sharp" name="Referral Reports">33</MENU>
+			<MENU icon="icon-users font-blue-sharp" name="CHV Performance">37</MENU>
+			<MENU icon="icon-users font-blue-sharp" name="Reviewers Report">93</MENU>
 		</MENU>
-		<MENU role="admin" icon="icon-settings" name="Configurations">
-			<MENU icon="icon-settings" name="Definitions">45</MENU>
-			<MENU icon="fa fa-sitemap" name="Organizations">5</MENU>
+		<MENU role="admin" icon="icon-settings font-blue-sharp" name="Configurations">
+			<MENU icon="icon-settings font-blue-sharp" name="Definitions">45</MENU>
+			<MENU icon="fa fa-sitemap font-blue-sharp" name="Organizations">5</MENU>
 			<MENU name="514 Indicators Definitions">50</MENU>
 			<MENU name="Link Health Facilities">55</MENU>
 		</MENU>
-		<MENU role="admin" icon="fa fa-hospital-o" name="Facility Data">2</MENU>
-		<MENU role="admin" icon="icon-settings" name="Administration">
-			<MENU icon="icon-settings" name="Definitions">10</MENU>
-			<MENU icon="icon-users" name="System Users">35</MENU>
-			<MENU icon="fa fa-sitemap" name="Health Facilities">16</MENU>
+		<MENU role="admin" icon="fa fa-hospital-o font-blue-sharp" name="Facility Data">2</MENU>
+		<MENU role="admin" icon="icon-settings font-blue-sharp" name="Administration">
+			<MENU icon="icon-settings font-blue-sharp" name="Definitions">10</MENU>
+			<MENU icon="icon-users font-blue-sharp" name="System Users">35</MENU>
+			<MENU icon="fa fa-sitemap font-blue-sharp" name="Health Facilities">16</MENU>
 			<MENU name="Indicators">17</MENU>
+			<MENU icon="icon-bubbles font-blue-sharp" name="Emails Alerts">95</MENU>
 		</MENU>
 	</MENU>
 	<DESK access="open" w="700" h="500" name="Dashboard" key="1">
@@ -42,7 +43,7 @@
 				<TEXTFIELD w="75" title="Location Name">location_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Sub Location Name">sub_location_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Community Unit">village_name</TEXTFIELD>
-				<GRID keyfield="survey_id" name="DSS" linkfield="village_id" table="vw_dss_survey_support">
+				<GRID keyfield="survey_id" name="DSS (MOTHERS)" where="(dsselection = 11 OR dsselection = 12)" linkfield="village_id" table="vw_dss_survey_support">
 					<TEXTFIELD w="75" title="Survey">survey_id</TEXTFIELD>
 					<TEXTFIELD w="75" title="Name">name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Gender">gender</TEXTFIELD>
@@ -68,6 +69,32 @@
 					</FORM>
 					<JASPER reportfile="DSS_New.jasper" name="DSS Report " linkfield="survey_id"></JASPER>
 				</GRID>
+				<GRID keyfield="survey_id" name="DSS (NEWBORNS)" where="(dsselection = 21 OR dsselection = 22)" linkfield="village_id" table="vw_dss_survey_support">
+					<TEXTFIELD w="75" title="Survey">survey_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Name">name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Gender">gender</TEXTFIELD>
+					<TEXTFIELD w="75" title="Mobile">mobile</TEXTFIELD>
+					<TEXTFIELD w="75" title="Age">age</TEXTFIELD>
+					<TEXTFIELD w="75" title="Age in">age_type</TEXTFIELD>
+					<TEXTFIELD w="75" title="Patient Status">category_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="CHV">worker_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Survey Time">survey_time</TEXTFIELD>
+					<GRID noorg="true" keyfield="mother_info_def_id" name="Survey Details" linkfield="survey_id" table="vw_dss_mpp">
+						<TEXTFIELD w="75" title="ID">mother_info_def_id</TEXTFIELD>
+						<TEXTFIELD w="75" title="Question">question</TEXTFIELD>
+						<TEXTFIELD w="75" title="Response">response_name</TEXTFIELD>
+					</GRID>
+					<FORM keyfield="survey_id" name="Report" linkfield="village_id" table="decision_support">
+						<COMBOBOX w="430" h="20" lpfield="worker_name" x="10" y="30" lptable="health_workers" title="Health Worker ">health_worker_id</COMBOBOX>
+						<COMBOBOX noorg="true" w="430" h="20" lpfield="village_name" x="10" y="30" lptable="villages" title="Community Unit">village_id</COMBOBOX>
+						<TEXTFIELD w="150" h="20" x="10" y="70" title="Household Number">mobile</TEXTFIELD>
+						<TEXTFIELD w="430" h="20" x="10" y="90" title="Household Member">name</TEXTFIELD>
+						<TEXTFIELD w="150" h="20" x="290" y="110" title="Location Lat">location_lat</TEXTFIELD>
+						<TEXTFIELD w="150" h="20" x="10" y="130" title="Location Lng">location_lng</TEXTFIELD>
+						<TEXTAREA w="430" h="70" x="10" y="150" title="Remarks">remarks</TEXTAREA>
+					</FORM>
+					<JASPER reportfile="DSS_newborn_New.jasper" name="DSS Report " linkfield="survey_id"></JASPER>
+				</GRID>
 			</GRID>
 		</GRID>
 		<FILTER role="clinician" split="150" w="700" h="550" name="CHV Reports" type="vert">
@@ -80,12 +107,11 @@
 		</FILTER>
 		<FILTER split="150" w="700" h="550" name="Village summary" type="vert">
 			<FILTERFORM name="Worker">
-				<COMBOBOX w="430" h="20" lpfield="worker_name" x="10" y="30" lptable="health_workers" title="CHV">health_worker_id</COMBOBOX>
 				<COMBOBOX noorg="true" w="430" h="20" lpfield="village_name" x="10" y="30" lptable="villages" title="Village">village_id</COMBOBOX>
 				<TEXTDATE w="150" h="20" x="10" y="50" title="Start Date">start_date</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="10" y="50" title="End Date">end_date</TEXTDATE>
 			</FILTERFORM>
-			<JASPER reportfile="vw_dss_detailed.jasper" name="Health Worker Reports "></JASPER>
+			<JASPER reportfile="vw_dss_detailed.jasper" name="Village Summary Report "></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" h="550" name="Report 513" key="13">
@@ -115,8 +141,9 @@
 						<TEXTFIELD w="75" title="UID">uid</TEXTFIELD>
 						<TEXTFIELD w="75" title="Members Name">member_name</TEXTFIELD>
 						<TEXTFIELD w="75" title="Age of individual">age</TEXTFIELD>
-						<TEXTFIELD w="75" title="Sub Location Name">individual_code</TEXTFIELD>
-						<TEXTFIELD w="75" title="Sub Location Name">gender_type</TEXTFIELD>
+						<TEXTFIELD w="75" title="Age Type">age_type</TEXTFIELD>
+						<TEXTFIELD w="75" title="Individual Code">individual_code</TEXTFIELD>
+						<TEXTFIELD w="75" title="Gender">gender_type</TEXTFIELD>
 						<GRID noorg="true" keyfield="survey_513_id" name="Individual Survey Details" linkfield="uid" table="vw_ref_513">
 							<TEXTFIELD w="45" title="QID">survey_513_def_id</TEXTFIELD>
 							<TEXTFIELD w="75" title="Question">question</TEXTFIELD>
@@ -143,7 +170,7 @@
 					<FORM keyfield="survey_id" name="Report" linkfield="village_id" table="survey_513">
 						<COMBOBOX w="430" h="20" lpfield="worker_name" x="10" y="30" lptable="health_workers" title="Health Worker ">health_worker_id</COMBOBOX>
 						<COMBOBOX noorg="true" w="430" h="20" lpfield="village_name" x="10" y="30" lptable="villages" title="Community Unit">village_id</COMBOBOX>
-						<TEXTFIELD w="150" h="20" x="10" y="70" title="Household Number">member_name</TEXTFIELD>
+						<TEXTFIELD w="150" h="20" x="10" y="70" title="Household Number">household_id</TEXTFIELD>
 						<TEXTFIELD w="150" h="20" x="290" y="110" title="Location Lat">location_lat</TEXTFIELD>
 						<TEXTFIELD w="150" h="20" x="10" y="130" title="Location Lng">location_lng</TEXTFIELD>
 						<COMBOLIST w="150" h="20" x="10" y="70" title="Status">survey_status
@@ -155,6 +182,8 @@
 						<TEXTAREA w="430" h="70" x="10" y="150" title="Remarks">remarks</TEXTAREA>
 						<TEXTAREA w="430" h="70" x="10" y="290" title="Reviewers Remarks">reviewers_remarks</TEXTAREA>
 					</FORM>
+					<JASPER reportfile="household_register_MOH513.jasper" name="Household Register Indicators (A)" linkfield="survey_id"></JASPER>
+					<JASPER reportfile="household_register_MOH513_b.jasper" name="Household Register Indicators (B)" linkfield="survey_id"></JASPER>
 				</GRID>
 				<GRID keyfield="survey_id" name="Approved Reports" where="( survey_status='1' )" tab.count="count(survey_id)" linkfield="village_id" table="vw_survey_513">
 					<TEXTFIELD w="75" title="Survey ID">survey_id</TEXTFIELD>
@@ -166,7 +195,6 @@
 		</GRID>
 		<FILTER split="150" w="700" h="550" name="513 CHV village summary" type="vert">
 			<FILTERFORM name="Worker">
-				<COMBOBOX w="430" h="20" lpfield="worker_name" x="10" y="30" lptable="health_workers" title="CHV">health_worker_id</COMBOBOX>
 				<COMBOBOX noorg="true" w="430" h="20" lpfield="village_name" x="10" y="30" lptable="villages" title="Village">village_id</COMBOBOX>
 				<TEXTDATE w="150" h="20" x="10" y="50" title="Start Date">start_date</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="10" y="50" title="End Date">end_date</TEXTDATE>
@@ -180,7 +208,7 @@
 				<TEXTDATE w="150" h="20" x="10" y="50" title="End Date">end_date</TEXTDATE>
 			</FILTERFORM>
 			<JASPER reportfile="vw_survey_513_background.jasper" name="Household Information "></JASPER>
-			<JASPER reportfile="vw_survey_513_village_summary.jasper" name="Health Worker Reports "></JASPER>
+			<JASPER reportfile="vw_survey_513_village_summary.jasper" name="Indicator Report "></JASPER>
 			<JASPER reportfile="vw_survey_513_death.jasper" name="Death Information "></JASPER>
 		</FILTER>
 		<FILTER split="150" w="700" h="550" name="513 Detailed CHV Village" type="vert">
@@ -190,17 +218,18 @@
 				<TEXTDATE w="150" h="20" x="10" y="50" title="Start Date">start_date</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="10" y="50" title="End Date">end_date</TEXTDATE>
 			</FILTERFORM>
-			<JASPER reportfile="vw_survey_513_background.jasper" name="Household Information "></JASPER>
+			<JASPER reportfile="vw_survey_513_background_chv.jasper" name="Household Information "></JASPER>
 			<JASPER reportfile="vw_survey_513_village_summary_chv.jasper" name="Health Worker Reports "></JASPER>
-			<JASPER reportfile="vw_survey_513_death.jasper" name="Death Information "></JASPER>
+			<JASPER reportfile="vw_survey_513_death_chv.jasper" name="Death Information "></JASPER>
 		</FILTER>
 		<FILTER split="150" w="700" h="550" name="513 Detailed Sub County summary" type="vert">
 			<FILTERFORM name="Sub County">
-				<COMBOBOX noorg="true" w="430" h="20" lpfield="sub_county_name" x="10" y="30" lptable="sub_countys" title="Sub countys">sub_county_id</COMBOBOX>
+				<COMBOBOX noorg="true" w="430" h="20" lpfield="sub_county_name" x="10" y="30" lptable="sub_countys" title="Sub county">sub_county_id</COMBOBOX>
+				<COMBOBOX noorg="true" w="430" h="20" lpfield="worker_name" x="10" y="30" lptable="health_workers" title="CHV">health_worker_id</COMBOBOX>
 				<TEXTDATE w="150" h="20" x="10" y="50" title="Start Date">start_date</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="10" y="50" title="End Date">end_date</TEXTDATE>
 			</FILTERFORM>
-			<JASPER reportfile="vw_survey_513_sub_county_summary_chv.jasper" name="Health Worker Reports "></JASPER>
+			<JASPER reportfile="vw_survey_513_sub_county_summary_chv.jasper" name="Indicator Reports "></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" h="550" name="Facility Data" key="2">
@@ -951,7 +980,6 @@
 				<TEXTDATE w="150" h="20" x="10" y="50" title="End Date">end_date</TEXTDATE>
 			</FILTERFORM>
 			<JASPER reportfile="vw_surveys_chv.jasper" name="Health Worker Reports "></JASPER>
-			<JASPER reportfile="vw_surveys_detailed.jasper" name="Sub county Reports "></JASPER>
 		</FILTER>
 		<FILTER split="150" w="700" h="550" name="MOH 514 Village summary" type="vert">
 			<FILTERFORM name="Worker">
@@ -985,6 +1013,13 @@
 				<TEXTDATE w="150" h="20" x="10" y="50" title="End Date">end_date</TEXTDATE>
 			</FILTERFORM>
 			<JASPER reportfile="vw_survey_514_for_515.jasper" name="MOH 514 summary For 515"></JASPER>
+		</FILTER>
+		<FILTER split="150" w="700" h="550" name="MOH 514 Sub county" type="vert">
+			<FILTERFORM name="Sub county">
+				<TEXTDATE w="150" h="20" x="10" y="50" title="Start Date">start_date</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="10" y="50" title="End Date">end_date</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="vw_surveys_detailed.jasper" name="Sub county Reports "></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" h="550" name="Reports 515" key="20">
@@ -1400,11 +1435,11 @@
 					<TEXTFIELD w="75" title="Survey status">status</TEXTFIELD>
 					<TEXTTIMESTAMP w="75" title="Referral Time">referral_time</TEXTTIMESTAMP>
 					<JASPER role="clinician" reportfile="vw_survey_100.jasper" name="CHV DSS - 100"></JASPER>
-					<TABLEVIEW  noorg="true" role="clinician" jumpview="40:0:0:2:2" updatetable="clinician_mpp" keyfield="clinician_mpp_id" name="Clinician's DSS" linkfield="survey_100_id" table="vw_clinician_mpp">
+					<TABLEVIEW noorg="true" role="clinician" jumpview="40:0:0:2:2" updatetable="clinician_mpp" keyfield="clinician_mpp_id" name="Clinician's DSS" linkfield="survey_100_id" table="vw_clinician_mpp">
 						<TEXTFIELD w="45" title="Registration ID">reg_id</TEXTFIELD>
 						<TEXTFIELD w="45" title="Question ID">mother_mpp_def_id</TEXTFIELD>
 						<TEXTFIELD w="75" title="Question">question</TEXTFIELD>
-						<COMBOBOX noorg="true" w="430" h="20" lpfield="response_option" x="10" y="30" lptable="mother_def_info_options" linkfield="mother_mpp_def_id" linksource="mother_mpp_def_id" default.select="SELECT OPTION" default.value="0" title="Select Option">response</COMBOBOX>
+						<COMBOBOX default.select="SELECT OPTION" noorg="true" w="430" h="20" lpfield="response_option" x="10" y="30" lptable="mother_def_info_options" linkfield="mother_mpp_def_id" linksource="mother_mpp_def_id" title="Select Option" default.value="0">response</COMBOBOX>
 						<TEXTFIELD w="75" title="Clinician response">response_name</TEXTFIELD>
 					</TABLEVIEW>
 					<FORM role="clinician" jumpview="40:0:0:2:3" keyfield="survey_100_id" name="by clinician" linkfield="village_id" table="survey_100">
@@ -1700,6 +1735,26 @@
 			</FILTERFORM>
 			<JASPER reportfile="reviewer_2017.jasper" name="Reviewer Report"></JASPER>
 		</FILTER>
+	</DESK>
+	<DESK w="700" h="500" name="Emails Alerts" key="95">
+		<GRID noorg="true" keyfield="sys_email_id" name="EMails" table="sys_emails">
+			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
+			<TEXTFIELD w="275" title="Email Name">sys_email_name</TEXTFIELD>
+			<TEXTFIELD w="275" title="Title">title</TEXTFIELD>
+			<FORM th="210" keyfield="sys_email_id" name="EMails" table="sys_emails">
+				<TEXTFIELD w="430" h="20" x="10" y="30" title="Title">title</TEXTFIELD>
+				<EDITOR tab="Details" w="530" h="170" x="10" y="2">details</EDITOR>
+			</FORM>
+			<GRID keyfield="sys_emailed_id" name="Email List" linkfield="sys_email_id" table="vw_sys_emailed">
+				<TEXTFIELD w="75" title="Email Name">sys_email_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Emailed ID">sys_emailed_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Table ID">table_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Table Name">table_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Email Type">email_type</TEXTFIELD>
+				<CHECKBOX w="75" title="Emailed">emailed</CHECKBOX>
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+			</GRID>
+		</GRID>
 	</DESK>
 </APP>
 

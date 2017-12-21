@@ -1,0 +1,781 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="HOUSEHOLD_REGISTER_MOH513_b" language="groovy" pageWidth="900" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="860" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5f86dfbe-eeda-4ab9-99a1-91a73940f9dd">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="194"/>
+	<property name="ireport.y" value="89"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0FFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#EFFFFF"/>
+		</conditionalStyle>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#EFF7FF"/>
+		</conditionalStyle>
+	</style>
+	<subDataset name="hh_indicators" whenResourceMissingType="Empty" uuid="f45d5b82-c03b-437a-a3d9-78d996082150">
+		<parameter name="survey_id" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT vw_household_513.household_info_def_id,
+CASE vw_household_513.household_info_def_id
+            WHEN 4 THEN 'Access to safe water  (✔/X)'::text
+            WHEN 3 THEN 'Use of Treated Water   (✔/X)'::text
+            WHEN 2 THEN 'Hand washing facilities  (✔/X)'::text
+            WHEN 1 THEN 'Functional Latrine use  (✔/X)'::text
+            WHEN 7 THEN 'Refuse Disposal Facility   (✔/X)'::text
+
+        END AS hh_indicator,
+    vw_household_513.question,
+    vw_household_513.survey_id,
+    vw_household_513.response,
+        CASE vw_household_513.response
+            WHEN 1 THEN 'YES'::text
+            WHEN 2 THEN 'NO'::text
+            WHEN 3 THEN 'N/A'::text
+            ELSE 'N/A'::text
+        END AS response_name
+   FROM  vw_household_513
+WHERE vw_household_513.survey_id = $P!{survey_id}]]>
+		</queryString>
+		<field name="household_info_def_id" class="java.lang.Integer"/>
+		<field name="hh_indicator" class="java.lang.String"/>
+		<field name="question" class="java.lang.String"/>
+		<field name="survey_id" class="java.lang.Integer"/>
+		<field name="response" class="java.lang.Integer"/>
+		<field name="response_name" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="deaths_survey" uuid="22d81426-00cf-45a1-9407-4d69e76e2fe5">
+		<parameter name="survey_id" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+death_id,survey_id,individual_code_dt,name_dt,age_dt,sex_dt,date_collection_dt,comments
+FROM death_info_513
+WHERE survey_id = $P!{survey_id}]]>
+		</queryString>
+		<field name="death_id" class="java.lang.Integer"/>
+		<field name="survey_id" class="java.lang.Integer"/>
+		<field name="individual_code_dt" class="java.lang.String"/>
+		<field name="name_dt" class="java.lang.String"/>
+		<field name="age_dt" class="java.lang.String"/>
+		<field name="sex_dt" class="java.lang.String"/>
+		<field name="date_collection_dt" class="java.lang.String"/>
+		<field name="comments" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="survey_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+      vw_survey_513.household_id, vw_survey_513.survey_time,
+     individual_hh_register_2017.individual_id,individual_hh_register_2017.member_name,individual_hh_register_2017.age,
+     individual_hh_register_2017.age_type,individual_hh_register_2017.gender_type,individual_hh_register_2017.survey_id,
+     individual_hh_register_2017.uid,
+     individual_hh_register_2017.using_family_pmethods,individual_hh_register_2017.penta1,penta2,individual_hh_register_2017.measles,
+     individual_hh_register_2017.fully_immunized,individual_hh_register_2017.vitamin_A,individual_hh_register_2017.cildren_foodgroup3,
+     individual_hh_register_2017.severely_malnourished, individual_hh_register_2017.llin_use,
+     individual_hh_register_2017.known_chronic_illness,individual_hh_register_2017.cough,individual_hh_register_2017.hiv_status,
+     individual_hh_register_2017.disability,individual_hh_register_2017.moderately_malnourished
+
+
+     FROM individual_hh_register_2017
+     INNER JOIN vw_survey_513 ON vw_survey_513.survey_id = individual_hh_register_2017.survey_id
+ WHERE vw_survey_513.survey_id = $P!{survey_id}]]>
+	</queryString>
+	<field name="household_id" class="java.lang.String"/>
+	<field name="survey_time" class="java.sql.Timestamp"/>
+	<field name="individual_id" class="java.lang.Integer"/>
+	<field name="member_name" class="java.lang.String"/>
+	<field name="age" class="java.lang.String"/>
+	<field name="age_type" class="java.lang.String"/>
+	<field name="gender_type" class="java.lang.String"/>
+	<field name="survey_id" class="java.lang.Integer"/>
+	<field name="uid" class="java.lang.String"/>
+	<field name="using_family_pmethods" class="java.lang.String"/>
+	<field name="penta1" class="java.lang.String"/>
+	<field name="penta2" class="java.lang.String"/>
+	<field name="measles" class="java.lang.String"/>
+	<field name="fully_immunized" class="java.lang.String"/>
+	<field name="vitamin_a" class="java.lang.String"/>
+	<field name="cildren_foodgroup3" class="java.lang.String"/>
+	<field name="severely_malnourished" class="java.lang.String"/>
+	<field name="llin_use" class="java.lang.String"/>
+	<field name="known_chronic_illness" class="java.lang.String"/>
+	<field name="cough" class="java.lang.String"/>
+	<field name="hiv_status" class="java.lang.String"/>
+	<field name="disability" class="java.lang.String"/>
+	<field name="moderately_malnourished" class="java.lang.String"/>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Transparent" x="352" y="59" width="153" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="0a54dd05-1790-4057-8f29-464d81d16eb3"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Household Register]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="771" y="59" width="74" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="e8360aeb-57a4-4f72-8dee-e22106db5386"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[MOH513]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="8" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="182" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Transparent" x="0" y="0" width="39" height="182" forecolor="#000000" backcolor="#FFFFFF" uuid="9e2dba0e-f169-49fe-9ede-c7dd3380697d"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Using Family Planning Methods　]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="39" y="0" width="39" height="182" forecolor="#000000" backcolor="#FFFFFF" uuid="6fe56702-5fa9-4928-98c0-1608affc0634"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Penta1 Given]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="78" y="0" width="39" height="182" forecolor="#000000" backcolor="#FFFFFF" uuid="aace9c5b-1a46-41b1-b5ea-08ac264a356f"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Penta 3 Given]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="117" y="0" width="39" height="182" forecolor="#000000" backcolor="#FFFFFF" uuid="7e55825c-e066-4b47-8204-d143ebf5524a"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Measles Given]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="156" y="0" width="39" height="182" forecolor="#000000" backcolor="#FFFFFF" uuid="7ddae431-8b66-438a-828f-4c0f4b3271f4"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Fully Immunized]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="195" y="0" width="39" height="182" forecolor="#000000" backcolor="#FFFFFF" uuid="ab6a32c7-de61-42cc-bcee-d4023fb825eb"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Vitamin A Given]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="234" y="0" width="69" height="182" forecolor="#000000" backcolor="#FFFFFF" uuid="94cb4f16-d154-4b48-ad7b-047d43570ec5"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Children 6-23 months  receiving 3 or more food groups three times a day]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="303" y="0" width="68" height="182" forecolor="#000000" backcolor="#FFFFFF" uuid="3b588306-aac7-4636-81e8-b62b5c98d760"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Severely Malnourished (MUAC indicating Red)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="371" y="0" width="63" height="182" forecolor="#000000" backcolor="#FFFFFF" uuid="60f8e951-c4b2-4e9c-a8db-1b34226db258"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Moderately Malnourished (MUAC indicating Yellow)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="434" y="0" width="39" height="182" forecolor="#000000" backcolor="#FFFFFF" uuid="9ba081ca-4864-4a47-8dde-cbece3313141"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[LLIN use]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="473" y="0" width="101" height="182" forecolor="#000000" backcolor="#FFFFFF" uuid="e6470d81-8952-4258-ba9b-652b3513505a"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Known chronic  illness]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="574" y="0" width="39" height="182" forecolor="#000000" backcolor="#FFFFFF" uuid="5487c2c1-6a79-4373-94f4-00a15525472b"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Cough (2 Weeks and above)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="613" y="0" width="39" height="182" forecolor="#000000" backcolor="#FFFFFF" uuid="1ef1bec2-5d84-4a0b-bd9a-e85c9a7cb1cb"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Knows HIV Status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="652" y="0" width="63" height="182" forecolor="#000000" backcolor="#FFFFFF" uuid="4b56f340-4d6b-4e34-a26a-4f49176116c3"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Disability]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="715" y="0" width="67" height="182" forecolor="#000000" backcolor="#FFFFFF" uuid="f067899a-3dd0-489b-b508-3126c4c0cdd2"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Others (                           )]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="782" y="0" width="78" height="182" forecolor="#000000" backcolor="#FFFFFF" uuid="be50f380-42e6-453a-9be8-6a0e44328cd0"/>
+				<box>
+					<pen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.75" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.75" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Other specific remarks]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="39" height="20" uuid="c7b06092-e245-48a8-8dd9-0d1f5833ce2a"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{using_family_pmethods}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="39" y="0" width="39" height="20" uuid="ba646065-7219-4007-950a-124a09e6c58a"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{penta1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="78" y="0" width="39" height="20" uuid="67464962-e5c2-4389-9739-5d9620217892"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{penta2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="117" y="0" width="39" height="20" uuid="969fd266-8d87-4300-904a-0e59481f7fa9"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{measles}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="156" y="0" width="40" height="21" uuid="6ed3481d-cd0e-466e-b470-5fe17d6c3c9a"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{fully_immunized}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="195" y="0" width="39" height="21" uuid="620053c2-3b49-4de2-8ed1-79b097bee86c"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{vitamin_a}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="234" y="0" width="69" height="20" uuid="6dee39b8-d634-4744-bfb8-d6d73ae72edf"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{cildren_foodgroup3}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="303" y="0" width="68" height="20" uuid="5d8c41a9-32f9-4911-8a3b-1d9b9ddb071b"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{severely_malnourished}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="371" y="0" width="63" height="20" uuid="02b8f6da-0158-4690-8905-c394d6749f6b"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{moderately_malnourished}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="434" y="0" width="39" height="20" uuid="606b8d78-cc46-4314-9bd2-5d580e1d6d6f"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{llin_use}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="473" y="0" width="101" height="20" uuid="457b22c2-8905-4226-a826-9c485f77f4f1"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{known_chronic_illness}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="574" y="0" width="39" height="20" uuid="82ae9d3b-fb85-4a45-bd64-6c4760f0f667"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{cough}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="613" y="0" width="39" height="20" uuid="cd21ff9e-aa4e-4a54-9ebc-7242ff2b4e19"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{hiv_status}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="652" y="0" width="63" height="20" uuid="10131ea5-fb15-4824-bbb2-ad46bbdd9684"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{disability}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="715" y="1" width="67" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="6beb9c98-6fc7-476f-83eb-08e7a9068afe"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="782" y="1" width="78" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="52bbb8e9-bb02-4301-b2e0-fd2f8c35c64b"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="25" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="69">
+			<componentElement>
+				<reportElement key="table" style="table" x="0" y="18" width="180" height="31" uuid="be794325-5843-4fe4-989d-ec74e2ceab4a"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
+					<datasetRun subDataset="hh_indicators" uuid="59aa7f4f-06b3-4699-bb18-6ea5d6e00ca8">
+						<datasetParameter name="survey_id">
+							<datasetParameterExpression><![CDATA[$F{survey_id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="185" uuid="ae4128fa-bc0f-4051-b02c-c58a7263e05c">
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="183" height="30" uuid="e0cd23db-6f8d-45ef-8c25-fd8187f59f2b"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Times New Roman" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Household indicators]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="183" height="20" uuid="bcf319b3-161e-48a2-b94e-3c53f019aba1"/>
+								<textFieldExpression><![CDATA[$F{question}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="86" uuid="718724bd-b07b-428d-8b44-78c6b1cf46ae">
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="3" y="0" width="83" height="30" uuid="a02f3787-71ba-4644-97e1-fb4c3cd216c8"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Times New Roman" size="12" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Indicator]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="3" y="0" width="83" height="20" uuid="adffc79e-ca02-4425-8482-495a0950e6a2"/>
+								<textFieldExpression><![CDATA[$F{response_name}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<componentElement>
+				<reportElement key="table 1" style="table 1" x="312" y="38" width="540" height="31" isPrintWhenDetailOverflows="true" uuid="48c723cd-f81e-4260-a134-35e90022aa94"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
+					<datasetRun subDataset="deaths_survey" uuid="6d819f6d-57ab-4be5-b8a4-4629765f7716">
+						<datasetParameter name="survey_id">
+							<datasetParameterExpression><![CDATA[$F{survey_id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="90" uuid="8e0a3d67-5fc7-436f-b590-d8faa93abc1e">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="5045b7da-918d-418b-b896-3995b24c4b86"/>
+								<text><![CDATA[Date of Death]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="eb194daf-3dc3-4e83-9381-f82a1de72219"/>
+								<textElement>
+									<font fontName="Times New Roman"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{date_collection_dt}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="3b6b960f-6f55-461c-b328-cc7e2e0ef6c0">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="201c7637-b1ae-48dc-b5cf-9b1169346949"/>
+								<text><![CDATA[Individual Code]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="8169fc4d-136b-45f1-ac7d-ca28f2039712"/>
+								<textElement>
+									<font fontName="Times New Roman"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{individual_code_dt}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="155" uuid="b7ac4bfd-f911-41a3-8f86-6948b3e3b8e6">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="155" height="30" uuid="51936760-b61f-4777-a1ba-1473063e669c"/>
+								<text><![CDATA[Name of Household member ]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="155" height="20" uuid="7f48a4de-75ea-49fc-b8c5-911e41c1133a"/>
+								<textElement>
+									<font fontName="Times New Roman"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{name_dt}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="58" uuid="35d36c4f-8a91-4d22-9a9d-3591eca673d6">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="58" height="30" uuid="fc09352c-c7b4-4bb3-ad91-5e1e3c9dfe19"/>
+								<text><![CDATA[Age]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="58" height="20" uuid="2f9d2715-7240-451e-b94f-a96d3e732448"/>
+								<textElement>
+									<font fontName="Times New Roman"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{age_dt}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="50" uuid="87f2177e-4166-44db-8439-77b56deb4c5a">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="50" height="30" uuid="5f76c64d-b719-4a01-960c-318e3e845515"/>
+								<text><![CDATA[Sex]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="50" height="20" uuid="1d7fa6e0-dc93-44cb-8d4d-6bc8d022465f"/>
+								<textElement>
+									<font fontName="Times New Roman"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{sex_dt}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="108" uuid="6592f4f3-e1c4-47b5-a69b-71a09fa5f6d0">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="108" height="30" uuid="5d9dc41d-9b3a-4c09-a77e-b4b8e1f85588"/>
+								<text><![CDATA[Comments e.g. neonates or dead before household registration ]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="108" height="20" uuid="c32fef74-41b9-47db-bc5b-223618104283"/>
+								<textElement>
+									<font fontName="Times New Roman"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{comments}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<staticText>
+				<reportElement mode="Transparent" x="312" y="18" width="540" height="20" backcolor="#3366FF" uuid="7e848cab-1dc4-4d31-8e31-f96fb53c2a03"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEATHS]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

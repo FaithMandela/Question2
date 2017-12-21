@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_surveys_detailed" language="groovy" pageWidth="1190" pageHeight="842" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="1150" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0a9c37fb-cae8-4f58-ac99-d15629992178">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_surveys_detailed" language="groovy" pageWidth="1190" pageHeight="842" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="1150" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0a9c37fb-cae8-4f58-ac99-d15629992178">
 	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="23"/>
+	<property name="ireport.x" value="351"/>
+	<property name="ireport.y" value="190"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -161,10 +161,12 @@ FROM vw_surveys WHERE vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::dat
 		<band height="205" splitType="Stretch">
 			<staticText>
 				<reportElement style="Column header" x="78" y="0" width="82" height="205" forecolor="#000000" uuid="bf36dace-7b65-4d7b-ba50-0b98bd237f7c"/>
-				<box bottomPadding="5">
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle" rotation="Left">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -173,10 +175,12 @@ FROM vw_surveys WHERE vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::dat
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="160" y="0" width="91" height="205" forecolor="#000000" uuid="02c0aae8-9353-45c3-b43e-f048a5b69d00"/>
-				<box bottomPadding="5">
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle" rotation="Left">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -185,10 +189,12 @@ FROM vw_surveys WHERE vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::dat
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="251" y="0" width="96" height="205" forecolor="#000000" uuid="38495bd8-44ce-4796-be5e-9334fbf5123c"/>
-				<box bottomPadding="5">
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle" rotation="Left">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -197,10 +203,12 @@ FROM vw_surveys WHERE vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::dat
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="347" y="0" width="80" height="205" forecolor="#000000" uuid="cd70438f-acca-4cc7-819d-f852966fe902"/>
-				<box bottomPadding="5">
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle" rotation="Left">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -209,10 +217,12 @@ FROM vw_surveys WHERE vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::dat
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="427" y="0" width="54" height="205" forecolor="#000000" uuid="3ad08939-1103-4966-9b26-d17ed9764691"/>
-				<box bottomPadding="5">
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle" rotation="Left">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -221,10 +231,12 @@ FROM vw_surveys WHERE vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::dat
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="481" y="0" width="64" height="205" forecolor="#000000" uuid="f13bfed6-876d-4feb-a26b-72826f43f320"/>
-				<box bottomPadding="5">
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle" rotation="Left">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -233,10 +245,12 @@ FROM vw_surveys WHERE vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::dat
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="545" y="0" width="116" height="205" forecolor="#000000" uuid="4e76b73a-ccbd-42db-a77a-0bbe69cb9fe5"/>
-				<box bottomPadding="5">
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle" rotation="Left">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -245,10 +259,12 @@ FROM vw_surveys WHERE vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::dat
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="1" y="0" width="30" height="205" forecolor="#000000" uuid="8c2c96f7-7c9e-4fec-81e1-c23f67711520"/>
-				<box bottomPadding="5">
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -257,10 +273,12 @@ FROM vw_surveys WHERE vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::dat
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="31" y="0" width="47" height="205" forecolor="#000000" uuid="3ce2155e-c66f-43f1-9640-549434659775"/>
-				<box bottomPadding="5">
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle" rotation="Left">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -269,15 +287,32 @@ FROM vw_surveys WHERE vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::dat
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="661" y="0" width="116" height="205" forecolor="#000000" uuid="65abe219-2bde-462e-9908-c938abe42458"/>
-				<box bottomPadding="5">
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle" rotation="Left">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Supervisor Remarks]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="777" y="0" width="137" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="ee30588b-dafc-4387-b717-966d66afaefc"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="Left" markup="none">
+					<font fontName="Times New Roman" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[CHV Name]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -286,8 +321,11 @@ FROM vw_surveys WHERE vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::dat
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="78" y="0" width="82" height="17" uuid="d2d83b54-5d12-48e4-8f68-f1255266c242"/>
 				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -297,8 +335,11 @@ FROM vw_surveys WHERE vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::dat
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="160" y="0" width="91" height="17" uuid="767b490a-ba5b-4c58-9fe3-da0416a59000"/>
 				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -308,8 +349,11 @@ FROM vw_surveys WHERE vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::dat
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="251" y="0" width="96" height="17" uuid="e98ccaf9-a0ce-41eb-b8a9-4af2f6d675d6"/>
 				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -319,8 +363,11 @@ FROM vw_surveys WHERE vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::dat
 			<textField isStretchWithOverflow="true" pattern="dd-MM-yyyy HH:mm" isBlankWhenNull="true">
 				<reportElement style="Detail" x="347" y="0" width="80" height="17" uuid="c05c76f8-8049-45d2-8a02-fbba8e0e66ea"/>
 				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -330,8 +377,11 @@ FROM vw_surveys WHERE vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::dat
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="427" y="0" width="54" height="17" uuid="0c6f23b9-b5a6-4d80-884a-92c5da475ea2"/>
 				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -341,8 +391,11 @@ FROM vw_surveys WHERE vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::dat
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="481" y="0" width="64" height="17" uuid="71c356cb-0690-4f63-ab45-18d2496e5b02"/>
 				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -352,8 +405,11 @@ FROM vw_surveys WHERE vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::dat
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="1" y="0" width="30" height="17" uuid="18419193-0aaf-4c3a-89eb-0b6d21734bcc"/>
 				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -363,8 +419,11 @@ FROM vw_surveys WHERE vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::dat
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="31" y="0" width="47" height="17" uuid="2bccac63-0eba-47d8-89f2-2667657c38f1"/>
 				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -374,8 +433,11 @@ FROM vw_surveys WHERE vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::dat
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="545" y="0" width="116" height="17" uuid="c43d15ed-2446-4d44-a229-9dfc02a6ceba"/>
 				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -385,13 +447,31 @@ FROM vw_surveys WHERE vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::dat
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="661" y="0" width="116" height="17" uuid="52a63f7a-e17b-4771-a7fc-b82a393dec82"/>
 				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{supervisor_remarks}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="777" y="0" width="137" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="74af9df2-bb3b-4b81-bdba-89492c67cc39"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{worker_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

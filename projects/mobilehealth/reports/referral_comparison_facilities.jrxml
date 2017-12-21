@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="referral_comparison_facilities" language="groovy" pageWidth="800" pageHeight="1190" whenNoDataType="BlankPage" columnWidth="760" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="0a9c37fb-cae8-4f58-ac99-d15629992178">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="referral_comparison_facilities" language="groovy" pageWidth="1000" pageHeight="1190" whenNoDataType="AllSectionsNoDetail" columnWidth="960" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="0a9c37fb-cae8-4f58-ac99-d15629992178">
 	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.x" value="182"/>
+	<property name="ireport.y" value="195"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -260,7 +260,7 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				<text><![CDATA[#]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="251" y="0" width="28" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="48a7b7c5-b808-4173-8759-83b105fde44f"/>
+				<reportElement mode="Transparent" x="275" y="0" width="55" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="48a7b7c5-b808-4173-8759-83b105fde44f"/>
 				<box bottomPadding="5" rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -275,7 +275,7 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				<text><![CDATA[Number of referrals to facility]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="220" y="0" width="31" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="5e76cdd9-c33c-45bb-8af4-4a744361f6d6"/>
+				<reportElement mode="Transparent" x="220" y="0" width="55" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="5e76cdd9-c33c-45bb-8af4-4a744361f6d6"/>
 				<box bottomPadding="5" rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -290,7 +290,7 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				<text><![CDATA[Number of CHVs referring to Facility]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="304" y="0" width="27" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="6c53ff05-cebd-4260-bc64-09d6607bc071"/>
+				<reportElement mode="Transparent" x="385" y="0" width="55" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="6c53ff05-cebd-4260-bc64-09d6607bc071"/>
 				<box bottomPadding="5" rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -320,7 +320,7 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				<text><![CDATA[Name of facility]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="279" y="0" width="25" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="9bbab7bb-3b77-4a24-aca8-4b973a557a96"/>
+				<reportElement mode="Transparent" x="330" y="0" width="55" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="9bbab7bb-3b77-4a24-aca8-4b973a557a96"/>
 				<box bottomPadding="5" rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -335,7 +335,7 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				<text><![CDATA[Number of Effective referrals]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="331" y="0" width="42" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="6c2ec1e7-76c1-4899-b4ae-23aa0c182203"/>
+				<reportElement mode="Transparent" x="440" y="0" width="55" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="6c2ec1e7-76c1-4899-b4ae-23aa0c182203"/>
 				<box bottomPadding="5" rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -350,7 +350,7 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				<text><![CDATA[Number of Effective referral (Postpartum mothers)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="373" y="0" width="26" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="2163f999-d172-435a-98d1-189412b8355b"/>
+				<reportElement mode="Transparent" x="495" y="0" width="55" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="2163f999-d172-435a-98d1-189412b8355b"/>
 				<box bottomPadding="5" rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -365,7 +365,7 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				<text><![CDATA[Number of Effective referral (Newborn)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="399" y="0" width="45" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="95a3d792-70f2-48ab-bc67-07d9692beef9"/>
+				<reportElement mode="Transparent" x="550" y="0" width="55" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="95a3d792-70f2-48ab-bc67-07d9692beef9"/>
 				<box bottomPadding="5" rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -380,7 +380,7 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				<text><![CDATA[Number of Effective referral ( ANC visits for women in the 1st trimester)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="469" y="0" width="46" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="c1f01525-6340-45d0-86f6-6606f3ee1f89"/>
+				<reportElement mode="Transparent" x="660" y="0" width="55" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="c1f01525-6340-45d0-86f6-6606f3ee1f89"/>
 				<box bottomPadding="5" rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -395,7 +395,7 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				<text><![CDATA[Number of Effective referrals for clients with danger signs]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="515" y="0" width="55" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="e9b0fd3c-9e16-4a01-8c47-228215e2be2b"/>
+				<reportElement mode="Transparent" x="715" y="0" width="55" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="e9b0fd3c-9e16-4a01-8c47-228215e2be2b"/>
 				<box bottomPadding="5" rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -410,7 +410,7 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				<text><![CDATA[Number of pregnant women with Danger signs referred to the facility]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="570" y="0" width="41" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="1cc477e6-9e9d-49f6-b946-7eac26960a60"/>
+				<reportElement mode="Transparent" x="770" y="0" width="55" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="1cc477e6-9e9d-49f6-b946-7eac26960a60"/>
 				<box bottomPadding="5" rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -425,7 +425,7 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				<text><![CDATA[Number of newborns with danger signs referred to the facility]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="611" y="0" width="27" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="963a0761-51b9-4d45-9083-f19ebbc3d0b6"/>
+				<reportElement mode="Transparent" x="825" y="0" width="55" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="963a0761-51b9-4d45-9083-f19ebbc3d0b6"/>
 				<box bottomPadding="5" rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -440,7 +440,7 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				<text><![CDATA[Number of postpartum women with danger signs referred to the facility]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="638" y="0" width="25" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="d94c6d6a-5f4e-4cae-9f2d-78a4ab2b816b"/>
+				<reportElement mode="Transparent" x="880" y="0" width="55" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="d94c6d6a-5f4e-4cae-9f2d-78a4ab2b816b"/>
 				<box bottomPadding="5" rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -455,7 +455,7 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				<text><![CDATA[Defaulters]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="444" y="0" width="25" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="24912d6b-33dc-4948-b4ed-77ae7df3af62"/>
+				<reportElement mode="Transparent" x="605" y="0" width="55" height="205" forecolor="#000000" backcolor="#FFFFFF" uuid="24912d6b-33dc-4948-b4ed-77ae7df3af62"/>
 				<box bottomPadding="5" rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -484,8 +484,8 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				</textElement>
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="220" y="0" width="31" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="2691c94c-e7c2-4b24-af26-7f9d17955e1c"/>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="220" y="0" width="55" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="2691c94c-e7c2-4b24-af26-7f9d17955e1c"/>
 				<box rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -499,8 +499,8 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				</textElement>
 				<textFieldExpression><![CDATA[$F{indicator1}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="251" y="0" width="28" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="619ce8a8-2db0-4c38-b438-567247e55b4e"/>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="275" y="0" width="55" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="619ce8a8-2db0-4c38-b438-567247e55b4e"/>
 				<box rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -514,8 +514,8 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				</textElement>
 				<textFieldExpression><![CDATA[$F{indicator2}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="304" y="0" width="27" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="c8b4ae5d-5749-4bd0-b1e7-6f551b916cf3"/>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="385" y="1" width="55" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="c8b4ae5d-5749-4bd0-b1e7-6f551b916cf3"/>
 				<box rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -529,8 +529,8 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				</textElement>
 				<textFieldExpression><![CDATA[$F{indicator4}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="331" y="0" width="42" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="f47b28b8-928e-4fb5-8f47-ea71b18a74f7"/>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="440" y="0" width="55" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="f47b28b8-928e-4fb5-8f47-ea71b18a74f7"/>
 				<box rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -544,8 +544,8 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				</textElement>
 				<textFieldExpression><![CDATA[$F{indicator5}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="373" y="0" width="26" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="99514503-bbfa-450a-bb0c-59aabe752ff8"/>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="495" y="0" width="55" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="99514503-bbfa-450a-bb0c-59aabe752ff8"/>
 				<box rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -559,8 +559,8 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				</textElement>
 				<textFieldExpression><![CDATA[$F{indicator6}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="399" y="0" width="45" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="3ce9b26b-3d2a-49a4-931c-30a865cb4e0b"/>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="550" y="0" width="55" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="3ce9b26b-3d2a-49a4-931c-30a865cb4e0b"/>
 				<box rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -574,8 +574,8 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				</textElement>
 				<textFieldExpression><![CDATA[$F{indicator7}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="444" y="0" width="25" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="cb1cfaf1-4f23-40c8-8f97-7ba28cc0b396"/>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="605" y="1" width="55" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="cb1cfaf1-4f23-40c8-8f97-7ba28cc0b396"/>
 				<box rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -589,8 +589,8 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				</textElement>
 				<textFieldExpression><![CDATA[$F{indicator8}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="469" y="0" width="46" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="22312248-80b9-41b5-b88b-3d65d4fd8e9a"/>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="660" y="0" width="55" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="22312248-80b9-41b5-b88b-3d65d4fd8e9a"/>
 				<box rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -604,8 +604,8 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				</textElement>
 				<textFieldExpression><![CDATA[$F{indicator9}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="515" y="0" width="55" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="6e201ab9-d274-4fcd-b96a-90c2e6bd565e"/>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="715" y="0" width="55" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="6e201ab9-d274-4fcd-b96a-90c2e6bd565e"/>
 				<box rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -619,8 +619,8 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				</textElement>
 				<textFieldExpression><![CDATA[$F{indicator10}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="570" y="0" width="41" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="06efb85d-34c8-4414-855d-36af200e9857"/>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="771" y="0" width="55" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="06efb85d-34c8-4414-855d-36af200e9857"/>
 				<box rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -634,8 +634,8 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				</textElement>
 				<textFieldExpression><![CDATA[$F{indicator11}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="611" y="0" width="27" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="88061448-d40d-4444-89e8-278664f14695"/>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="825" y="0" width="56" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="88061448-d40d-4444-89e8-278664f14695"/>
 				<box rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -649,8 +649,8 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				</textElement>
 				<textFieldExpression><![CDATA[$F{indicator12}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="638" y="0" width="25" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="3346c718-bc62-4112-ba84-f1d91cf7c563"/>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="881" y="0" width="55" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="3346c718-bc62-4112-ba84-f1d91cf7c563"/>
 				<box rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -679,8 +679,8 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				</textElement>
 				<textFieldExpression><![CDATA[$F{link_health_facility_name}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="279" y="0" width="25" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="0cf19db8-b855-4a4b-bb9a-81d9edd06c65"/>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="330" y="1" width="55" height="31" forecolor="#000000" backcolor="#FFFFFF" uuid="0cf19db8-b855-4a4b-bb9a-81d9edd06c65"/>
 				<box rightPadding="0">
 					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
@@ -697,9 +697,9 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="23">
+		<band height="29">
 			<textField pattern="###0">
-				<reportElement positionType="Float" x="220" y="0" width="31" height="20" uuid="e82a543c-d754-4802-b65f-13302b140a55"/>
+				<reportElement positionType="Float" x="220" y="0" width="55" height="23" uuid="e82a543c-d754-4802-b65f-13302b140a55"/>
 				<box>
 					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
 					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
@@ -713,37 +713,7 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				<textFieldExpression><![CDATA[$V{indicator1_count}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="251" y="0" width="28" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="9a70f1f4-6245-4452-90b0-6b1efde0cdad"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{indicator2_count}]]></textFieldExpression>
-			</textField>
-			<textField pattern="###0" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="304" y="0" width="27" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="218060db-5267-4e22-a83f-fcfb442391cd"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{indicator4_count}]]></textFieldExpression>
-			</textField>
-			<textField pattern="###0" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="331" y="0" width="42" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="d951d1bc-55ec-432e-90ca-0ea85502e0c7"/>
+				<reportElement mode="Transparent" x="440" y="0" width="55" height="23" forecolor="#000000" backcolor="#FFFFFF" uuid="d951d1bc-55ec-432e-90ca-0ea85502e0c7"/>
 				<box>
 					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
 					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
@@ -758,7 +728,66 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				<textFieldExpression><![CDATA[$V{indicator5_count}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="373" y="0" width="26" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="68edadb4-64e8-4a5f-a13d-248ace32df5b"/>
+				<reportElement mode="Transparent" x="770" y="0" width="55" height="22" forecolor="#000000" backcolor="#FFFFFF" uuid="39110c76-8a06-412e-892e-a3ad8c0d1c02"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{indicator11_count}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="0" width="218" height="23" uuid="05d2844f-36e9-4672-905d-44fc00ac7ab4"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField pattern="###0" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="330" y="0" width="55" height="23" forecolor="#000000" backcolor="#FFFFFF" uuid="7a92b831-dabd-4d86-9e3d-aa4772a8a570"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{indicator3_count}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="385" y="0" width="55" height="23" forecolor="#000000" backcolor="#FFFFFF" uuid="218060db-5267-4e22-a83f-fcfb442391cd"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{indicator4_count}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="495" y="0" width="55" height="23" forecolor="#000000" backcolor="#FFFFFF" uuid="68edadb4-64e8-4a5f-a13d-248ace32df5b"/>
 				<box>
 					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
 					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
@@ -773,7 +802,22 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				<textFieldExpression><![CDATA[$V{indicator6_count}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="399" y="0" width="45" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="520dc3da-ee1a-490d-8fd2-7795b25159e8"/>
+				<reportElement mode="Transparent" x="275" y="0" width="55" height="23" forecolor="#000000" backcolor="#FFFFFF" uuid="9a70f1f4-6245-4452-90b0-6b1efde0cdad"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{indicator2_count}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="550" y="0" width="55" height="23" forecolor="#000000" backcolor="#FFFFFF" uuid="520dc3da-ee1a-490d-8fd2-7795b25159e8"/>
 				<box>
 					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
 					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
@@ -788,7 +832,7 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				<textFieldExpression><![CDATA[$V{indicator7_count}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="444" y="0" width="25" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="0fabc19b-0fcb-4c92-94d4-8ef140e90e9d"/>
+				<reportElement mode="Transparent" x="605" y="0" width="55" height="22" forecolor="#000000" backcolor="#FFFFFF" uuid="0fabc19b-0fcb-4c92-94d4-8ef140e90e9d"/>
 				<box>
 					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
 					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
@@ -803,22 +847,7 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				<textFieldExpression><![CDATA[$V{indicator8_count}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="469" y="0" width="46" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="ec1421bf-99e8-4afe-a099-eabcb10ede11"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{indicator9_count}]]></textFieldExpression>
-			</textField>
-			<textField pattern="###0" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="515" y="0" width="55" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="7bf74616-055f-4826-b6d8-56a4dead2b00"/>
+				<reportElement mode="Transparent" x="715" y="0" width="55" height="22" forecolor="#000000" backcolor="#FFFFFF" uuid="7bf74616-055f-4826-b6d8-56a4dead2b00"/>
 				<box>
 					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
 					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
@@ -833,22 +862,7 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				<textFieldExpression><![CDATA[$V{indicator10_count}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="570" y="0" width="41" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="39110c76-8a06-412e-892e-a3ad8c0d1c02"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{indicator11_count}]]></textFieldExpression>
-			</textField>
-			<textField pattern="###0" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="611" y="0" width="27" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="906b1fef-1adb-4ccf-b329-43a463c2b8b2"/>
+				<reportElement mode="Transparent" x="825" y="0" width="56" height="23" forecolor="#000000" backcolor="#FFFFFF" uuid="906b1fef-1adb-4ccf-b329-43a463c2b8b2"/>
 				<box>
 					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
 					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
@@ -863,7 +877,22 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 				<textFieldExpression><![CDATA[$V{indicator12_count}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="638" y="0" width="25" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="8c30526c-c815-4f4f-baba-d371a40b047a"/>
+				<reportElement mode="Transparent" x="660" y="0" width="55" height="23" forecolor="#000000" backcolor="#FFFFFF" uuid="ec1421bf-99e8-4afe-a099-eabcb10ede11"/>
+				<box>
+					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{indicator9_count}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="881" y="1" width="55" height="22" forecolor="#000000" backcolor="#FFFFFF" uuid="8c30526c-c815-4f4f-baba-d371a40b047a"/>
 				<box>
 					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
 					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
@@ -876,35 +905,6 @@ WHERE referral_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{indicator13_count}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="1" y="0" width="218" height="20" uuid="05d2844f-36e9-4672-905d-44fc00ac7ab4"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
-				</box>
-				<textElement>
-					<font fontName="Times New Roman" size="12" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Total]]></text>
-			</staticText>
-			<textField pattern="###0" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="279" y="0" width="25" height="19" forecolor="#000000" backcolor="#FFFFFF" uuid="7a92b831-dabd-4d86-9e3d-aa4772a8a570"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.5" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.5" lineColor="#CCCCCC"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{indicator3_count}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnFooter>

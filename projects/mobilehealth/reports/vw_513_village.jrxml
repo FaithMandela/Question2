@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_surveys_detailed_village" language="groovy" pageWidth="1190" pageHeight="842" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="1150" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0a9c37fb-cae8-4f58-ac99-d15629992178">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_surveys_detailed_village" language="groovy" pageWidth="900" pageHeight="842" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="860" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0a9c37fb-cae8-4f58-ac99-d15629992178">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="36"/>
+	<property name="ireport.y" value="162"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -73,7 +73,7 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="259" splitType="Stretch">
+		<band height="285" splitType="Stretch">
 			<image>
 				<reportElement x="114" y="0" width="112" height="112" uuid="a872cdfb-94e9-4e98-b440-0a18dcef52cd"/>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "aphrc_uk_aid.png"]]></imageExpression>
@@ -150,7 +150,7 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 				<text><![CDATA[Village Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="341" y="241" width="65" height="15" forecolor="#000000" uuid="35097522-f91e-40a8-a36b-d46c7b34121b"/>
+				<reportElement style="Column header" x="247" y="241" width="65" height="15" forecolor="#000000" uuid="35097522-f91e-40a8-a36b-d46c7b34121b"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
@@ -171,7 +171,7 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 				<text><![CDATA[Start Date : ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="406" y="241" width="159" height="15" uuid="12fdef3e-edd3-499a-8fbc-84d4354771ce"/>
+				<reportElement style="Detail" x="312" y="241" width="159" height="15" uuid="12fdef3e-edd3-499a-8fbc-84d4354771ce"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
@@ -183,13 +183,15 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="205" splitType="Stretch">
+		<band height="129" splitType="Stretch">
 			<staticText>
-				<reportElement style="Column header" x="31" y="0" width="34" height="205" forecolor="#000000" uuid="f0b99f9f-a096-4550-8d73-a2cef995faf7"/>
+				<reportElement style="Column header" x="31" y="0" width="34" height="128" forecolor="#000000" uuid="f0b99f9f-a096-4550-8d73-a2cef995faf7"/>
 				<box bottomPadding="5">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle" rotation="Left">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -197,11 +199,13 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 				<text><![CDATA[No.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="112" y="0" width="82" height="205" forecolor="#000000" uuid="bf36dace-7b65-4d7b-ba50-0b98bd237f7c"/>
+				<reportElement style="Column header" x="139" y="0" width="139" height="128" forecolor="#000000" uuid="bf36dace-7b65-4d7b-ba50-0b98bd237f7c"/>
 				<box bottomPadding="5">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle" rotation="Left">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -209,11 +213,13 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 				<text><![CDATA[CHV Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="194" y="0" width="91" height="205" forecolor="#000000" uuid="02c0aae8-9353-45c3-b43e-f048a5b69d00"/>
+				<reportElement style="Column header" x="278" y="0" width="91" height="128" forecolor="#000000" uuid="02c0aae8-9353-45c3-b43e-f048a5b69d00"/>
 				<box bottomPadding="5">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle" rotation="Left">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -221,11 +227,13 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 				<text><![CDATA[Household No.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="285" y="0" width="96" height="205" forecolor="#000000" uuid="38495bd8-44ce-4796-be5e-9334fbf5123c"/>
+				<reportElement style="Column header" x="369" y="0" width="96" height="128" forecolor="#000000" uuid="38495bd8-44ce-4796-be5e-9334fbf5123c"/>
 				<box bottomPadding="5">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle" rotation="Left">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -233,11 +241,13 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 				<text><![CDATA[Remarks]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="381" y="0" width="80" height="205" forecolor="#000000" uuid="cd70438f-acca-4cc7-819d-f852966fe902"/>
+				<reportElement style="Column header" x="465" y="0" width="95" height="128" forecolor="#000000" uuid="cd70438f-acca-4cc7-819d-f852966fe902"/>
 				<box bottomPadding="5">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle" rotation="Left">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -245,11 +255,13 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 				<text><![CDATA[Time]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="461" y="0" width="54" height="205" forecolor="#000000" uuid="3ad08939-1103-4966-9b26-d17ed9764691"/>
+				<reportElement style="Column header" x="560" y="0" width="94" height="128" forecolor="#000000" uuid="3ad08939-1103-4966-9b26-d17ed9764691"/>
 				<box bottomPadding="5">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle" rotation="Left">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -257,11 +269,13 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 				<text><![CDATA[Latitude]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="515" y="0" width="64" height="205" forecolor="#000000" uuid="f13bfed6-876d-4feb-a26b-72826f43f320"/>
+				<reportElement style="Column header" x="654" y="0" width="87" height="128" forecolor="#000000" uuid="f13bfed6-876d-4feb-a26b-72826f43f320"/>
 				<box bottomPadding="5">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle" rotation="Left">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -269,11 +283,13 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 				<text><![CDATA[Longitude]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="1" y="0" width="30" height="205" forecolor="#000000" uuid="8c2c96f7-7c9e-4fec-81e1-c23f67711520"/>
+				<reportElement style="Column header" x="1" y="0" width="30" height="128" forecolor="#000000" uuid="8c2c96f7-7c9e-4fec-81e1-c23f67711520"/>
 				<box bottomPadding="5">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -281,11 +297,13 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 				<text><![CDATA[#]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="65" y="0" width="47" height="205" forecolor="#000000" uuid="3ce2155e-c66f-43f1-9640-549434659775"/>
+				<reportElement style="Column header" x="65" y="0" width="74" height="128" forecolor="#000000" uuid="3ce2155e-c66f-43f1-9640-549434659775"/>
 				<box bottomPadding="5">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle" rotation="Left">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -293,11 +311,13 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 				<text><![CDATA[Status]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="579" y="0" width="116" height="205" forecolor="#000000" uuid="65abe219-2bde-462e-9908-c938abe42458"/>
+				<reportElement style="Column header" x="741" y="0" width="119" height="128" forecolor="#000000" uuid="65abe219-2bde-462e-9908-c938abe42458"/>
 				<box bottomPadding="5">
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle" rotation="Left">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -311,8 +331,11 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="31" y="0" width="34" height="17" uuid="ef9d2c43-b978-46b2-a045-665d8bfb3985"/>
 				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -320,10 +343,13 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 				<textFieldExpression><![CDATA[$F{survey_id}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="112" y="0" width="82" height="17" uuid="d2d83b54-5d12-48e4-8f68-f1255266c242"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="139" y="0" width="139" height="17" uuid="d2d83b54-5d12-48e4-8f68-f1255266c242"/>
 				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -331,10 +357,13 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 				<textFieldExpression><![CDATA[$F{worker_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="194" y="0" width="91" height="17" uuid="767b490a-ba5b-4c58-9fe3-da0416a59000"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="278" y="0" width="91" height="17" uuid="767b490a-ba5b-4c58-9fe3-da0416a59000"/>
 				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -342,10 +371,13 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 				<textFieldExpression><![CDATA[$F{household_id}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd-MM-yyyy HH:mm" isBlankWhenNull="true">
-				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="381" y="0" width="80" height="17" uuid="c05c76f8-8049-45d2-8a02-fbba8e0e66ea"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="465" y="0" width="95" height="17" uuid="c05c76f8-8049-45d2-8a02-fbba8e0e66ea"/>
 				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -353,10 +385,13 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 				<textFieldExpression><![CDATA[$F{survey_time}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="461" y="0" width="54" height="17" uuid="0c6f23b9-b5a6-4d80-884a-92c5da475ea2"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="560" y="0" width="94" height="17" uuid="0c6f23b9-b5a6-4d80-884a-92c5da475ea2"/>
 				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -364,10 +399,13 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 				<textFieldExpression><![CDATA[$F{location_lat}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="515" y="0" width="64" height="17" uuid="71c356cb-0690-4f63-ab45-18d2496e5b02"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="654" y="0" width="87" height="17" uuid="71c356cb-0690-4f63-ab45-18d2496e5b02"/>
 				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -377,8 +415,11 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="1" y="0" width="30" height="17" uuid="18419193-0aaf-4c3a-89eb-0b6d21734bcc"/>
 				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -386,10 +427,13 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="65" y="0" width="47" height="17" uuid="2bccac63-0eba-47d8-89f2-2667657c38f1"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="65" y="0" width="74" height="17" uuid="2bccac63-0eba-47d8-89f2-2667657c38f1"/>
 				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -397,10 +441,13 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 				<textFieldExpression><![CDATA[$F{survey_status}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="579" y="0" width="116" height="17" uuid="52a63f7a-e17b-4771-a7fc-b82a393dec82"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="741" y="0" width="119" height="17" uuid="52a63f7a-e17b-4771-a7fc-b82a393dec82"/>
 				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -408,10 +455,13 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 				<textFieldExpression><![CDATA[$F{reviewers_remarks}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd-MM-yyyy HH:mm" isBlankWhenNull="true">
-				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="285" y="0" width="96" height="17" uuid="cc2555ce-f2de-4826-af2a-718cdb0bcc02"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="369" y="0" width="96" height="17" uuid="cc2555ce-f2de-4826-af2a-718cdb0bcc02"/>
 				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -423,16 +473,16 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="0" y="1" width="1150" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="b3a7d4ef-0e22-47fa-9eff-5b0416c07901"/>
+				<reportElement mode="Opaque" x="0" y="1" width="860" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="b3a7d4ef-0e22-47fa-9eff-5b0416c07901"/>
 				<textField evaluationTime="Report">
-					<reportElement style="Column header" x="1105" y="2" width="40" height="20" forecolor="#736343" uuid="9850d206-00d1-42a2-94f0-b0652032880a"/>
+					<reportElement style="Column header" x="812" y="2" width="40" height="20" forecolor="#736343" uuid="9850d206-00d1-42a2-94f0-b0652032880a"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="Column header" x="1025" y="2" width="80" height="20" forecolor="#736343" uuid="764d780e-8341-4a3b-860b-600897048a39"/>
+					<reportElement style="Column header" x="732" y="2" width="80" height="20" forecolor="#736343" uuid="764d780e-8341-4a3b-860b-600897048a39"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
@@ -451,7 +501,7 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 	<summary>
 		<band height="24" splitType="Stretch">
 			<staticText>
-				<reportElement style="Column header" x="1" y="2" width="193" height="22" forecolor="#000000" uuid="48bdc9d2-cd67-4807-a166-e3c108ecfb7b"/>
+				<reportElement style="Column header" x="1" y="0" width="193" height="22" forecolor="#000000" uuid="48bdc9d2-cd67-4807-a166-e3c108ecfb7b"/>
 				<box>
 					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
 				</box>
@@ -461,7 +511,7 @@ ORDER BY vw_survey_513.survey_time ASC]]>
 				<text><![CDATA[Total number of households visited :]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="194" y="2" width="956" height="22" uuid="c12ff53d-79cb-47be-a6e8-b8971fff1ae1"/>
+				<reportElement style="Detail" x="194" y="0" width="114" height="22" uuid="c12ff53d-79cb-47be-a6e8-b8971fff1ae1"/>
 				<box>
 					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
 				</box>

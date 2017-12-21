@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_survey_514_village_summary" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d06842e4-7758-486e-973b-a02a8458184f">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_survey_514_village_summary" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d06842e4-7758-486e-973b-a02a8458184f">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -44,14 +44,43 @@
 			<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 		</parameter>
 		<queryString>
-			<![CDATA[select COUNT(household_number) from vw_surveys
-WHERE
-vw_surveys.village_id = '$P!{village_id}'
-AND vw_surveys.survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date]]>
+			<![CDATA[SELECT COUNT(DISTINCT survey_513_individual.survey_id) FROM survey_513_individual
+	 INNER JOIN vw_survey_513 ON survey_513_individual.survey_id = vw_survey_513.survey_id
+     WHERE vw_survey_513.village_id = '$P!{village_id}'
+         AND vw_survey_513.survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date
+
+]]>
 		</queryString>
 		<field name="count" class="java.lang.Long"/>
 	</subDataset>
 	<subDataset name="dataset1" uuid="f6b5ec27-79ec-4f7f-9a8e-593982093bb4"/>
+	<subDataset name="hhh_indicators" uuid="f108c7b6-a231-497f-81f5-c16497abcd0a">
+		<parameter name="village_id" class="java.lang.String">
+			<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="end_date" class="java.lang.String">
+			<defaultValueExpression><![CDATA["2015-09-30"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="start_date" class="java.lang.String">
+			<defaultValueExpression><![CDATA["2015-09-01"]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[(SELECT 2 AS m_order, vw_household_513.household_info_def_id,vw_household_513.question, vw_survey_513.village_name,
+ 	COUNT(vw_household_513.response_name) AS no_per_indicator
+FROM vw_household_513
+	 INNER JOIN vw_survey_513 ON vw_household_513.survey_id = vw_survey_513.survey_id
+	 WHERE vw_household_513.response = 1
+        AND vw_survey_513.village_id = '$P!{village_id}'
+         AND vw_survey_513.survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date
+       GROUP BY vw_household_513.question, vw_survey_513.village_name, vw_household_513.household_info_def_id
+       ORDER BY vw_household_513.household_info_def_id)]]>
+		</queryString>
+		<field name="m_order" class="java.lang.Integer"/>
+		<field name="household_info_def_id" class="java.lang.Integer"/>
+		<field name="question" class="java.lang.String"/>
+		<field name="village_name" class="java.lang.String"/>
+		<field name="no_per_indicator" class="java.lang.Long"/>
+	</subDataset>
 	<parameter name="filterid" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
@@ -80,34 +109,25 @@ AND vw_surveys.survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_d
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[(SELECT 1 AS m_order, vw_ref_513.question, vw_survey_513.village_name,
- 	COUNT(vw_ref_513.response_name) AS no_per_indicator, vw_survey_513.worker_name
+		<![CDATA[(SELECT 1 AS m_order,vw_ref_513.survey_513_def_id, vw_ref_513.question, vw_survey_513.village_name,
+ 	COUNT(vw_ref_513.response_name) AS no_per_indicator
 FROM vw_ref_513
 	 INNER JOIN vw_survey_513 ON vw_ref_513.survey_id = vw_survey_513.survey_id
-	 WHERE vw_ref_513.response = 1
-         AND vw_survey_513.village_id = '$P!{village_id}'
+	 WHERE vw_ref_513.response = 1  AND vw_survey_513.village_id = '$P!{village_id}'
          AND vw_survey_513.survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date
-       GROUP BY vw_ref_513.question, vw_survey_513.village_name, vw_survey_513.worker_name
-UNION
-SELECT 2 AS m_order, vw_household_513.question, vw_survey_513.village_name,
- 	COUNT(vw_household_513.response_name) AS no_per_indicator, vw_survey_513.worker_name
-FROM vw_household_513
-	 INNER JOIN vw_survey_513 ON vw_household_513.survey_id = vw_survey_513.survey_id
-	 WHERE vw_household_513.response = 1
-         AND vw_survey_513.village_id = '$P!{village_id}'
-         AND vw_survey_513.survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date
-       GROUP BY vw_household_513.question, vw_survey_513.village_name, vw_survey_513.worker_name)]]>
+       GROUP BY vw_ref_513.question, vw_survey_513.village_name,vw_ref_513.survey_513_def_id
+       ORDER BY vw_ref_513.survey_513_def_id)]]>
 	</queryString>
 	<field name="m_order" class="java.lang.Integer"/>
+	<field name="survey_513_def_id" class="java.lang.Integer"/>
 	<field name="question" class="java.lang.String"/>
 	<field name="village_name" class="java.lang.String"/>
 	<field name="no_per_indicator" class="java.lang.Long"/>
-	<field name="worker_name" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="207" splitType="Stretch">
+		<band height="212" splitType="Stretch">
 			<image>
 				<reportElement x="0" y="0" width="112" height="112" uuid="a872cdfb-94e9-4e98-b440-0a18dcef52cd"/>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "aphrc_uk_aid.png"]]></imageExpression>
@@ -193,7 +213,7 @@ FROM vw_household_513
 			<componentElement>
 				<reportElement key="table" style="table" x="229" y="187" width="180" height="15" uuid="80334182-1b24-4e62-bb8b-255bc124aa94"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="household_count" uuid="e0de8740-a7e9-4b2a-b5ec-395f2b1be104">
+					<datasetRun subDataset="household_count" uuid="7f4f9a38-bfaa-418b-a7bf-278de6036486">
 						<datasetParameter name="start_date">
 							<datasetParameterExpression><![CDATA[$P{start_date}]]></datasetParameterExpression>
 						</datasetParameter>
@@ -219,7 +239,7 @@ FROM vw_household_513
 				</jr:table>
 			</componentElement>
 			<staticText>
-				<reportElement style="Column header" x="28" y="187" width="201" height="15" forecolor="#000000" uuid="7210666b-1af4-455b-9082-1d068938fa70"/>
+				<reportElement style="Column header" x="28" y="190" width="201" height="15" forecolor="#000000" uuid="7210666b-1af4-455b-9082-1d068938fa70"/>
 				<box leftPadding="4">
 					<pen lineWidth="0.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
@@ -329,22 +349,19 @@ FROM vw_household_513
 			</textField>
 		</band>
 	</detail>
-	<columnFooter>
-		<band height="17" splitType="Stretch"/>
-	</columnFooter>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="-21" y="-1" width="597" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="f26371e2-d54e-4bf1-b050-d563e11207d1"/>
+				<reportElement mode="Opaque" x="0" y="-1" width="555" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="f26371e2-d54e-4bf1-b050-d563e11207d1"/>
 				<textField evaluationTime="Report">
-					<reportElement style="Column header" x="533" y="0" width="40" height="20" forecolor="#736343" uuid="f0aee7a9-1776-4ce9-b49b-6a821ecfc9c1"/>
+					<reportElement style="Column header" x="508" y="0" width="40" height="20" forecolor="#736343" uuid="f0aee7a9-1776-4ce9-b49b-6a821ecfc9c1"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="Column header" x="453" y="0" width="80" height="20" forecolor="#736343" uuid="a61aba68-91f4-43f5-99ef-ae009e10f703"/>
+					<reportElement style="Column header" x="428" y="0" width="80" height="20" forecolor="#736343" uuid="a61aba68-91f4-43f5-99ef-ae009e10f703"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
@@ -361,6 +378,69 @@ FROM vw_household_513
 		</band>
 	</pageFooter>
 	<summary>
-		<band splitType="Stretch"/>
+		<band height="44" splitType="Stretch">
+			<componentElement>
+				<reportElement key="table 1" style="Column header" x="0" y="15" width="555" height="24" uuid="f53f3220-df2a-4fb0-b4b7-7a896a42f19a"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
+					<datasetRun subDataset="hhh_indicators" uuid="7f64c7d4-8130-4f09-a0a1-95d664c0f218">
+						<datasetParameter name="village_id">
+							<datasetParameterExpression><![CDATA[$P{village_id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="start_date">
+							<datasetParameterExpression><![CDATA[$P{start_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="end_date">
+							<datasetParameterExpression><![CDATA[$P{end_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="39" uuid="27ec02a8-5330-46d4-bfa1-cd8614e6f4ba">
+						<jr:columnHeader height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="39" height="30" uuid="e095cceb-5afd-44f9-970d-c4bf383c1d53"/>
+								<textElement verticalAlignment="Middle"/>
+								<text><![CDATA[#]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="39" height="20" uuid="424cab95-c822-487f-afab-9847b8c897af"/>
+								<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="312" uuid="231dfcfd-d96a-43ad-8fc9-d6e697ddaeba">
+						<jr:columnHeader height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="312" height="30" uuid="97532e43-a8fa-4d13-b4a3-e5245a56ccf2"/>
+								<textElement verticalAlignment="Middle"/>
+								<text><![CDATA[Indicator]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="312" height="20" uuid="0af67b94-b543-4d47-bf9c-a3976fa868b8"/>
+								<textFieldExpression><![CDATA[$F{question}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="89e4f904-7a51-4ec5-beb3-f21039e11ac4">
+						<jr:columnHeader height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="738dd2a1-8b86-4d80-9c1e-8f74205af421"/>
+								<textElement verticalAlignment="Middle"/>
+								<text><![CDATA[No. Per Indicator]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="13664a46-baa8-43d2-a9a4-953347c4cf5a"/>
+								<textFieldExpression><![CDATA[$F{no_per_indicator}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
 	</summary>
 </jasperReport>

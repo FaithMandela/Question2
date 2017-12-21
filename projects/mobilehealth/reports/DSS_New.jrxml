@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DSS CHV Report" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2923a684-4940-484d-b121-df7b84902ddb">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DSS CHV Report" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2923a684-4940-484d-b121-df7b84902ddb">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="219"/>
+	<property name="ireport.y" value="202"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -110,7 +110,7 @@
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[DSS CHV Report]]></text>
+				<text><![CDATA[DSS (Mother) CHV Report]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="10" y="209" width="98" height="20" uuid="773879c5-9a4b-4238-8111-e894fea634f4"/>
@@ -178,7 +178,7 @@
 					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[Patient Status:]]></text>
+				<text><![CDATA[Client Status:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Transparent" x="307" y="163" width="100" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="ac21813d-8ccf-4444-bfe8-77bc01e9c8f1"/>
@@ -186,7 +186,7 @@
 					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<text><![CDATA[Patient Name :]]></text>
+				<text><![CDATA[Client Name :]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Transparent" x="307" y="185" width="101" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="b8397811-84cf-4e4b-87e1-c36ce1deefdd"/>
@@ -239,7 +239,7 @@
 				<reportElement style="table_TH" mode="Opaque" x="54" y="0" width="295" height="20" forecolor="#000000" backcolor="#CCCCCC" uuid="f5403e65-65b7-4599-82f0-eb630b8b8819"/>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
 					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
+					<paragraph lineSpacing="Single" leftIndent="7"/>
 				</textElement>
 				<text><![CDATA[Survey Questions]]></text>
 			</staticText>
@@ -247,7 +247,7 @@
 				<reportElement style="table_TH" mode="Opaque" x="349" y="0" width="192" height="20" forecolor="#000000" backcolor="#CCCCCC" uuid="c4db8506-fd5d-406b-9987-8ba3a7e11bf0"/>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
 					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
+					<paragraph lineSpacing="Single" leftIndent="7"/>
 				</textElement>
 				<text><![CDATA[Survey Responses]]></text>
 			</staticText>
@@ -263,15 +263,15 @@
 	</columnHeader>
 	<detail>
 		<band height="22" splitType="Stretch">
-			<textField pattern="" isBlankWhenNull="false">
-				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="56" y="0" width="264" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="6b200b06-b751-432b-8121-9118f6f11e38"/>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="56" y="0" width="281" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="6b200b06-b751-432b-8121-9118f6f11e38"/>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
 					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{question}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
 				<reportElement mode="Transparent" x="351" y="0" width="192" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="0f54a8ad-5b75-4eba-a495-66496febf5a0"/>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
 					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>

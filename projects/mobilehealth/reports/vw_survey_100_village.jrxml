@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_survey_100_village" language="groovy" pageWidth="1190" pageHeight="842" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="1150" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="dd1516cf-ed5b-4546-bd31-d29492bc1c50">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_survey_100_village" language="groovy" pageWidth="1115" pageHeight="842" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="1075" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="dd1516cf-ed5b-4546-bd31-d29492bc1c50">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -97,7 +97,7 @@ AND vw_survey_100.referral_time::date BETWEEN'$P!{start_date}'::date AND '$P!{en
 				<text><![CDATA[MINISTRY OF HEALTH - MOH:100]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="113" y="115" width="186" height="15" uuid="24a954b7-fc9e-4a0e-a8f4-a07c9b4deb39"/>
+				<reportElement style="Detail" x="117" y="115" width="186" height="15" uuid="24a954b7-fc9e-4a0e-a8f4-a07c9b4deb39"/>
 				<box leftPadding="5"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -113,7 +113,7 @@ AND vw_survey_100.referral_time::date BETWEEN'$P!{start_date}'::date AND '$P!{en
 				<text><![CDATA[Sub Location : ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="113" y="130" width="186" height="15" uuid="ef41ee1f-4841-4248-a199-03ff0e6fb902"/>
+				<reportElement style="Detail" x="117" y="130" width="186" height="15" uuid="ef41ee1f-4841-4248-a199-03ff0e6fb902"/>
 				<box leftPadding="5"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -129,15 +129,15 @@ AND vw_survey_100.referral_time::date BETWEEN'$P!{start_date}'::date AND '$P!{en
 				<text><![CDATA[Location : ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="13" y="130" width="100" height="15" forecolor="#000000" uuid="a9fee4b8-5027-43c6-bbb7-90de44553314"/>
+				<reportElement style="Column header" x="13" y="130" width="104" height="15" forecolor="#000000" uuid="a9fee4b8-5027-43c6-bbb7-90de44553314"/>
 				<box leftPadding="5"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Bold"/>
 				</textElement>
-				<text><![CDATA[Village / Estate : ]]></text>
+				<text><![CDATA[Community Unit : ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="113" y="100" width="186" height="15" uuid="831ad8e6-33c6-45e7-8c4c-02ad982cc14c"/>
+				<reportElement style="Detail" x="117" y="100" width="186" height="15" uuid="831ad8e6-33c6-45e7-8c4c-02ad982cc14c"/>
 				<box leftPadding="5"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -152,28 +152,28 @@ AND vw_survey_100.referral_time::date BETWEEN'$P!{start_date}'::date AND '$P!{en
 				<text><![CDATA[Village Summary]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="991" y="130" width="159" height="15" uuid="cb51eeea-7378-4518-ba3b-95b92146a3e9"/>
+				<reportElement style="Detail" x="889" y="130" width="159" height="15" uuid="cb51eeea-7378-4518-ba3b-95b92146a3e9"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{end_date}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="702" y="130" width="65" height="15" forecolor="#000000" uuid="36c7bb22-3b6c-410a-bed2-dbce37b764d0"/>
+				<reportElement style="Column header" x="600" y="130" width="65" height="15" forecolor="#000000" uuid="36c7bb22-3b6c-410a-bed2-dbce37b764d0"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Start Date : ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="926" y="130" width="65" height="15" forecolor="#000000" uuid="57430475-7bdc-45f2-9ef5-ba2f5fbe255c"/>
+				<reportElement style="Column header" x="824" y="130" width="65" height="15" forecolor="#000000" uuid="57430475-7bdc-45f2-9ef5-ba2f5fbe255c"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[End Date : ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="767" y="130" width="159" height="15" uuid="3c43094a-5dde-479c-bd5d-5d0d8135d778"/>
+				<reportElement style="Detail" x="665" y="130" width="159" height="15" uuid="3c43094a-5dde-479c-bd5d-5d0d8135d778"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
@@ -187,7 +187,7 @@ AND vw_survey_100.referral_time::date BETWEEN'$P!{start_date}'::date AND '$P!{en
 	<columnHeader>
 		<band height="50">
 			<staticText>
-				<reportElement style="Column header" mode="Opaque" x="1" y="0" width="1149" height="20" forecolor="#000000" backcolor="#CCCCCC" uuid="147310e4-15d6-410e-a89b-723594f17c6a"/>
+				<reportElement style="Column header" mode="Opaque" x="1" y="0" width="1069" height="20" forecolor="#000000" backcolor="#CCCCCC" uuid="147310e4-15d6-410e-a89b-723594f17c6a"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" isBold="true" isUnderline="false" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -363,21 +363,7 @@ AND vw_survey_100.referral_time::date BETWEEN'$P!{start_date}'::date AND '$P!{en
 				<text><![CDATA[CHV Mobile]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="873" y="20" width="80" height="30" forecolor="#000000" uuid="4460f756-9145-494c-b844-b88f2da5cce2"/>
-				<box topPadding="1" leftPadding="4">
-					<pen lineWidth="0.75" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<topPen lineWidth="0.75" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<leftPen lineWidth="0.75" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<bottomPen lineWidth="0.75" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<rightPen lineWidth="0.75" lineStyle="Dotted" lineColor="#BFBFBF"/>
-				</box>
-				<textElement>
-					<font fontName="Times New Roman" size="9" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Community Unit ]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="953" y="20" width="116" height="30" forecolor="#000000" uuid="dc8306f2-f4e5-42ce-96db-f8a0f8bdc270"/>
+				<reportElement style="Column header" x="873" y="20" width="116" height="30" forecolor="#000000" uuid="dc8306f2-f4e5-42ce-96db-f8a0f8bdc270"/>
 				<box topPadding="1" leftPadding="4">
 					<pen lineWidth="0.75" lineStyle="Dotted" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.75" lineStyle="Dotted" lineColor="#BFBFBF"/>
@@ -391,7 +377,7 @@ AND vw_survey_100.referral_time::date BETWEEN'$P!{start_date}'::date AND '$P!{en
 				<text><![CDATA[Receiving officer Name ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="1069" y="20" width="81" height="30" forecolor="#000000" uuid="f0ecdd94-d4a1-4ee1-82ae-a893b110599c"/>
+				<reportElement style="Column header" x="989" y="20" width="81" height="30" forecolor="#000000" uuid="f0ecdd94-d4a1-4ee1-82ae-a893b110599c"/>
 				<box topPadding="1" leftPadding="4">
 					<pen lineWidth="0.75" lineStyle="Dotted" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.75" lineStyle="Dotted" lineColor="#BFBFBF"/>
@@ -549,21 +535,7 @@ AND vw_survey_100.referral_time::date BETWEEN'$P!{start_date}'::date AND '$P!{en
 				<textFieldExpression><![CDATA[$F{comments}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="873" y="0" width="80" height="15" uuid="0a361f5d-6efb-45d2-98ad-a3ff4922d9b0"/>
-				<box topPadding="1" leftPadding="4">
-					<pen lineWidth="0.75" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<topPen lineWidth="0.75" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<leftPen lineWidth="0.75" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<bottomPen lineWidth="0.75" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<rightPen lineWidth="0.75" lineStyle="Dotted" lineColor="#BFBFBF"/>
-				</box>
-				<textElement>
-					<font fontName="Times New Roman" size="9" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{community_unit}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="953" y="0" width="116" height="15" uuid="aa84b7db-bd6a-4f85-923e-36720ae36d0d"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="873" y="0" width="116" height="15" uuid="aa84b7db-bd6a-4f85-923e-36720ae36d0d"/>
 				<box topPadding="1" leftPadding="4">
 					<pen lineWidth="0.75" lineStyle="Dotted" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.75" lineStyle="Dotted" lineColor="#BFBFBF"/>
@@ -577,7 +549,7 @@ AND vw_survey_100.referral_time::date BETWEEN'$P!{start_date}'::date AND '$P!{en
 				<textFieldExpression><![CDATA[$F{receiving_officer_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="1069" y="0" width="81" height="15" uuid="200edb98-670b-49d2-ad53-db18bf044aa3"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="989" y="0" width="81" height="15" uuid="200edb98-670b-49d2-ad53-db18bf044aa3"/>
 				<box topPadding="1" leftPadding="4">
 					<pen lineWidth="0.75" lineStyle="Dotted" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.75" lineStyle="Dotted" lineColor="#BFBFBF"/>
@@ -679,16 +651,16 @@ AND vw_survey_100.referral_time::date BETWEEN'$P!{start_date}'::date AND '$P!{en
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="0" y="1" width="1150" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="113249e0-7d4d-4357-b4c2-ef9ef39d8e1a"/>
+				<reportElement mode="Opaque" x="0" y="1" width="1070" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="113249e0-7d4d-4357-b4c2-ef9ef39d8e1a"/>
 				<textField evaluationTime="Report">
-					<reportElement style="Column header" x="1108" y="1" width="40" height="20" forecolor="#736343" uuid="51dc2405-285b-41e6-86c4-0e561a48ce6b"/>
+					<reportElement style="Column header" x="1025" y="1" width="40" height="20" forecolor="#736343" uuid="51dc2405-285b-41e6-86c4-0e561a48ce6b"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="Column header" x="1028" y="1" width="80" height="20" forecolor="#736343" uuid="d516ff53-a410-441d-bde1-2c12172c6f5b"/>
+					<reportElement style="Column header" x="945" y="1" width="80" height="20" forecolor="#736343" uuid="d516ff53-a410-441d-bde1-2c12172c6f5b"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>

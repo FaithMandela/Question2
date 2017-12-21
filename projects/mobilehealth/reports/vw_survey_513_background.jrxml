@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_survey_514_village_summary" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d06842e4-7758-486e-973b-a02a8458184f">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_survey_514_village_summary" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d06842e4-7758-486e-973b-a02a8458184f">
 	<property name="ireport.zoom" value="1.1000000000000003"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -44,14 +44,24 @@
 			<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 		</parameter>
 		<queryString>
-			<![CDATA[select COUNT(household_number) from vw_surveys
-WHERE
-vw_surveys.village_id = '$P!{village_id}'
-AND vw_surveys.survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date]]>
+			<![CDATA[SELECT COUNT(DISTINCT survey_513_individual.survey_id) FROM survey_513_individual
+	 INNER JOIN vw_survey_513 ON survey_513_individual.survey_id = vw_survey_513.survey_id
+     WHERE vw_survey_513.village_id = '$P!{village_id}'
+         AND vw_survey_513.survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date
+
+]]>
 		</queryString>
 		<field name="count" class="java.lang.Long"/>
 	</subDataset>
-	<subDataset name="dataset1" uuid="f6b5ec27-79ec-4f7f-9a8e-593982093bb4"/>
+	<subDataset name="dataset1" uuid="f6b5ec27-79ec-4f7f-9a8e-593982093bb4">
+		<queryString>
+			<![CDATA[SELECT COUNT(DISTINCT survey_513_individual.survey_id) FROM survey_513_individual
+	 INNER JOIN vw_survey_513 ON survey_513_individual.survey_id = vw_survey_513.survey_id
+     WHERE vw_survey_513.village_id = 56
+         AND vw_survey_513.survey_time::date BETWEEN'2017-01-01'::date AND '2017-12-31'::date]]>
+		</queryString>
+		<field name="count" class="java.lang.Long"/>
+	</subDataset>
 	<parameter name="filterid" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
@@ -80,11 +90,16 @@ AND vw_surveys.survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_d
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT survey_513_individual.survey_id, survey_513_individual.member_name, survey_513_individual.age_type, survey_513_individual.gender_type, survey_513_individual.age, vw_survey_513.village_name, vw_survey_513.household_id, vw_survey_513.mobile
+		<![CDATA[SELECT DISTINCT survey_513_individual.survey_id, survey_513_individual.member_name, survey_513_individual.age_type,
+survey_513_individual.gender_type, survey_513_individual.age, vw_survey_513.village_name, vw_survey_513.household_id,
+vw_survey_513.mobile,individual_hh_register_2017.individual_code,individual_hh_register_2017.relationship_to_hhh,
+individual_hh_register_2017.age_cohort, vw_survey_513.survey_time
 FROM survey_513_individual
 	 LEFT JOIN vw_survey_513 ON survey_513_individual.survey_id = vw_survey_513.survey_id
+	 LEFT JOIN individual_hh_register_2017 ON survey_513_individual.survey_id = individual_hh_register_2017.survey_id
      WHERE vw_survey_513.village_id = '$P!{village_id}'
-         AND vw_survey_513.survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date]]>
+         AND vw_survey_513.survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date
+ORDER BY survey_513_individual.survey_id ASC]]>
 	</queryString>
 	<field name="survey_id" class="java.lang.Integer"/>
 	<field name="member_name" class="java.lang.String"/>
@@ -94,6 +109,10 @@ FROM survey_513_individual
 	<field name="village_name" class="java.lang.String"/>
 	<field name="household_id" class="java.lang.String"/>
 	<field name="mobile" class="java.lang.String"/>
+	<field name="individual_code" class="java.lang.String"/>
+	<field name="relationship_to_hhh" class="java.lang.String"/>
+	<field name="age_cohort" class="java.lang.String"/>
+	<field name="survey_time" class="java.sql.Timestamp"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -182,9 +201,9 @@ FROM survey_513_individual
 				<text><![CDATA[End Date : ]]></text>
 			</staticText>
 			<componentElement>
-				<reportElement key="table" style="table" x="229" y="187" width="180" height="15" uuid="80334182-1b24-4e62-bb8b-255bc124aa94"/>
-				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="household_count" uuid="e0de8740-a7e9-4b2a-b5ec-395f2b1be104">
+				<reportElement key="table" style="table" x="229" y="185" width="180" height="15" uuid="80334182-1b24-4e62-bb8b-255bc124aa94"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
+					<datasetRun subDataset="household_count" uuid="4a298cf8-e588-40c3-af88-30bbec485ed4">
 						<datasetParameter name="start_date">
 							<datasetParameterExpression><![CDATA[$P{start_date}]]></datasetParameterExpression>
 						</datasetParameter>
@@ -232,12 +251,12 @@ FROM survey_513_individual
 		<band height="15" splitType="Stretch">
 			<staticText>
 				<reportElement style="Column header" x="1" y="0" width="27" height="15" forecolor="#000000" uuid="12a7d27d-26fb-43a2-8d20-52971236a5ed"/>
-				<box leftPadding="4">
-					<pen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<leftPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<rightPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman"/>
@@ -246,12 +265,12 @@ FROM survey_513_individual
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="286" y="0" width="60" height="15" forecolor="#000000" uuid="94ab1119-1ef0-48ff-8f9b-8e3676807182"/>
-				<box leftPadding="4">
-					<pen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<leftPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<rightPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman"/>
@@ -259,13 +278,13 @@ FROM survey_513_individual
 				<text><![CDATA[Gender Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="346" y="0" width="137" height="15" forecolor="#000000" uuid="cd9371c4-170e-464f-bfec-46c39136ae3c"/>
-				<box leftPadding="4">
-					<pen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<leftPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<rightPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
+				<reportElement style="Column header" x="346" y="0" width="118" height="15" forecolor="#000000" uuid="cd9371c4-170e-464f-bfec-46c39136ae3c"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman"/>
@@ -274,12 +293,12 @@ FROM survey_513_individual
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="28" y="0" width="110" height="15" forecolor="#000000" uuid="20fdadbb-6c83-479d-b7c8-c7b45e95cebc"/>
-				<box leftPadding="4">
-					<pen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<leftPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<rightPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman"/>
@@ -288,12 +307,12 @@ FROM survey_513_individual
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="138" y="0" width="70" height="15" forecolor="#000000" uuid="b98a3129-833e-47d7-862b-3497392987c1"/>
-				<box leftPadding="4">
-					<pen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<leftPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<rightPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman"/>
@@ -302,30 +321,75 @@ FROM survey_513_individual
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="208" y="0" width="78" height="15" forecolor="#000000" uuid="aa63fe26-7461-462f-ab09-babf8dc2520c"/>
-				<box leftPadding="4">
-					<pen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<leftPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<rightPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Mobile]]></text>
 			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="464" y="0" width="102" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="a1d245d8-580b-461b-853d-aa6b5ee1e5c4"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Individual Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="566" y="0" width="136" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="b5ad531d-19e2-421e-a20c-34b2114ab8fb"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Relationship To HH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="702" y="0" width="100" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="5ba4f3d0-23fc-4b0c-b52a-52d0989d4dc9"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Survey Time]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="17" splitType="Stretch">
+		<band height="16" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="1" y="0" width="27" height="16" uuid="f11117dd-07c2-45a4-b905-0ca7a47c1822"/>
-				<box leftPadding="4">
-					<pen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<leftPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<rightPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman"/>
@@ -334,12 +398,12 @@ FROM survey_513_individual
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="286" y="0" width="60" height="16" uuid="e3145318-8db5-4fa2-aa4f-a04612a63992"/>
-				<box leftPadding="4">
-					<pen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<leftPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<rightPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman"/>
@@ -347,13 +411,13 @@ FROM survey_513_individual
 				<textFieldExpression><![CDATA[$F{gender_type}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="346" y="0" width="137" height="16" uuid="cfb07ed8-d38d-407b-a80b-20710e4bc8ea"/>
-				<box leftPadding="4">
-					<pen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<leftPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<rightPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="346" y="0" width="118" height="16" uuid="cfb07ed8-d38d-407b-a80b-20710e4bc8ea"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman"/>
@@ -362,12 +426,12 @@ FROM survey_513_individual
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="28" y="0" width="110" height="16" uuid="e02e10ca-d08c-4b1b-a20d-ff9c75765ea3"/>
-				<box leftPadding="4">
-					<pen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<leftPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<rightPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman"/>
@@ -376,12 +440,12 @@ FROM survey_513_individual
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="138" y="0" width="70" height="16" uuid="dd0d7efa-a830-4b96-bdf1-30d12affcc6f"/>
-				<box leftPadding="4">
-					<pen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<leftPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<rightPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman"/>
@@ -390,33 +454,78 @@ FROM survey_513_individual
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="208" y="0" width="78" height="16" uuid="e4876a88-295d-4805-8fc8-6f74bbf70d7f"/>
-				<box leftPadding="4">
-					<pen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<leftPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
-					<rightPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{mobile}]]></textFieldExpression>
 			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="464" y="0" width="102" height="16" forecolor="#000000" backcolor="#FFFFFF" uuid="38553aad-0b66-4f63-b182-4e3f4335bd2d"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{individual_code}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="566" y="0" width="136" height="16" forecolor="#000000" backcolor="#FFFFFF" uuid="7cdbaa72-33e8-4f25-8fc6-104ba384d224"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{relationship_to_hhh}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="702" y="0" width="100" height="16" forecolor="#000000" backcolor="#FFFFFF" uuid="8ef307f7-09fe-4cbb-b8c9-93092ccc5739"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{survey_time}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="-21" y="-1" width="597" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="f26371e2-d54e-4bf1-b050-d563e11207d1"/>
+				<reportElement mode="Opaque" x="0" y="-1" width="802" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="f26371e2-d54e-4bf1-b050-d563e11207d1"/>
 				<textField evaluationTime="Report">
-					<reportElement style="Column header" x="533" y="0" width="40" height="20" forecolor="#736343" uuid="f0aee7a9-1776-4ce9-b49b-6a821ecfc9c1"/>
+					<reportElement style="Column header" x="742" y="0" width="40" height="20" forecolor="#736343" uuid="f0aee7a9-1776-4ce9-b49b-6a821ecfc9c1"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="Column header" x="453" y="0" width="80" height="20" forecolor="#736343" uuid="a61aba68-91f4-43f5-99ef-ae009e10f703"/>
+					<reportElement style="Column header" x="662" y="0" width="80" height="20" forecolor="#736343" uuid="a61aba68-91f4-43f5-99ef-ae009e10f703"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
