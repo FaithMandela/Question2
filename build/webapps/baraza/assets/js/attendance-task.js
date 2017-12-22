@@ -134,12 +134,13 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         oldBtnClass  = 'clock-in-btn';
 
                       
-                        btnClock.removeAttr("disabled");
+                        //btnClock.removeAttr("disabled");
                         btnLunch.removeAttr('disabled');//if clocked in activate lunch button
                         btnBreak.removeAttr('disabled');//if clocked in activate break button
                         btnClockIn.hide();//hide clocin in button
                         btnClockOut.show();//show clock out button
                         btnLunchOut.hide();//hide the lunchout button
+                        //btnBreakOut.hide();//hide break button
                     }
                     if(logInOut == 'OUT'){
                         btnMsg = "CLOCKING DONE";
@@ -176,6 +177,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         btnClockIn.hide();
                         btnLunch.hide();
                         btnLunchOut.show();
+                        //btnBreakOut.hide();//hide break button
                     }
                     if(logInOut == 'LUNCHOUT'){
                         btnMsg = "LUNCH DONE";

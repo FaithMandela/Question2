@@ -600,7 +600,7 @@
 				btnClockOut.show();//show clock out button
 				btnLunchOut.hide();//hide the lunchout button
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
-					btnClockStatus, btnaddClass, labeladdClass, "CLOCK OUT", "Clocked In Time :"+attendanceList[key].log_time);
+					btnClockStatus, btnaddClass, labeladdClass, "CLOCK OUT", "Clocked In :"+attendanceList[key].log_time);
 			}
 			//If the day is done disable the button
 			if(log_time_in != "" && log_time_out != ""){
@@ -614,7 +614,7 @@
 				btnLunchOut.attr('disabled','disabled');
 				btnBreakOut.attr('disabled','disabled');
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
-				btnClockStatus, btnaddClass, labeladdClass, "DONE CLOCKING", "Clocked Out Time :"+attendanceList[key].log_time_out);
+				btnClockStatus, btnaddClass, labeladdClass, "DONE CLOCKING", "Clocked Out :"+attendanceList[key].log_time_out);
 			}
 		}
 
@@ -635,7 +635,7 @@
                 btnLunchOut.show();
 
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
-				btnClockStatus, btnaddClass, labeladdClass, "LUNCH OUT", "Lunch Start Time:"+ attendanceList[key].log_time);
+				btnClockStatus, btnaddClass, labeladdClass, "LUNCH OUT", "Lunch Start :"+ attendanceList[key].log_time);
 			}
 			
 			if(log_time_in != "" && log_time_out != ""){
@@ -645,12 +645,12 @@
 
 
                 //hide the clock in and lunch in show lunch out
-                btnClockIn.hide();
+                btnClockOut.hide();
                 btnLunch.hide();
                 btnLunchOut.show();
 
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
-				btnClockStatus, btnaddClass, labeladdClass, "DONE LUNCH", "Lunch End Time:"+ attendanceList[key].log_time_out);
+				btnClockStatus, btnaddClass, labeladdClass, "DONE LUNCH", "Lunch End "+ attendanceList[key].log_time_out);
 			}
 		}
 
@@ -661,14 +661,14 @@
 			if(log_time_out == ""){
 				btnClock.removeAttr("disabled");
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
-				btnClockStatus, btnaddClass, labeladdClass, "BREAK OUT", "Break Start Time:"+attendanceList[key].log_time);
+				btnClockStatus, btnaddClass, labeladdClass, "BREAK OUT", "Break Start :"+attendanceList[key].log_time);
 
 			}
 
 			if(log_time_out != ""){
 				btnClock.addClass("disabled");
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
-				btnClockStatus, btnaddClass, labeladdClass, "DONE BREAK", "Break End Time:"+attendanceList[key].log_time_out);
+				btnClockStatus, btnaddClass, labeladdClass, "DONE BREAK", "Break End :"+attendanceList[key].log_time_out);
 			}
 
 		}
