@@ -570,7 +570,7 @@
 	var btnBreak = $(".break-btn");
 	var btnClockIn = $(".clock-in-btn");
 	var btnClockOut = $(".clock-out-btn");
-
+	//landing page when the array is null disable lunch and break buttons
 	if(attendanceList.length < 1){
 		btnLunch.attr('disabled','disabled');//if clocked in activate lunch button
 		btnBreak.attr('disabled','disabled');//if clocked in activate break button
@@ -589,17 +589,11 @@
 		if(log_type == 1){
 			 btnClock = $(".clock-in-btn");
 			 btnClockStatus = $(".clock-in-status-btn");
-	        //If default landing Page, disable lunch break buttons
-			if(log_time_in == "" && log_time_out == ""){
-				btnLunch.attr('disabled','disabled');
-				btnBreak.attr('disabled','disabled');
-				btnClockOut.hide();
-			}
-			//If clock in is set retain status
-			if(log_time_in == "" && log_time_out == ""){
+			//If clock in is set retain status activate break and lunch buttons
+			if(log_time_in != "" && log_time_out == ""){
 				btnClock.removeAttr("disabled");
-				btnLunch.attr('disabled','disabled');//if clocked in activate lunch button
-				btnBreak.attr('disabled','disabled');//if clocked in activate break button
+				btnLunch.removeAttr('disabled');//if clocked in activate lunch button
+				btnBreak.removeAttr('disabled');//if clocked in activate break button
 				btnClockIn.hide();//hide clocin in button
 				btnClockOut.show();//show clock out button
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
