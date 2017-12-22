@@ -10,6 +10,7 @@ var btnLunch = $(".lunch-break-btn");
 var btnBreak = $(".break-btn");
 var btnClockIn = $(".clock-in-btn");
 var btnClockOut = $(".clock-out-btn");
+const IN = 'IN';
 
 /**
  * Clock In Button JS
@@ -116,26 +117,29 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
             var btnMsg = 'Check Out';
             for(var data in result){
                 var log_type = result[data].log_type;
+                var log_in_out = result[data].log_in_out;
                  msg = '';
                 if(log_type == 1){
                     //btnMsg = "CLOCK OUT";
                     //outBtnNewClassName = 'clock-out-btn' ;
                     //oldBtnClass  = 'clock-in-btn';
                     //msg = 'Clocked In Time :'+result[data].log_time;
-                    if(logInOut == 'IN'){
+
+                    if(log_in_out == 'IN'){
                         btnMsg = "CLOCK OUT";
                         msg = 'Clocked In Time :'+result[data].log_time;
                         outBtnNewClassName = 'clock-out-btn' ;
                         oldBtnClass  = 'clock-in-btn';
 
-                        btnLunch.attr('disabled','disabled');//if clocked in activate lunch button
-                        btnBreak.attr('disabled','disabled');//if clocked in activate break button
-                        btnClockIn.show();//hide clocin in button
-                        btnClockOut.hide();//show clock out button
+                      
+                        btnLunch.removeAttr('disabled');//if clocked in activate lunch button
+                        btnBreak.removeAttr('disabled');//if clocked in activate break button
+                        btnClockIn.hide();//hide clockin in button
+                        btnClockOut.show();//show clock out button
                     }
-                    if(logInOut == 'OUT'){
+                    if(log_in_out == 'OUT'){
                         btnMsg = "CLOCKING DONE";
-                        msg = 'Clocked Out Time : 5:00pm';
+                        msg = 'Clocked Out Time : '+result[data].log_time;
                         outBtnNewClassName = 'clock-out-btn' ;
                         oldBtnClass  = 'clock-in-btn';
                     }
