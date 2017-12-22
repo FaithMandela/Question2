@@ -566,19 +566,28 @@
 	var timeSheet = <%=web.getDashboardItem("timeSheet")%>;
 
 	<%= web.getAccordionJs() %>
+	var btnLunch = $(".lunch-break-btn");
+	var btnBreak = $(".break-btn");
+	var btnClockIn = $(".clock-in-btn");
+	var btnClockOut = $(".clock-out-btn");
+
+	if(attendanceList.length < 1){
+		btnClock.removeAttr("disabled");
+		btnLunch.attr('disabled','disabled');//if clocked in activate lunch button
+		btnBreak.attr('disabled','disabled');//if clocked in activate break button
+		btnClockIn.hide();//hide clocin in button
+		btnClockOut.show();//show clock out button
+
+	}
 	for(var key in attendanceList){
 		var log_type = attendanceList[key].log_type;
 		var log_time_out = attendanceList[key].log_time_out;
 		var log_time_in = attendanceList[key].log_time;
-		var btnLunch = $(".lunch-break-btn");
-		var btnBreak = $(".break-btn");
-		var btnClockIn = $(".clock-in-btn");
-		var btnClockOut = $(".clock-out-btn");
 
 
 		if(log_type == 1){
-			var btnClock = $(".clock-in-btn");
-			var btnClockStatus = $(".clock-in-status-btn");
+			 btnClock = $(".clock-in-btn");
+			 btnClockStatus = $(".clock-in-status-btn");
 	        //If default landing Page, disable lunch break buttons
 			if(log_time_in == "" && log_time_out == ""){
 				btnLunch.attr('disabled','disabled');
@@ -586,7 +595,7 @@
 				btnClockOut.hide();
 			}
 			//If clock in is set retain status
-			if(attendanceList.length < 1){
+			if(log_time_in == "" && log_time_out == ""){
 				btnClock.removeAttr("disabled");
 				btnLunch.attr('disabled','disabled');//if clocked in activate lunch button
 				btnBreak.attr('disabled','disabled');//if clocked in activate break button
@@ -605,8 +614,8 @@
 
 
 		if(log_type == 4){
-			var btnClock = $(".lunch-break-btn");
-			var btnClockStatus = $(".lunch-break-status-btn");
+			 btnClock = $(".lunch-break-btn");
+			 btnClockStatus = $(".lunch-break-status-btn");
 
 			if(log_time_out == ""){
 				btnClock.removeAttr("disabled");
@@ -621,8 +630,8 @@
 		}
 
 		if(log_type == 7){
-			var btnClock = $(".break-btn");
-			var btnClockStatus = $(".break-status-btn");
+			 btnClock = $(".break-btn");
+			 btnClockStatus = $(".break-status-btn");
 
 			if(log_time_out == ""){
 				btnClock.removeAttr("disabled");
