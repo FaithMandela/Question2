@@ -51,7 +51,7 @@ btnLunch
         var btnClockStatus = $('.lunch-break-status-btn');
         var msg = 'Lunch End : 2:00pm ';
         btnClock.button('loading');
-        postAjax(btnClock, btnLunchOut, btnClockStatus, msg, '4', 'LUNCHOUT');
+        postAjax(btnClock, btnLunchOut, btnClockStatus, msg, '4', 'LUNCHIN');
     });
 
 /**
@@ -64,7 +64,7 @@ btnLunchOut
         var btnClockStatus = $('.lunch-break-status-btn');
         var msg = 'Lunch End : 2:00pm ';
         btnClock.button('loading');
-        postAjax(btnClock, btnLunchOut, btnClockStatus, msg, '4', 'LUNCHIN');
+        postAjax(btnClock, btnLunchOut, btnClockStatus, msg, '4', 'LUNCHOUT');
     });
 
 /**
@@ -116,7 +116,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
             $(".submit i").removeAttr('class').addClass("fa fa-refresh fa-spin fa-3x fa-fw  text-center").css({"color":"#fff",});
         },
         success : function(result) {
-            var btnMsg = 'Check Out';
+            var btnMsg = 'DONE';
             for(var data in result){
                 var log_type = result[data].log_type;
                 var log_in_out = result[data].log_in_out;
@@ -135,10 +135,8 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
 
                       
                         //btnClock.removeAttr("disabled");
-                        btnLunch.removeAttr('disabled');//if clocked in activate lunch button
-                        btnBreak.removeAttr('disabled');//if clocked in activate break button
-                        btnClockIn.hide();//hide clocin in button
-                        btnClockOut.show();//show clock out button
+                        btnLunch.removeAttr("disabled");//if clocked in activate lunch button
+                        btnBreak.removeAttr("disabled");//if clocked in activate break button
                         btnLunchOut.hide();//hide the lunchout button
                         //btnBreakOut.hide();//hide break button
                     }
@@ -196,12 +194,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         btnLunchOut.show();
                     }
                 }
-                //if(log_type == 4){
-                //    btnMsg = "LUNCH OUT";
-                //    msg = 'Lunch End :'+result[data].log_time;
-                //    outBtnNewClassName = 'lunch-break-out-btn';
-                //    oldBtnClass  = 'lunch-break-btn';
-                //}
+           
                 if(log_type == 7){
                     btnMsg = "BREAK OUT";
                     outBtnNewClassName = 'break-out-btn';
