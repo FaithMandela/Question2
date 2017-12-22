@@ -51,7 +51,7 @@ btnLunch
         var btnClockStatus = $('.lunch-break-status-btn');
         var msg = 'Lunch End : 2:00pm ';
         btnClock.button('loading');
-        postAjax(btnClock, btnClockStatus, msg, '4', 'LUNCHOUT');
+        postAjax(btnClock, btnLunchOut, btnClockStatus, msg, '4', 'LUNCHOUT');
     });
 
 /**
@@ -64,7 +64,7 @@ btnLunchOut
         var btnClockStatus = $('.lunch-break-status-btn');
         var msg = 'Lunch End : 2:00pm ';
         btnClock.button('loading');
-        postAjax(btnClock, btnClockStatus, msg, '4', 'LUNCHIN');
+        postAjax(btnClock, btnLunchOut, btnClockStatus, msg, '4', 'LUNCHIN');
     });
 
 /**
@@ -134,10 +134,12 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         oldBtnClass  = 'clock-in-btn';
 
                       
+                        btnClock.removeAttr("disabled");
                         btnLunch.removeAttr('disabled');//if clocked in activate lunch button
                         btnBreak.removeAttr('disabled');//if clocked in activate break button
-                        btnClockIn.hide();//hide clockin in button
+                        btnClockIn.hide();//hide clocin in button
                         btnClockOut.show();//show clock out button
+                        btnLunchOut.hide();//hide the lunchout button
                     }
                     if(logInOut == 'OUT'){
                         btnMsg = "CLOCKING DONE";

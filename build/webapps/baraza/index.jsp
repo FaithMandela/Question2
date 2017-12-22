@@ -567,6 +567,7 @@
 
 	<%= web.getAccordionJs() %>
 	var btnLunch = $(".lunch-break-btn");
+	var btnLunchOut = $(".lunch-break-out-btn");
 	var btnBreak = $(".break-btn");
 	var btnClockIn = $(".clock-in-btn");
 	var btnClockOut = $(".clock-out-btn");
@@ -576,6 +577,7 @@
 		btnBreak.attr('disabled','disabled');//if clocked in activate break button
 		btnClockIn.show();//hide clocin in button
 		btnClockOut.hide();//show clock out button
+		btnLunchOut.hide();//hide the lunchout button
 	}
 
 	console.log("Attendance size");
@@ -596,6 +598,7 @@
 				btnBreak.removeAttr('disabled');//if clocked in activate break button
 				btnClockIn.hide();//hide clocin in button
 				btnClockOut.show();//show clock out button
+				btnLunchOut.hide();//hide the lunchout button
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
 					btnClockStatus, btnaddClass, labeladdClass, "CLOCK OUT", "Clocked In Time :"+attendanceList[key].log_time);
 			}
@@ -630,6 +633,7 @@
                 btnClockIn.hide();
                 btnLunch.hide();
                 btnLunchOut.show();
+
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
 				btnClockStatus, btnaddClass, labeladdClass, "LUNCH OUT", "Lunch Start Time:"+ attendanceList[key].log_time);
 			}
@@ -644,6 +648,7 @@
                 btnClockIn.hide();
                 btnLunch.hide();
                 btnLunchOut.show();
+
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
 				btnClockStatus, btnaddClass, labeladdClass, "DONE LUNCH", "Lunch End Time:"+ attendanceList[key].log_time_out);
 			}
