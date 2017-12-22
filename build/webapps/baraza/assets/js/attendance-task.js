@@ -28,7 +28,7 @@ $('.clock-out-btn')
         var btnClockStatus = $('.clock-in-status-btn');
         var msg = 'Clocked In Time : 8:00am ';
         btnClock.button('loading');
-        postAjax(btnClock, btnClockStatus, msg, '1', 'DONE CLOCKING');
+        postAjax(btnClock, btnClockStatus, msg, '1', 'OUT');
     });
 
 
@@ -42,7 +42,7 @@ $('.lunch-break-btn')
         var btnClockStatus = $('.lunch-break-status-btn');
         var msg = 'Lunch End : 2:00pm ';
         btnClock.button('loading');
-        postAjax(btnClock, btnClockStatus, msg, '4', 'LUNCH OUT');
+        postAjax(btnClock, btnClockStatus, msg, '4', 'LUNCHOUT');
     });
 
 /**
@@ -55,7 +55,7 @@ $('.lunch-break-out-btn')
         var btnClockStatus = $('.lunch-break-status-btn');
         var msg = 'Lunch End : 2:00pm ';
         btnClock.button('loading');
-        postAjax(btnClock, btnClockStatus, msg, '4', 'DONE LUNCH');
+        postAjax(btnClock, btnClockStatus, msg, '4', 'LUNCHIN');
     });
 
 /**
@@ -67,7 +67,7 @@ $('.break-btn')
         var btnClockStatus = $('.break-status-btn');
         var msg = 'Break End : 4:30pm ';
         btnClock.button('loading');
-        postAjax(btnClock, btnClockStatus, msg, '7', 'BREAK OUT');
+        postAjax(btnClock, btnClockStatus, msg, '7', 'BREAKOUT');
     });
 
 /**
@@ -79,7 +79,7 @@ $('.break-out-btn')
         var btnClockStatus = $('.break-status-btn');
         var msg = 'Break End : 4:30pm ';
         btnClock.button('loading');
-        postAjax(btnClock, btnClockStatus, msg, '7', 'DONE BREAK');
+        postAjax(btnClock, btnClockStatus, msg, '7', 'BREAKIN');
     });
 
 /**

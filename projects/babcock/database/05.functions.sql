@@ -2121,7 +2121,9 @@ CREATE OR REPLACE FUNCTION open_registration(varchar(12), varchar(12), varchar(1
 DECLARE
 	mystr VARCHAR(120);
 BEGIN
-	UPDATE qstudents SET finalised = false, printed = false WHERE (qstudentid = $1::integer);
+	UPDATE qstudents SET finalised = false, printed = false, so_approval = false, majorapproval = false
+	WHERE (qstudentid = $1::integer);
+	
 	mystr := 'Registration opened';
 	RETURN mystr;
 END;

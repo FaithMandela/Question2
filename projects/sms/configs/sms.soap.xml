@@ -38,6 +38,13 @@
 			update="UPDATE sms SET folder_id = 2, sent = true WHERE sms_id = "
 			error="UPDATE sms SET number_error = true, sent = true WHERE sms_id = "></PROCESS>
 	</COMM>
+	
+	<COMM orgid="1"  dbclass="org.postgresql.Driver" dbpath="jdbc:postgresql://192.168.0.4:5432/fcm"
+		dbusername="postgres" dbpassword="Invent2k">
+		<PROCESS sql="SELECT sms_id, sms_number, message FROM sms" where="(sent = false)" 
+			update="UPDATE sms SET folder_id = 2, sent = true WHERE sms_id = "
+			error="UPDATE sms SET number_error = true, sent = true WHERE sms_id = "></PROCESS>
+	</COMM>
 
 </SOAPSMS>
 

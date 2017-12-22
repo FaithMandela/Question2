@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="admissions" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="453" leftMargin="28" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="81fb2e84-f44f-4fe0-bb90-6ab7f22b5286">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="77"/>
+	<property name="ireport.y" value="221"/>
 	<parameter name="filterid" class="java.lang.String"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
@@ -97,7 +97,7 @@ WHERE
 				<textFieldExpression><![CDATA["I am happy to inform you that you have been admitted into the " +"<b>"+" School of " + $F{schoolname} +"</b>"+ "  to pursue a "+"<b>" +$F{degreename}+"</b>" + " in " +"<b>"+ $F{majorname}+"</b>" + " subject to presentation of your original academic certificate for Verification on the day of registration.<br><p>You are expected to report to the University on " + $F{admission_date}+"." + " Kindly visit http://ueab.ac.ke/index/node/83 to access the fee structure. On the registration day you are required to pay the fees before you are registered.  All payments must be made in banker’s cheque or money order only payable to the University of Eastern Africa, Baraton." +"<br><p>You will be required to abide by the rules and regulations as stipulated in the Student Handbook and the correct Academic Bulletin."+"<p><br>Boarding facilities are available for interested students at a fee as stipulated in the free structure. Borders are advised to come with their own bedding: blankets, bed sheets, pillow and pillowcase and other personal items. A mattress may be purchased at the University Bookstore. Rental facilities are available outside the University for day students.<br></p>" + "<p>Interested students are advised to apply for HELB loans by 30th September 2016. To apply visit www.helb.co.ke for more information.</p>" + "<p>During the orientation week, you will be required to do a full medical checkup at the University Hospital at a cost of Ksh 2500 (Two thousand five hundred shillings only).</p>" +"<p>We look forward to seeing you here as a student and trust that you will find your studies enjoyable and fulfilling in a Christian environment.</p>" +"<p>Yours faithfully,</p>"]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="6" y="334" width="132" height="27" uuid="8ffaef93-103e-43e6-a36a-ea277df85d70"/>
+				<reportElement x="6" y="334" width="134" height="27" uuid="8ffaef93-103e-43e6-a36a-ea277df85d70"/>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "registrarsignature.png"]]></imageExpression>
 			</image>
 			<staticText>

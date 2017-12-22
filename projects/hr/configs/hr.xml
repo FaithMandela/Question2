@@ -2793,6 +2793,7 @@
 						<COMBOBOX w="100" title="Currency" lptable="currency" lpfield="currency_symbol">currency_id</COMBOBOX>
 						<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 						<TEXTFIELD w="150" title="Nature Of Expence">nature_of_expence</TEXTFIELD>
+						<TEXTFIELD w="120" title="Receipt Number">receipt_number</TEXTFIELD>
 						<TEXTDECIMAL w="100" title="Requested Amount" readonly="true">requested_amount</TEXTDECIMAL>
 						<TEXTDECIMAL w="100" title="Amount">amount</TEXTDECIMAL>
 						<TEXTFIELD w="75" title="Expense Code">expense_code</TEXTFIELD>

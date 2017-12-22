@@ -1,5 +1,4 @@
 		
-		
 CREATE OR REPLACE FUNCTION leave_aplication(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	v_leave_balance			real;
@@ -103,3 +102,4 @@ BEGIN
 	return msg;
 END;
 $$ LANGUAGE plpgsql;
+

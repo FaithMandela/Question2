@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="degree_comp_letter" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="581" leftMargin="7" rightMargin="7" topMargin="7" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" isFloatColumnFooter="true" whenResourceMissingType="Empty" uuid="51496e27-3492-4761-b5e2-d96941b5f404">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="105"/>
+	<property name="ireport.y" value="104"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -163,7 +163,7 @@ WHERE (completed = true) AND (studentdegreeid = '$P!{filterid}');]]>
 				<text><![CDATA[TO WHOM IT MAY CONCERN]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="52" y="174" width="505" height="28" uuid="ce63ed2b-2e9d-4d6c-b4a6-23e60c26ba65"/>
+				<reportElement x="52" y="174" width="507" height="28" uuid="ce63ed2b-2e9d-4d6c-b4a6-23e60c26ba65"/>
 				<textElement markup="html">
 					<font fontName="Times New Roman" size="12" isUnderline="false" pdfFontName="Times-Roman"/>
 				</textElement>

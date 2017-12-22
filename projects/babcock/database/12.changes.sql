@@ -228,3 +228,16 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+UPDATE qstudents SET printed = false, so_approval = false, majorapproval = false
+WHERE (quarterid = '2017/2018.1') AND (finalised = false) AND (so_approval = true);
+
+
+UPDATE qstudents SET printed = true, so_approval = true, majorapproval = true, approved = true
+WHERE (quarterid = '2017/2018.1') AND (finalised = true) AND (so_approval = true) AND (approved = false) AND (finaceapproval = true);
+
+
+
+
+
+

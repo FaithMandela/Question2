@@ -2,7 +2,7 @@
 
 CREATE SCHEMA logs;
 
-CREATE TABLE logs.log_employees (
+CREATE TABLE logs.lg_employees (
 	log_employee_id			serial primary key,
 	entity_id				integer,
 	department_role_id		integer,
@@ -72,7 +72,7 @@ CREATE TABLE logs.log_employees (
 	created					timestamp default current_timestamp not null
 );
 
-CREATE TABLE logs.log_employee_month (
+CREATE TABLE logs.lg_employee_month (
 	log_employee_month_id	serial primary key,
 	employee_month_id		integer,
 	entity_id				integer,
@@ -95,7 +95,7 @@ CREATE TABLE logs.log_employee_month (
 	created					timestamp default current_timestamp not null
 );
 
-CREATE TABLE logs.log_employee_tax_types (
+CREATE TABLE logs.lg_employee_tax_types (
 	log_employee_tax_type_id	serial primary key,
 	employee_tax_type_id	integer,
 	employee_month_id		integer,
@@ -113,7 +113,7 @@ CREATE TABLE logs.log_employee_tax_types (
 	created					timestamp default current_timestamp not null
 );
 
-CREATE TABLE logs.log_employee_advances (
+CREATE TABLE logs.lg_employee_advances (
 	log_employee_advance_id	serial primary key,
 	employee_advance_id		integer,
 	employee_month_id		integer,
@@ -140,7 +140,7 @@ CREATE TABLE logs.log_employee_advances (
 	created					timestamp default current_timestamp not null
 );
 
-CREATE TABLE logs.log_advance_deductions (
+CREATE TABLE logs.lg_advance_deductions (
 	log_advance_deduction_id	serial primary key,
 	advance_deduction_id	integer,
 	employee_month_id		integer,
@@ -154,7 +154,7 @@ CREATE TABLE logs.log_advance_deductions (
 	created					timestamp default current_timestamp not null
 );
 
-CREATE TABLE logs.log_employee_adjustments (
+CREATE TABLE logs.lg_employee_adjustments (
 	log_employee_adjustment_id	serial primary key,
 	employee_adjustment_id	integer,
 	employee_month_id		integer,
@@ -180,7 +180,7 @@ CREATE TABLE logs.log_employee_adjustments (
 	created					timestamp default current_timestamp not null
 );
 
-CREATE TABLE logs.log_employee_overtime (
+CREATE TABLE logs.lg_employee_overtime (
 	log_employee_overtime_id	serial primary key,
 	employee_overtime_id	integer,
 	employee_month_id		integer,
@@ -200,7 +200,7 @@ CREATE TABLE logs.log_employee_overtime (
 	created					timestamp default current_timestamp not null
 );
 
-CREATE TABLE logs.log_employee_per_diem (
+CREATE TABLE logs.lg_employee_per_diem (
 	log_employee_per_diem_id	serial primary key,
 	employee_per_diem_id	integer,
 	employee_month_id		integer,
@@ -226,7 +226,7 @@ CREATE TABLE logs.log_employee_per_diem (
 	created					timestamp default current_timestamp not null
 );
 
-CREATE TABLE logs.log_employee_banking (
+CREATE TABLE logs.lg_employee_banking (
 	log_employee_banking_id	serial primary key,
 	employee_banking_id		integer,
 	employee_month_id		integer,
@@ -252,7 +252,7 @@ CREATE TABLE logs.log_employee_banking (
 CREATE OR REPLACE FUNCTION log_employees() RETURNS trigger AS $$
 BEGIN
 
-	INSERT INTO logs.log_employees (entity_id, department_role_id, bank_branch_id, disability_id, 
+	INSERT INTO logs.lg_employees (entity_id, department_role_id, bank_branch_id, disability_id, 
 		employee_id, pay_scale_id, pay_scale_step_id, pay_group_id, location_id, 
 		currency_id, org_id, person_title, surname, first_name, middle_name, 
 		employee_full_name, employee_email, date_of_birth, dob_email, 
@@ -283,5 +283,146 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER log_employees AFTER UPDATE OR DELETE ON employees
 	FOR EACH ROW EXECUTE PROCEDURE log_employees();
+
+
+CREATE OR REPLACE FUNCTION log_employee_month() RETURNS trigger AS $$
+BEGIN
+	
+	INSERT INTO logs.lg_employee_month (employee_month_id, entity_id, period_id, bank_branch_id, pay_group_id, 
+		department_role_id, currency_id, org_id, exchange_rate, bank_account, 
+		basic_pay, hour_pay, worked_hours, part_time, details)
+	VALUES (OLD.employee_month_id, OLD.entity_id, OLD.period_id, OLD.bank_branch_id, OLD.pay_group_id,
+		OLD.department_role_id, OLD.currency_id, OLD.org_id, OLD.exchange_rate, OLD.bank_account,
+		OLD.basic_pay, OLD.hour_pay, OLD.worked_hours, OLD.part_time, OLD.details);
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER log_employee_month AFTER UPDATE OR DELETE ON employee_month
+	FOR EACH ROW EXECUTE PROCEDURE log_employee_month();
+
+	
+CREATE OR REPLACE FUNCTION log_employee_tax_types() RETURNS trigger AS $$
+BEGIN
+	
+	INSERT INTO logs.lg_employee_tax_types (employee_tax_type_id, employee_month_id, tax_type_id, org_id, 
+		tax_identification, in_tax, amount, additional, employer, exchange_rate, narrative)
+    VALUES (OLD.employee_tax_type_id, OLD.employee_month_id, OLD.tax_type_id, OLD.org_id,
+		OLD.tax_identification, OLD.in_tax, OLD.amount, OLD.additional, OLD.employer, OLD.exchange_rate, OLD.narrative);
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER log_employee_tax_types AFTER UPDATE OR DELETE ON employee_tax_types
+	FOR EACH ROW EXECUTE PROCEDURE log_employee_tax_types();
+
+CREATE OR REPLACE FUNCTION log_employee_advances() RETURNS trigger AS $$
+BEGIN
+	
+	INSERT INTO logs.lg_employee_advances (employee_advance_id, employee_month_id, currency_id, entity_id, 
+		org_id, pay_date, pay_upto, pay_period, amount, payment_amount, 
+		exchange_rate, in_payroll, completed, application_date, approve_status, 
+		workflow_table_id, action_date, narrative, details)
+    VALUES (OLD.employee_advance_id, OLD.employee_month_id, OLD.currency_id, OLD.entity_id,
+		OLD.org_id, OLD.pay_date, OLD.pay_upto, OLD.pay_period, OLD.amount, OLD.payment_amount,
+		OLD.exchange_rate, OLD.in_payroll, OLD.completed, OLD.application_date, OLD.approve_status,
+		OLD.workflow_table_id, OLD.action_date, OLD.narrative, OLD.details);
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER log_employee_advances AFTER UPDATE OR DELETE ON employee_advances
+	FOR EACH ROW EXECUTE PROCEDURE log_employee_advances();
+	
+CREATE OR REPLACE FUNCTION log_advance_deductions() RETURNS trigger AS $$
+BEGIN
+	
+	INSERT INTO logs.lg_advance_deductions (advance_deduction_id, employee_month_id, org_id, pay_date, amount, 
+		exchange_rate, in_payroll, narrative)
+	VALUES (OLD.advance_deduction_id, OLD.employee_month_id, OLD.org_id, OLD.pay_date, OLD.amount,
+		OLD.exchange_rate, OLD.in_payroll, OLD.narrative);
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER log_advance_deductions AFTER UPDATE OR DELETE ON advance_deductions
+	FOR EACH ROW EXECUTE PROCEDURE log_advance_deductions();
+
+CREATE OR REPLACE FUNCTION log_employee_adjustments() RETURNS trigger AS $$
+BEGIN
+	
+	INSERT INTO logs.lg_employee_adjustments (employee_adjustment_id, employee_month_id, adjustment_id, pension_id, 
+		org_id, adjustment_type, adjustment_factor, pay_date, amount, 
+		balance, paid_amount, exchange_rate, tax_reduction_amount, tax_relief_amount, 
+		in_payroll, in_tax, visible, narrative)
+	VALUES (OLD.employee_adjustment_id, OLD.employee_month_id, OLD.adjustment_id, OLD.pension_id,
+		OLD.org_id, OLD.adjustment_type, OLD.adjustment_factor, OLD.pay_date, OLD.amount,
+		OLD.balance, OLD.paid_amount, OLD.exchange_rate, OLD.tax_reduction_amount, OLD.tax_relief_amount,
+		OLD.in_payroll, OLD.in_tax, OLD.visible, OLD.narrative);
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER log_employee_adjustments AFTER UPDATE OR DELETE ON employee_adjustments
+	FOR EACH ROW EXECUTE PROCEDURE log_employee_adjustments();
+
+CREATE OR REPLACE FUNCTION log_employee_overtime() RETURNS trigger AS $$
+BEGIN
+	
+	INSERT INTO logs.lg_employee_overtime (employee_overtime_id, employee_month_id, entity_id, org_id, overtime_date, 
+		overtime, overtime_rate, auto_computed, application_date, approve_status, 
+		workflow_table_id, action_date, narrative, details)
+	VALUES (OLD.employee_overtime_id, OLD.employee_month_id, OLD.entity_id, OLD.org_id, OLD.overtime_date,
+		OLD.overtime, OLD.overtime_rate, OLD.auto_computed, OLD.application_date, OLD.approve_status,
+		OLD.workflow_table_id, OLD.action_date, OLD.narrative, OLD.details);
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER log_employee_overtime AFTER UPDATE OR DELETE ON employee_overtime
+	FOR EACH ROW EXECUTE PROCEDURE log_employee_overtime();
+
+CREATE OR REPLACE FUNCTION log_employee_per_diem() RETURNS trigger AS $$
+BEGIN
+	
+	INSERT INTO logs.log_employee_per_diem (employee_per_diem_id, employee_month_id, currency_id, org_id, 
+		travel_date, return_date, days_travelled, per_diem, cash_paid, 
+		tax_amount, full_amount, exchange_rate, travel_to, post_account, 
+		application_date, approve_status, workflow_table_id, action_date, 
+		completed, details)
+	VALUES (OLD.employee_per_diem_id, OLD.employee_month_id, OLD.currency_id, OLD.org_id,
+		OLD.travel_date, OLD.return_date, OLD.days_travelled, OLD.per_diem, OLD.cash_paid,
+		OLD.tax_amount, OLD.full_amount, OLD.exchange_rate, OLD.travel_to, OLD.post_account,
+		OLD.application_date, OLD.approve_status, OLD.workflow_table_id, OLD.action_date,
+		OLD.completed, OLD.details);
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER log_employee_per_diem AFTER UPDATE OR DELETE ON employee_per_diem
+	FOR EACH ROW EXECUTE PROCEDURE log_employee_per_diem();
+	
+CREATE OR REPLACE FUNCTION log_employee_banking() RETURNS trigger AS $$
+BEGIN
+	
+	INSERT INTO logs.log_employee_banking (employee_banking_id, employee_month_id, bank_branch_id, currency_id, 
+		org_id, amount, exchange_rate, cheque, bank_account, narrative)
+	VALUES (OLD.employee_banking_id, OLD.employee_month_id, OLD.bank_branch_id, OLD.currency_id,
+		OLD.org_id, OLD.amount, OLD.exchange_rate, OLD.cheque, OLD.bank_account, OLD.narrative);
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER log_employee_banking AFTER UPDATE OR DELETE ON employee_banking
+	FOR EACH ROW EXECUTE PROCEDURE log_employee_banking();
+
 
 
