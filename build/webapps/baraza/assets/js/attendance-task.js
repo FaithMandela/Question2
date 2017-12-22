@@ -6,11 +6,15 @@ var btnaddClassWarning = 'btn-warning';
 var labelrmvClass = 'label-primary';
 var labeladdClass = 'label-success';
 var labeladdClassError = 'label-danger';
+var btnLunch = $(".lunch-break-btn");
+var btnBreak = $(".break-btn");
+var btnClockIn = $(".clock-in-btn");
+var btnClockOut = $(".clock-out-btn");
 
 /**
  * Clock In Button JS
  **/
-$('.clock-in-btn')
+btnClockIn
     .click(function () {
         var btnClock = $(this);
         var unHideBtnClock = $('.clock-out-btn');
@@ -23,7 +27,7 @@ $('.clock-in-btn')
 /**
  * Clock Out Button JS
  **/
-$('.clock-out-btn')
+btnClockOut
     .click(function () {
         var btnClock = $(this);
         var unHideBtnClock = $('.clock-out-btn');
@@ -38,7 +42,7 @@ $('.clock-out-btn')
  *
  * Lunch Break Button JS
  **/
-$('.lunch-break-btn')
+btnLunch
     .click(function () {
         var btnClock = $(this);
         var btnClockStatus = $('.lunch-break-status-btn');
@@ -63,7 +67,7 @@ $('.lunch-break-out-btn')
 /**
  * Evening Break Button JS
  **/
-$('.break-btn')
+btnBreak
     .click(function () {
         var btnClock = $(this);
         var btnClockStatus = $('.break-status-btn');
@@ -112,7 +116,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
             var btnMsg = 'Check Out';
             for(var data in result){
                 var log_type = result[data].log_type;
-                var msg = '';
+                 msg = '';
                 if(log_type == 1){
                     //btnMsg = "CLOCK OUT";
                     //outBtnNewClassName = 'clock-out-btn' ;
@@ -123,6 +127,11 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         msg = 'Clocked In Time :'+result[data].log_time;
                         outBtnNewClassName = 'clock-out-btn' ;
                         oldBtnClass  = 'clock-in-btn';
+
+                        btnLunch.attr('disabled','disabled');//if clocked in activate lunch button
+                        btnBreak.attr('disabled','disabled');//if clocked in activate break button
+                        btnClockIn.show();//hide clocin in button
+                        btnClockOut.hide();//show clock out button
                     }
                     if(logInOut == 'OUT'){
                         btnMsg = "CLOCKING DONE";
