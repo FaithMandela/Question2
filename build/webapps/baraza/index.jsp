@@ -586,10 +586,10 @@
 				btnClockOut.hide();
 			}
 			//If clock in is set retain status
-			if(attendanceList.length == 0){
+			if(attendanceList.length < 1){
 				btnClock.removeAttr("disabled");
-				btnLunch.removeAttr('disabled');//if clocked in activate lunch button
-				btnBreak.removeAttr('disabled');//if clocked in activate break button
+				btnLunch.attr('disabled','disabled');//if clocked in activate lunch button
+				btnBreak.attr('disabled','disabled');//if clocked in activate break button
 				btnClockIn.hide();//hide clocin in button
 				btnClockOut.show();//show clock out button
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
