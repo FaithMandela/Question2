@@ -76,7 +76,7 @@ btnBreak
         var btnClockStatus = $('.break-status-btn');
         var msg = 'Break End : 4:30pm ';
         btnClock.button('loading');
-        postAjax(btnClock, btnClockStatus, msg, '7', 'BREAKOUT');
+        postAjax(btnClock, btnBreakOut, btnClockStatus, msg, '7', 'BREAKOUT');
     });
 
 /**
@@ -88,7 +88,7 @@ btnBreakOut
         var btnClockStatus = $('.break-status-btn');
         var msg = 'Break End : 4:30pm ';
         btnClock.button('loading');
-        postAjax(btnClock, btnClockStatus, msg, '7', 'BREAKIN');
+        postAjax(btnClock, btnBreakOut, btnClockStatus, msg, '7', 'BREAKIN');
     });
 
 /**
