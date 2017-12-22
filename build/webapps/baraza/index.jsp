@@ -573,6 +573,7 @@
 		var btnLunch = $(".lunch-break-btn");
 		var btnBreak = $(".break-btn");
 		var btnClockIn = $(".clock-in-btn");
+		var btnClockOut = $(".clock-out-btn");
 
 
 		if(log_type == 1){
@@ -582,12 +583,15 @@
 			if(log_time_in == "" && log_time_out == ""){
 				btnLunch.attr('disabled','disabled');
 				btnBreak.attr('disabled','disabled');
+				btnClockOut.hide();
 			}
 			//If clock in is set retain status
 			if(log_time_in != "" && log_time_out == ""){
 				btnClock.removeAttr("disabled");
-				btnLunch.attr('disabled','disabled');
-				btnBreak.attr('disabled','disabled');
+				btnLunch.removeAttr('disabled');//if clocked in activate lunch button
+				btnBreak.removeAttr('disabled');//if clocked in activate break button
+				btnClockIn.hide();//hide clocin in button
+				btnClockOut.show();//show clock out button
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
 					btnClockStatus, btnaddClass, labeladdClass, "CLOCK OUT", "Clocked In Time :"+attendanceList[key].log_time);
 			}

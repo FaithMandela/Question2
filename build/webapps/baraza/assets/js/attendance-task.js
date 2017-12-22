@@ -13,10 +13,11 @@ var labeladdClassError = 'label-danger';
 $('.clock-in-btn')
     .click(function () {
         var btnClock = $(this);
+        var unHideBtnClock = $('.clock-out-btn');
         var btnClockStatus = $('.clock-in-status-btn');
         var msg = 'Clocked In Time : 8:00am ';
         btnClock.button('loading');
-        postAjax(btnClock, btnClockStatus, msg, '1', 'IN');
+        postAjax(btnClock, unHideBtnClock, btnClockStatus, msg, '1', 'IN');
     });
 
 /**
@@ -25,10 +26,11 @@ $('.clock-in-btn')
 $('.clock-out-btn')
     .click(function () {
         var btnClock = $(this);
+        var unHideBtnClock = $('.clock-out-btn');
         var btnClockStatus = $('.clock-in-status-btn');
         var msg = 'Clocked In Time : 8:00am ';
         btnClock.button('loading');
-        postAjax(btnClock, btnClockStatus, msg, '1', 'OUT');
+        postAjax(btnClock, unHideBtnClock, btnClockStatus, msg, '1', 'OUT');
     });
 
 
@@ -88,7 +90,7 @@ $('.break-out-btn')
  * @param btnStatusCss
  * @param msg
  */
-function postAjax(btnEnrtryCss, btnStatusCss, msg, logType, logInOut){
+function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut){
     var btnClock  = $(btnEnrtryCss);
     var btnClockStatus = $(btnStatusCss);
     var oldBtnClass = '';
@@ -112,10 +114,22 @@ function postAjax(btnEnrtryCss, btnStatusCss, msg, logType, logInOut){
                 var log_type = result[data].log_type;
                 var msg = '';
                 if(log_type == 1){
-                    btnMsg = "CLOCK OUT";
-                    outBtnNewClassName = 'clock-out-btn' ;
-                    oldBtnClass  = 'clock-in-btn';
-                    msg = 'Clocked In Time :'+result[data].log_time;
+                    //btnMsg = "CLOCK OUT";
+                    //outBtnNewClassName = 'clock-out-btn' ;
+                    //oldBtnClass  = 'clock-in-btn';
+                    //msg = 'Clocked In Time :'+result[data].log_time;
+                    if(logInOut == 'IN'){
+                        btnMsg = "CLOCK OUT";
+                        msg = 'Clocked In Time :'+result[data].log_time;
+                        outBtnNewClassName = 'clock-out-btn' ;
+                        oldBtnClass  = 'clock-in-btn';
+                    }
+                    if(logInOut == 'OUT'){
+                        btnMsg = "CLOCKING DONE";
+                        msg = 'Clocked Out Time : 5:00pm';
+                        outBtnNewClassName = 'clock-out-btn' ;
+                        oldBtnClass  = 'clock-in-btn';
+                    }
                 }
                 if(log_type == 4){
                     btnMsg = "LUNCH OUT";
@@ -131,9 +145,11 @@ function postAjax(btnEnrtryCss, btnStatusCss, msg, logType, logInOut){
                 }
 
             }
+            buttonVisible(btnClock,unHideBtn,  btnClockStatus, labelrmvClass, btnStatusCss, labeladdClass, msg);
+            changeBtnMsg(btnClock, btnMsg);
 
-            colorChange(btnClock, btnClockStatus, oldBtnClass, btnrmvClass, labelrmvClass,
-                btnStatusCss, btnaddClass, labeladdClass, btnMsg, msg, outBtnNewClassName);
+            //colorChange(btnClock, btnClockStatus, oldBtnClass, btnrmvClass, labelrmvClass,
+            //    btnStatusCss, btnaddClass, labeladdClass, btnMsg, msg, outBtnNewClassName);
 
         },
         error: function(xhr, resp, text) {
@@ -144,6 +160,34 @@ function postAjax(btnEnrtryCss, btnStatusCss, msg, logType, logInOut){
         }
 
     });
+}
+/**
+ *
+ * @param hidebtnClock
+ * @param unhidebtnClock
+ * @param btnClockStatus
+ * @param labelrmvClass
+ * @param btnStatusCss
+ * @param labeladdClass
+ * @param labelMsg
+ */
+function buttonVisible(hidebtnClock, unhidebtnClock, btnClockStatus, labelrmvClass, btnStatusCss,
+                       labeladdClass, labelMsg){
+    hidebtnClock.hide();
+    unhidebtnClock.show();
+
+    btnClockStatus.removeClass('label '+ labelrmvClass +' '+ btnStatusCss);
+    btnClockStatus.addClass('label '+ labeladdClass +' '+ btnStatusCss);
+    btnClockStatus.html(labelMsg);
+}
+/**
+ *
+ * @param btnClass
+ * @param btnMsg
+ */
+function changeBtnMsg(btnClass, btnMsg){
+    btnClass.html(btnMsg);
+    btnClass.attr('disabled','disabled');
 }
 /**
  * Javascript handle Color Transformations

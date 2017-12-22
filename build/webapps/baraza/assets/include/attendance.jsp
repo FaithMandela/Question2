@@ -13,6 +13,7 @@
 				<button type="button" data-loading-text="Updating..." class="clock-in-btn btn-block btn-sm btn-primary">
 				CLOCK IN
 				</button>
+				<button type="button" data-loading-text="Updating..." class="clock-out-btn btn-success btn-block btn-sm">CLOCK OUT</button>
 				</div>
 				<div class="col-md-6 col-xs-6 margin-top-5" >
 				<span class="label label-primary clock-in-status-btn" style="width:100%;padding: 2px 21px 4px 21px;">Current Time : 8:00am </span>
