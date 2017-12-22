@@ -586,7 +586,7 @@
 				btnClockOut.hide();
 			}
 			//If clock in is set retain status
-			if(log_time_in != "" && log_time_out == ""){
+			if(attendanceList.length == 0){
 				btnClock.removeAttr("disabled");
 				btnLunch.removeAttr('disabled');//if clocked in activate lunch button
 				btnBreak.removeAttr('disabled');//if clocked in activate break button
