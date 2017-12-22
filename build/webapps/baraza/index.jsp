@@ -627,8 +627,8 @@
 			//if lunch has started, disable clock out and break start button
 			if(log_time_in != "" && log_time_out == ""){
                 //disable break in/out and disable clock out
-                btnClockOut.attr('disabled','disabled');
-                btnBreak.attr('disabled','disabled');
+                <%--btnClockOut.attr('disabled','disabled');--%>
+                <%--btnBreak.attr('disabled','disabled');--%>
 
 
                 //hide the clock in and lunch in show lunch out
