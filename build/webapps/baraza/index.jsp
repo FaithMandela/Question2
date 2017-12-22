@@ -572,13 +572,14 @@
 	var btnClockOut = $(".clock-out-btn");
 
 	if(attendanceList.length < 1){
-		btnClock.removeAttr("disabled");
 		btnLunch.attr('disabled','disabled');//if clocked in activate lunch button
 		btnBreak.attr('disabled','disabled');//if clocked in activate break button
 		btnClockIn.hide();//hide clocin in button
 		btnClockOut.show();//show clock out button
-
 	}
+
+	console.log("Attendance size");
+
 	for(var key in attendanceList){
 		var log_type = attendanceList[key].log_type;
 		var log_time_out = attendanceList[key].log_time_out;
