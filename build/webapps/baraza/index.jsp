@@ -599,9 +599,17 @@
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
 					btnClockStatus, btnaddClass, labeladdClass, "CLOCK OUT", "Clocked In Time :"+attendanceList[key].log_time);
 			}
-			//If all details are filled disable the button
+			//If the day is done disable the button
 			if(log_time_in != "" && log_time_out != ""){
-				btnClock.attr('disabled','disabled');
+				//hide all in buttons
+				btnClockIn.hide();
+				btnLunch.hide();
+				btnBreak.hide();
+
+				//disable all clockout buttons
+				btnClockOut.attr('disabled','disabled');
+				btnLunchOut.attr('disabled','disabled');
+				btnBreakOut.attr('disabled','disabled');
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
 				btnClockStatus, btnaddClass, labeladdClass, "DONE CLOCKING", "Clocked Out Time :"+attendanceList[key].log_time_out);
 			}
@@ -611,7 +619,15 @@
 		if(log_type == 4){
 			 btnClock = $(".lunch-break-btn");
 			 btnClockStatus = $(".lunch-break-status-btn");
-
+			//if lunch has started, disable clock out and break start button
+			if(log_time_in != "" && log_time_out == ""){
+				btnClock.attr('disabled', 'disabled');//disable clock out button
+				btnBreak.attr('disabled', 'disabled');//disable break out button
+				btnLunch.hide();//hide lunch in button
+				btnLunchOut.show();//show lunch out button
+				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
+				btnClockStatus, btnaddClass, labeladdClass, "LUNCH OUT", "Lunch Start Time:"+ attendanceList[key].log_time);
+			}
 			if(log_time_out == ""){
 				btnClock.removeAttr("disabled");
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
