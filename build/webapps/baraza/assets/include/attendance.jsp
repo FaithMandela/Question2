@@ -39,6 +39,9 @@
 				<button type="button" data-loading-text="Updating..." class="break-btn btn-block btn-sm btn-primary">
 				BREAK
 				</button>
+				<button type="button" data-loading-text="Updating..." class="break-out-btn btn-block btn-sm btn-success">
+				BREAK OUT
+				</button>
 				</div>
 				<div class="col-md-6 col-xs-6 margin-top-5">
 				<span class="label label-primary break-status-btn" style="width:100%;padding: 2px 21px 4px 21px;">Break Time : 4:00pm </span>

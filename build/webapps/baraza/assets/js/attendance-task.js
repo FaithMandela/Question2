@@ -194,12 +194,22 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         btnLunchOut.show();
                     }
                 }
-           
+
                 if(log_type == 7){
-                    btnMsg = "BREAK OUT";
-                    outBtnNewClassName = 'break-out-btn';
-                    oldBtnClass  = 'break-btn';
-                    msg = 'Break End :'+result[data].log_time;
+                    if(logInOut == 'BREAKIN'){
+                        btnMsg = "BREAK OUT";
+                        outBtnNewClassName = 'break-out-btn';
+                        oldBtnClass  = 'break-btn';
+                        msg = 'Break Start :'+result[data].log_time;
+
+                    }
+                    if(logInOut == 'BREAKOUT'){
+                        btnMsg = "BREAK DONE";
+                        outBtnNewClassName = 'break-out-btn';
+                        oldBtnClass  = 'break-btn';
+                        msg = 'Break End :'+result[data].log_time;
+
+                    }
                 }
 
             }
