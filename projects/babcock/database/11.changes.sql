@@ -127,3 +127,9 @@ BEGIN
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+
+UPDATE qstudents SET Picked = false
+WHERE quarterid = '2017/2018.1' and sublevelid = 'UGPM' and finaceapproval = true and Picked = true;
+
+
