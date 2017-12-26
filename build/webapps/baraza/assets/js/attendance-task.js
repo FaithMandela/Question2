@@ -22,7 +22,7 @@ btnClockIn
         var btnClock = $(this);
         var unHideBtnClock = $('.clock-out-btn');
         var btnClockStatus = $('.clock-in-status-btn');
-        var msg = 'Clocked In Time : 8:00am ';
+        var msg = 'Clocked In : 8:00am ';
         btnClock.button('loading');
         postAjax(btnClock, unHideBtnClock, btnClockStatus, msg, '1', 'IN');
     });
@@ -129,7 +129,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
 
                     if(logInOut == 'IN'){
                         btnMsg = "CLOCK OUT";
-                        msg = 'Clocked In Time :'+result[data].log_time;
+                        msg = 'Clocked In :'+result[data].log_time;
                         outBtnNewClassName = 'clock-out-btn' ;
                         oldBtnClass  = 'clock-in-btn';
 
@@ -142,7 +142,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                     }
                     if(logInOut == 'OUT'){
                         btnMsg = "CLOCKING DONE";
-                        msg = 'Clocked Out Time : '+result[data].log_time;
+                        msg = 'Clocked Out : '+result[data].log_time;
                         outBtnNewClassName = 'clock-out-btn' ;
                         oldBtnClass  = 'clock-in-btn';
 
