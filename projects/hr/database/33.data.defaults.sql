@@ -49,13 +49,14 @@ FROM skill_levels
 WHERE org_id = 0
 ORDER BY skill_level_id;
 
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_name, visible, in_tax, account_number) VALUES (1, 41, 'Sitting Allowance', true, true, '90005');
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (1, 42, 'Bonus', true, true, '90005');
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (2, 43, 'External Loan', true, false, '40055');
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (2, 44, 'Home Ownership saving plan', true, false, '40055');
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (2, 45, 'Staff contribution', true, false, '40055');
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 46, 'Travel', true, false, '90070');
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 47, 'Communcation', true, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_effect_id, adjustment_id, adjustment_name, visible, in_tax, account_number) VALUES 
+(1, 1, 41, 'Sitting Allowance', true, true, '90005'),
+(1, 1, 42, 'Bonus', true, true, '90005'),
+(2, 2, 43, 'External Loan', true, false, '40055'),
+(2, 2, 44, 'Home Ownership saving plan', true, false, '40055'),
+(2, 2, 45, 'Staff contribution', true, false, '40055'),
+(3, 3, 46, 'Travel', true, false, '90070'),
+(3, 3, 47, 'Communcation', true, false, '90070');
 UPDATE adjustments SET org_id = 1, currency_id = 5 WHERE org_id is null;
 SELECT pg_catalog.setval('adjustments_adjustment_id_seq', 50, true);
 

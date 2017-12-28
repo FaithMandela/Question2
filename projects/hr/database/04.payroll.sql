@@ -1442,6 +1442,11 @@ BEGIN
 		v_income := getAdjustment(v_employee_month_id, 2) / v_exchange_rate;
 		v_tax := get_tax(v_income, v_period_tax_type_id, 1) - getAdjustment(v_employee_month_id, 4, 25) / v_exchange_rate;
 		
+	ELSIF ($2 = 7) THEN	---- for Nigeria
+		v_tax_relief := getAdjustment(v_employee_month_id, 1) / v_exchange_rate;
+		v_tax_relief := 16666.67 +  (v_tax_relief * 0.2);
+		v_income := getAdjustment(v_employee_month_id, 2) / v_exchange_rate;
+		v_tax := get_tax(v_income, v_period_tax_type_id, 1) - v_tax_relief;
 	ELSE
 		v_tax := 0;
 	END IF;
@@ -2088,4 +2093,17 @@ BEGIN
 	return msg;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION ytd_gross_salary(integer, integer, integer) RETURNS real AS $$
+	SELECT sum(gross_salary)
+	FROM vw_employee_month
+	WHERE (entity_id = $1) AND (fiscal_year_id = $2) AND (period_id <= $3);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION ytd_net_pay(integer, integer, integer) RETURNS real AS $$
+	SELECT sum(net_pay)
+	FROM vw_employee_month
+	WHERE (entity_id = $1) AND (fiscal_year_id = $2) AND (period_id <= $3);
+$$ LANGUAGE SQL;
 
