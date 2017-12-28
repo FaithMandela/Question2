@@ -469,6 +469,7 @@ DECLARE
 	v_org_id				integer;
 	v_access_log_id			integer;
 	v_in					integer;
+	v_attendance_id			integer;
 	msg		 				varchar(120);
 BEGIN
 
@@ -489,6 +490,20 @@ BEGIN
 	IF((v_access_log_id is not null) AND (v_in = 0))THEN
 		UPDATE access_logs SET log_time_out = current_timestamp
 		WHERE access_log_id = v_access_log_id;
+		IF($3 = 'IN')THEN
+			SELECT attendance_id INTO v_attendance_id
+			FROM attendance
+			WHERE (entity_id = $1) AND (attendance_date = );
+			
+			INSERT INTO attendance (
+	attendance_id			serial primary key,
+	entity_id				integer references entitys,
+	shift_id				integer references shifts,
+	org_id					integer references orgs,
+	attendance_date			date not null,
+	time_in					time not null,
+	time_out
+		END IF;
 	END IF;
 
 	msg := 'ok';

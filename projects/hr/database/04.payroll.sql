@@ -2096,13 +2096,13 @@ $$ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION ytd_gross_salary(integer, integer, integer) RETURNS real AS $$
-	SELECT sum(gross_salary)
+	SELECT sum(gross_salary)::real
 	FROM vw_employee_month
 	WHERE (entity_id = $1) AND (fiscal_year_id = $2) AND (period_id <= $3);
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION ytd_net_pay(integer, integer, integer) RETURNS real AS $$
-	SELECT sum(net_pay)
+	SELECT sum(net_pay)::real
 	FROM vw_employee_month
 	WHERE (entity_id = $1) AND (fiscal_year_id = $2) AND (period_id <= $3);
 $$ LANGUAGE SQL;

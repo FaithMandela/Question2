@@ -98,6 +98,9 @@ INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALU
 INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 1000000, 90000, NULL);
 INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 1000000000, 100000, NULL);
 
+---- Zibambwe Payroll tax
+
+
 INSERT INTO stores (org_id, store_name) VALUES (1, 'Main Store');
 
 INSERT INTO sys_emails (org_id, use_type,  sys_email_name, title, details) 

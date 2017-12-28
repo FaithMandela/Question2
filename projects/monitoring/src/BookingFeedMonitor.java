@@ -1,4 +1,5 @@
 import java.util.Calendar;
+import java.util.Date;
 import java.sql.Timestamp;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -28,6 +29,7 @@ public class BookingFeedMonitor {
 				
 				BookingFeedMonitor bf = new BookingFeedMonitor(args[0]);
 				bf.run();
+				bf.faidaPlusTickets();
 			}else{
 				System.out.println("Working Hours  : NO" );
 			}
@@ -91,13 +93,12 @@ public class BookingFeedMonitor {
 
 			} else {//Connected
 				System.out.println("Server Connection Successfull..." );
-				String query= "SELECT  TravelOrderIdentifier, DatabaseTimeStamp, CURRENT_TIMESTAMP AS today, DATEDIFF(MINUTE, DatabaseTimeStamp, CURRENT_TIMESTAMP) AS difference  FROM TravelOrderEvent WHERE TravelOrderIdentifier = (select max(TravelOrderIdentifier) FROM TravelOrderEvent )";
+				String query= "SELECT TravelOrderIdentifier, DatabaseTimeStamp, CURRENT_TIMESTAMP AS today, DATEDIFF(MINUTE, DatabaseTimeStamp, CURRENT_TIMESTAMP) AS difference  FROM TravelOrderEvent WHERE TravelOrderIdentifier = (select max(TravelOrderIdentifier) FROM TravelOrderEvent )";
 				Statement st = conn.createStatement();
 				ResultSet rs = st.executeQuery(query);
 				
 				int TravelOrderIdentifier = 0, difference = 0;
 				Timestamp DatabaseTimeStamp = null, now = null;
-
 				
 				while (rs.next()){
 					TravelOrderIdentifier = rs.getInt("TravelOrderIdentifier");
@@ -139,18 +140,52 @@ public class BookingFeedMonitor {
 					}
 				}
 				st.close();
-				
-				if(conn != null){
-					conn.close();
-					System.out.println("Closing MSSQL Connection ....");
-				}
-				if(pgconn != null){
-					pgconn.close();
-					System.out.println("Closing PGSQL Connection ....");
-				}
 			}
+			if(conn != null) conn.close();
+			if(pgconn != null) pgconn.close();
 		}catch (SQLException e){
 			System.err.println("Got an error! " + e.toString());
 		}
-    } 
+    }
+    
+	/* Test for faida plus ticket data */
+    public void faidaPlusTickets() {
+		try{
+			Connection pgconn = getConnection("pg"); 
+			Connection conn = DriverManager.getConnection("jdbc:postgresql://62.24.122.1:5432/tickets", "postgres", "invent2k");
+			Statement stmt = null;
+			
+			if(conn == null) {//failed to connect
+				stmt = pgconn.createStatement();
+				String sql = "INSERT INTO sys_emailed (sys_email_id, org_id, narrative)"
+					+ " VALUES (3, 0, 'FaidaPlus Serve Connection Failed...')";
+				stmt.executeUpdate(sql);
+				System.out.println("FaidaPlus Serve Connection Failed..." );
+
+			} else {//Connected
+				System.out.println("FaidaPlus Server Connection Successfull..." );
+				String query= "SELECT max(ticketdate) as last_ticket_date FROM tickets";
+				Statement st = conn.createStatement();
+				ResultSet rs = st.executeQuery(query);
+				
+				Date currentTime = new Date();
+				Date lastTicketDate = new Date();
+				if(rs.next()) lastTicketDate = rs.getDate("last_ticket_date");
+				Long daysNotPicked = currentTime.getTime() - lastTicketDate.getTime();
+				daysNotPicked = daysNotPicked / (1000 * 60 * 60 * 24);
+				
+				System.out.println("FaidaPlus tickets last picked " + daysNotPicked.toString() + " days ago");
+				if(daysNotPicked > 3) {
+					stmt = pgconn.createStatement();
+					String sql = "INSERT INTO sys_emailed (sys_email_id, org_id, narrative)" 
+						+ "VALUES (3, 0, 'FaidaPlus tickets last picked " + daysNotPicked.toString() + " days ago')";
+					stmt.executeUpdate(sql);
+				}
+			}
+			if(conn != null) conn.close();
+			if(pgconn != null) pgconn.close();
+		} catch (SQLException ex) {
+			System.err.println("Got an error! " + ex.toString());
+		}
+    }
 }
