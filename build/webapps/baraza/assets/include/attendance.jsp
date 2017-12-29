@@ -25,6 +25,9 @@
 				<button type="button" data-loading-text="Updating..." class="lunch-break-btn btn-block btn-sm btn-primary">
 				LUNCH BREAK
 				</button>
+				<button type="button" data-loading-text="Updating..." class="lunch-break-out-btn btn-block btn-sm btn-success">
+				LUNCH OUT
+				</button>
 				</div>
 				<div class="col-md-6 col-xs-6 margin-top-5">
 				<span class="label label-primary lunch-break-status-btn" style="width:100%;padding: 2px 21px 4px 21px;">Lunch Time : 1:00pm </span>
@@ -35,6 +38,9 @@
 				<div class="col-md-6 col-xs-6">
 				<button type="button" data-loading-text="Updating..." class="break-btn btn-block btn-sm btn-primary">
 				BREAK
+				</button>
+				<button type="button" data-loading-text="Updating..." class="break-out-btn btn-block btn-sm btn-success">
+				BREAK OUT
 				</button>
 				</div>
 				<div class="col-md-6 col-xs-6 margin-top-5">

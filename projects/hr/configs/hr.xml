@@ -2935,7 +2935,7 @@
 					<FORM name="Tasks" keyfield="task_id" linkfield="phase_id" table="tasks">
 						<USERFIELD>entity_id</USERFIELD>
 						<TEXTFIELD w="430" title="Task Name" y="30" h="20" x="10">task_name</TEXTFIELD>
-						<TEXTDATE w="150" title="Start Date" y="50" h="20" x="10">start_date</TEXTDATE>
+						<TEXTDATE w="150" title="Start Date" default="now" y="50" h="20" x="10">start_date</TEXTDATE>
 						<TEXTDATE w="150" title="Dead Line" y="50" h="20" x="290">dead_line</TEXTDATE>
 						<TEXTDATE w="150" title="End Date" y="70" h="20" x="10">end_date</TEXTDATE>
 						<CHECKBOX w="150" title="Completed" y="70" h="20" x="290">completed</CHECKBOX>
@@ -2986,6 +2986,13 @@
 		</GRID>
 		<JASPER name="My Task Report" user="filterid" reportfile="vw_tasks_1.jasper"></JASPER>
 		<JASPER name="Attendance" user="filterid" reportfile="vw_week_attendance_b.jasper"></JASPER>
+		<GRID limit="100" name="Access Logs" keyfield="access_log_id" orderby="access_log_id desc" table="access_logs" user="entity_id">
+			<TEXTTIMESTAMP w="75" title="Log Time">log_time</TEXTTIMESTAMP>
+			<TEXTTIMESTAMP w="75" title="Log Time Out">log_time_out</TEXTTIMESTAMP>
+			<TEXTFIELD w="75" title="Log In Out">log_in_out</TEXTFIELD>
+			<TEXTFIELD w="75" title="Log Ip">log_ip</TEXTFIELD>
+			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Arbitration" key="45" h="550">
 		<GRID name="Employees" keyfield="entity_id" orderby="first_name" table="vw_employees" where="(active = true)">

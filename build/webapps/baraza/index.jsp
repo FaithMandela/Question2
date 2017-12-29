@@ -566,75 +566,131 @@
 	var timeSheet = <%=web.getDashboardItem("timeSheet")%>;
 
 	<%= web.getAccordionJs() %>
+	var btnLunch = $(".lunch-break-btn");
+	var btnLunchOut = $(".lunch-break-out-btn");
+	var btnBreak = $(".break-btn");
+	var btnBreakOut = $(".break-out-btn");
+	var btnClockIn = $(".clock-in-btn");
+	var btnClockOut = $(".clock-out-btn");
+	//landing page when the array is null disable lunch and break buttons
+	if(attendanceList.length < 1){
+		btnLunch.attr('disabled','disabled');//if clocked in activate lunch button
+		btnBreak.attr('disabled','disabled');//if clocked in activate break button
+		btnClockIn.show();//hide clocin in button
+		btnClockOut.hide();//show clock out button
+		btnLunchOut.hide();//hide the lunchout button
+		btnBreakOut.hide();
+	}
+
+
 	for(var key in attendanceList){
 		var log_type = attendanceList[key].log_type;
 		var log_time_out = attendanceList[key].log_time_out;
 		var log_time_in = attendanceList[key].log_time;
-		var btnLunch = $(".lunch-break-btn");
-		var btnBreak = $(".break-btn");
-		var btnClockIn = $(".clock-in-btn");
-		var btnClockOut = $(".clock-out-btn");
 
 
 		if(log_type == 1){
-			var btnClock = $(".clock-in-btn");
-			var btnClockStatus = $(".clock-in-status-btn");
-	        //If default landing Page, disable lunch break buttons
-			if(log_time_in == "" && log_time_out == ""){
-				btnLunch.attr('disabled','disabled');
-				btnBreak.attr('disabled','disabled');
-				btnClockOut.hide();
-			}
-			//If clock in is set retain status
+			 btnClock = $(".clock-in-btn");
+			 btnClockStatus = $(".clock-in-status-btn");
+			//If clock in is set retain status activate break and lunch buttons
 			if(log_time_in != "" && log_time_out == ""){
 				btnClock.removeAttr("disabled");
 				btnLunch.removeAttr('disabled');//if clocked in activate lunch button
 				btnBreak.removeAttr('disabled');//if clocked in activate break button
 				btnClockIn.hide();//hide clocin in button
 				btnClockOut.show();//show clock out button
+				btnLunchOut.hide();//hide the lunchout button
+				btnBreakOut.hide();//hide the breakout button
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
-					btnClockStatus, btnaddClass, labeladdClass, "CLOCK OUT", "Clocked In Time :"+attendanceList[key].log_time);
+					btnClockStatus, btnaddClass, labeladdClass, "CLOCK OUT", "Clocked In :"+attendanceList[key].log_time);
 			}
-			//If all details are filled disable the button
+			//If the day is done disable the button
 			if(log_time_in != "" && log_time_out != ""){
-				btnClock.attr('disabled','disabled');
+				//hide all in buttons
+				btnClockIn.hide();
+				btnLunch.hide();
+				btnBreak.hide();
+
+				//disable all clockout buttons
+				btnClockOut.attr('disabled','disabled');
+				btnLunchOut.attr('disabled','disabled');
+				btnBreakOut.attr('disabled','disabled');
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
-				btnClockStatus, btnaddClass, labeladdClass, "DONE CLOCKING", "Clocked Out Time :"+attendanceList[key].log_time_out);
+				btnClockStatus, btnaddClass, labeladdClass, "DONE CLOCKING", "Clocked Out :"+attendanceList[key].log_time_out);
 			}
 		}
 
 
 		if(log_type == 4){
-			var btnClock = $(".lunch-break-btn");
-			var btnClockStatus = $(".lunch-break-status-btn");
+			 btnClock = $(".lunch-break-btn");
+			 btnClockStatus = $(".lunch-break-status-btn");
+			//if lunch has started, disable clock out and break start button
+			if(log_time_in != "" && log_time_out == ""){
+                //disable break in/out and disable clock out
+                <%--btnClockOut.attr('disabled','disabled');--%>
+                <%--btnBreak.attr('disabled','disabled');--%>
 
-			if(log_time_out == ""){
-				btnClock.removeAttr("disabled");
+
+                //hide the clock in and lunch in show lunch out
+                btnClockIn.hide();
+                btnLunch.hide();
+                btnLunchOut.show();
+				btnBreakOut.hide();//hide the breakout button
+
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
-				btnClockStatus, btnaddClass, labeladdClass, "LUNCH OUT", "Lunch Start Time:"+ attendanceList[key].log_time);
+				btnClockStatus, btnaddClass, labeladdClass, "LUNCH OUT", "Lunch Start :"+ attendanceList[key].log_time);
 			}
-			if(log_time_out != ""){
-				btnClock.addClass("disabled");
+			
+			if(log_time_in != "" && log_time_out != ""){
+                //enable break in/out and enable clock out
+                btnClockOut.removeAttr('disabled');
+                btnBreak.removeAttr('disabled');
+
+
+                //hide the clock in and lunch in show lunch out
+                btnClockOut.hide();
+                btnLunch.hide();
+                btnLunchOut.show();
+				btnBreakOut.hide();//hide the breakout button
+
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
-				btnClockStatus, btnaddClass, labeladdClass, "DONE LUNCH", "Lunch End Time:"+ attendanceList[key].log_time_out);
+				btnClockStatus, btnaddClass, labeladdClass, "DONE LUNCH", "Lunch End "+ attendanceList[key].log_time_out);
 			}
 		}
 
 		if(log_type == 7){
-			var btnClock = $(".break-btn");
-			var btnClockStatus = $(".break-status-btn");
+			 btnClock = $(".break-btn");
+			 btnClockStatus = $(".break-status-btn");
 
-			if(log_time_out == ""){
-				btnClock.removeAttr("disabled");
+			if(log_time_out == "" && log_time_out == ""){
+				//Disable Clock out and lunch out
+				btnClockOut.attr('disabled','disabled');
+				btnLunchOut.attr('disabled','disabled');
+
+				//hide break in,hide lunchin clock in show breakout
+				btnBreak.hide();
+				btnBreakOut.show();
+				btnLunch.hide();
+				btnClockIn.hide();
+
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
-				btnClockStatus, btnaddClass, labeladdClass, "BREAK OUT", "Break Start Time:"+attendanceList[key].log_time);
+				btnClockStatus, btnaddClass, labeladdClass, "BREAK OUT", "Break Start :"+attendanceList[key].log_time);
 
 			}
 
-			if(log_time_out != ""){
-				btnClock.addClass("disabled");
+			if(log_time_out != "" && log_time_out != ""){
+				//Enable Clock out and disable break
+				btnClockOut.removeAttr('disabled','disabled');
+				btnBreakOut.attr('disabled','disabled');
+
+				//hide break in,hide lunchin clock in show breakout
+				btnBreak.hide();
+				btnBreakOut.show();
+				btnLunch.hide();
+				btnClockIn.hide();
+
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
-				btnClockStatus, btnaddClass, labeladdClass, "DONE BREAK", "Break End Time:"+attendanceList[key].log_time_out);
+				btnClockStatus, btnaddClass, labeladdClass, "DONE BREAK", "Break End :"+attendanceList[key].log_time_out);
 			}
 
 		}

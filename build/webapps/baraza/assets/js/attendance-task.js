@@ -6,16 +6,23 @@ var btnaddClassWarning = 'btn-warning';
 var labelrmvClass = 'label-primary';
 var labeladdClass = 'label-success';
 var labeladdClassError = 'label-danger';
+var btnLunch = $(".lunch-break-btn");
+var btnLunchOut = $('.lunch-break-out-btn');
+var btnBreak = $(".break-btn");
+var btnBreakOut = $('.break-out-btn');
+var btnClockIn = $(".clock-in-btn");
+var btnClockOut = $(".clock-out-btn");
+const IN = 'IN';
 
 /**
  * Clock In Button JS
  **/
-$('.clock-in-btn')
+btnClockIn
     .click(function () {
         var btnClock = $(this);
         var unHideBtnClock = $('.clock-out-btn');
         var btnClockStatus = $('.clock-in-status-btn');
-        var msg = 'Clocked In Time : 8:00am ';
+        var msg = 'Clocked In : 8:00am ';
         btnClock.button('loading');
         postAjax(btnClock, unHideBtnClock, btnClockStatus, msg, '1', 'IN');
     });
@@ -23,7 +30,7 @@ $('.clock-in-btn')
 /**
  * Clock Out Button JS
  **/
-$('.clock-out-btn')
+btnClockOut
     .click(function () {
         var btnClock = $(this);
         var unHideBtnClock = $('.clock-out-btn');
@@ -38,50 +45,50 @@ $('.clock-out-btn')
  *
  * Lunch Break Button JS
  **/
-$('.lunch-break-btn')
+btnLunch
     .click(function () {
         var btnClock = $(this);
         var btnClockStatus = $('.lunch-break-status-btn');
         var msg = 'Lunch End : 2:00pm ';
         btnClock.button('loading');
-        postAjax(btnClock, btnClockStatus, msg, '4', 'LUNCHOUT');
+        postAjax(btnClock, btnLunchOut, btnClockStatus, msg, '4', 'LUNCHIN');
     });
 
 /**
  *
  * Lunch Out Button JS
  **/
-$('.lunch-break-out-btn')
+btnLunchOut
     .click(function () {
         var btnClock = $(this);
         var btnClockStatus = $('.lunch-break-status-btn');
         var msg = 'Lunch End : 2:00pm ';
         btnClock.button('loading');
-        postAjax(btnClock, btnClockStatus, msg, '4', 'LUNCHIN');
+        postAjax(btnClock, btnLunchOut, btnClockStatus, msg, '4', 'LUNCHOUT');
     });
 
 /**
  * Evening Break Button JS
  **/
-$('.break-btn')
+btnBreak
     .click(function () {
         var btnClock = $(this);
         var btnClockStatus = $('.break-status-btn');
         var msg = 'Break End : 4:30pm ';
         btnClock.button('loading');
-        postAjax(btnClock, btnClockStatus, msg, '7', 'BREAKOUT');
+        postAjax(btnClock, btnBreakOut, btnClockStatus, msg, '7', 'BREAKIN');
     });
 
 /**
  * Evening Break Out Button JS
  **/
-$('.break-out-btn')
+btnBreakOut
     .click(function () {
         var btnClock = $(this);
         var btnClockStatus = $('.break-status-btn');
         var msg = 'Break End : 4:30pm ';
         btnClock.button('loading');
-        postAjax(btnClock, btnClockStatus, msg, '7', 'BREAKIN');
+        postAjax(btnClock, btnBreakOut, btnClockStatus, msg, '7', 'BREAKOUT');
     });
 
 /**
@@ -109,39 +116,100 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
             $(".submit i").removeAttr('class').addClass("fa fa-refresh fa-spin fa-3x fa-fw  text-center").css({"color":"#fff",});
         },
         success : function(result) {
-            var btnMsg = 'Check Out';
+            var btnMsg = 'DONE';
             for(var data in result){
                 var log_type = result[data].log_type;
-                var msg = '';
+                var log_in_out = result[data].log_in_out;
+                 msg = '';
                 if(log_type == 1){
                     //btnMsg = "CLOCK OUT";
                     //outBtnNewClassName = 'clock-out-btn' ;
                     //oldBtnClass  = 'clock-in-btn';
                     //msg = 'Clocked In Time :'+result[data].log_time;
+
                     if(logInOut == 'IN'){
                         btnMsg = "CLOCK OUT";
-                        msg = 'Clocked In Time :'+result[data].log_time;
+                        msg = 'Clocked In :'+result[data].log_time;
                         outBtnNewClassName = 'clock-out-btn' ;
                         oldBtnClass  = 'clock-in-btn';
+
+                      
+                        //btnClock.removeAttr("disabled");
+                        btnLunch.removeAttr("disabled");//if clocked in activate lunch button
+                        btnBreak.removeAttr("disabled");//if clocked in activate break button
+                        btnLunchOut.hide();//hide the lunchout button
+                        //btnBreakOut.hide();//hide break button
                     }
                     if(logInOut == 'OUT'){
                         btnMsg = "CLOCKING DONE";
-                        msg = 'Clocked Out Time : 5:00pm';
+                        msg = 'Clocked Out : '+result[data].log_time;
                         outBtnNewClassName = 'clock-out-btn' ;
                         oldBtnClass  = 'clock-in-btn';
+
+                        //hide all in buttons when fully done for the day
+                        btnClockIn.hide();
+                        btnLunch.hide();
+                        btnBreak.hide();
+
+                        //disable all clockout buttons
+                        btnClockOut.attr('disabled','disabled');
+                        btnClockIn.attr('disabled','disabled');
+                        btnLunchOut.attr('disabled','disabled');
+                        btnBreakOut.attr('disabled','disabled');
+
                     }
                 }
                 if(log_type == 4){
-                    btnMsg = "LUNCH OUT";
-                    msg = 'Lunch End :'+result[data].log_time;
-                    outBtnNewClassName = 'lunch-break-out-btn';
-                    oldBtnClass  = 'lunch-break-btn';
+                    if(logInOut == 'LUNCHIN'){
+                        btnMsg = "LUNCH OUT";
+                        msg = 'Lunch Start :'+result[data].log_time;
+                        outBtnoldBtnClassName = 'lunch-break-out-btn' ;
+                        oldBtnClass  = 'lunch-break-btn';
+
+                        //disable break in/out and disable clock out
+                        btnClockOut.attr('disabled','disabled');
+                        btnBreak.attr('disabled','disabled');
+
+
+                        //hide the clock in and lunch in show lunch out
+                        btnClockIn.hide();
+                        btnLunch.hide();
+                        btnLunchOut.show();
+                        //btnBreakOut.hide();//hide break button
+                    }
+                    if(logInOut == 'LUNCHOUT'){
+                        btnMsg = "LUNCH DONE";
+                        msg = 'Lunch End :'+result[data].log_time;
+                        outBtnoldBtnClassName = 'lunch-break-out-btn';
+                        oldBtnClass  = 'lunch-break-btn';
+
+                        //enable break in/out and enable clock out
+                        btnClockOut.removeAttr('disabled');
+                        btnBreak.removeAttr('disabled');
+
+
+                        //hide the clock in and lunch in show lunch out
+                        btnClockIn.hide();
+                        btnLunch.hide();
+                        btnLunchOut.show();
+                    }
                 }
+
                 if(log_type == 7){
-                    btnMsg = "BREAK OUT";
-                    outBtnNewClassName = 'break-out-btn';
-                    oldBtnClass  = 'break-btn';
-                    msg = 'Break End :'+result[data].log_time;
+                    if(logInOut == 'BREAKIN'){
+                        btnMsg = "BREAK OUT";
+                        outBtnNewClassName = 'break-out-btn';
+                        oldBtnClass  = 'break-btn';
+                        msg = 'Break Start :'+result[data].log_time;
+
+                    }
+                    if(logInOut == 'BREAKOUT'){
+                        btnMsg = "BREAK DONE";
+                        outBtnNewClassName = 'break-out-btn';
+                        oldBtnClass  = 'break-btn';
+                        msg = 'Break End :'+result[data].log_time;
+
+                    }
                 }
 
             }

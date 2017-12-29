@@ -467,14 +467,44 @@ $$ LANGUAGE SQL;
 CREATE OR REPLACE FUNCTION add_access_logs(int, int, varchar(32), varchar(32)) RETURNS varchar(120) AS $$
 DECLARE
 	v_org_id				integer;
+	v_access_log_id			integer;
+	v_in					integer;
+	v_attendance_id			integer;
+	v_log_date				date;
 	msg		 				varchar(120);
 BEGIN
 
 	SELECT org_id INTO v_org_id
 	FROM entitys WHERE entity_id = $1;
+	
+	SELECT access_log_id, log_time::date INTO v_access_log_id, v_log_date
+	FROM access_logs
+	WHERE (entity_id = $1) AND (log_type = $2) AND (log_time_out is null);
+	
+	v_in := 0;
+	IF($3 IN ('IN', 'LUNCHIN', 'BREAKIN'))THEN v_in := 1; END IF;
 
-	INSERT INTO access_logs (entity_id, org_id, log_type, log_in_out, log_ip)
-	VALUES ($1, v_org_id, $2, $3, $4);
+	IF((v_access_log_id is null) AND (v_in = 1))THEN
+		INSERT INTO access_logs (entity_id, org_id, log_type, log_in_out, log_ip)
+		VALUES ($1, v_org_id, $2, $3, $4);
+	END IF;
+	IF((v_access_log_id is not null) AND (v_in = 0))THEN
+		UPDATE access_logs SET log_time_out = current_timestamp
+		WHERE access_log_id = v_access_log_id;
+		
+		IF($3 = 'IN')THEN
+			SELECT attendance_id INTO v_attendance_id
+			FROM attendance
+			WHERE (entity_id = $1) AND (attendance_date = v_log_date);
+			
+			IF(v_attendance_id is null)THEN
+				INSERT INTO attendance (entity_id, org_id, attendance_date, time_in, time_out)
+				VALUES ($1, v_org_id, v_log_date, log_time::time, current_time);
+			ELSE
+				UPDATE attendance SET time_out = current_time WHERE attendance_id = v_attendance_id;
+			END IF;
+		END IF;
+	END IF;
 
 	msg := 'ok';
 	
