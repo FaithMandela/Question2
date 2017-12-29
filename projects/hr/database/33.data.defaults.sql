@@ -66,39 +66,12 @@ INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_rel
 INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account, sys_country_id) VALUES (10, 11, 'FULL PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 0, 0, false, false, false, 0, 0, false, '40045', '40045', 'KE');
 INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, tax_rate, account_id) VALUES (11, 15, 'Exempt', 0, '42000');
 INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, tax_rate, account_id) VALUES (12, 15, 'VAT', 16, '42000');
-
+SELECT pg_catalog.setval('tax_types_tax_type_id_seq', 50, true);
 
 INSERT INTO tax_rates (org_id, tax_type_id, tax_range, tax_rate)
 SELECT 1,  tax_type_id + 6, tax_range, tax_rate
 FROM tax_rates
 WHERE org_id = 0;
-
---- Uganda Payroll tax
-INSERT INTO tax_types (tax_type_id, use_key_id, account_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, active, sys_country_id) VALUES (14, 11, NULL, 'PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 0, 1, false, 0, false, true, true, 0, 0, NULL, true, 'UG');
-INSERT INTO tax_types (tax_type_id, use_key_id, account_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, active, sys_country_id) VALUES (15, 12, NULL, 'NSSF', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, false, 0, false, true, true, 0, 200, NULL, true, 'UG');
-INSERT INTO tax_types (tax_type_id, use_key_id, account_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, active, sys_country_id) VALUES (16, 12, NULL, 'Local Service Tax', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, false, 0, false, false, false, 0, 0, NULL, true, 'UG');
-UPDATE tax_types SET org_id = 1, currency_id = 5 WHERE org_id is null;
-SELECT pg_catalog.setval('tax_types_tax_type_id_seq', 16, true);
-
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 1, 235000, 0, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 1, 335000, 10, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 1, 410000, 20, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 1, 100000000, 10, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 1, 10000000, 30, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (15, 1, 100000000, 5, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 100000, 0, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 200000, 5000, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 300000, 10000, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 400000, 20000, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 500000, 30000, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 600000, 40000, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 700000, 60000, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 800000, 70000, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 900000, 80000, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 1000000, 90000, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 1000000000, 100000, NULL);
-
----- Zibambwe Payroll tax
 
 
 INSERT INTO stores (org_id, store_name) VALUES (1, 'Main Store');
