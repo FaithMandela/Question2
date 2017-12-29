@@ -18,6 +18,7 @@ CREATE TABLE holidays (
 	details					text
 );
 CREATE INDEX holidays_org_id ON holidays (org_id);
+CREATE INDEX holidays_holiday_date ON holidays (holiday_date);
 
 CREATE TABLE industry (
 	industry_id				serial primary key,
@@ -79,6 +80,7 @@ CREATE TABLE fiscal_years (
 	org_id					integer references orgs,
 	fiscal_year_start		date not null,
 	fiscal_year_end			date not null,
+	submission_date			date,
 	year_opened				boolean default true not null,
 	year_closed				boolean default false not null,
 	details					text,
@@ -104,7 +106,6 @@ CREATE TABLE periods (
 	loan_approval			boolean default false not null,
 	gl_payroll_account		varchar(32),
 	gl_advance_account		varchar(32),
-
 
     entity_id 				integer references entitys,
 	application_date		timestamp default now(),
@@ -177,7 +178,8 @@ CREATE VIEW vw_bank_branch AS
 	SELECT sys_countrys.sys_country_id, sys_countrys.sys_country_code, sys_countrys.sys_country_name,
 		banks.bank_id, banks.bank_name, banks.bank_code, banks.swift_code,  banks.sort_code,
 		bank_branch.bank_branch_id, bank_branch.org_id, bank_branch.bank_branch_name, 
-		bank_branch.bank_branch_code, bank_branch.narrative
+		bank_branch.bank_branch_code, bank_branch.narrative,
+		(banks.bank_name || ', ' || bank_branch.bank_branch_name) as bank_branch_disp
 	FROM bank_branch INNER JOIN banks ON bank_branch.bank_id = banks.bank_id
 		LEFT JOIN sys_countrys ON banks.sys_country_id = sys_countrys.sys_country_id;
 		
@@ -190,7 +192,7 @@ CREATE VIEW vw_departments AS
 
 CREATE VIEW vw_periods AS
 	SELECT fiscal_years.fiscal_year_id, fiscal_years.fiscal_year, fiscal_years.fiscal_year_start, 
-		fiscal_years.fiscal_year_end, fiscal_years.year_opened, fiscal_years.year_closed,
+		fiscal_years.fiscal_year_end, fiscal_years.submission_date, fiscal_years.year_opened, fiscal_years.year_closed,
 
 		periods.period_id, periods.org_id, 
 		periods.start_date, periods.end_date, periods.opened, periods.activated, periods.closed, 
@@ -290,6 +292,13 @@ BEGIN
 	SELECT year_closed INTO year_close
 	FROM fiscal_years
 	WHERE (fiscal_year_id = NEW.fiscal_year_id);
+
+	IF(year_close = true)THEN
+		RAISE EXCEPTION 'The year is closed not transactions are allowed.';
+	END IF;
+	IF(NEW.start_date > NEW.end_date)THEN
+		RAISE EXCEPTION 'The starting date has to be before the ending date.';
+	END IF;
 	
 	IF(TG_OP = 'UPDATE')THEN    
 		IF (OLD.closed = true) AND (NEW.closed = false) THEN
@@ -306,17 +315,13 @@ BEGIN
 		NEW.closed = true;
 	END IF;
 
-	IF(year_close = true)THEN
-		RAISE EXCEPTION 'The year is closed not transactions are allowed.';
-	END IF;
 
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_periods BEFORE INSERT OR UPDATE ON periods
-    FOR EACH ROW EXECUTE PROCEDURE ins_periods();
-    
+	FOR EACH ROW EXECUTE PROCEDURE ins_periods();
     
 CREATE OR REPLACE FUNCTION open_periods(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
