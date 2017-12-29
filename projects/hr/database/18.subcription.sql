@@ -187,6 +187,8 @@ DECLARE
 	v_bank_id				integer;
 	v_tax_type_id			integer;
 	v_workflow_id			integer;
+	v_sys_currency_name		varchar(50);
+	v_sys_currency_code		varchar(3);
 	v_org_suffix			char(2);
 	myrec 					RECORD;
 BEGIN
@@ -216,8 +218,13 @@ BEGIN
 		INSERT INTO address (org_id, address_name, sys_country_id, table_name, table_id, premises, town, phone_number, website, is_default) 
 		VALUES (NEW.org_id, NEW.business_name, NEW.country_id, 'orgs', NEW.org_id, NEW.business_address, NEW.city, NEW.telephone, NEW.website, true);
 		
+		SELECT sys_currency_name, sys_currency_code INTO v_sys_currency_name, v_sys_currency_code
+		FROM sys_countrys
+		WHERE sys_country_id = NEW.country_id;
+		
 		v_currency_id := nextval('currency_currency_id_seq');
-		INSERT INTO currency (org_id, currency_id, currency_name, currency_symbol) VALUES (NEW.org_id, v_currency_id, 'Default Currency', 'DC');
+		INSERT INTO currency (org_id, currency_id, currency_name, currency_symbol) 
+		VALUES (NEW.org_id, v_currency_id, v_sys_currency_name, v_sys_currency_code);
 		UPDATE orgs SET currency_id = v_currency_id WHERE org_id = NEW.org_id;
 		
 		INSERT INTO currency_rates (org_id, currency_id, exchange_rate) VALUES (NEW.org_id, v_currency_id, 1);

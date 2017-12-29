@@ -39,10 +39,11 @@ CREATE TABLE sys_countrys (
 	sys_country_code		varchar(3),
 	sys_country_name		varchar(120) unique,
 	sys_country_number		varchar(3),
-	sys_phone_code			varchar(3),
+	sys_country_capital		varchar(64),
+	sys_phone_code			varchar(7),
 	sys_currency_name		varchar(50),
-	sys_currency_cents		varchar(50),
 	sys_currency_code		varchar(3),
+	sys_currency_cents		varchar(50),
 	sys_currency_exchange	real
 );
 CREATE INDEX sys_countrys_sys_continent_id ON sys_countrys (sys_continent_id);
