@@ -248,13 +248,13 @@ CREATE VIEW vw_week_attendance AS
 			FROM vw_attendance p2 WHERE p2.a_dow = 2) pp2 ON
 			(a.entity_id = pp2.entity_id) AND (a.period_code = pp2.a_month) AND (a.p_week = pp2.a_week)
 		LEFT JOIN (SELECT p3.time_in, p3.time_out, p3.entity_id, p3.a_month, p3.a_week
-			FROM vw_attendance p3 WHERE p3.a_dow = 1) pp3 ON
+			FROM vw_attendance p3 WHERE p3.a_dow = 3) pp3 ON
 			(a.entity_id = pp3.entity_id) AND (a.period_code = pp3.a_month) AND (a.p_week = pp3.a_week)
 		LEFT JOIN (SELECT p4.time_in, p4.time_out, p4.entity_id, p4.a_month, p4.a_week
 			FROM vw_attendance p4 WHERE p4.a_dow = 4) pp4 ON
 			(a.entity_id = pp4.entity_id) AND (a.period_code = pp4.a_month) AND (a.p_week = pp4.a_week)
 		LEFT JOIN (SELECT p5.time_in, p5.time_out, p5.entity_id, p5.a_month, p5.a_week
-			FROM vw_attendance p5 WHERE p5.a_dow = 1) pp5 ON
+			FROM vw_attendance p5 WHERE p5.a_dow = 5) pp5 ON
 			(a.entity_id = pp5.entity_id) AND (a.period_code = pp5.a_month) AND (a.p_week = pp5.a_week);
 					
 CREATE OR REPLACE FUNCTION add_shift_staff(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
@@ -471,13 +471,14 @@ DECLARE
 	v_in					integer;
 	v_attendance_id			integer;
 	v_log_date				date;
+	v_log_time				time;
 	msg		 				varchar(120);
 BEGIN
 
 	SELECT org_id INTO v_org_id
 	FROM entitys WHERE entity_id = $1;
 	
-	SELECT access_log_id, log_time::date INTO v_access_log_id, v_log_date
+	SELECT access_log_id, log_time::date, log_time::time INTO v_access_log_id, v_log_date, v_log_time
 	FROM access_logs
 	WHERE (entity_id = $1) AND (log_type = $2) AND (log_time_out is null);
 	
@@ -492,14 +493,14 @@ BEGIN
 		UPDATE access_logs SET log_time_out = current_timestamp
 		WHERE access_log_id = v_access_log_id;
 		
-		IF($3 = 'IN')THEN
+		IF($3 = 'OUT')THEN
 			SELECT attendance_id INTO v_attendance_id
 			FROM attendance
 			WHERE (entity_id = $1) AND (attendance_date = v_log_date);
 			
 			IF(v_attendance_id is null)THEN
 				INSERT INTO attendance (entity_id, org_id, attendance_date, time_in, time_out)
-				VALUES ($1, v_org_id, v_log_date, log_time::time, current_time);
+				VALUES ($1, v_org_id, v_log_date, v_log_time, current_time);
 			ELSE
 				UPDATE attendance SET time_out = current_time WHERE attendance_id = v_attendance_id;
 			END IF;
