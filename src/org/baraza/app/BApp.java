@@ -308,7 +308,7 @@ public class BApp extends JPanel implements ActionListener, TreeSelectionListene
 					ipaddress = i.toString();
 				} catch(java.net.UnknownHostException ex) { }
 
-				db.setUser(ipaddress, tfUserName.getText());
+				db.setUser(ipaddress, tfUserName.getText(), "App");
 				
 				BElement configs = root.getElementByName("CONFIGS");
 				if(configs != null) {
