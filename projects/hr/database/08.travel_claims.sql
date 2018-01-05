@@ -302,7 +302,7 @@ BEGIN
 
 		IF((NEW.approve_status = 'Draft') AND (OLD.travel_type_id <> NEW.travel_type_id))THEN
 			DELETE FROM e_fields WHERE table_id = NEW.employee_travel_id AND et_field_id IN
-			(SELECT et_field_id FROM et_fields WHERE (et_fields.org_id = NEW.org_id) AND (et_fields.table_code = 1));
+			(SELECT et_field_id FROM et_fields WHERE (et_fields.org_id = NEW.org_id) AND (et_fields.table_code = 111));
 			
 			INSERT INTO e_fields (et_field_id, org_id, table_code, table_id)
 			SELECT et_fields.et_field_id, et_fields.org_id, et_fields.table_code, NEW.employee_travel_id
