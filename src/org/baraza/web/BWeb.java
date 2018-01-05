@@ -427,7 +427,7 @@ public class BWeb {
 		if(elParam == null) return;
 
 		String paramStr = elParam.getAttribute("params");
-		if((paramStr != null) && (!paramKey.equals("{new}"))) {
+		if((paramStr != null) && (!paramKey.equals("[new]"))) {
 			String paramsql = "SELECT " + paramStr;
 			paramsql += " FROM " + elParam.getAttribute("table");
 			paramsql += " WHERE (" + elParam.getAttribute("keyfield") + " = '" + paramKey + "')";
@@ -459,8 +459,8 @@ public class BWeb {
 			if(Arrays.binarySearch(deskTypes, elName)>=0) {
 				// Show only a form for a new entry
 				boolean show = true;
-				if(keyD.equals("{new}") && (!elName.equals("FORM"))) show = false;
-				if(keyD.equals("{new}") && (el.getAttribute("new", "true").equals("false"))) show = false;
+				if(keyD.equals("[new]") && (!elName.equals("FORM"))) show = false;
+				if(keyD.equals("[new]") && (el.getAttribute("new", "true").equals("false"))) show = false;
 				
 				if(el.getAttribute("superuser", "false").equals("true")) {
 					if(!db.getUser().getSuperUser()) show = false;
@@ -509,7 +509,7 @@ public class BWeb {
 					else
 						tabs += "\t\t\t<li>";
 					tabs += "<a href='?view=" + keyV +  j.toString();
-					if(keyD.equals("{new}") && (elName.equals("FORM"))) {
+					if(keyD.equals("[new]") && (elName.equals("FORM"))) {
 						tabs += "&data=" + keyD + "'>New " + tabName + "</a></li>\n";
 					} else if (elName.equals("FORM") && (!el.getAttribute("edit", "true").equals("false"))) {
 						tabs += "&data=" + keyD + "'>Edit " + tabName + "</a></li>\n";
@@ -591,7 +591,7 @@ public class BWeb {
 			
 			if(hasForm && newShow) {
 				String newBtn = view.getAttribute("new.button", "New");
-				buttons += "<a class='btn blue btn-sm' title='Add New' href='?view=" + viewKey + ":" + String.valueOf(fv) + "&data={new}'><i class='fa fa-plus'></i>   " + newBtn + "</a>\n";
+				buttons += "<a class='btn blue btn-sm' title='Add New' href='?view=" + viewKey + ":" + String.valueOf(fv) + "&data=[new]'><i class='fa fa-plus'></i>   " + newBtn + "</a>\n";
 			}
 			buttons += "<a class='btn green btn-sm' href='?view=" + viewKey + did + "&refresh=true'><i class='fa fa-refresh'></i>   Refresh</a>\n";
 			
@@ -636,22 +636,22 @@ public class BWeb {
 
 		if(view.getName().equals("FORM")) {		
 			String saveBtn = view.getAttribute("save.button", "Save");
-			if(view.getAttribute("new", "true").equals("true") && ("{new}".equals(dataItem)))
+			if(view.getAttribute("new", "true").equals("true") && ("[new]".equals(dataItem)))
 				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'> <i class='fa  fa-save'></i> &nbsp; " + saveBtn + "</button>\n";
 			if(view.getAttribute("fornew", "false").equals("true"))
 				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'> <i class='fa  fa-save'></i> &nbsp; " + saveBtn + "</button>\n";
-			if(view.getAttribute("edit", "true").equals("true") && (!"{new}".equals(dataItem)))
+			if(view.getAttribute("edit", "true").equals("true") && (!"[new]".equals(dataItem)))
 				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'> <i class='fa  fa-save'></i> &nbsp; " + saveBtn + "</button>\n";
 			boolean canDel = true;
 			if(view.getAttribute("delete", "true").equals("false")) canDel = false;
 			if(canDel && view.getAttribute("delete.role") != null) {
 				if(!checkAccess(view.getAttribute("delete.role"))) canDel = false;
 			}
-			if(canDel && (!"{new}".equals(dataItem)))
+			if(canDel && (!"[new]".equals(dataItem)))
 				buttons += "<button class='btn btn-danger i_cross icon small' name='process' value='Delete' "
 				+ "onclick=\"return confirm('Are you sure you delete?')\""
 				+ "> <i class='fa fa-trash-o'></i> &nbsp; Delete</button>\n";
-			/*if(view.getAttribute("audit", "true").equals("true") && (!"{new}".equals(dataItem)))
+			/*if(view.getAttribute("audit", "true").equals("true") && (!"[new]".equals(dataItem)))
 				buttons += "<button class='btn blue i_key icon small' name='process' value='Audit'>Audit</button>\n";*/
             
             buttons += "<a class='btn btn-circle btn-icon-only btn-default btn-sm fullscreen' href='javascript:;' data-original-title='' title=''></a>";
@@ -845,7 +845,7 @@ System.out.println("BASE 3020 : " + dataItem);
 			linkData = viewData.get(vds - 1);
 			formLinkData = viewData.get(vds - 2);
 			
-			if((!linkData.equals("{new}")) && (comboField == null)) {
+			if((!linkData.equals("[new]")) && (comboField == null)) {
 				if(view.getName().equals("FORM")) {
 					if(wheresql != null) wheresql += " AND (";
 					else wheresql = "(";
@@ -979,7 +979,7 @@ System.out.println("BASE 3020 : " + dataItem);
 			if(comboField == null) {
 				BWebBody webbody = new BWebBody(db, view, wheresql, sortby);
 				if(vds > 2) {
-					if(linkData.equals("{new}")) {
+					if(linkData.equals("[new]")) {
 						if(view.getAttribute("new", "true").equals("true")) 
 							body = webbody.getForm(true, formLinkData, request);
 					} else if(view.getAttribute("edit", "true").equals("true")) {
@@ -1400,7 +1400,7 @@ System.out.println("repository : " + repository);
 
 		if(vds > 2) {
 			linkData = viewData.get(vds - 1);
-			if(linkData.equals("{new}")) formlink = view.getAttribute("keyfield") + " = null";
+			if(linkData.equals("[new]")) formlink = view.getAttribute("keyfield") + " = null";
 			else formlink = view.getAttribute("keyfield") + " = '" + linkData + "'";
 		}
 
@@ -1411,7 +1411,7 @@ System.out.println("repository : " + repository);
 				qForm.recEdit();
 			} else if(vds < 3) {
 				qForm.recAdd();
-			} else if(linkData.equals("{new}")) {
+			} else if(linkData.equals("[new]")) {
 				qForm.recAdd();
 				if(view.getAttribute("linkfield") != null) 
 					qForm.updateField(view.getAttribute("linkfield"), viewData.get(vds - 2));
@@ -1500,7 +1500,7 @@ System.out.println("Reached ACCORDION " + vds + " : " + formlink);
 				qAccd.recAdd();
 			} else if(linkData == null) {
 				if(qAccd.moveFirst()) qAccd.recEdit();
-			} else if(linkData.equals("{new}")) {
+			} else if(linkData.equals("[new]")) {
 				qAccd.recAdd();
 				if(accdView.getAttribute("linkfield") != null) 
 					qAccd.updateField(accdView.getAttribute("linkfield"), viewData.get(vds - 2));
@@ -1527,11 +1527,11 @@ System.out.println("Reached ACCORDION " + vds + " : " + formlink);
 
 		if(vds > 2) {
 			linkData = viewData.get(vds - 1);
-			if(!linkData.equals("{new}"))
+			if(!linkData.equals("[new]"))
 				formlink = view.getAttribute("keyfield") + " = '" + linkData + "'";
 		}
 
-		if(view.getName().equals("FORM") && (!linkData.equals("{new}"))) {
+		if(view.getName().equals("FORM") && (!linkData.equals("[new]"))) {
 			BQuery qForm = new BQuery(db, view, formlink, null);
 			qForm.movePos(1);
 			qForm.recDelete();
@@ -1548,7 +1548,7 @@ System.out.println("Reached ACCORDION " + vds + " : " + formlink);
 				viewKey = viewKey.substring(0, viewKey.lastIndexOf(":"));
 				webSession.setAttribute("viewkey", viewKey);
 			} else {
-				dataItem = "{new}";
+				dataItem = "[new]";
 			}
 			saveMsg = "<div style='color:#00FF00'>Record deleted.</div>";
 		}
@@ -1865,7 +1865,7 @@ log.severe("BASE : " + mysql);
 				String keyField = views.get(j).getAttribute("keyfield", "");
 				String key = viewData.get(j+1);
 
-				if(!"{new}".equals(key) && !views.get(j).getName().equals("FILTER")) {
+				if(!"[new]".equals(key) && !views.get(j).getName().equals("FILTER")) {
 					BQuery ft = new BQuery(db, views.get(j), keyField + " = '" + key + "'", null);
 					lblFt += "\n<li><a href='#'><b>" + ft.getFooter() + "</b></a></li>";
 					ft.close();

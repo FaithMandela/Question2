@@ -13,6 +13,10 @@ import java.util.logging.Logger;
 import java.util.Map;
 import java.util.HashMap;
 import java.security.Principal;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.apache.catalina.realm.JDBCRealm;
 import org.apache.catalina.connector.Request;
@@ -24,28 +28,24 @@ import org.baraza.utils.BLogHandle;
 public class BJDBCRealm extends JDBCRealm {
 	Logger log = Logger.getLogger(BJDBCRealm.class.getName());
 	
-	public int counter = 0;
-	public Map<String, String> userList;
+	private Map<String, String> userList;
+	private Map<String, String> IPList;
 	
 	public BJDBCRealm() {
-        super();
+		super();
 
-        userList = new HashMap<String, String>();
-System.out.println("BASE 4010 : authenticating class starting");
-
-        
+		userList = new HashMap<String, String>();
+		IPList = new HashMap<String, String>();
+		log.info("Authenticating class starting");
 	}
 	
 	public Principal authenticate(String username, String credentials) {
 		Principal principal = super.authenticate(username, credentials);
-
-System.out.println("BASE 4110 : authenticating " + username);
 		
 		if(principal != null) {
-System.out.println("BASE 4120 : authenticating " + principal.getName());
-System.out.println("BASE 4130 : " + counter);
-			userList.put(username, "login");
-			counter++;
+			String loginId = logUser(principal.getName());
+			userList.put(username, loginId);
+			IPList.remove(username);
 		}
 		
 		return principal;
@@ -54,11 +54,45 @@ System.out.println("BASE 4130 : " + counter);
 	public SecurityConstraint[] findSecurityConstraints(Request request, Context context) {
 		SecurityConstraint[] sc = super.findSecurityConstraints(request, context);
 		
-System.out.println("BASE 4240 : findSecurityConstraints " + request.getRemoteAddr() + " : " + request.getRemoteUser());
-System.out.println("BASE 4250 : " + counter);
+		String userName = request.getRemoteUser();
+		if((userName != null) && (IPList.get(userName) == null)) {
+			String loginId = userList.get(userName);
+			if(loginId != null) logUserIP(loginId, request.getRemoteAddr());
+			IPList.put(userName, request.getRemoteAddr());
+		}
 
 		return sc;
 	}
 	
+	public String logUser(String userName) {
+		String loginId = null;
+		try {
+			String mysql = "SELECT add_sys_login('" + userName + "')";
+			Connection db = open();
+			Statement st = db.createStatement();
+			ResultSet rs = st.executeQuery(mysql);
+			db.commit();
+			if(rs.next()) loginId = rs.getString(1);
+			rs.close();
+			st.close();
+		} catch (SQLException ex) {
+			log.severe("Database executeAutoKey error : " + ex);
+		}
+		return loginId;
+	}
+	
+	public void logUserIP(String loginId, String userIP) {
+		try {
+			String mysql = "UPDATE sys_logins SET login_ip = '" + userIP
+			+ "' WHERE sys_login_id = " + loginId;
+			Connection db = open();
+			Statement st = db.createStatement();
+			st.execute(mysql);
+			db.commit();
+			st.close();
+		} catch (SQLException ex) {
+			log.severe("Database executeAutoKey error : " + ex);
+		}
+	}	
 }
 

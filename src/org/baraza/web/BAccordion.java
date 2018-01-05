@@ -60,14 +60,14 @@ public class BAccordion {
 			String whereSql = null;
 			if(vw.getName().equals("FORM")) {
 				if((linkData != null) && (vds > 2)) {
-					if("{new}".equals(linkData)) whereSql = vw.getAttribute("keyfield") + " = null";
+					if("[new]".equals(linkData)) whereSql = vw.getAttribute("keyfield") + " = null";
 					else whereSql = vw.getAttribute("keyfield") + " = '" + linkData + "'";
 				}
 				
 				BWebBody webbody = new BWebBody(db, vw, whereSql, null);
 				body += webbody.getForm(false, formLinkData, request);
 				webbody.close();
-			} else if(vw.getName().equals("GRID") && !"{new}".equals(linkData)) {
+			} else if(vw.getName().equals("GRID") && !"[new]".equals(linkData)) {
 				if(linkData != null && vw.getAttribute("linkfield") != null) 
 					whereSql = vw.getAttribute("linkfield") + " = '" + linkData + "'";
 				

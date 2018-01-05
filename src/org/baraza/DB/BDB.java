@@ -142,9 +142,6 @@ public class BDB {
 
 	public void setUser(String userIP, String userName) {
 		user = new BUser(this, userIP, userName);
-		String mysql = "INSERT INTO sys_logins (entity_id, login_ip) VALUES ('";
-		mysql += user.getUserID() + "', '" + userIP + "')";
-		executeQuery(mysql);
 	}
 
 	public void setUser(String userIP, String userName, String narrative) {

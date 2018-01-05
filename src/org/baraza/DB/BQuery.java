@@ -1002,7 +1002,7 @@ public class BQuery {
 				saveMsg += updateField(el.getValue(), el.getAttribute("default"));
 			} else if(el.getName().equals("FUNCTION")) {
 				if(el.getAttribute("when", "").equals("new")) {
-					if("{new}".equals(linkData)) 
+					if("[new]".equals(linkData)) 
 						saveMsg += updateField(el.getValue(), db.executeFunction(el.getAttribute("function")));
 				} else if (el.getAttribute("function") != null) {
 					saveMsg += updateField(el.getValue(), db.executeFunction(el.getAttribute("function")));
