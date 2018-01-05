@@ -8,7 +8,7 @@ ALTER TABLE entitys ADD COLUMN action_date timestamp without time zone;
 ALTER TABLE entitys ADD CONSTRAINT primary_email UNIQUE (primary_email);
 ALTER TABLE periods ADD COLUMN redeem boolean DEFAULT false;
 ALTER TABLE entitys ADD COLUMN client_code character varying(10);
-ALTER TABLE sys_emailed ADD COLUMN mail_body text;
+--ALTER TABLE sys_emailed ADD COLUMN mail_body text;
 
 CREATE TABLE clients (
 	client_id			    serial primary key,
@@ -37,10 +37,10 @@ CREATE TABLE loyalty_points (
 	period_id				integer references periods,
 	point_date				date,
 	segments                real default 0 not null,
-	amount                  real default 0 not null,
+	amount_rate             real default 0 not null,
 	points					real default 0 not null,
 	points_amount           real default 0 not null,
-	refunds 				real default 0 not null,
+	refunds 				boolean default false not null,
 	tours_amount 			real default 0 not null,
 	bonus                   real default 0 not null,
 	sectors 				character varying(100),
@@ -201,6 +201,20 @@ CREATE TABLE city_codes (
 	sys_country_id			char(2) references sys_countrys
 );
 
+CREATE TABLE donation (
+	donation_id 			serial primary key,
+	org_id 					integer references orgs,
+	entity_id 				integer not null references entitys,
+	donated_by				integer not null references entitys,
+	donation_amount			real default 0 not null,
+	donation_status			varchar(50) default 'Completed',
+	donation_date			timestamp not null default current_timestamp,
+	details 				text
+);
+CREATE INDEX donation_entity_id  ON donation(entity_id);
+CREATE INDEX donation_org_id  ON donation(org_id);
+CREATE INDEX donation_donated_by  ON donation(donated_by);
+
 
 CREATE OR REPLACE VIEW vw_entitys AS
 	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default,
@@ -219,12 +233,13 @@ CREATE OR REPLACE VIEW vw_entitys AS
 		vw_entity_address.premises, vw_entity_address.street, vw_entity_address.town,
 		vw_entity_address.phone_number, vw_entity_address.extension, vw_entity_address.mobile,
 		vw_entity_address.fax, vw_entity_address.email, vw_entity_address.website,
+		
+		entity_types.entity_type_id, entity_types.entity_type_name, entity_types.entity_role, 
 
 		entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader,
 		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password,
-		entitys.function_role, entitys.primary_email, entitys.primary_telephone,
-		entity_types.entity_type_id, entity_types.entity_type_name,
-		entity_types.entity_role, entity_types.use_key, entitys.client_code
+		entitys.function_role, entitys.use_key_id, entitys.primary_email, entitys.primary_telephone, entitys.client_code
+		
 	FROM (entitys LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id)
 		INNER JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
 		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id;
@@ -257,7 +272,7 @@ CREATE OR REPLACE VIEW vw_order_details AS
 
 CREATE OR REPLACE VIEW vw_loyalty_points AS
 	SELECT loyalty_points.loyalty_points_id, periods.period_id, periods.start_date as period, to_char(periods.start_date, 'mmyyyy'::text) AS ticket_period,
-		vw_entitys.client_code, loyalty_points.segments, loyalty_points.amount, loyalty_points.points,	loyalty_points.points_amount,loyalty_points.tours_amount,
+		vw_entitys.client_code, loyalty_points.segments, loyalty_points.amount_rate, loyalty_points.points,	loyalty_points.points_amount,loyalty_points.tours_amount,
 		loyalty_points.bonus, vw_entitys.org_name, vw_entitys.entity_name, vw_entitys.entity_id,vw_entitys.user_name,
 		loyalty_points.point_date, loyalty_points.ticket_number, loyalty_points.invoice_number, loyalty_points.approve_status, loyalty_points.refunds,
 		periods.end_date, loyalty_points.local_inter, loyalty_points.is_return
@@ -278,47 +293,47 @@ CREATE OR REPLACE VIEW vw_loyalty_points AS
 
     CREATE OR REPLACE VIEW vw_client_statement AS
     SELECT a.dr, a.cr, a.order_date::date, a.client_code, a.org_name, a.entity_id,
-    	 (a.dr +a.tours_amount- a.cr - a.donated_amount - a.refunds) AS balance, a.donated_amount, a.details, a.refunds, a.entity_name,
+    	 (a.dr +a.tours_amount- a.cr - a.donated_amount) AS balance, a.donated_amount, a.details, a.refunds, a.entity_name,
     	 a.tours_amount
     	FROM ((SELECT COALESCE(vw_loyalty_points.points, 0::real) + COALESCE(vw_loyalty_points.bonus, 0::real) AS dr,
     		0::real AS cr, vw_loyalty_points.period AS order_date, vw_loyalty_points.client_code,
     		vw_loyalty_points.org_name, vw_loyalty_points.entity_id,
-    		0::real as donated_amount, COALESCE(vw_loyalty_points.refunds, 0::real) AS refunds, ''::text as details, vw_loyalty_points.entity_name,
+    		0::real as donated_amount, COALESCE(vw_loyalty_points.refunds, 0::boolean) AS refunds, ''::text as details, vw_loyalty_points.entity_name,
     		vw_loyalty_points.tours_amount
     	FROM vw_loyalty_points)
     	UNION ALL
     	(SELECT 0::real AS dr, vw_orders.points::real AS cr, vw_orders.order_date,
     	vw_orders.client_code, vw_orders.org_name, vw_orders.entity_id,
-    	0::real as donated_amount, 0::real AS refunds, ''::text as details, vw_orders.entity_name,
+    	0::real as donated_amount, 0::boolean AS refunds, ''::text as details, vw_orders.entity_name,
     	0::real AS tours_amount
     	FROM vw_orders)
     	UNION ALL
     	(SELECT 0::real as dr, 0::real as cr, vw_donation.donation_date,
     	vw_donation.client_code, vw_donation.org_name, vw_donation.donated_by as entity_id, COALESCE(vw_donation.donation_amount,0::real) as donated_amount,
-    	0::real AS refunds, vw_donation.details, vw_donation.entity_name,0::real AS tours_amount
+    	'false'::boolean AS refunds, vw_donation.details, vw_donation.entity_name,0::real AS tours_amount
     	 FROM vw_donation)) a
     	ORDER BY a.order_date;
 
 
     CREATE OR REPLACE VIEW vw_csr_statement AS
     SELECT a.dr, a.cr, a.order_date::date, a.client_code, a.org_name, a.entity_id,
-    	 (a.dr+a.tours_amount - a.cr + a.donated_amount - a.refunds) AS balance, a.donated_amount, a.details, a.refunds, a.entity_name
+    	 (a.dr+a.tours_amount - a.cr + a.donated_amount) AS balance, a.donated_amount, a.details, a.refunds, a.entity_name
     	FROM ((SELECT COALESCE(vw_loyalty_points.points, 0::real) + COALESCE(vw_loyalty_points.bonus, 0::real) AS dr,
     		0::real AS cr, vw_loyalty_points.period AS order_date, vw_loyalty_points.client_code,
     		vw_loyalty_points.org_name, vw_loyalty_points.entity_id,
-    		0::real as donated_amount, COALESCE(vw_loyalty_points.refunds, 0::real) AS refunds, ''::text as details, vw_loyalty_points.entity_name,
+    		0::real as donated_amount, vw_loyalty_points.refunds, ''::text as details, vw_loyalty_points.entity_name,
     		vw_loyalty_points.tours_amount
     	FROM vw_loyalty_points)
     	UNION ALL
     	(SELECT 0::real AS dr, vw_orders.points::real AS cr, vw_orders.order_date,
     	vw_orders.client_code, vw_orders.org_name, vw_orders.entity_id,
-    	0::real as donated_amount, 0::real AS refunds, ''::text as details, vw_orders.entity_name,
+    	0::real as donated_amount, 'false'::boolean AS refunds, ''::text as details, vw_orders.entity_name,
     	0::real AS tours_amount
     	FROM vw_orders)
     	UNION ALL
     	(SELECT 0::real as dr, 0::real as cr, vw_donation.donation_date,
     	vw_donation.client_code, vw_donation.org_name, vw_donation.entity_id, COALESCE(vw_donation.donation_amount,0::real) as donated_amount,
-    	0::real AS refunds, vw_donation.details, vw_donation.entity_name,
+    	'false'::boolean AS refunds, vw_donation.details, vw_donation.entity_name,
     	0::real AS tours_amount
     	 FROM vw_donation)) a
     	ORDER BY a.order_date;

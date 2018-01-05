@@ -418,7 +418,7 @@ v_balance := getPointsBalance(rec.entity_id,rec.client_code);
 	   IF(rec.primary_email is not null AND v_balance > 0.0) THEN
 
 		   INSERT INTO sys_emailed (org_id, sys_email_id, table_id, table_name)
-		   VALUES(rec.org_id, 11, rec.entity_id, 'entitys');
+		   VALUES(rec.org_id, 9, rec.entity_id, 'entitys');
 	   END IF;
    END IF;
 END LOOP;
