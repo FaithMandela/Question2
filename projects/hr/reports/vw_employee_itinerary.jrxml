@@ -34,10 +34,13 @@
 		</box>
 	</style>
 	<subDataset name="dsef" uuid="2c695204-8943-458a-ae03-fc3eeaae3f87">
-		<queryString language="SQL">
+		<parameter name="p_employee_travel_id" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		</parameter>
+		<queryString>
 			<![CDATA[SELECT et_field_name, e_field_value
 FROM vw_e_fields
-WHERE (table_code = 111);]]>
+WHERE (table_code = 111) AND (table_id = $P{p_employee_travel_id});]]>
 		</queryString>
 		<field name="et_field_name" class="java.lang.String"/>
 		<field name="e_field_value" class="java.lang.String"/>
@@ -415,21 +418,16 @@ $P!{organd}]]>
 			<componentElement>
 				<reportElement key="table" style="table" x="1" y="0" width="360" height="20" uuid="7585ca85-deeb-475d-9947-906eacbc72bf"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="dsef" uuid="8fa390b7-b22c-4f6f-9909-02838d6fb93c">
+					<datasetRun subDataset="dsef" uuid="ff84854b-7d4e-4a7b-a9b3-9c27283be850">
+						<datasetParameter name="p_employee_travel_id">
+							<datasetParameterExpression><![CDATA[$F{employee_travel_id}]]></datasetParameterExpression>
+						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
 					<jr:column width="185" uuid="dd1aee22-2b76-4dc5-aba9-6ca2d25c10e1">
-						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
-							<staticText>
-								<reportElement x="0" y="0" width="185" height="30" uuid="fedf1c2a-9b38-4678-8037-79eff4381e22"/>
-								<textElement>
-									<font fontName="Times New Roman"/>
-								</textElement>
-								<text><![CDATA[et_field_name]]></text>
-							</staticText>
-						</jr:columnHeader>
+						<jr:columnHeader style="table_CH" height="0" rowSpan="1"/>
 						<jr:detailCell style="table_TD" height="20" rowSpan="1">
-							<textField>
+							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="185" height="20" uuid="d39645d1-7065-4d22-9e32-c8431a79575a"/>
 								<textElement>
 									<font fontName="Times New Roman"/>
@@ -439,17 +437,9 @@ $P!{organd}]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="270" uuid="bc3464ae-fb19-4c9c-8353-b272658a3690">
-						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
-							<staticText>
-								<reportElement x="0" y="0" width="270" height="30" uuid="b618bd0c-a542-4fb6-b6c0-7b7d682b9041"/>
-								<textElement>
-									<font fontName="Times New Roman"/>
-								</textElement>
-								<text><![CDATA[e_field_value]]></text>
-							</staticText>
-						</jr:columnHeader>
+						<jr:columnHeader style="table_CH" height="0" rowSpan="1"/>
 						<jr:detailCell style="table_TD" height="20" rowSpan="1">
-							<textField>
+							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="270" height="20" uuid="f4d38b48-de0a-4096-98fc-f4c944956eb7"/>
 								<textElement>
 									<font fontName="Times New Roman"/>
