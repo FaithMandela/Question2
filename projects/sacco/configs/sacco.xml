@@ -1416,7 +1416,7 @@
 					<COMBOBOX w="430" h="20" lpfield="currency_name" x="10" y="110" lptable="currency" default_org_fnct="get_default_currency" title="Currency">currency_id</COMBOBOX>
 					<TEXTDATE default="now" w="150" h="20" x="290" y="190" title="Activity Date">activity_date</TEXTDATE>
 					<TEXTDATE default="now" w="150" h="20" x="10" y="210" title="Value Date">value_date</TEXTDATE>
-					<TEXTDECIMAL w="150" h="20" x="290" y="210" title="Credit">account_credit</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" h="20" x="290" y="210" title="Credit (Amount)">account_credit</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" h="20" x="10" y="250" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 					<TEXTAREA w="430" h="70" x="10" y="310" title="Details">details</TEXTAREA>
 				</FORM>
@@ -1428,7 +1428,7 @@
 					<COMBOBOX w="430" h="20" lpfield="currency_name" x="10" y="110" lptable="currency" default_org_fnct="get_default_currency" title="Currency">currency_id</COMBOBOX>
 					<TEXTDATE default="now" w="150" h="20" x="290" y="190" title="Activity Date">activity_date</TEXTDATE>
 					<TEXTDATE default="now" w="150" h="20" x="10" y="210" title="Value Date">value_date</TEXTDATE>
-					<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Debit">account_debit</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Debit (Amount)">account_debit</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" h="20" x="10" y="250" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 					<TEXTAREA w="430" h="70" x="10" y="310" title="Details">details</TEXTAREA>
 				</FORM>
@@ -1441,7 +1441,7 @@
 					<TEXTFIELD w="150" h="20" x="10" y="190" title="Transfer Account">transfer_account_no</TEXTFIELD>
 					<TEXTDATE default="now" w="150" h="20" x="290" y="190" title="Activity Date">activity_date</TEXTDATE>
 					<TEXTDATE default="now" w="150" h="20" x="10" y="210" title="Value Date">value_date</TEXTDATE>
-					<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Debit">account_debit</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Debit (Amount)">account_debit</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" h="20" x="10" y="250" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 					<TEXTAREA w="430" h="70" x="10" y="310" title="Details">details</TEXTAREA>
 				</FORM>
@@ -1454,7 +1454,7 @@
 					<TEXTFIELD w="150" h="20" x="10" y="190" title="Transfer Account">transfer_account_no</TEXTFIELD>
 					<TEXTDATE default="now" w="150" h="20" x="290" y="190" title="Activity Date">activity_date</TEXTDATE>
 					<TEXTDATE default="now" w="150" h="20" x="10" y="210" title="Value Date">value_date</TEXTDATE>
-					<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Debit">account_debit</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Debit (Amount)">account_debit</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" h="20" x="10" y="250" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 					<TEXTAREA w="430" h="70" x="10" y="310" title="Details">details</TEXTAREA>
 				</FORM>
@@ -1501,7 +1501,7 @@
 					<COMBOBOX w="430" h="20" lpfield="currency_name" x="10" y="110" lptable="currency" default_org_fnct="get_default_currency" title="Currency">currency_id</COMBOBOX>
 					<TEXTDATE default="now" w="150" h="20" x="290" y="190" title="Activity Date">activity_date</TEXTDATE>
 					<TEXTDATE default="now" w="150" h="20" x="10" y="210" title="Value Date">value_date</TEXTDATE>
-					<TEXTDECIMAL w="150" h="20" x="290" y="210" title="Credit">account_credit</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" h="20" x="290" y="210" title="Credit (Amount)">account_credit</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" h="20" x="10" y="250" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 					<TEXTAREA w="430" h="70" x="10" y="310" title="Details">details</TEXTAREA>
 				</FORM>
@@ -1513,7 +1513,7 @@
 					<COMBOBOX w="430" h="20" lpfield="currency_name" x="10" y="110" lptable="currency" default_org_fnct="get_default_currency" title="Currency">currency_id</COMBOBOX>
 					<TEXTDATE default="now" w="150" h="20" x="290" y="190" title="Activity Date">activity_date</TEXTDATE>
 					<TEXTDATE default="now" w="150" h="20" x="10" y="210" title="Value Date">value_date</TEXTDATE>
-					<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Debit">account_debit</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Debit (Amount)">account_debit</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" h="20" x="10" y="250" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 					<TEXTAREA w="430" h="70" x="10" y="310" title="Details">details</TEXTAREA>
 				</FORM>
@@ -1526,7 +1526,7 @@
 					<TEXTFIELD w="150" h="20" x="10" y="190" title="Transfer Account">transfer_account_no</TEXTFIELD>
 					<TEXTDATE default="now" w="150" h="20" x="290" y="190" title="Activity Date">activity_date</TEXTDATE>
 					<TEXTDATE default="now" w="150" h="20" x="10" y="210" title="Value Date">value_date</TEXTDATE>
-					<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Debit">account_debit</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Debit (Amount)">account_debit</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" h="20" x="10" y="250" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 					<TEXTAREA w="430" h="70" x="10" y="310" title="Details">details</TEXTAREA>
 				</FORM>
@@ -1539,7 +1539,7 @@
 					<COMBOBOX w="430" h="20" lpfield="transfer_account_no" x="10" y="110" lptable="vw_trx_contrib" linkfield="deposit_account_id" title="Contribution Account">transfer_account_no</COMBOBOX>
 					<TEXTDATE default="now" w="150" h="20" x="290" y="190" title="Activity Date">activity_date</TEXTDATE>
 					<TEXTDATE default="now" w="150" h="20" x="10" y="210" title="Value Date">value_date</TEXTDATE>
-					<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Debit">account_debit</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Debit (Amount)">account_debit</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" h="20" x="10" y="250" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 					<TEXTAREA w="430" h="70" x="10" y="310" title="Details">details</TEXTAREA>
 				</FORM>
@@ -1552,7 +1552,7 @@
 					<COMBOBOX w="430" h="20" lpfield="transfer_account_no" x="10" y="110" lptable="vw_trx_shares" linkfield="deposit_account_id" title="Shares Account">transfer_account_no</COMBOBOX>
 					<TEXTDATE default="now" w="150" h="20" x="290" y="190" title="Activity Date">activity_date</TEXTDATE>
 					<TEXTDATE default="now" w="150" h="20" x="10" y="210" title="Value Date">value_date</TEXTDATE>
-					<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Debit">account_debit</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Debit (Amount)">account_debit</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" h="20" x="10" y="250" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 					<TEXTAREA w="430" h="70" x="10" y="310" title="Details">details</TEXTAREA>
 				</FORM>
@@ -1565,7 +1565,7 @@
 					<TEXTFIELD w="150" h="20" x="10" y="190" title="Transfer Account">transfer_account_no</TEXTFIELD>
 					<TEXTDATE default="now" w="150" h="20" x="290" y="190" title="Activity Date">activity_date</TEXTDATE>
 					<TEXTDATE default="now" w="150" h="20" x="10" y="210" title="Value Date">value_date</TEXTDATE>
-					<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Debit">account_debit</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Debit (Amount)">account_debit</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" h="20" x="10" y="250" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 					<TEXTAREA w="430" h="70" x="10" y="310" title="Details">details</TEXTAREA>
 				</FORM>
@@ -1612,7 +1612,7 @@
 					<COMBOBOX w="430" h="20" lpfield="currency_name" x="10" y="110" lptable="currency" default_org_fnct="get_default_currency" title="Currency">currency_id</COMBOBOX>
 					<TEXTDATE default="now" w="150" h="20" x="290" y="190" title="Activity Date">activity_date</TEXTDATE>
 					<TEXTDATE default="now" w="150" h="20" x="10" y="210" title="Value Date">value_date</TEXTDATE>
-					<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Debit">account_debit</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Debit (Amount)">account_debit</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" h="20" x="10" y="250" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 					<TEXTAREA w="430" h="70" x="10" y="310" title="Details">details</TEXTAREA>
 				</FORM>
@@ -1625,7 +1625,7 @@
 					<TEXTFIELD w="150" h="20" x="10" y="190" title="Transfer Account">transfer_account_no</TEXTFIELD>
 					<TEXTDATE default="now" w="150" h="20" x="290" y="190" title="Activity Date">activity_date</TEXTDATE>
 					<TEXTDATE default="now" w="150" h="20" x="10" y="210" title="Value Date">value_date</TEXTDATE>
-					<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Debit">account_debit</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Debit (Amount)">account_debit</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" h="20" x="10" y="250" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 					<TEXTAREA w="430" h="70" x="10" y="310" title="Details">details</TEXTAREA>
 				</FORM>
@@ -1673,7 +1673,7 @@
 					<TEXTFIELD w="150" h="20" x="10" y="190" title="Transfer Account">transfer_account_no</TEXTFIELD>
 					<TEXTDATE default="now" w="150" h="20" x="290" y="190" title="Activity Date">activity_date</TEXTDATE>
 					<TEXTDATE default="now" w="150" h="20" x="10" y="210" title="Value Date">value_date</TEXTDATE>
-					<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Debit">account_debit</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Debit (Amount)">account_debit</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" h="20" x="10" y="250" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 					<TEXTAREA w="430" h="70" x="10" y="310" title="Details">details</TEXTAREA>
 				</FORM>
