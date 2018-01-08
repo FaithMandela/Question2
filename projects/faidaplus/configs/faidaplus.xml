@@ -186,7 +186,7 @@
 				<ACTION approval="4" fnct="upd_orders_status">Cancel Order</ACTION>
 			</ACTIONS>
 		</GRID>
-		<GRID noorg="true" role="admin,staff,finance_manager" keyfield="order_id" name=" Orders Awaiting Collection" orderby="order_date DESC" where="(order_status = 'Awaiting Collection')" tab.count="count(order_id)" table="vw_orders">
+		<GRID noorg="true" role="admin,staff,finance_manager" keyfield="order_id" name=" Orders Awaiting Collection" orderby="order_id DESC" where="(order_status = 'Awaiting Collection')" tab.count="count(order_id)" table="vw_orders">
 			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
 			<TEXTFIELD w="275" fnct="to_char(order_date,'dd/mm/yyyy HH12:MI:SS')" title="Order Date">order_date</TEXTFIELD>
 			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
@@ -255,7 +255,7 @@
 				<ACTION approval="2" fnct="upd_orders_status">Collected/Delivered</ACTION>
 			</ACTIONS>
 		</GRID>
-		<GRID noorg="true" role="admin,staff,finance_manager" keyfield="order_id" name="All Orders" orderby="order_date DESC" tab.count="count(order_id)" table="vw_orders">
+		<GRID noorg="true" role="admin,staff,finance_manager" keyfield="order_id" name="All Orders" orderby="order_id DESC" tab.count="count(order_id)" table="vw_orders">
 			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
 			<TEXTFIELD w="275" fnct="to_char(order_date,'dd/mm/yyyy HH12:MI:SS')" title="Order Date">order_date</TEXTFIELD>
 			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>

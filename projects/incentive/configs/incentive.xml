@@ -30,7 +30,7 @@
 			<MENU role="admin" name="Files">65</MENU>
 			<MENU name="Error Messages">75</MENU>
 		</MENU>
-		<MENU name="Reports">
+		<MENU role="admin,staff" name="Reports">
 			<MENU name="Orders">56</MENU>
 			<MENU name="Batch Orders">72</MENU>
 			<MENU name="Statement">60</MENU>
