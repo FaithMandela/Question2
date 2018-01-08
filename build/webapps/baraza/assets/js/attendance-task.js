@@ -329,10 +329,9 @@ $('#end-task')
         var btnId = $('.end-task');
         var json = $('#task-manage').serializeArray();
         console.log(" select " + json);
-        var jsonData = {start:"false"};
-        $.each(json, function(i, field){
-            jsonData [field.name] = field.value;
-        });
+        var jsonData =  {
+            end_task: true,
+        };
 
         $.ajax({
             url: 'ajax', // url where to submit the request

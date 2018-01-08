@@ -31,9 +31,9 @@
                             <button  type="button" id="start-task" class="start-task btn-block btn-sm btn-primary">
                                 <i class=""></i> Start Task
                             </button>
-                            <button  type="button" id="end-task" class="end-task btn-block btn-sm btn-warning" style="display:none">
-                                <i class=""></i> End Task
-                            </button>
+                            <%--<button  type="button" id="end-task" class="end-task btn-block btn-sm btn-warning" style="display:none">--%>
+                                <%--<i class=""></i> End Task--%>
+                            <%--</button>--%>
                         </div>
                         <div class="col-md-6 col-xs-6">
                         </div>
@@ -55,7 +55,9 @@
                                     <td id="tsk_name">Sprint Planning Meeting</td>
                                     <td><span class="label label-sm label-success">In Progress</span></td>
                                     <td>
-                                        <a href="javascript:;" class="btn btn-xs red">Stop Task <i class="fa  fa-hand-o-up"></i></a>
+                                        <button  type="button" id="end-task" class="btn btn-xs red" >
+                                            <i class="fa  fa-hand-o-up"></i> End Task
+                                        </button>
                                     </td>
                                 </tr>
                             </tbody>
