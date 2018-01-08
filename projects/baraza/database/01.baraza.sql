@@ -37,12 +37,13 @@ CREATE TABLE sys_countrys (
 	sys_country_id			char(2) primary key,
 	sys_continent_id		char(2) references sys_continents,
 	sys_country_code		varchar(3),
-	sys_country_number		varchar(3),
-	sys_phone_code			varchar(3),
 	sys_country_name		varchar(120) unique,
+	sys_country_number		varchar(3),
+	sys_country_capital		varchar(64),
+	sys_phone_code			varchar(7),
 	sys_currency_name		varchar(50),
-	sys_currency_cents		varchar(50),
 	sys_currency_code		varchar(3),
+	sys_currency_cents		varchar(50),
 	sys_currency_exchange	real
 );
 CREATE INDEX sys_countrys_sys_continent_id ON sys_countrys (sys_continent_id);
@@ -917,6 +918,23 @@ CREATE OR REPLACE FUNCTION get_et_field_name(integer) RETURNS varchar(120) AS $$
 	SELECT et_field_name
 	FROM et_fields WHERE (et_field_id = $1);
 $$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION add_sys_login(varchar(120)) RETURNS integer AS $$
+DECLARE
+	v_sys_login_id			integer;
+	v_entity_id				integer;
+BEGIN
+	SELECT entity_id INTO v_entity_id
+	FROM entitys WHERE user_name = $1;
+
+	v_sys_login_id := nextval('sys_logins_sys_login_id_seq');	
+
+	INSERT INTO sys_logins (sys_login_id, entity_id)
+	VALUES (v_sys_login_id, v_entity_id);
+
+	return v_sys_login_id;
+END;
+$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION upd_action() RETURNS trigger AS $$
 DECLARE

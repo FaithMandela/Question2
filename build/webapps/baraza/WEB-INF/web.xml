@@ -166,11 +166,6 @@
 			<url-pattern>/grid_export</url-pattern>
 			<url-pattern>/jsondata</url-pattern>
 			<url-pattern>/ajax</url-pattern>
-
-			<http-method>DELETE</http-method>
-			<http-method>GET</http-method>
-			<http-method>POST</http-method>
-			<http-method>PUT</http-method>
 		</web-resource-collection>
 		<auth-constraint>
 			<role-name>user</role-name>

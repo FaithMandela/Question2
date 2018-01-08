@@ -19,7 +19,6 @@ import org.apache.catalina.core.StandardServer;
 import org.apache.catalina.core.AprLifecycleListener;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
-import org.apache.catalina.deploy.ApplicationParameter;
 
 import org.baraza.DB.BDB;
 import org.baraza.xml.BElement;

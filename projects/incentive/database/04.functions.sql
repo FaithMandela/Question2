@@ -48,7 +48,7 @@ BEGIN
             IF(rec.loy_loc_int = 'L')THEN
                 SELECT case when rec.trues > 1 then isreturn else one_way end as points INTO v_points FROM points_scaling WHERE code = 'L';
                 v_points_amount := v_rates * v_points;
-				v_refunds := 0;
+
 				IF(v_isRefund)THEN
 					v_points_amount := -(v_rates * v_points);
 					v_points := -v_points;
@@ -56,9 +56,9 @@ BEGIN
 				END IF;
 				SELECT invoice_number INTO v_invoice_number FROM loyalty_points WHERE invoice_number = rec.loy_doc_number;
 				IF(v_invoice_number is null)THEN
-	                INSERT INTO loyalty_points(org_id, entity_id, period_id, point_date,amount, points, points_amount, refunds,
+	                INSERT INTO loyalty_points(org_id, entity_id, period_id, point_date,amount_rate, points, refunds,
 	                bonus, sectors, ticket_number, local_inter, client_code, loyalty_curr,invoice_number, is_return)
-	                VALUES (0, v_entity_id, v_period_id, rec.loy_date, v_rates, v_points, v_points_amount, v_refunds,
+	                VALUES ($2::integer, v_entity_id, v_period_id, rec.loy_date, v_rates, v_points, v_isRefund,
 	                0, rec.loy_routing, rec.loy_serv_number, rec.loy_loc_int, rec.loy_cust_code, rec.loy_currency,
 	                rec.loy_doc_number, v_isreturn);
 				END IF;
@@ -91,12 +91,12 @@ BEGIN
 					END IF;
 
 				END IF;
-
+				IF(v_int_code IS NULL)THEN RAISE EXCEPTION 'City codes cannot be verified'; END IF;
 
 
                 SELECT case when rec.trues > 1 then isreturn else one_way end as points INTO v_points FROM points_scaling WHERE code = v_int_code;
+
 				v_points_amount := v_rates * v_points;
-				v_refunds := 0;
 				IF(v_isRefund)THEN
 					v_points_amount := -(v_rates * v_points);
 					v_points := -v_points;
@@ -104,9 +104,9 @@ BEGIN
 				END IF;
 				SELECT invoice_number INTO v_invoice_number FROM loyalty_points WHERE invoice_number = rec.loy_doc_number;
 				IF(v_invoice_number is null)THEN
-					INSERT INTO loyalty_points(org_id, entity_id, period_id, point_date,amount, points, points_amount, refunds,
+					INSERT INTO loyalty_points(org_id, entity_id, period_id, point_date,amount_rate, points, refunds,
 					bonus, sectors, ticket_number, local_inter, client_code, loyalty_curr,invoice_number, is_return)
-					VALUES (0, v_entity_id, v_period_id, rec.loy_date, v_rates, v_points, v_points_amount, v_refunds,
+					VALUES ($2::integer, v_entity_id, v_period_id, rec.loy_date, v_rates, v_points, v_isRefund,
 					0, rec.loy_routing, rec.loy_serv_number, rec.loy_loc_int, rec.loy_cust_code, rec.loy_currency,
 					rec.loy_doc_number, v_isreturn);
 				END IF;

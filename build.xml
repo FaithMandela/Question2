@@ -46,10 +46,10 @@
 		</jar>
 
 		<signjar jar="${build}/baraza.jar" tsaurl="http://sha256timestamp.ws.symantec.com/sha256/timestamp"
-			keystore="${build.lib}/dewciskeystore.jks" alias="dewciskeystore" storepass="Baraza9NBO"/>
+			keystore="${build.lib}/dewciscs-2017.jks" alias="dewcis-code-signing-certificate" storepass="Baraza9NBO"/>
 
 		<signjar jar="${build}/baraza.app.jar" tsaurl="http://sha256timestamp.ws.symantec.com/sha256/timestamp"
-			keystore="${build.lib}/dewciskeystore.jks" alias="dewciskeystore" storepass="Baraza9NBO"/>
+			keystore="${build.lib}/dewciscs-2017.jks" alias="dewcis-code-signing-certificate" storepass="Baraza9NBO"/>
 
         <delete dir="${classes.dir}"/>
 	</target>

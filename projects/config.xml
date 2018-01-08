@@ -1,3 +1,4 @@
+
 <APPLIST loglevel="info" dbpassword="invent" greeting="Open Baraza Server" encryption="accessbaaccessba" dbtemplate="baraza" dbpath="jdbc:postgresql://localhost/postgres" dbclass="org.postgresql.Driver" dbusername="postgres" logfile="baraza.log" mode="run">
 	<APP dbpath="jdbc:postgresql://1localhost/healthfacility" dbname="healthfacility" path="healthfacility" xmlfile="healthfacility.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Health Facility</APP>
 	<APP dbpath="jdbc:postgresql://localhost/travelportapps" dbname="travelportapps" path="travelportapps" xmlfile="travelportapps.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="travelportapps">Travelport Apps</APP>
@@ -65,7 +66,6 @@
 	<APP dbpath="jdbc:postgresql://localhost/aua" dbname="aua" path="aua" xmlfile="web/general.xml" dbclass="org.postgresql.Driver" dbusername="postgres">AUA Web General</APP>
 	<APP dbpath="jdbc:postgresql://localhost/mysa" dbname="mysa" path="mysa" xmlfile="mysa.xml" dbclass="org.postgresql.Driver" dbusername="postgres">MYSA</APP>
 	<APP dbpath="jdbc:postgresql://localhost/telcom" dbname="tamshi" path="tamshidomain" xmlfile="tamshi.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Tamshi Domain</APP>
-	<APP dbpath="jdbc:postgresql://localhost/fidelity" dbname="fidelity" path="fidelity" xmlfile="fidelity.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Fidelity</APP>
 	<APP dbpath="jdbc:postgresql://localhost/metropol" dbname="metropol" path="metropol" xmlfile="metropol.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Metropol</APP>
 	<APP dbpath="jdbc:postgresql://localhost/sg" dbname="sg" path="sg" xmlfile="sg.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres">SG</APP>
 	<APP dbpath="jdbc:postgresql://localhost/meridian" dbname="meridian" path="meridian" xmlfile="meridian.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Meridian</APP>
@@ -95,4 +95,5 @@
 	<SERVER dbpassword="invent" dbpath="jdbc:sqlserver://192.168.0.78:1433;databaseName=GIDS;selectMethod=cursor" noaudit="true" dbname="agency" path="agency" xmlfile="ticket_email.xml" disable="true" dbclass="com.microsoft.sqlserver.jdbc.SQLServerDriver" dbusername="sa">Agency Polling</SERVER>
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">UEAB Emails</SERVER>
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://localhost/mobilehealth" dbname="mobilehealth" path="mobilehealth" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Mobile Health Mailing Server</SERVER>
+
 </APPLIST>

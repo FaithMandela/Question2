@@ -132,7 +132,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Property" key="35">
-		<GRID keyfield="property_id" name="Property" where="(is_active = true)" table="vw_property">
+		<GRID keyfield="property_id" name="Active Property" where="(is_active = true)" table="vw_property">
 			<TEXTFIELD w="75" title="Property Owner">client_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Property Type">property_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Property Name">property_name</TEXTFIELD>
@@ -152,15 +152,14 @@
 				<TEXTDECIMAL w="75" title="Rental Value">rental_value</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Service Fees">service_fees</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Commision Value">commision_value</TEXTDECIMAL>
-				<GRID keyfield="period_rental_id" name="Period Rentals" tab.count="count(period_rental_id)" linkfield="rental_id" table="vw_period_rentals">
+				<GRID new="false" keyfield="period_rental_id" name="Period Rentals" tab.count="count(period_rental_id)" linkfield="rental_id" table="vw_period_rentals">
 					<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 					<TEXTDECIMAL w="75" title="Rent Amount">rental_amount</TEXTDECIMAL>
 					<TEXTDECIMAL w="75" title="Service Fees">service_fees</TEXTDECIMAL>
 					<TEXTDECIMAL w="75" title="Repair Amount">repair_amount</TEXTDECIMAL>
 					<TEXTDECIMAL w="75" title="Commision">commision</TEXTDECIMAL>
 					<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
-					<FORM auditid="sys_audit_trail_id" keyfield="period_rental_id" name="Period Rentals" linkfield="rental_id" table="period_rentals">
-						<COMBOBOX w="430" h="20" lpfield="period_disp" x="10" y="10" lptable="periods" title="Period">period_id</COMBOBOX>
+					<FORM auditid="sys_audit_trail_id" new="false" edit="false" keyfield="period_rental_id" name="Period Rentals" linkfield="rental_id" delete="false" table="period_rentals">
 						<TEXTDECIMAL w="150" h="20" x="10" y="30" title="Rent Amount">rental_amount</TEXTDECIMAL>
 						<TEXTDECIMAL w="150" h="20" x="290" y="30" title="Service Fees">service_fees</TEXTDECIMAL>
 						<TEXTDECIMAL w="150" h="20" x="10" y="50" title="Repair Amount">repair_amount</TEXTDECIMAL>
@@ -246,6 +245,18 @@
 				<TEXTFIELD w="150" h="20" x="10" y="10" title="Unit Type Name">unit_type_name</TEXTFIELD>
 				<TEXTAREA w="430" h="70" x="10" y="30" title="Details">details</TEXTAREA>
 			</FORM>
+		</GRID>
+		<GRID keyfield="property_id" name="Archived Property" where="(is_active = false)" tab.count="count(property_id)" table="vw_property">
+			<TEXTFIELD w="75" title="Client Name">client_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Property Type">property_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Property Name">property_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Estate">estate</TEXTFIELD>
+			<TEXTFIELD w="75" title="Plot No">plot_no</TEXTFIELD>
+			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+			<TEXTFIELD w="75" title="Units">units</TEXTFIELD>
+			<ACTIONS>
+				<ACTION approval="2" fnct="un_archive">Activate Property</ACTION>
+			</ACTIONS>
 		</GRID>
 	</DESK>
 	<DESK w="700" h="500" name="Organisation" key="5">
@@ -1439,9 +1450,6 @@
 			<TEXTFIELD w="75" title="Property Type">property_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Estate">estate</TEXTFIELD>
 			<TEXTFIELD w="75" title="Plot No">plot_no</TEXTFIELD>
-			<TEXTFIELD w="75" title="Total Units">units</TEXTFIELD>
-			<TEXTFIELD w="75" title="Accupied">accupied</TEXTFIELD>
-			<TEXTFIELD w="75" title="Vacant">vacant</TEXTFIELD>
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 			<GRID keyfield="payment_id" name="Property Billing and Remmitance" linkfield="property_id" table="vw_client_bill">
 				<TEXTDATE w="75" title="Tranct Date">payment_date</TEXTDATE>
@@ -1530,9 +1538,6 @@
 			<TEXTFIELD w="75" title="Plot No">plot_no</TEXTFIELD>
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 			<TEXTFIELD w="75" title="Units">units</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Rental Value">rental_value</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Service Fees">service_fees</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Commision Value">commision_value</TEXTDECIMAL>
 			<ACTIONS>
 				<ACTION approval="2" fnct="un_archive">Activate Property</ACTION>
 			</ACTIONS>
@@ -1742,9 +1747,6 @@
 				<TEXTFIELD w="75" title="Property Type">property_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Estate">estate</TEXTFIELD>
 				<TEXTFIELD w="75" title="Plot No">plot_no</TEXTFIELD>
-				<TEXTFIELD w="75" title="Total Units">units</TEXTFIELD>
-				<TEXTFIELD w="75" title="Accupied">accupied</TEXTFIELD>
-				<TEXTFIELD w="75" title="Vacant">vacant</TEXTFIELD>
 				<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 				<GRID keyfield="payment_id" name="Client Billing and Remmitance" linkfield="property_id" table="vw_client_bill">
 					<TEXTDATE w="75" title="Tranct Date">payment_date</TEXTDATE>
