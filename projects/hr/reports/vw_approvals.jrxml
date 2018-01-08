@@ -14,7 +14,7 @@
 		</conditionalStyle>
 	</style>
 	<parameter name="tableid" class="java.lang.Integer" isForPrompting="false">
-		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_approvals.approve_status, vw_approvals.action_date, vw_approvals.app_entity_name
