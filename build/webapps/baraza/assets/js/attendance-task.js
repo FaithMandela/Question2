@@ -205,12 +205,32 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         oldBtnClass  = 'break-btn';
                         msg = 'Break Start :'+result[data].log_time;
 
+                        //Disable Clock out and lunch out
+                        btnClockOut.attr('disabled','disabled');
+                        btnLunchOut.attr('disabled','disabled');
+
+                        //hide break in,hide lunchin clock in show breakout
+                        btnBreak.hide();
+                        btnBreakOut.show();
+                        btnLunch.hide();
+                        btnClockIn.hide();
+
                     }
                     if(logInOut == 'BREAKOUT'){
                         btnMsg = "BREAK DONE";
                         outBtnNewClassName = 'break-out-btn';
                         oldBtnClass  = 'break-btn';
                         msg = 'Break End :'+result[data].log_time;
+
+                        //Enable Clock out and disable break
+                        btnClockOut.removeAttr('disabled','disabled');
+                    //btnBreakOut.attr('disabled','disabled');
+
+                            //hide break in,hide lunchin clock in show breakout
+                        btnBreak.hide();
+                        btnBreakOut.show();
+                        btnLunch.hide();
+                        btnClockIn.hide();
 
                     }
                 }
