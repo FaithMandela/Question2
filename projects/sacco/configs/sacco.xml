@@ -3596,38 +3596,25 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" h="550" name="sacco statements" key="285">
-		<FILTER split="150" w="700" h="550" name="Transaction A/Cs Statement" type="vert">
+		<FILTER split="150" keyfield="org_id" w="700" h="550" name="A/Cs Product Statements" type="vert">
 			<FILTERFORM name="Transaction A/C Statement">
+				<COMBOBOX w="430" h="20" lpfield="product_name" x="10" y="30" lptable="products" where="(loan_account = false) and (is_active = true)" title="Account Product">product_no</COMBOBOX>
 				<TEXTDATE w="150" h="20" x="10" y="50" title="Start Date">start_date</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="10" y="50" title="End Date">end_date</TEXTDATE>
 			</FILTERFORM>
-			<JASPER reportfile="sacco_trxs_statement_dr.jasper" name="Transaction A/C Statement"></JASPER>
-		</FILTER>
-		<FILTER split="150" w="700" h="550" name="Contribution A/Cs Statement" type="vert">
-			<FILTERFORM name="Contribution A/C Statement">
-				<TEXTDATE w="150" h="20" x="10" y="50" title="Start Date">start_date</TEXTDATE>
-				<TEXTDATE w="150" h="20" x="10" y="50" title="End Date">end_date</TEXTDATE>
-			</FILTERFORM>
-			<JASPER reportfile="sacco_contribs_statement_dr.jasper" name="Contribution A/Cs Statement"></JASPER>
-		</FILTER>
-		<FILTER split="150" w="700" h="550" name="Shares A/Cs Statement" type="vert">
-			<FILTERFORM name="Shares A/C Statement">
-				<TEXTDATE w="150" h="20" x="10" y="50" title="Start Date">start_date</TEXTDATE>
-				<TEXTDATE w="150" h="20" x="10" y="50" title="End Date">end_date</TEXTDATE>
-			</FILTERFORM>
-			<JASPER reportfile="sacco_shares_statement_dr.jasper" name="Shares A/Cs Statement"></JASPER>
+			<JASPER reportfile="sacco_trxs_statement_dr.jasper" org.table="vw_orgs" name="Transaction A/C Statement"></JASPER>
 		</FILTER>
 		<FILTER split="150" w="700" h="550" name="Monthly Contributions" type="horl">
 			<DRILLDOWN pos="top" keyfield="period_year" name="Year" listfield="period_year" table="vw_Period_Year">
 				<DRILLDOWN pos="top" wherefield="Period_Year" keyfield="Period_ID" name="Month" orderby="month_id" listfield="Period_Month" user="entity_id" table="vw_periods"></DRILLDOWN>
 			</DRILLDOWN>
-			<JASPER reportfile="sacco_contribs_statement_monthly.jasper" name="Monthly Contributions"></JASPER>
+			<JASPER reportfile="sacco_contribs_statement_monthly.jasper" org.table="vw_orgs" name="Monthly Contributions"></JASPER>
 		</FILTER>
 		<FILTER split="150" w="700" h="550" name="Monthly Transactions" type="horl">
 			<DRILLDOWN pos="top" keyfield="period_year" name="Year" listfield="period_year" table="vw_Period_Year">
 				<DRILLDOWN pos="top" wherefield="Period_Year" keyfield="Period_ID" name="Month" orderby="month_id" listfield="Period_Month" user="entity_id" table="vw_periods"></DRILLDOWN>
 			</DRILLDOWN>
-			<JASPER reportfile="sacco_trxs_statement_monthly.jasper" name="Monthly Transactions"></JASPER>
+			<JASPER reportfile="sacco_trxs_statement_monthly.jasper" org.table="vw_orgs" name="Monthly Transactions"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" h="550" name="Investments" key="290">
@@ -3647,24 +3634,6 @@
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 			<CHECKBOX w="75" title="Completed">is_completed</CHECKBOX>
 			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
-			<FORM keyfield="investment_id" name="Investments" cols="2" table="investments">
-				<USERFIELD>entity_id</USERFIELD>
-				<COMBOBOX w="150" h="20" lpfield="investment_type_name" x="10" y="10" lptable="investment_types" title="Investment Type" span="true">investment_type_id</COMBOBOX>
-				<COMBOBOX w="150" h="20" lpfield="investment_status_name" x="10" y="30" lptable="investment_status" title="Investment Status">investment_status_id</COMBOBOX>
-				<COMBOBOX w="150" h="20" lpfield="currency_name" x="10" y="50" lptable="currency" title="Currency" span="true">currency_id</COMBOBOX>
-				<TEXTFIELD w="150" h="20" x="10" y="90" title="Investment Name">investment_name</TEXTFIELD>
-				<TEXTDATE w="150" h="20" x="10" y="110" title="Started Date" span="true">started_date</TEXTDATE>
-				<TEXTDATE w="150" h="20" x="290" y="110" title="Expected Maturity">expected_maturity</TEXTDATE>
-				<TEXTDECIMAL default="1" w="150" h="20" x="10" y="130" title="Exchange Rate" span="true">exchange_rate</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" h="20" x="290" y="130" title="Proposed Capital">proposed_capital</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" h="20" x="10" y="150" title="Expected Profit" span="true">expected_profit</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" h="20" x="290" y="150" title="Initial Payment">initial_payment</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" h="20" x="10" y="170" title="Monthly Payments" span="true">monthly_payments</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" h="20" x="290" y="170" title="Monthly Returns" span="true">monthly_returns</TEXTDECIMAL>
-				<CHECKBOX w="150" h="20" x="10" y="190" title="Active">is_active</CHECKBOX>
-				<CHECKBOX w="150" h="20" x="290" y="190" title="Completed">is_completed</CHECKBOX>
-				<TEXTAREA tab="Details" w="430" h="70" x="10" y="250">details</TEXTAREA>
-			</FORM>
 			<GRID keyfield="transaction_id" name="Expenditure" orderby="completed desc, payment_date" where="(tx_type = -1) " linkfield="investment_id" table="vw_tx_ledger">
 				<TEXTFIELD w="75" title="Ledger Type">ledger_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
@@ -3816,6 +3785,24 @@
 					</FORM>
 				</GRID>
 			</GRID>
+			<FORM keyfield="investment_id" name="Investments" cols="2" table="investments">
+				<USERFIELD>entity_id</USERFIELD>
+				<COMBOBOX w="150" h="20" lpfield="investment_type_name" x="10" y="10" lptable="investment_types" title="Investment Type" span="true">investment_type_id</COMBOBOX>
+				<COMBOBOX w="150" h="20" lpfield="investment_status_name" x="10" y="30" lptable="investment_status" title="Investment Status">investment_status_id</COMBOBOX>
+				<COMBOBOX w="150" h="20" lpfield="currency_name" x="10" y="50" lptable="currency" title="Currency" span="true">currency_id</COMBOBOX>
+				<TEXTFIELD w="150" h="20" x="10" y="90" title="Investment Name">investment_name</TEXTFIELD>
+				<TEXTDATE w="150" h="20" x="10" y="110" title="Started Date" span="true">started_date</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="110" title="Expected Maturity">expected_maturity</TEXTDATE>
+				<TEXTDECIMAL default="1" w="150" h="20" x="10" y="130" title="Exchange Rate" span="true">exchange_rate</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" h="20" x="290" y="130" title="Proposed Capital">proposed_capital</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" h="20" x="10" y="150" title="Expected Profit" span="true">expected_profit</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" h="20" x="290" y="150" title="Initial Payment">initial_payment</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" h="20" x="10" y="170" title="Monthly Payments" span="true">monthly_payments</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" h="20" x="290" y="170" title="Monthly Returns" span="true">monthly_returns</TEXTDECIMAL>
+				<CHECKBOX w="150" h="20" x="10" y="190" title="Active">is_active</CHECKBOX>
+				<CHECKBOX w="150" h="20" x="290" y="190" title="Completed">is_completed</CHECKBOX>
+				<TEXTAREA tab="Details" w="430" h="70" x="10" y="250">details</TEXTAREA>
+			</FORM>
 		</GRID>
 		<GRID keyfield="investment_type_id" name="Investment Types" table="investment_types">
 			<TEXTFIELD w="75" title="Investment Type ID">investment_type_id</TEXTFIELD>
