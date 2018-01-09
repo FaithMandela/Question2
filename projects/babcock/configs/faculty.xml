@@ -140,7 +140,7 @@
 			<TEXTFIELD w="135" title="Student Name">studentname</TEXTFIELD>
 			<TEXTFIELD w="50" title="Advisor Approval">majorapproval</TEXTFIELD>
 			<TEXTFIELD w="50" title="Finance Approval">finaceapproval</TEXTFIELD>
-			<TEXTFIELD w="50" title="Submited Course" edit="true">finalised</TEXTFIELD>
+			<TEXTFIELD w="50" title="Submited Course">finalised</TEXTFIELD>
 			<JASPER name="Student Details" reportfile="studentdetailsa.jasper"></JASPER>
 			<ACTIONS>
 				<ACTION fnct="open_registration" approval="2">Open Registration</ACTION>

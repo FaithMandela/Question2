@@ -507,6 +507,7 @@
 			<EDITFIELD w="150" title="Not Approved" editkey="qstudentid" editvalue="qstudents">noapproval</EDITFIELD>
 			<ACTIONS>
 				<ACTION fnct="updatemajorapproval">Approve</ACTION>
+				<ACTION fnct="open_registration" approval="2">Not Approved</ACTION>
 			</ACTIONS>
 			<JASPER name="Unofficial Transcript" reportfile="studentquarterviewa.jasper"></JASPER>
 			<JASPER name="Check List" reportfile="studentdegreeviewe.jasper"></JASPER>
