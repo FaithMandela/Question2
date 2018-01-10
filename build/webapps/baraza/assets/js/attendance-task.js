@@ -314,7 +314,7 @@ $('#start-task')
         var btnRId = $('#start-task');
         var json = $('#task-manage').serializeArray();
         console.log(" select " + json);
-        var jsonData = {start_task:"true"};
+        var jsonData = {task:"start"};
         $.each(json, function(i, field){
             jsonData [field.name] = field.value;
         });
@@ -354,7 +354,7 @@ $('#end_task')
         var json = $('#task-manage').serializeArray();
         console.log(" select " + json);
         var jsonData =  {
-            end_task: "true",
+            task: "stop",
             timesheet_id:timesheetId
         };
         $.ajax({
