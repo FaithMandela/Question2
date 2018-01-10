@@ -1,47 +1,41 @@
 
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.util.Calendar;
-import java.util.List;
-import java.text.SimpleDateFormat;
+import java.util.Base64;
+import java.io.IOException;
 
-import ipn.*;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class BMPesa {
 	
 	public static void main(String[] args) {
+		BMPesa mpesa = new BMPesa();
+		mpesa.authenticate("", "");
+	}
+
+	public String authenticate(String app_key, String app_secret) {
+		String token = null;
+		String appKeySecret = app_key + ":" + app_secret;
+		byte[] bytes = appKeySecret.getBytes("ISO-8859-1");
+		String encoded = Base64.getEncoder().encodeToString(bytes);
+
+		OkHttpClient client = new OkHttpClient();
+
+		Request request = new Request.Builder()
+			.url("https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials")
+			.get()
+			.addHeader("authorization", "Basic " + encoded)
+			.addHeader("cache-control", "no-cache")
+			.build();
+
 		try {
-			IpnWebRetrieval service = new IpnWebRetrieval();
-			System.out.println("Retrieving the port from the following service: " + service);
-
-			Calendar cal = Calendar.getInstance();
-			SimpleDateFormat dateParse = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			System.out.println("Running MPESA Web service : " + dateParse.format(cal.getTime()));
-
-			RetrieveData port = service.getRetrieveDataPort();
-
-			List<Tblmpesa> pts = port.retrieveTransactionsByDate("254708850080", "2013-10-01", "#Jud1ci@71");
-			
-			System.out.println("Size : " + pts.size());
-			for(Tblmpesa pt : pts) {
-				System.out.println("Message ID : " + pt.getMessageId());
-				System.out.println("Message ID : " + pt.getMpesaAccountnumber());
-				System.out.println("Message ID : " + pt.getMpesaAllocated());
-				System.out.println("Message ID : " + pt.getMpesaAmount());
-				System.out.println("Message ID : " + pt.getMpesaBalance());
-				System.out.println("Message ID : " + pt.getMpesaDatetime());
-				System.out.println("Message ID : " + pt.getMpesaId());
-				System.out.println("Message ID : " + pt.getMpesaOriginaltext());
-				System.out.println("Message ID : " + pt.getMpesaSendermobile());
-				System.out.println("Message ID : " + pt.getMpesaSendername());
-				System.out.println("Message ID : " + pt.getMpesaTerminal());
-				System.out.println("Message ID : " + pt.getMpesaTxcode());
-				System.out.println("Message ID : " + pt.getMpesaTxdate());
-				System.out.println("");
-			}
-
-		} catch(InvalidCredentialsFault_Exception ex) {
-			System.out.println("Credential error : " + ex);
+			Response response = client.newCall(request).execute();
+		} catch(IOException ex) {
+			System.out.println("IO Error");
 		}
+
+		return token;
 	}
 }

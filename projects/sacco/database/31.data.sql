@@ -1,5 +1,5 @@
 ------ emails
-
+---applications
 INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
 	VALUES (1, 0, 'Application', 'Thank you for your Application', 'Thank you {{name}} for your application.<br><br>
 		Your user name is {{username}}<br> 

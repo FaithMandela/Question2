@@ -16,6 +16,12 @@ BEGIN
 		
 		INSERT INTO entitys (entity_id, org_id, use_key_id, entity_type_id, member_id, entity_name, user_name, primary_email, primary_telephone, function_role)
 		VALUES (v_entity_id, NEW.org_id, 100, v_entity_type_id, NEW.member_id, NEW.member_name, v_user_name, lower(trim(NEW.member_email)), NEW.telephone_number, 'member');
+
+		INSERT INTO sys_emailed (org_id, sys_email_id, table_id, table_name, email_type)
+			SELECT org_id, sys_email_id, NEW.entity_id, 'entitys', 1
+			FROM sys_emails
+			WHERE (use_type = 2) AND (org_id = NEW.org_id);
+
 	END IF;
 
 	RETURN NULL;
