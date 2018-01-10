@@ -493,8 +493,13 @@ System.out.println("BASE 2120 : ");
 			JsonReader jsonReader = Json.createReader(new StringReader(jsonField));
 			JsonObject jObj = jsonReader.readObject();
 			
-			String mySql = "SELECT add_timesheet(" + jObj.getString("task_name")
-				+ "," + jObj.getString("start") + ", '" + jObj.getString("task_narrative") + "');";
+			String mySql = null;
+			if("start".equals(jObj.getString("task"))) {
+				mySql = "SELECT add_timesheet(" + jObj.getString("task_name")
+					+ ",true, '" + jObj.getString("task_narrative") + "');";
+			} else {
+				mySql = "SELECT add_timesheet(" + jObj.getString("timesheet_id") + ",false, '');";
+			}
 System.out.println("BASE 2130 : " + mySql);
 
 			myOutput = db.executeFunction(mySql);

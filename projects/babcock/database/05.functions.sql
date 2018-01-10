@@ -1416,7 +1416,7 @@ BEGIN
 	mystr := null;
 	
 	IF (myqrec.qstudentid IS NULL) THEN 
-		RAISE EXCEPTION 'Please register for the semester and make course selections first before applying for payment';
+		RAISE EXCEPTION 'Make course selections first before applying for payment';
 	ELSIF (myqrec.hours < myqrec.mincredits) AND (myqrec.overloadapproval = false) THEN
 		RAISE EXCEPTION 'You have an underload, the required minimum is % credits.', CAST(myqrec.mincredits as text);
 	ELSIF (myqrec.hours < myqrec.mincredits) AND (myqrec.overloadapproval = true) AND (myqrec.hours < myqrec.overloadhours) THEN
