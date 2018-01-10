@@ -314,7 +314,7 @@ $('#start-task')
         var btnRId = $('#start-task');
         var json = $('#task-manage').serializeArray();
         console.log(" select " + json);
-        var jsonData = {start:"true"};
+        var jsonData = {start_task:"true"};
         $.each(json, function(i, field){
             jsonData [field.name] = field.value;
         });
@@ -346,16 +346,17 @@ $('#start-task')
 
     });
 
-$('#end-task')
+$('#end_task')
     .click(function () {
         btnrmvClass = 'btn-warning';
         var btnId = $('.end-task');
+        var timesheetId = $('#end_task').val();
         var json = $('#task-manage').serializeArray();
         console.log(" select " + json);
         var jsonData =  {
-            end_task: true,
+            end_task: "true",
+            timesheet_id:timesheetId
         };
-
         $.ajax({
             url: 'ajax', // url where to submit the request
             type : "POST", // type of action POST || GET

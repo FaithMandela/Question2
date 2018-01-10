@@ -55,7 +55,7 @@
                                     <td id="tsk_name">Sprint Planning Meeting</td>
                                     <td><span class="label label-sm label-success">In Progress</span></td>
                                     <td>
-                                        <button  type="button" id="end-task" class="btn btn-xs red" >
+                                        <button  type="button" id="end_task" class="btn btn-xs red" value="">
                                             <i class="fa  fa-hand-o-up"></i> End Task
                                         </button>
                                     </td>
