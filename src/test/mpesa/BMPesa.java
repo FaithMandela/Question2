@@ -20,7 +20,8 @@ public class BMPesa {
 		String validationURL = "http://62.24.122.19:9090/mpesa/validation";
 		String confirmationURL =  "http://62.24.122.19:9090/mpesa/confirmation";
 		String auth = mpesa.authenticate("r1renXMh8prPMjoooC2c3TAwQjG6z1va", "Hp6MN1RX8Bvc7vGI");
-		String resp = mpesa.registerURL(auth, "603095", validationURL, confirmationURL);
+		String resp = mpesa.registerURL(auth, "600617", validationURL, confirmationURL);
+		resp = mpesa.testTransaction(auth, "600617", "CustomerPayBillOnline", "100", "254708374149","xyz");
 	}
 
 	public String authenticate(String app_key, String app_secret) {
@@ -69,6 +70,40 @@ System.out.println("BASE 2010 : " + jObject.toString());
 			RequestBody body = RequestBody.create(mediaType, jObject.toString());
 			Request request = new Request.Builder()
 				.url("https://sandbox.safaricom.co.ke/mpesa/c2b/v1/registerurl")
+				.post(body)
+				.addHeader("authorization", "Bearer " + auth)
+				.addHeader("content-type", "application/json")
+				.build();
+			Response response = client.newCall(request).execute();
+			
+System.out.println(response.body().string());
+		} catch(IOException ex) {
+			System.out.println("IO Error");
+		} catch(JSONException ex) {
+			System.out.println("JSON Error");
+		}
+
+		return resp;
+	}
+	
+	public String testTransaction(String auth, String shortCode, String commandID, String amount, String MSISDN, String billRefNumber) {
+		String resp = null;
+		
+		try {
+			JSONObject jObject = new JSONObject();
+			jObject.put("ShortCode", shortCode);
+			jObject.put("CommandID", commandID);
+			jObject.put("Amount", amount);
+			jObject.put("Msisdn", MSISDN);
+			jObject.put("BillRefNumber", billRefNumber);
+			
+System.out.println("BASE 2010 : " + jObject.toString());
+			
+			OkHttpClient client = new OkHttpClient();
+			MediaType mediaType = MediaType.parse("application/json");
+			RequestBody body = RequestBody.create(mediaType, jObject.toString());
+			Request request = new Request.Builder()
+				.url("https://sandbox.safaricom.co.ke/mpesa/c2b/v1/simulate")
 				.post(body)
 				.addHeader("authorization", "Bearer " + auth)
 				.addHeader("content-type", "application/json")
