@@ -37,7 +37,7 @@
 		<MENU name="Travel" role="finance,admin,hr">
 			<MENU name="Employee Travels" role="finance,admin,hr">235</MENU>
 			<MENU name="Travel Definations" role="finance,admin,hr">240</MENU>
-			<MENU name="Travel Report" role="finance,admin,hr">220</MENU>
+			<MENU name="Travel Report" role="finance,admin,hr">250</MENU>
 		</MENU>
 		<MENU name="Administration" role="admin">
 			<MENU name="Organisation">20</MENU>
@@ -4691,7 +4691,7 @@
 		</GRID>
 	</DESK>
 
-	<DESK w="700" name="Travel" key="220" h="550">
+	<DESK w="700" name="Travel" key="250" h="550">
 		<FILTER w="700" name="Travel" split="150" type="vert" h="550">
 			<FILTERFORM name="Date Range">
 				<TEXTDATE w="150" filterfield="departure_date" title="Starting From" filtertype=">=" y="10" h="20" default_fnct="get_start_year" x="10">startrange</TEXTDATE>

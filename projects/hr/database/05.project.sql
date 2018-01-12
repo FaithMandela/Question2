@@ -100,7 +100,7 @@ CREATE TABLE phases (
 	phase_name				varchar(240),
 	start_date				date not null,
 	end_date				date,
-	completed				boolean not null default false,
+	completed				boolean default false not null,
 	phase_cost				real default 0 not null,
 	details					text
 );
@@ -457,7 +457,7 @@ BEGIN
 		VALUES ($1, v_org_id, current_date, current_time, current_time, false, $3);
 	ELSE
 		UPDATE timesheet SET ts_end_time = current_time, ts_completed = true 
-		WHERE (ts_completed = false) AND (task_id = $1);
+		WHERE (ts_completed = false) AND (timesheet_id = $1);
 	END IF;
 
 	msg := 'ok';
