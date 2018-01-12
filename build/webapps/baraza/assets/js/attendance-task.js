@@ -213,6 +213,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         btnBreak.hide();
                         btnBreakOut.show();
                         btnLunch.hide();
+                        btnLunchOut.show();
                         btnClockIn.hide();
 
                     }
@@ -230,6 +231,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         btnBreak.hide();
                         btnBreakOut.show();
                         btnLunch.hide();
+                        btnLunchOut.show();
                         btnClockIn.hide();
 
                     }

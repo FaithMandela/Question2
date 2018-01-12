@@ -671,6 +671,7 @@
 				btnBreak.hide();
 				btnBreakOut.show();
 				btnLunch.hide();
+				btnLunchOut.show();
 				btnClockIn.hide();
 
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
@@ -687,6 +688,7 @@
 				btnBreak.hide();
 				btnBreakOut.show();
 				btnLunch.hide();
+				btnLunchOut.show();
 				btnClockIn.hide();
 
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
