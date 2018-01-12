@@ -56,6 +56,8 @@ CREATE TABLE members (
 CREATE INDEX members_entity_id ON members(entity_id);
 CREATE INDEX members_org_id ON members(org_id);
 
+ALTER TABLE members ADD  is_active		boolean default true not null;
+
 ALTER TABLE entitys ADD 	member_id		integer references members;
 CREATE INDEX entitys_member_id ON entitys(member_id);
 
@@ -648,7 +650,7 @@ SELECT
 	members.picture_file, members.employed,members.self_employed, members.employer_name, 
 	members.monthly_salary, members.monthly_net_income, members.annual_turnover, members.annual_net_income,members.employer_address, 
 	members.introduced_by, members.application_date, members.approve_status, members.workflow_table_id, members.action_date, 
-	members.details,entitys.entity_id
+	members.details,entitys.entity_id,members.is_active
 FROM members
 	INNER JOIN entitys ON members.member_id = entitys.member_id
 	INNER JOIN orgs ON members.org_id = orgs.org_id
