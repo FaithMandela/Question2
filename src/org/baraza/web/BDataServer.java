@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.baraza.utils.BWebUtils;
 import org.baraza.DB.BDB;
 import org.baraza.DB.BQuery;
 
@@ -37,27 +38,8 @@ public class BDataServer extends HttpServlet {
 
 		log.info("Start Data Server");
 
-		System.out.println("HEADERS ------- ");
-		Enumeration<String> headerNames = request.getHeaderNames();
-		while (headerNames.hasMoreElements()) {
-			String headerName = headerNames.nextElement();
-			System.out.println(headerName);
-			request.getHeader(headerName);
-			Enumeration<String> headers = request.getHeaders(headerName);
-			while (headers.hasMoreElements()) {
-				String headerValue = headers.nextElement();
-				System.out.println("\t" + headerValue);
-			}
-		}
-
-		System.out.println("PARAMETERS ------- ");
-		Enumeration en = request.getParameterNames();
-        while (en.hasMoreElements()) {
-			String paramName = (String)en.nextElement();
-			System.out.println(paramName + " : " + request.getParameter(paramName));
-		}
-		System.out.print("\n");
-
+		BWebUtils.showHeaders(request);
+		BWebUtils.showParameters(request);
 
 
 		log.info("Start Data Server");
