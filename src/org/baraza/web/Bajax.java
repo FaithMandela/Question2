@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.logging.Logger;
 import java.io.StringReader;
 import java.io.PrintWriter;
 import java.io.OutputStream;
@@ -38,6 +39,7 @@ import org.baraza.DB.BQuery;
 import org.baraza.xml.BElement;
 
 public class Bajax extends HttpServlet {
+	Logger log = Logger.getLogger(Bajax.class.getName());
 
 	BWeb web = null;
 	BDB db = null;
