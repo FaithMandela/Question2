@@ -1,13 +1,16 @@
-//Requires the following libraries. Maven repositories given below
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import org.json.simple.JSONObject;
+
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
+
+import org.json.JSONObject;
+import org.json.JSONException;
+
 
 public class BMPesaListen {
 
@@ -74,19 +77,24 @@ public class BMPesaListen {
              * other than a 0 (zero) for the 'ResultCode' during Validation means an
              * error occurred and the transaction is cancelled
              */
-            JSONObject obj = new JSONObject();
-            obj.put("ResultCode", 0);
-            obj.put("ResultDesc", "The service was accepted successfully");
-            obj.put("ThirdPartyTransID", "1234567890");
+			String res = "";
+			try {
+				JSONObject obj = new JSONObject();
+				obj.put("ResultCode", 0);
+				obj.put("ResultDesc", "The service was accepted successfully");
+				obj.put("ThirdPartyTransID", "1234567890");
+				res = obj.toString();
+			} catch(JSONException ex) {
+				System.out.println("JSONException : " + ex);
+			}
 
             /**
              * Respond to the server appropriately
              */
-            String res = obj.toJSONString();
-            he.sendResponseHeaders(200, res.length());
-            OutputStream os = he.getResponseBody();
-            os.write(res.getBytes("UTF-8"));
-            os.close();
+			he.sendResponseHeaders(200, res.length());
+			OutputStream os = he.getResponseBody();
+			os.write(res.getBytes("UTF-8"));
+			os.close();
         }
     }
 

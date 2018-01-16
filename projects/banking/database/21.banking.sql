@@ -398,25 +398,25 @@ CREATE TABLE mpesa_trxs (
 );
 CREATE INDEX mpesa_trxs_org_id ON mpesa_trxs (org_id);
 
-CREATE TABLE mpesa_soap (
+CREATE TABLE mpesa_api (
 	mpesa_soap_id			serial primary key,
 	org_id					integer references orgs,
-	request_id				varchar(32),
+	TransactionType			varchar(32),
 	TransID					varchar(32),
+	TransTime				timestamp,
 	TransAmount				real,
-	BillRefNumber			varchar(32),
-	TransTime				varchar(32),
-	BusinessShortCode		varchar(32),
-	TransType				varchar(32),
-	FirstName				varchar(32),
-	LastName				varchar(32),
-	MSISDN					varchar(32),
+	BusinessShortCode		varchar(16),
+	BillRefNumber			varchar(64),
+	InvoiceNumber			varchar(64),
 	OrgAccountBalance		real,
-	InvoiceNumber			varchar(32),
-	ThirdPartyTransID		varchar(32),
+	ThirdPartyTransID		varchar(64),
+	MSISDN					varchar(16),
+	FirstName				varchar(64),
+	MiddleName 				varchar(64),
+	LastName				varchar(64),
 	created					timestamp default current_timestamp not null
 );
-CREATE INDEX mpesa_soap_org_id ON mpesa_soap (org_id);
+CREATE INDEX mpesa_api_org_id ON mpesa_api (org_id);
 
 CREATE VIEW vw_activity_types AS
 	SELECT activity_types.dr_account_id, dra.account_no as dr_account_no, dra.account_name as dr_account_name,

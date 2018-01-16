@@ -8,13 +8,23 @@
  */
 package org.baraza.utils;
 
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Enumeration;
 import java.util.logging.Logger;
+import java.io.UnsupportedEncodingException;
+
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 
 import javax.servlet.http.HttpServletRequest;
 
 public class BWebUtils {
-	Logger log = Logger.getLogger(BWebUtils.class.getName());
+	static Logger log = Logger.getLogger(BWebUtils.class.getName());
 
 	public static void showHeaders(HttpServletRequest request) {
 		System.out.println("HEADERS ------- ");
@@ -40,6 +50,35 @@ public class BWebUtils {
 			System.out.println(paramName + " : " + request.getParameter(paramName));
 		}
 		System.out.print("\n");
+	}
+	
+	public static String createToken(String userId) {
+		String token = null;
+		try {
+			Algorithm algorithm = Algorithm.HMAC256("secret");
+			token = JWT.create().withIssuer("auth0").withSubject(userId).sign(algorithm);
+		} catch (UnsupportedEncodingException ex){
+			log.severe("UnsupportedEncodingException : " + ex);
+		} catch (JWTCreationException ex){
+			log.severe("JWTCreationException : " + ex);
+		}
+		
+		return token;
+	}
+	
+	public static String decodeToken(String token) {
+		String payLoad = null;
+		try {
+			Algorithm algorithm = Algorithm.HMAC256("secret");
+			JWTVerifier verifier = JWT.require(algorithm).withIssuer("auth0").build(); 
+			DecodedJWT jwt = verifier.verify(token);
+			payLoad = jwt.getSubject();
+		} catch (UnsupportedEncodingException ex){
+			log.severe("UnsupportedEncodingException : " + ex);
+		} catch (JWTVerificationException ex){
+			log.severe("JWTVerificationException : " + ex);
+		}
+		return payLoad;
 	}
 
 }

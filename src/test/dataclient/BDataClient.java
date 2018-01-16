@@ -30,6 +30,7 @@ public class BDataClient {
 			String appKeySecret = app_key + ":" + app_secret;
 			byte[] byteData = appKeySecret.getBytes("ISO-8859-1");
 			String encoded = Base64.getEncoder().encodeToString(byteData);
+System.out.println("BASE 1010 : " + encoded);
 
 			OkHttpClient client = new OkHttpClient();
 			Request request = new Request.Builder()
@@ -41,7 +42,7 @@ public class BDataClient {
 			Response response = client.newCall(request).execute();
 			
 			String rBody = response.body().string();
-			System.out.println("BASE 1010 : " + rBody);
+System.out.println("BASE 1040 : " + rBody);
 
 		} catch(IOException ex) {
 			System.out.println("IO Error : " + ex);

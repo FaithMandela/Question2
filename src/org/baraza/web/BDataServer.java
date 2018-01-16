@@ -9,6 +9,8 @@
 package org.baraza.web;
 
 import java.util.logging.Logger;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Enumeration;
 import java.io.OutputStream;
 import java.io.InputStream;
@@ -37,15 +39,22 @@ public class BDataServer extends HttpServlet {
 		db = new BDB(dbconfig);
 
 		log.info("Start Data Server");
+		
+		String auth = request.getHeader("authorization");
+		System.out.println("BASE 2010 : " + auth);
 
 		BWebUtils.showHeaders(request);
 		BWebUtils.showParameters(request);
-
+		
+		String token = BWebUtils.createToken("15");
+		System.out.println("BASE 3010 : " + token);
+		System.out.println("BASE 3030 : " + BWebUtils.decodeToken(token));
 
 		log.info("Start Data Server");
 
 		db.close();
 	}
+	
 
 
 }
