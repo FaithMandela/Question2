@@ -399,11 +399,11 @@ CREATE TABLE mpesa_trxs (
 CREATE INDEX mpesa_trxs_org_id ON mpesa_trxs (org_id);
 
 CREATE TABLE mpesa_api (
-	mpesa_soap_id			serial primary key,
+	mpesa_api_id			serial primary key,
 	org_id					integer references orgs,
 	TransactionType			varchar(32),
 	TransID					varchar(32),
-	TransTime				timestamp,
+	TransTime				varchar(16),
 	TransAmount				real,
 	BusinessShortCode		varchar(16),
 	BillRefNumber			varchar(64),
@@ -414,6 +414,7 @@ CREATE TABLE mpesa_api (
 	FirstName				varchar(64),
 	MiddleName 				varchar(64),
 	LastName				varchar(64),
+	TransactionTime			timestamp,
 	created					timestamp default current_timestamp not null
 );
 CREATE INDEX mpesa_api_org_id ON mpesa_api (org_id);

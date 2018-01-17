@@ -18,13 +18,27 @@ WHERE active = true
 ORDER BY department_name, department_role_name;
 
 
+
 ----------- Kenya Tax rate increase
-UPDATE tax_rates SET tax_range = 12298.33 WHERE tax_type_id = 1;
-UPDATE tax_rates SET tax_range = 23885.25 WHERE tax_type_id = 2;
-UPDATE tax_rates SET tax_range = 35472.17 WHERE tax_type_id = 3;
-UPDATE tax_rates SET tax_range = 47059.08 WHERE tax_type_id = 4;
+select * from tax_types order by tax_type_id;
+select * from tax_rates where tax_type_id = 1 order by tax_rate_id;
+
+UPDATE tax_rates SET tax_range = 12298 WHERE tax_rate_id = 1;
+UPDATE tax_rates SET tax_range = 23885 WHERE tax_rate_id = 2;
+UPDATE tax_rates SET tax_range = 35472 WHERE tax_rate_id = 3;
+UPDATE tax_rates SET tax_range = 47059 WHERE tax_rate_id = 4;
 
 UPDATE tax_types SET tax_relief = 1408 WHERE tax_type_id = 1;
+
+UPDATE tax_rates SET tax_range = 12298 WHERE tax_rate_id = 26;
+UPDATE tax_rates SET tax_range = 23885 WHERE tax_rate_id = 27;
+UPDATE tax_rates SET tax_range = 35472 WHERE tax_rate_id = 28;
+UPDATE tax_rates SET tax_range = 47059 WHERE tax_rate_id = 29;
+
+UPDATE tax_types SET tax_relief = 1408 WHERE tax_type_id = 8;
+
+
+SELECT pg_catalog.setval('tax_rates_tax_rate_id_seq', 1, false);
 
 
 ----------- Update tax on a larger scale using work join
