@@ -3,7 +3,6 @@ import java.util.Base64;
 import java.util.Iterator;
 import java.io.IOException;
 
-
 import org.json.JSONObject;
 import org.json.JSONException;
 
@@ -19,31 +18,36 @@ public class BDataClient {
 
 		String myURL = "http://localhost:9090/hr/dataserver";
 		
+		String data = "{name:\"Dennis\"}";
+		
 		BDataClient dataClient = new BDataClient();
-		String auth = dataClient.authenticate(myURL, "r1renXMh8prPMjoooC2c3TAwQjG6z1va", "Hp6MN1RX8Bvc7vGI");
-
+		String auth = dataClient.authenticate(myURL, "root", "baraza");
+		String resp = dataClient.sendData(myURL, "20:10", auth, data);
 	}
 
-	public String authenticate(String myURL, String app_key, String app_secret) {
+	public String authenticate(String myURL, String appKey, String appPass) {
 		String auth = null;
+		if(appKey == null || appPass == null) return auth;
+		
 		try {
-			String appKeySecret = app_key + ":" + app_secret;
-			byte[] byteData = appKeySecret.getBytes("ISO-8859-1");
-			String encoded = Base64.getEncoder().encodeToString(byteData);
-System.out.println("BASE 1010 : " + encoded);
+			String authUser = Base64.getEncoder().encodeToString(appKey.getBytes("UTF-8"));
+			String authPass = Base64.getEncoder().encodeToString(appPass.getBytes("UTF-8"));
 
 			OkHttpClient client = new OkHttpClient();
 			Request request = new Request.Builder()
-				.url(myURL + "?grant_type=client_credentials")
+				.url(myURL)
 				.get()
-				.addHeader("authorization", "Basic " + encoded)
+				.addHeader("action", "authorization")
+				.addHeader("authUser", authUser)
+				.addHeader("authPass", authPass)
 				.addHeader("cache-control", "no-cache")
 				.build();
 			Response response = client.newCall(request).execute();
 			
 			String rBody = response.body().string();
-System.out.println("BASE 1040 : " + rBody);
-
+			JSONObject jResp = new JSONObject(rBody);
+			auth = jResp.getString("access_token");
+System.out.println("BASE 1040 : " + rBody + " : " + auth);
 		} catch(IOException ex) {
 			System.out.println("IO Error : " + ex);
 		}
@@ -51,7 +55,7 @@ System.out.println("BASE 1040 : " + rBody);
 		return auth;
 	}
 	
-	public String sendData(String myURL, String auth, String data) {
+	public String sendData(String myURL, String viewLink, String auth, String data) {
 		String resp = null;
 		
 		try {			
@@ -61,9 +65,10 @@ System.out.println("BASE 2010 : " + data);
 			MediaType mediaType = MediaType.parse("application/json");
 			RequestBody body = RequestBody.create(mediaType, data);
 			Request request = new Request.Builder()
-				.url(myURL + "?type=datain")
+				.url(myURL + "?view=" + viewLink)
 				.post(body)
-				.addHeader("authorization", "Bearer " + auth)
+				.addHeader("action", "data")
+				.addHeader("authorization", auth)
 				.addHeader("content-type", "application/json")
 				.build();
 			Response response = client.newCall(request).execute();

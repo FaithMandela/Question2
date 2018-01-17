@@ -14,7 +14,7 @@ Class-Path: lib/activation-1.1.1.jar lib/bcprov-jdk15on-159.jar lib/commons-bean
  lib/batik-util.jar lib/batik-css.jar lib/batik-xml.jar lib/batik-parser.jar lib/batik-script.jar lib/batik-awt-util.jar 
  lib/xml-apis-xerces-2.9.1.jar lib/xml-apis.jar lib/xml-apis-ext.jar lib/xmlgraphics-commons-2.0.jar 
  lib/interclient.jar lib/core-renderer.jar lib/jtidy-r938.jar 
- lib/javax.json-1.0.4.jar lib/java-jwt-3.3.0.jar 
+ lib/javax.json-1.0.4.jar lib/json-20171018.jar lib/java-jwt-3.3.0.jar 
  lib/jackson-core-2.9.2.jar lib/jackson-databind-2.9.2.jar lib/jackson-annotations-2.9.2.jar 
  lib/webdav/httpclient-4.3.4.jar lib/webdav/httpcore-4.3.2.jar lib/webdav/sardine.jar lib/webdav/slf4j-api-1.7.7.jar 
  lib/webdav/slf4j-simple-1.7.7.jar 

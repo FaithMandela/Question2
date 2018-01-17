@@ -12,9 +12,13 @@ import java.util.logging.Logger;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Enumeration;
+import java.util.Base64;
 import java.io.OutputStream;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.io.IOException;
+
+import org.json.JSONObject;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
@@ -37,24 +41,54 @@ public class BDataServer extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {
 		String dbconfig = "java:/comp/env/jdbc/database";
 		db = new BDB(dbconfig);
+		String resp = "";
 
 		log.info("Start Data Server");
 		
-		String auth = request.getHeader("authorization");
-		System.out.println("BASE 2010 : " + auth);
-
 		BWebUtils.showHeaders(request);
 		BWebUtils.showParameters(request);
 		
-		String token = BWebUtils.createToken("15");
-		System.out.println("BASE 3010 : " + token);
-		System.out.println("BASE 3030 : " + BWebUtils.decodeToken(token));
+		String action = request.getHeader("action");
+		if(action == null) return;
+System.out.println("BASE 2010 : " + action);
 
-		log.info("Start Data Server");
+		
+		if(action.equals("authorization")) {
+			String authUser = request.getHeader("authUser");
+			String authPass = request.getHeader("authPass");
+			if(authUser == null || authPass == null) return;
 
+			authUser = new String(Base64.getDecoder().decode(authUser));
+			authPass = new String(Base64.getDecoder().decode(authPass));
+			
+			String userId = db.executeFunction("SELECT password_validate('" + authUser + "', '" + authPass + "')");
+System.out.println("BASE 2010 : " + authUser + " : " + authPass + " : " + userId);
+
+			String token = BWebUtils.createToken("15");
+System.out.println("BASE 3010 : " + token);
+
+			
+			JSONObject jResp = new JSONObject();
+			jResp.put("access_token", token);
+			jResp.put("expires_in", "15");
+			resp = jResp.toString();
+		} if(action.equals("data")) {
+			String token = request.getHeader("authorization");
+		
+			System.out.println("BASE 3030 : " + BWebUtils.decodeToken(token));
+		}
+
+		// Send feedback
+		response.setContentType("application/json;charset=\"utf-8\"");
+		PrintWriter out = null;
+		try { out = response.getWriter(); } catch(IOException ex) {}
+		out.println(resp);
+
+		log.info("End Data Server");
+	
 		db.close();
 	}
 	
 
-
+	
 }
