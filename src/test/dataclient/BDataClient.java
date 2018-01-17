@@ -21,8 +21,8 @@ public class BDataClient {
 		String data = "{name:\"Dennis\"}";
 		
 		BDataClient dataClient = new BDataClient();
-		String auth = dataClient.authenticate(myURL, "root", "baraza");
-		String resp = dataClient.sendData(myURL, "20:10", auth, data);
+		String token = dataClient.authenticate(myURL, "root", "baraza");
+		String resp = dataClient.sendData(myURL, "20:10", token, data);
 	}
 
 	public String authenticate(String myURL, String appKey, String appPass) {

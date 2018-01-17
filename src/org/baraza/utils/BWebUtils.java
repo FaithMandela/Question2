@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Enumeration;
 import java.util.logging.Logger;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import com.auth0.jwt.algorithms.Algorithm;
@@ -79,6 +81,18 @@ public class BWebUtils {
 			log.severe("JWTVerificationException : " + ex);
 		}
 		return payLoad;
+	}
+	
+	public static String requestBody(HttpServletRequest request) {
+		StringBuffer jb = new StringBuffer();
+		String line = null;
+		try {
+			BufferedReader reader = request.getReader();
+			while ((line = reader.readLine()) != null) jb.append(line);
+		} catch (IOException ex) {
+			log.severe("JWTVerificationException : " + ex);
+		}
+		return jb.toString();
 	}
 
 }

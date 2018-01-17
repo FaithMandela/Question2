@@ -21,9 +21,11 @@ import java.io.IOException;
 import org.json.JSONObject;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
 
 import org.baraza.utils.BWebUtils;
 import org.baraza.DB.BDB;
@@ -33,20 +35,26 @@ public class BDataServer extends HttpServlet {
 	Logger log = Logger.getLogger(BDataServer.class.getName());
 
 	BDB db = null;
-
+	
+	public void init(ServletConfig config) throws ServletException {
+		super.init(config);
+		
+		String dbconfig = "java:/comp/env/jdbc/database";
+		db = new BDB(dbconfig);
+	}
+	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)  {
 		doGet(request, response);
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {
-		String dbconfig = "java:/comp/env/jdbc/database";
-		db = new BDB(dbconfig);
 		String resp = "";
 
 		log.info("Start Data Server");
 		
 		BWebUtils.showHeaders(request);
 		BWebUtils.showParameters(request);
+		String body = BWebUtils.requestBody(request);
 		
 		String action = request.getHeader("action");
 		if(action == null) return;
@@ -64,9 +72,8 @@ System.out.println("BASE 2010 : " + action);
 			String userId = db.executeFunction("SELECT password_validate('" + authUser + "', '" + authPass + "')");
 System.out.println("BASE 2010 : " + authUser + " : " + authPass + " : " + userId);
 
-			String token = BWebUtils.createToken("15");
+			String token = BWebUtils.createToken(userId);
 System.out.println("BASE 3010 : " + token);
-
 			
 			JSONObject jResp = new JSONObject();
 			jResp.put("access_token", token);
@@ -74,8 +81,16 @@ System.out.println("BASE 3010 : " + token);
 			resp = jResp.toString();
 		} if(action.equals("data")) {
 			String token = request.getHeader("authorization");
+			String userId = BWebUtils.decodeToken(token);
 		
-			System.out.println("BASE 3030 : " + BWebUtils.decodeToken(token));
+			System.out.println("BASE 3030 : " + userId);
+			
+			JSONObject jResp = new JSONObject();
+			if(userId == null) {
+				jResp.put("access_error", "Wrong token");
+			} else {
+				System.out.println("BASE Body : " + body);
+			}
 		}
 
 		// Send feedback
@@ -85,10 +100,10 @@ System.out.println("BASE 3010 : " + token);
 		out.println(resp);
 
 		log.info("End Data Server");
-	
-		db.close();
 	}
 	
+	public void destroy() {
+		db.close();
+	}
 
-	
 }
