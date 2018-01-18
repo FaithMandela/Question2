@@ -32,9 +32,7 @@ BEGIN
 		PERFORM updTax(employee_month_id, period_id)
 		FROM employee_month
 		WHERE (period_id = CAST($1 as int));
-		PERFORM updTax(employee_month_id, period_id)
-		FROM employee_month
-		WHERE (period_id = CAST($1 as int));
+		
 		PERFORM updTax(employee_month_id, period_id)
 		FROM employee_month
 		WHERE (period_id = CAST($1 as int));

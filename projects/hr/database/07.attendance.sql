@@ -464,7 +464,7 @@ CREATE OR REPLACE FUNCTION sum_attendance_hours(integer, integer) RETURNS interv
 	WHERE (vw_week_attendance.entity_id = $1) AND (vw_week_attendance.period_id = $2)
 $$ LANGUAGE SQL;
 
-CREATE OR REPLACE FUNCTION add_access_logs(int, int, varchar(32), varchar(32)) RETURNS varchar(120) AS $$
+CREATE OR REPLACE FUNCTION add_access_logs(int, int, varchar(32), varchar(32)) RETURNS varchar(16) AS $$
 DECLARE
 	v_org_id				integer;
 	v_access_log_id			integer;
@@ -488,10 +488,13 @@ BEGIN
 	IF((v_access_log_id is null) AND (v_in = 1))THEN
 		INSERT INTO access_logs (entity_id, org_id, log_type, log_in_out, log_ip)
 		VALUES ($1, v_org_id, $2, $3, $4);
+
+		msg := '0';
 	END IF;
 	IF((v_access_log_id is not null) AND (v_in = 0))THEN
 		UPDATE access_logs SET log_time_out = current_timestamp
 		WHERE access_log_id = v_access_log_id;
+		msg := v_access_log_id::varchar(16);
 		
 		IF($3 = 'OUT')THEN
 			SELECT attendance_id INTO v_attendance_id
@@ -506,8 +509,6 @@ BEGIN
 			END IF;
 		END IF;
 	END IF;
-
-	msg := 'ok';
 	
 	return msg;
 END;
