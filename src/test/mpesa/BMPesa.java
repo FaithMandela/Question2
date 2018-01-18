@@ -18,12 +18,9 @@ public class BMPesa {
 	public static void main(String[] args) {
 		BMPesa mpesa = new BMPesa();
 		
-		String baseUrl = "http://ae01f383.ngrok.io/";
-		//String validationURL = baseUrl + "confirm";
-		//String confirmationURL =  baseUrl + "confirm";
-		
-		String validationURL = "http://jumbo.dewcis.com:9090/mpesa/validation";
-		String confirmationURL =  "http://jumbo.dewcis.com:9090/mpesa/confirmation";
+		String baseUrl = "http://regsys.kenic.or.ke:9090/mpesa/";
+		String validationURL = baseUrl + "validation";
+		String confirmationURL =  baseUrl + "confirmation";
 		
 		if(args.length == 0) return;
 		
