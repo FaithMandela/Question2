@@ -221,7 +221,7 @@ $P!{organd}]]>
 				<textFieldExpression><![CDATA[$F{details}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="1" y="0" width="396" height="65" uuid="73db5ba3-273c-4d3d-9d7c-6eb479709265"/>
+				<reportElement x="1" y="0" width="554" height="78" uuid="73db5ba3-273c-4d3d-9d7c-6eb479709265"/>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + $F{logo}]]></imageExpression>
 			</image>
 		</band>

@@ -774,7 +774,7 @@ CREATE VIEW studentgradeview AS
 		qstudentview.roomnumber, qstudentview.currbalance, qstudentview.finaceapproval, qstudentview.majorapproval,
 		qstudentview.departapproval, qstudentview.overloadapproval, qstudentview.finalised, qstudentview.printed,
 		qstudentview.studentdeanapproval, qstudentview.overloadhours, qstudentview.studylevel,
-		qstudentview.publishgrades, qstudentview.org_id,
+		qstudentview.publishgrades, qstudentview.org_id, qstudentview.charge,
 		qgradeview.schoolid as crs_schoolid, qgradeview.schoolname as crs_schoolname,
 		qgradeview.departmentid as crs_departmentid, qgradeview.departmentname as crs_departmentname,
 		qgradeview.degreelevelid as crs_degreelevelid, qgradeview.degreelevelname as crs_degreelevelname,

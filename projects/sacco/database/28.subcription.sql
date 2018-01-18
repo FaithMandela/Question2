@@ -197,11 +197,6 @@ BEGIN
 		SELECT transaction_type_id, NEW.org_id, 1
 		FROM transaction_types;
 		
-		INSERT INTO sys_emails (org_id, use_type,  sys_email_name, title, details) 
-		SELECT NEW.org_id, use_type, sys_email_name, title, details
-		FROM sys_emails
-		WHERE org_id = 1;
-		
 		INSERT INTO account_class (org_id, account_class_no, chat_type_id, chat_type_name, account_class_name)
 		SELECT NEW.org_id, account_class_no, chat_type_id, chat_type_name, account_class_name
 		FROM account_class

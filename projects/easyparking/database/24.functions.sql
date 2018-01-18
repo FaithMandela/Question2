@@ -399,7 +399,7 @@ BEGIN
 		VALUES (v_entity_id, 0, 0, NEW.mpesa_msisdn, msg);
 	ELSE
 		INSERT INTO sms (entity_id, org_id, folder_id, sms_number, message)
-		VALUES (v_entity_id, 0, 0, NEW.mpesa_msisdn, 'Your account is credited and Parking paid sucesfully for ' || NEW.mpesa_acc);
+		VALUES (v_entity_id, 0, 0, NEW.mpesa_msisdn, 'Your account is credited and Parking paid successfully for ' || NEW.mpesa_acc);
 	END IF;
 	
 	RETURN NULL;

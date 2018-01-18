@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sacco_trxs_statement_dr" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="68af7105-dcde-419c-ad26-75fd56e936fc">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="433"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
@@ -31,6 +31,9 @@
 	<parameter name="end_date" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2017-01-31"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="product_no" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_account_activity.org_id,vw_orgs.org_name,vw_orgs.org_full_name,vw_account_activity.member_id,
  vw_account_activity.member_name, vw_account_activity.product_name,
@@ -42,11 +45,13 @@
  vw_account_activity.balance,vw_account_activity.product_no
 
 FROM vw_account_activity INNER JOIN vw_orgs ON vw_account_activity.org_id = vw_orgs.org_id
-WHERE vw_account_activity.product_no = 1
-AND vw_account_activity.activity_date BETWEEN '$P!{start_date}'::DATE AND '$P!{end_date}'::DATE
 
+WHERE (vw_account_activity.product_no = $P!{product_no})
+AND (vw_account_activity.activity_date BETWEEN '$P!{start_date}'::DATE AND '$P!{end_date}'::DATE)
+$P!{organd}
 
-ORDER BY account_activity_id ASC]]>
+ORDER BY account_activity_id ASC
+]]>
 	</queryString>
 	<field name="org_id" class="java.lang.Integer"/>
 	<field name="org_name" class="java.lang.String"/>
@@ -107,12 +112,12 @@ ORDER BY account_activity_id ASC]]>
 				<textFieldExpression><![CDATA[$F{product_name}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="87" y="93" width="243" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="91c9b41e-877e-4d17-a15b-2334b8d654dc"/>
+				<reportElement mode="Transparent" x="87" y="93" width="270" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="91c9b41e-877e-4d17-a15b-2334b8d654dc"/>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
 					<font fontName="Times New Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA["From "+$P{start_date} +" To "+$P{end_date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["From     "+$P{start_date} +"    To     "+$P{end_date}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement mode="Transparent" x="1" y="93" width="86" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="62215373-c4e8-4a10-a551-df4d68d78437"/>
@@ -206,7 +211,7 @@ ORDER BY account_activity_id ASC]]>
 				<text><![CDATA[A/C Number]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="87" y="1" width="122" height="15" forecolor="#000000" uuid="0f26b0cb-a562-465c-88b1-d228e6a4b3fa"/>
+				<reportElement style="Column header" x="87" y="1" width="122" height="14" forecolor="#000000" uuid="0f26b0cb-a562-465c-88b1-d228e6a4b3fa"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>

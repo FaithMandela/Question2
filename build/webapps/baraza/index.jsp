@@ -594,7 +594,7 @@
 			 btnClockStatus = $(".clock-in-status-btn");
 			//If clock in is set retain status activate break and lunch buttons
 			if(log_time_in != "" && log_time_out == ""){
-				btnClock.removeAttr("disabled");
+				<%--btnClock.removeAttr("disabled");--%>
 				btnLunch.removeAttr('disabled');//if clocked in activate lunch button
 				btnBreak.removeAttr('disabled');//if clocked in activate break button
 				btnClockIn.hide();//hide clocin in button
@@ -627,8 +627,8 @@
 			//if lunch has started, disable clock out and break start button
 			if(log_time_in != "" && log_time_out == ""){
                 //disable break in/out and disable clock out
-                <%--btnClockOut.attr('disabled','disabled');--%>
-                <%--btnBreak.attr('disabled','disabled');--%>
+                btnClockOut.attr('disabled','disabled');
+                btnBreak.attr('disabled','disabled');
 
 
                 //hide the clock in and lunch in show lunch out
@@ -671,6 +671,7 @@
 				btnBreak.hide();
 				btnBreakOut.show();
 				btnLunch.hide();
+				btnLunchOut.show();
 				btnClockIn.hide();
 
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
@@ -681,12 +682,13 @@
 			if(log_time_out != "" && log_time_out != ""){
 				//Enable Clock out and disable break
 				btnClockOut.removeAttr('disabled','disabled');
-				btnBreakOut.attr('disabled','disabled');
+				<%--btnBreakOut.attr('disabled','disabled');--%>
 
 				//hide break in,hide lunchin clock in show breakout
 				btnBreak.hide();
 				btnBreakOut.show();
 				btnLunch.hide();
+				btnLunchOut.show();
 				btnClockIn.hide();
 
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
@@ -701,6 +703,7 @@
 	if(timeSheet.length > 0){
 		$('.task-manage-form').hide();
 		$("#tsk_name").text(timeSheet[0].task_name);
+		$("#end_task").val(timeSheet[0].timesheet_id);
 
 	}else{
 		$('#display-task').hide();

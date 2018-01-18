@@ -70,20 +70,20 @@ CREATE INDEX phases_investment_id ON phases (investment_id);
 CREATE INDEX phases_org_id ON phases(org_id);
 
 CREATE TABLE tasks (
-	task_id					serial primary key,
+	task_id				serial primary key,
 	phase_id				integer references phases,
-	entity_id				integer references members,
+	member_id				integer references members,
 	org_id					integer references orgs,
 	task_name				varchar(320) not null,
 	task_start				date not null,
-	task_deadline			date,
+	task_deadline				date,
 	task_end				date,
 	task_cost				real default 0 not null,
 	task_completed			boolean not null default false,
 	details					text
 );
 CREATE INDEX tasks_phase_id ON tasks (phase_id);
-CREATE INDEX tasks_entity_id ON tasks (entity_id);
+CREATE INDEX tasks_member_id ON tasks (member_id);
 CREATE INDEX tasks_org_id ON tasks (org_id);
 
 CREATE VIEW vw_investments AS
@@ -119,7 +119,7 @@ CREATE VIEW vw_tasks AS
 		tasks.org_id, tasks.task_id, tasks.task_name, tasks.task_start, tasks.task_deadline, tasks.task_end,
 		tasks.task_cost, tasks.task_completed, tasks.details
 	FROM tasks INNER JOIN vw_phases ON tasks.phase_id = vw_phases.phase_id
-		INNER JOIN members ON tasks.entity_id = members.entity_id;
+		INNER JOIN members ON tasks.member_id = members.member_id;
 
 ------------ Update Transactions view
 DROP VIEW vws_tx_ledger;

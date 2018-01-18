@@ -870,6 +870,19 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+	
+CREATE OR REPLACE FUNCTION ins_mpesa_api() RETURNS trigger AS $$
+DECLARE
+	v_customer_id			integer;
+BEGIN
 
+	NEW.TransactionTime := to_timestamp(NEW.TransTime, 'YYYYMMDDHH24MISS');
+	
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
+CREATE TRIGGER ins_mpesa_api BEFORE INSERT ON mpesa_api
+	FOR EACH ROW EXECUTE PROCEDURE ins_mpesa_api();
+	
 	

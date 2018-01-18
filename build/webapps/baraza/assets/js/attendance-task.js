@@ -137,8 +137,11 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         //btnClock.removeAttr("disabled");
                         btnLunch.removeAttr("disabled");//if clocked in activate lunch button
                         btnBreak.removeAttr("disabled");//if clocked in activate break button
+
+                        btnClockIn.hide();//hide clocin in button
+                        btnClockOut.show();//show clock out button
                         btnLunchOut.hide();//hide the lunchout button
-                        //btnBreakOut.hide();//hide break button
+                        btnBreakOut.hide();//hide the breakout button
                     }
                     if(logInOut == 'OUT'){
                         btnMsg = "CLOCKING DONE";
@@ -148,8 +151,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
 
                         //hide all in buttons when fully done for the day
                         btnClockIn.hide();
-                        btnLunch.hide();
-                        btnBreak.hide();
+
 
                         //disable all clockout buttons
                         btnClockOut.attr('disabled','disabled');
@@ -175,7 +177,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         btnClockIn.hide();
                         btnLunch.hide();
                         btnLunchOut.show();
-                        //btnBreakOut.hide();//hide break button
+                        btnBreakOut.hide();//hide break button
                     }
                     if(logInOut == 'LUNCHOUT'){
                         btnMsg = "LUNCH DONE";
@@ -202,12 +204,34 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         oldBtnClass  = 'break-btn';
                         msg = 'Break Start :'+result[data].log_time;
 
+                        //Disable Clock out and lunch out
+                        btnClockOut.attr('disabled','disabled');
+                        btnLunchOut.attr('disabled','disabled');
+
+                        //hide break in,hide lunchin clock in show breakout
+                        btnBreak.hide();
+                        btnBreakOut.show();
+                        btnLunch.hide();
+                        btnLunchOut.show();
+                        btnClockIn.hide();
+
                     }
                     if(logInOut == 'BREAKOUT'){
                         btnMsg = "BREAK DONE";
                         outBtnNewClassName = 'break-out-btn';
                         oldBtnClass  = 'break-btn';
                         msg = 'Break End :'+result[data].log_time;
+
+                        //Enable Clock out and disable break
+                        btnClockOut.removeAttr('disabled','disabled');
+                    //btnBreakOut.attr('disabled','disabled');
+
+                            //hide break in,hide lunchin clock in show breakout
+                        btnBreak.hide();
+                        btnBreakOut.show();
+                        btnLunch.hide();
+                        btnLunchOut.show();
+                        btnClockIn.hide();
 
                     }
                 }
@@ -291,7 +315,7 @@ $('#start-task')
         var btnRId = $('#start-task');
         var json = $('#task-manage').serializeArray();
         console.log(" select " + json);
-        var jsonData = {start:"true"};
+        var jsonData = {task:"start"};
         $.each(json, function(i, field){
             jsonData [field.name] = field.value;
         });
@@ -323,17 +347,17 @@ $('#start-task')
 
     });
 
-$('#end-task')
+$('#end_task')
     .click(function () {
         btnrmvClass = 'btn-warning';
         var btnId = $('.end-task');
+        var timesheetId = $('#end_task').val();
         var json = $('#task-manage').serializeArray();
         console.log(" select " + json);
-        var jsonData = {start:"false"};
-        $.each(json, function(i, field){
-            jsonData [field.name] = field.value;
-        });
-
+        var jsonData =  {
+            task: "stop",
+            timesheet_id:timesheetId
+        };
         $.ajax({
             url: 'ajax', // url where to submit the request
             type : "POST", // type of action POST || GET

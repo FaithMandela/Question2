@@ -75,8 +75,6 @@ CREATE TABLE Segments (
 );
 CREATE INDEX Segments_pcc ON Segments (pcc);
 
-CREATE TABLE 
-
 CREATE VIEW vwlogs AS
 	SELECT pccs.pcc, pccs.agencyname, logs.logid, logs.logdate, logs.currency, logs.processdate
 	FROM pccs INNER JOIN logs ON pccs.pcc = logs.pcc;

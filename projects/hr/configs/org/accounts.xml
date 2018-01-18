@@ -301,11 +301,12 @@
 		<GRID name="Sales Quotation" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 14)">
 			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Client">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
 			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
+			<TEXTFIELD w="35" title="Currency">currency_symbol</TEXTFIELD>
 			<TEXTDECIMAL w="45" title="Amount">transaction_net_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="45" title="Tax">transaction_tax_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="45" title="Total">transaction_amount</TEXTDECIMAL>
-			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
 			<TEXTFIELD w="45" title="Approval Status">approve_status</TEXTFIELD>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 			<ACTIONS>
@@ -346,11 +347,12 @@
 		<GRID name="Sales Order" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 1)">
 			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Client">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
 			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
+			<TEXTFIELD w="35" title="Currency">currency_symbol</TEXTFIELD>
 			<TEXTDECIMAL w="45" title="Amount">transaction_net_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="45" title="Tax">transaction_tax_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="45" title="Total">transaction_amount</TEXTDECIMAL>
-			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
 			<TEXTFIELD w="45" title="Approval Status">approve_status</TEXTFIELD>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 			<ACTIONS>
@@ -391,8 +393,8 @@
 		<GRID name="Delivery Note" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 11)">
 			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Client">entity_name</TEXTFIELD>
-			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
+			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Approval Status">approve_status</TEXTFIELD>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 			<ACTIONS>
@@ -438,11 +440,12 @@
 		<GRID name="Invoice" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 2)">
 			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Client">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
 			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
+			<TEXTFIELD w="35" title="Currency">currency_symbol</TEXTFIELD>
 			<TEXTDECIMAL w="45" title="Amount">transaction_net_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="45" title="Tax">transaction_tax_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="45" title="Total">transaction_amount</TEXTDECIMAL>
-			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
 			<TEXTFIELD w="45" title="Approval Status">approve_status</TEXTFIELD>
 			<TEXTFIELD w="45" title="Posted">posted</TEXTFIELD>
 			<ACTIONS>
@@ -484,9 +487,10 @@
 		<GRID name="Receipts" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 7)">
 			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Client">entity_name</TEXTFIELD>
-			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
-			<TEXTDECIMAL w="75" title="Amount">transaction_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
+			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
+			<TEXTFIELD w="35" title="Currency">currency_symbol</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Amount">transaction_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Approval Status">approve_status</TEXTFIELD>
 			<TEXTFIELD w="75" title="Posted">posted</TEXTFIELD>
 			<ACTIONS>
@@ -514,11 +518,12 @@
 		<GRID name="Credit Note" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 9)">
 			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Client">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
 			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
+			<TEXTFIELD w="35" title="Currency">currency_symbol</TEXTFIELD>
 			<TEXTDECIMAL w="45" title="Amount">transaction_net_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="45" title="Tax">transaction_tax_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="45" title="Total">transaction_amount</TEXTDECIMAL>
-			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
 			<TEXTFIELD w="45" title="Approval Status">approve_status</TEXTFIELD>
 			<TEXTFIELD w="45" title="Posted">posted</TEXTFIELD>
 			<ACTIONS>
@@ -560,11 +565,12 @@
 		<GRID name="Purchase Quotation" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 15)">
 			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Supplier">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
 			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
+			<TEXTFIELD w="35" title="Currency">currency_symbol</TEXTFIELD>
 			<TEXTDECIMAL w="45" title="Amount">transaction_net_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="45" title="Tax">transaction_tax_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="45" title="Total">transaction_amount</TEXTDECIMAL>
-			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
 			<TEXTFIELD w="45" title="Approval Status">approve_status</TEXTFIELD>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 			<ACTIONS>
@@ -604,11 +610,12 @@
 		<GRID name="Purchase Order" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 4)">
 			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Supplier">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
 			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
+			<TEXTFIELD w="35" title="Currency">currency_symbol</TEXTFIELD>
 			<TEXTDECIMAL w="45" title="Amount">transaction_net_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="45" title="Tax">transaction_tax_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="45" title="Total">transaction_amount</TEXTDECIMAL>
-			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
 			<TEXTFIELD w="45" title="Approval Status">approve_status</TEXTFIELD>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 			<ACTIONS>
@@ -659,8 +666,8 @@
 		<GRID name="Goods Receipt Note" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 12)">
 			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Supplier">entity_name</TEXTFIELD>
-			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
+			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Approval Status">approve_status</TEXTFIELD>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 			<ACTIONS>
@@ -705,11 +712,12 @@
 		<GRID name="Invoice" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 5)">
 			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Supplier">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
 			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
+			<TEXTFIELD w="35" title="Currency">currency_symbol</TEXTFIELD>
 			<TEXTDECIMAL w="45" title="Amount">transaction_net_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="45" title="Tax">transaction_tax_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="45" title="Total">transaction_amount</TEXTDECIMAL>
-			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
 			<TEXTFIELD w="45" title="Approval Status">approve_status</TEXTFIELD>
 			<TEXTFIELD w="45" title="Posted">posted</TEXTFIELD>
 			<ACTIONS>
@@ -750,9 +758,10 @@
 		<GRID name="Payments" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 8)">
 			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Supplier">entity_name</TEXTFIELD>
-			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
-			<TEXTDECIMAL w="75" title="Amount">transaction_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
+			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
+			<TEXTFIELD w="35" title="Currency">currency_symbol</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Amount">transaction_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Approval Status">approve_status</TEXTFIELD>
 			<TEXTFIELD w="75" title="Posted">posted</TEXTFIELD>
 			<ACTIONS>
@@ -780,11 +789,12 @@
 		<GRID name="Debit Note" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 10)">
 			<TEXTFIELD w="45" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Supplier">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
 			<TEXTDATE w="45" title="Date">transaction_date</TEXTDATE>
+			<TEXTFIELD w="35" title="Currency">currency_symbol</TEXTFIELD>
 			<TEXTDECIMAL w="45" title="Amount">transaction_net_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="45" title="Tax">transaction_tax_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="45" title="Total">transaction_amount</TEXTDECIMAL>
-			<TEXTFIELD w="75" title="Job">job</TEXTFIELD>
 			<TEXTFIELD w="45" title="Approval Status">approve_status</TEXTFIELD>
 			<TEXTFIELD w="45" title="Posted">posted</TEXTFIELD>
 			<ACTIONS>

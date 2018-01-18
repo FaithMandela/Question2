@@ -229,15 +229,149 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-UPDATE qstudents SET printed = false, so_approval = false, majorapproval = false
-WHERE (quarterid = '2017/2018.1') AND (finalised = false) AND (so_approval = true);
+--- Finance payment
+CREATE OR REPLACE FUNCTION insQPayment(varchar(12), varchar(12), varchar(12)) RETURNS VARCHAR(120) AS $$
+DECLARE
+	myrec				RECORD;
+	myqrec				RECORD;
+	mypayrec 			RECORD;
+	mypayreccheck 		RECORD;
+	myquarter 			RECORD;
+	mystud 				RECORD;
+	mystr 				varchar(120);
+	mycurrqs 			int;
+	myamount 			real;
+	mylatefees 			int;
+	mymaxcredit 		real;
+	mydegreeid 			int;
+	p_major				varchar(12);
+	m_load				real;
+	ml_load				real;
+	v_charges			float;
+	v_org_id			integer;
+	mynarrative 		varchar(120);
+BEGIN
+	mycurrqs := getqstudentid($2);
+	
+	SELECT currentbalance, accountnumber, newstudent, seeregistrar
+	INTO mystud
+	FROM students WHERE (studentid = $2);
+	
+	SELECT studentpaymentid INTO mypayrec
+	FROM studentpayments WHERE (qstudentid = mycurrqs) AND (approved = false);
+	
+	SELECT studentpaymentid INTO mypayreccheck
+	FROM studentpayments WHERE (qstudentid = mycurrqs) AND (approved = true);
+	
+	SELECT org_id, charges INTO v_org_id, v_charges
+	FROM qstudents WHERE (qstudentid = mycurrqs);
+	
+	SELECT quarterid, quarter, mincredits, maxcredits, org_id,
+		studentid, studentdegreeid, qstudentid, finalised, finaceapproval, gpa, hours, studylevel,
+		offcampus, residenceoffcampus, overloadapproval, overloadhours, studentdeanapproval
+	INTO myqrec
+	FROM studentquarterview
+	WHERE (qstudentid = CAST($1 as int));
+	
+	SELECT qlatereg, qlastdrop, lateregistrationfee, getchargedays(qlatereg, current_date) as latedays,
+		lateregistrationfee * getchargedays(qlatereg, current_date) as latefees,
+		quarterid, substring(quarterid from 11 for 1) as quarter
+	INTO myquarter
+	FROM quarters 
+	WHERE (active = true) and (org_id = v_org_id);
+	
+	mylatefees := 0;
+	mynarrative := '';
+	IF (myquarter.latefees > 0) AND (v_charges = 0) AND ((mystud.newstudent = false) OR (myquarter.quarter != '1')) THEN 
+		mylatefees := myquarter.latefees;
+		mynarrative := 'Late Registration fees charges for ' || CAST(myquarter.latedays as text) || ' days at a rate of ' || CAST(myquarter.lateregistrationfee as text) || ' Per day.';
+	END IF;
 
+	IF (mycurrqs is not null) THEN
+		UPDATE qstudents SET charges = mylatefees, financenarrative = mynarrative
+		WHERE (qstudentid = mycurrqs);
+	END IF;
+	
+	SELECT accountnumber, quarterid, currbalance, fullfinalbalance, finalbalance, studylevel,
+		paymenttype, ispartpayment, offcampus, studentdeanapproval, financeclosed, finaceapproval
+	INTO myrec
+	FROM vwqstudentbalances
+	WHERE (qstudentid = mycurrqs);
+	
+	mydegreeid := myqrec.studentdegreeid;
+	mymaxcredit := myqrec.maxcredits;
+	SELECT majors.majorid, majors.quarterload INTO p_major, m_load
+	FROM (majors INNER JOIN studentmajors ON majors.majorid = studentmajors.majorid)
+	WHERE (studentmajors.primarymajor = true) AND (studentmajors.studentdegreeid = mydegreeid);
 
-UPDATE qstudents SET printed = true, so_approval = true, majorapproval = true, approved = true
-WHERE (quarterid = '2017/2018.1') AND (finalised = true) AND (so_approval = true) AND (approved = false) AND (finaceapproval = true);
+	SELECT quarterload INTO ml_load
+	FROM major_levels WHERE (majorid = p_major) AND (major_level = myrec.studylevel);
+	
+	IF (ml_load IS NOT NULL) THEN
+		mymaxcredit := ml_load;
+	ELSIF (m_load IS NOT NULL) THEN
+		mymaxcredit := m_load;
+	END IF;
 
+	myamount := 0;
+	mystr := null;
+	
+	IF (v_org_id = 0) THEN
+		IF (myqrec.qstudentid IS NULL) THEN 
+			RAISE EXCEPTION 'Make course selections first before applying for payment';
+		ELSIF (myqrec.hours < myqrec.mincredits) AND (myqrec.overloadapproval = false) THEN
+			RAISE EXCEPTION 'You have an underload, the required minimum is % credits.', CAST(myqrec.mincredits as text);
+		ELSIF (myqrec.hours < myqrec.mincredits) AND (myqrec.overloadapproval = true) AND (myqrec.hours < myqrec.overloadhours) THEN
+			RAISE EXCEPTION 'You have an underload, you can only take the approved minimum of % ', CAST(myqrec.overloadhours as text);
+		ELSIF (myqrec.hours > mymaxcredit) AND (myqrec.overloadapproval = false) THEN
+			RAISE EXCEPTION 'You have an overload, the required maximum is % ', CAST(mymaxcredit as text);
+		ELSIF (myqrec.hours > mymaxcredit) AND (myqrec.overloadapproval = true) AND (myqrec.hours > myqrec.overloadhours) THEN
+			RAISE EXCEPTION 'You have an overload, you can only take the approved maximum of % ', CAST(myqrec.overloadhours as text);
+		ELSIF (myqrec.offcampus = true) AND (myqrec.studentdeanapproval = false) THEN
+			RAISE EXCEPTION 'You have no clearence to be off campus';
+		END IF;
+	END IF;
+	
+	IF (myrec.currbalance is null) THEN
+		RAISE EXCEPTION 'Application for payment rejected because your current credit is not updated, send a post to Bursary.';
+	ELSIF (myrec.financeclosed = true) OR (myrec.finaceapproval = true) THEN
+		RAISE EXCEPTION 'You cannot make changes after submiting your payment unless you apply on the post for it to be opened by finance.';
+	ELSIF (myrec.offcampus = true) AND (myrec.studentdeanapproval = false) THEN
+		RAISE EXCEPTION 'Application for payment rejected, first get off campus approval.';
+	ELSIF (myrec.paymenttype = 1) THEN
+		myamount := myrec.fullfinalbalance;
+	ELSIF (myrec.paymenttype = 2) THEN
+		myamount := myrec.finalbalance;
+	ELSIF (myrec.paymenttype = 3) AND (myrec.ispartpayment = false) THEN
+		RAISE EXCEPTION 'Application for payment rejected, your require approval for the payment plan';
+	ELSIF (myrec.paymenttype = 3) AND (myrec.ispartpayment = true) THEN
+		myamount := myrec.currbalance + (myrec.finalbalance - myrec.currbalance) / 2;
+	ELSIF (myrec.paymenttype = 4) AND (myrec.studylevel = 100) THEN
+		myamount := -209000.0;
+	ELSIF (myrec.paymenttype = 4) AND (myrec.studylevel != 100) THEN
+		RAISE EXCEPTION 'You can only apply for acceptance fee.';
+	ELSE
+		RAISE EXCEPTION 'Application for payment rejected, verify application and approvals';
+	END IF;
 
+	IF (myamount < 0) THEN
+		IF (mypayrec.studentpaymentid is null) THEN
+			INSERT INTO studentpayments (org_id, qstudentid, amount, narrative) 
+			VALUES (v_org_id, mycurrqs, myamount * (-1), CAST(nextval('studentpayment_seq') as text) || 'Fees;' || myrec.quarterid || ';' || myrec.accountnumber);
+		ELSE
+			UPDATE studentpayments SET amount = myamount * (-1)
+			WHERE studentpaymentid = mypayrec.studentpaymentid;
+		END IF;
+		UPDATE qstudents SET financeclosed = true WHERE (qstudentid = mycurrqs);
+		mystr := 'Application for payment accepted, proceed';
+	END IF;
 
+	IF (myamount >= 0) AND (mystr is null) THEN
+		UPDATE qstudents SET financeclosed = true WHERE qstudentid = mycurrqs;
+		mystr := 'Fees indicated as fully paid';
+	END IF;
 
-
+    RETURN mystr;
+END;
+$$ LANGUAGE plpgsql;
 
