@@ -151,8 +151,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
 
                         //hide all in buttons when fully done for the day
                         btnClockIn.hide();
-                        btnLunch.hide();
-                        btnBreak.hide();
+
 
                         //disable all clockout buttons
                         btnClockOut.attr('disabled','disabled');
