@@ -1348,6 +1348,7 @@ DECLARE
 	m_load				real;
 	ml_load				real;
 	v_charges			float;
+	v_org_id			integer;
 	mynarrative 		varchar(120);
 BEGIN
 	mycurrqs := getqstudentid($2);
@@ -1362,7 +1363,7 @@ BEGIN
 	SELECT studentpaymentid INTO mypayreccheck
 	FROM studentpayments WHERE (qstudentid = mycurrqs) AND (approved = true);
 	
-	SELECT charges INTO v_charges
+	SELECT org_id, charges INTO v_org_id, v_charges
 	FROM qstudents WHERE (qstudentid = mycurrqs);
 	
 	SELECT quarterid, quarter, mincredits, maxcredits, org_id,
@@ -1377,7 +1378,7 @@ BEGIN
 		quarterid, substring(quarterid from 11 for 1) as quarter
 	INTO myquarter
 	FROM quarters 
-	WHERE (active = true) and (org_id = myqrec.org_id);
+	WHERE (active = true) and (org_id = v_org_id);
 	
 	mylatefees := 0;
 	mynarrative := '';
@@ -1415,19 +1416,23 @@ BEGIN
 	myamount := 0;
 	mystr := null;
 	
-	IF (myqrec.qstudentid IS NULL) THEN 
-		RAISE EXCEPTION 'Make course selections first before applying for payment';
-	ELSIF (myqrec.hours < myqrec.mincredits) AND (myqrec.overloadapproval = false) THEN
-		RAISE EXCEPTION 'You have an underload, the required minimum is % credits.', CAST(myqrec.mincredits as text);
-	ELSIF (myqrec.hours < myqrec.mincredits) AND (myqrec.overloadapproval = true) AND (myqrec.hours < myqrec.overloadhours) THEN
-		RAISE EXCEPTION 'You have an underload, you can only take the approved minimum of % ', CAST(myqrec.overloadhours as text);
-	ELSIF (myqrec.hours > mymaxcredit) AND (myqrec.overloadapproval = false) THEN
-		RAISE EXCEPTION 'You have an overload, the required maximum is % ', CAST(mymaxcredit as text);
-	ELSIF (myqrec.hours > mymaxcredit) AND (myqrec.overloadapproval = true) AND (myqrec.hours > myqrec.overloadhours) THEN
-		RAISE EXCEPTION 'You have an overload, you can only take the approved maximum of % ', CAST(myqrec.overloadhours as text);
-	ELSIF (myqrec.offcampus = true) AND (myqrec.studentdeanapproval = false) THEN
-		RAISE EXCEPTION 'You have no clearence to be off campus';
-	ELSIF (myrec.currbalance is null) THEN
+	IF (v_org_id = 0) THEN
+		IF (myqrec.qstudentid IS NULL) THEN 
+			RAISE EXCEPTION 'Make course selections first before applying for payment';
+		ELSIF (myqrec.hours < myqrec.mincredits) AND (myqrec.overloadapproval = false) THEN
+			RAISE EXCEPTION 'You have an underload, the required minimum is % credits.', CAST(myqrec.mincredits as text);
+		ELSIF (myqrec.hours < myqrec.mincredits) AND (myqrec.overloadapproval = true) AND (myqrec.hours < myqrec.overloadhours) THEN
+			RAISE EXCEPTION 'You have an underload, you can only take the approved minimum of % ', CAST(myqrec.overloadhours as text);
+		ELSIF (myqrec.hours > mymaxcredit) AND (myqrec.overloadapproval = false) THEN
+			RAISE EXCEPTION 'You have an overload, the required maximum is % ', CAST(mymaxcredit as text);
+		ELSIF (myqrec.hours > mymaxcredit) AND (myqrec.overloadapproval = true) AND (myqrec.hours > myqrec.overloadhours) THEN
+			RAISE EXCEPTION 'You have an overload, you can only take the approved maximum of % ', CAST(myqrec.overloadhours as text);
+		ELSIF (myqrec.offcampus = true) AND (myqrec.studentdeanapproval = false) THEN
+			RAISE EXCEPTION 'You have no clearence to be off campus';
+		END IF;
+	END IF;
+	
+	IF (myrec.currbalance is null) THEN
 		RAISE EXCEPTION 'Application for payment rejected because your current credit is not updated, send a post to Bursary.';
 	ELSIF (myrec.financeclosed = true) OR (myrec.finaceapproval = true) THEN
 		RAISE EXCEPTION 'You cannot make changes after submiting your payment unless you apply on the post for it to be opened by finance.';
@@ -1452,7 +1457,7 @@ BEGIN
 	IF (myamount < 0) THEN
 		IF (mypayrec.studentpaymentid is null) THEN
 			INSERT INTO studentpayments (org_id, qstudentid, amount, narrative) 
-			VALUES (myqrec.org_id, mycurrqs, myamount * (-1), CAST(nextval('studentpayment_seq') as text) || 'Fees;' || myrec.quarterid || ';' || myrec.accountnumber);
+			VALUES (v_org_id, mycurrqs, myamount * (-1), CAST(nextval('studentpayment_seq') as text) || 'Fees;' || myrec.quarterid || ';' || myrec.accountnumber);
 		ELSE
 			UPDATE studentpayments SET amount = myamount * (-1)
 			WHERE studentpaymentid = mypayrec.studentpaymentid;

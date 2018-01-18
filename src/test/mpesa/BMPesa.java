@@ -1,4 +1,5 @@
 
+import java.util.concurrent.TimeUnit;
 import java.util.Base64;
 import java.util.Iterator;
 import java.io.IOException;
@@ -17,11 +18,19 @@ public class BMPesa {
 	public static void main(String[] args) {
 		BMPesa mpesa = new BMPesa();
 		
-		String validationURL = "http://62.24.122.19:9090/mpesa/validation";
-		String confirmationURL =  "http://62.24.122.19:9090/mpesa/confirmation";
-		String auth = mpesa.authenticate("r1renXMh8prPMjoooC2c3TAwQjG6z1va", "Hp6MN1RX8Bvc7vGI");
-		String resp = mpesa.registerURL(auth, "600617", validationURL, confirmationURL);
-		resp = mpesa.testTransaction(auth, "600617", "CustomerPayBillOnline", "100", "254708374149","xyz");
+		String baseUrl = "http://regsys.kenic.or.ke:9090/mpesa/";
+		String validationURL = baseUrl + "validation";
+		String confirmationURL =  baseUrl + "confirmation";
+		
+		if(args.length == 0) return;
+		
+		if(args[0].equals("reg")) {
+			String auth = mpesa.authenticate("r1renXMh8prPMjoooC2c3TAwQjG6z1va", "Hp6MN1RX8Bvc7vGI");
+			String resp = mpesa.registerURL(auth, "600617", validationURL, confirmationURL);
+		} if(args[0].equals("test")) {
+			String auth = mpesa.authenticate("r1renXMh8prPMjoooC2c3TAwQjG6z1va", "Hp6MN1RX8Bvc7vGI");
+			String resp = mpesa.testTransaction(auth, "600617", "CustomerPayBillOnline", "123", "254708374149", "ESL");
+		}
 	}
 
 	public String authenticate(String app_key, String app_secret) {
@@ -39,15 +48,18 @@ public class BMPesa {
 				.addHeader("cache-control", "no-cache")
 				.build();
 			Response response = client.newCall(request).execute();
+			
+			String rBody = response.body().string();
+			System.out.println("BASE 1010 : " + rBody);
 
-			JSONObject jObject = new JSONObject(response.body().string());
+			JSONObject jObject = new JSONObject(rBody);
 			auth = jObject.getString("access_token");
 
 			System.out.println("access_token : " + auth);
 		} catch(IOException ex) {
-			System.out.println("IO Error");
+			System.out.println("IO Error : " + ex);
 		} catch(JSONException ex) {
-			System.out.println("JSON Error");
+			System.out.println("JSON Error : " + ex);
 		}
 
 		return auth;
@@ -78,9 +90,9 @@ System.out.println("BASE 2010 : " + jObject.toString());
 			
 System.out.println(response.body().string());
 		} catch(IOException ex) {
-			System.out.println("IO Error");
+			System.out.println("IO Error : " + ex);
 		} catch(JSONException ex) {
-			System.out.println("JSON Error");
+			System.out.println("JSON Error : " + ex);
 		}
 
 		return resp;
@@ -99,7 +111,13 @@ System.out.println(response.body().string());
 			
 System.out.println("BASE 2010 : " + jObject.toString());
 			
-			OkHttpClient client = new OkHttpClient();
+			//OkHttpClient client = new OkHttpClient();
+			OkHttpClient client = new OkHttpClient.Builder()
+				.connectTimeout(20, TimeUnit.SECONDS)
+				.writeTimeout(20, TimeUnit.SECONDS)
+				.readTimeout(30, TimeUnit.SECONDS)
+				.build();
+			
 			MediaType mediaType = MediaType.parse("application/json");
 			RequestBody body = RequestBody.create(mediaType, jObject.toString());
 			Request request = new Request.Builder()
@@ -109,12 +127,12 @@ System.out.println("BASE 2010 : " + jObject.toString());
 				.addHeader("content-type", "application/json")
 				.build();
 			Response response = client.newCall(request).execute();
-			
+						
 System.out.println(response.body().string());
 		} catch(IOException ex) {
-			System.out.println("IO Error");
+			System.out.println("IO Error : " + ex);
 		} catch(JSONException ex) {
-			System.out.println("JSON Error");
+			System.out.println("JSON Error : " + ex);
 		}
 
 		return resp;

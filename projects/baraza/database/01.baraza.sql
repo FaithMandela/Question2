@@ -910,6 +910,23 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER ins_sys_reset AFTER INSERT ON sys_reset
 	FOR EACH ROW EXECUTE PROCEDURE ins_sys_reset();
 
+CREATE OR REPLACE FUNCTION password_validate(varchar(64), varchar(32)) RETURNS integer AS $$
+DECLARE
+	v_entity_id			integer;
+	v_entity_password	varchar(64);
+BEGIN
+
+	SELECT entity_id, entity_password INTO v_entity_id, v_entity_password
+	FROM entitys WHERE (user_name = $1);
+
+	IF (md5($2) != v_entity_password) THEN
+		v_entity_id = -1;
+	END IF;
+
+	return v_entity_id;
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE FUNCTION Emailed(integer, varchar(64)) RETURNS void AS $$
 	UPDATE sys_emailed SET emailed = true WHERE (sys_emailed_id = CAST($2 as int));
 $$ LANGUAGE SQL;

@@ -149,6 +149,15 @@
 		<url-pattern>/ajaxupdate</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>BarazaDataServer</servlet-name>
+		<servlet-class>org.baraza.web.BDataServer</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>BarazaDataServer</servlet-name>
+		<url-pattern>/dataserver</url-pattern>
+	</servlet-mapping>
+
 	<security-constraint>
 		<display-name>Users Security Constraint</display-name>
 		<web-resource-collection>
