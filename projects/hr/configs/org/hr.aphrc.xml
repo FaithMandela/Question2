@@ -35,7 +35,8 @@
 			<MENU name="Arbitration">45</MENU>
 		</MENU>
 		<MENU name="Travel" role="finance,admin,hr">
-			<MENU name="Employee Travels" role="finance,admin,hr">235</MENU>
+			<MENU name="Employee Travels" role="finance,admin,hr">245</MENU>
+			<MENU name="All Employee Travels" role="admin">235</MENU>
 			<MENU name="Travel Definations" role="finance,admin,hr">240</MENU>
 			<MENU name="Travel Report" role="finance,admin,hr">250</MENU>
 		</MENU>
@@ -3228,6 +3229,18 @@
 				<ACTION fnct="upd_approvals" approval="3">Reject</ACTION>
 				<ACTION fnct="upd_approvals" approval="4">Review</ACTION>
 			</ACTIONS>
+			<GRID linkparams="table_id=workflow_table_id" keyfield="employee_travel_id" name="Travel Request" viewfilter="table_name=employee_travels" table="vw_employee_travels">
+				<TEXTFIELD w="35" title="ID">employee_travel_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Travel Type">travel_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Staff Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Project Name">project_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Travel Funding">travel_funding_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Purpose Of Trip">purpose_of_trip</TEXTFIELD>
+				<TEXTDATE w="75" title="Departure Date">departure_date</TEXTDATE>
+				<TEXTDATE w="75" title="Arrival Date">arrival_date</TEXTDATE>
+				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+				<JASPER reportfile="vw_employee_itinerary.jasper" name="Travel Report"></JASPER>
+			</GRID>
 			<GRID name="Petty Cash" keyfield="pc_expenditure_id" table="vw_pc_expenditure" viewfilter="table_name=pc_expenditure" linkparams="table_id=workflow_table_id">
 				<TEXTFIELD w="75" title="Category">pc_category_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Item Name">pc_item_name</TEXTFIELD>
@@ -4601,6 +4614,9 @@
 				</ACCORDION>
 			</GRID>
 		</GRID>
+	</DESK>
+
+	<DESK w="700" name="Employee Travels" key="245" h="550">
 		<GRID name="Process Claims" keyfield="claim_id" table="vw_claims" where="(approve_status = 'Approved') AND (process_claim = false)">
 			<TEXTFIELD w="75" title="Claim ID">claim_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Claim Type">claim_type_name</TEXTFIELD>

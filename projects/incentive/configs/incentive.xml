@@ -25,10 +25,6 @@
 			<MENU role="admin" name="EMails">60</MENU>
 			<MENU role="admin" name="Workflows">40</MENU>
 			<MENU role="admin" name="Countrys">5</MENU>
-			<MENU role="admin" name="Forms">20</MENU>
-			<MENU role="admin" name="News">55</MENU>
-			<MENU role="admin" name="Files">65</MENU>
-			<MENU name="Error Messages">75</MENU>
 		</MENU>
 		<MENU role="admin,staff" name="Reports">
 			<MENU name="Orders">56</MENU>

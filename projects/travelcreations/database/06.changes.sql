@@ -1,32 +1,10 @@
+UPDATE entitys  SET user_name='smutua2001@yahoo.com' WHERE primary_email = 'smutua2001@yahoo.com';
+UPDATE entitys  SET user_name='winfred.mwaki@feedthechildren.org' WHERE primary_email = 'winfred.mwaki@feedthechildren.org';
+UPDATE entitys  SET user_name='gorettiakinyi@hotmail.com' WHERE primary_email = 'gorettiakinyi@hotmail.com';
+UPDATE entitys  SET user_name='roys@maxwellsda.org' WHERE primary_email = 'roys@maxwellsda.org';
+UPDATE entitys  SET user_name='junek@brainwavekenya.com' WHERE primary_email = 'junek@brainwavekenya.com';
+UPDATE entitys  SET user_name='hakariuki@chasebank.co.ke' WHERE primary_email = 'hakariuki@chasebank.co.ke';
+UPDATE entitys  SET user_name='Dmphande@worldbank.org' WHERE primary_email = 'Dmphande@worldbank.org';
+UPDATE entitys  SET user_name='Jackson.kinyanjui@workingsmart.biz' WHERE primary_email = 'Jackson.kinyanjui@workingsmart.biz';
 
-CREATE OR REPLACE FUNCTION ins_emailed_clients()  RETURNS trigger AS
-$$
-DECLARE
-   v_entity_id		integer;
-   v_org_id			integer;
-   v_email			varchar(32);
-   v_balance        real;
-   rec              RECORD;
-BEGIN
-FOR rec IN SELECT entity_id, org_id, primary_email,client_code
-FROM entitys
-WHERE is_active is true LOOP
-
-	IF(NEW.redeem is true) THEN
-v_balance := getPointsBalance(rec.entity_id,rec.client_code);
-	   IF(rec.primary_email is not null AND v_balance > 0.0) THEN
-
-		   INSERT INTO sys_emailed (org_id, sys_email_id, table_id, table_name)
-		   VALUES(rec.org_id, 11, rec.entity_id, 'entitys');
-	   END IF;
-   END IF;
-END LOOP;
-
-   RETURN NULL;
-END;
-$$
-  LANGUAGE plpgsql;
-
-  CREATE TRIGGER ins_emailed_clients  AFTER UPDATE  ON periods
-    FOR EACH ROW
-    EXECUTE PROCEDURE ins_emailed_clients();
+UPDATE sys_emailed SET emailed = false WHERE table_id IN(23,24,30,38,32,41,22,20) AND sys_email_id = 2;

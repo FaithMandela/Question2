@@ -82,7 +82,7 @@ CREATE VIEW vwlogs AS
 CREATE VIEW vwtickets AS
 	SELECT ticketid, ticketdate, ticketpcc, bookpcc,  pcc, bpcc, son,
 		tvoid, topen, tused, texch, trfnd, tarpt, tckin, tlftd, tunvl, tprtd, tsusp,
-		segs, (topen + tused + tarpt + tckin + tlftd + tprtd + tunvl) as activesegs,
+		segs, (topen + tused + tarpt + tckin + tlftd + tprtd + tunvl + tsusp) as activesegs,
 		to_char(ticketdate, 'MMYYYY') as ticketperiod,
 		(CAST(date_part('year', ticketdate) - 2000 as varchar) || to_char(ticketdate, 'MM')) as segperiod,
 		to_char(ticketdate, 'Month') as ticketmonth,
