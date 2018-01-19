@@ -281,28 +281,7 @@ function changeBtnMsg(btnClass, btnMsg){
     btnClass.html(btnMsg);
     btnClass.attr('disabled','disabled');
 }
-/**
- * Javascript handle Color Transformations
- * @param btnClock
- * @param btnClockStatus
- * @param btnEnrtryCss
- * @param btnrmvClass
- * @param labelrmvClass
- * @param btnStatusCss
- * @param btnaddClass
- * @param labeladdClass
- */
-function colorChange(btnClock , btnClockStatus, btnEnrtryCss, btnrmvClass, labelrmvClass,
-                     btnStatusCss, btnaddClass, labeladdClass, btnMsg, labelMsg, outBtnoldBtnClassName){
-//        btnClock.button('reset');
-    btnClock.removeClass(btnEnrtryCss +' btn-block btn-sm '+ btnrmvClass);
-    btnClock.addClass(outBtnoldBtnClassName +' btn-block btn-sm '+ btnaddClass);
-    btnClock.html(btnMsg);
 
-    btnClockStatus.removeClass('label '+ labelrmvClass +' '+ btnStatusCss);
-    btnClockStatus.addClass('label '+ labeladdClass +' '+ btnStatusCss);
-    btnClockStatus.html(labelMsg);
-}
 
 $('.tasks-manage').select2({
     placeholder: "Select",
@@ -387,3 +366,25 @@ $('#end_task')
         });
 
     });
+/**
+ * Javascript handle Color Transformations
+ * @param btnClock
+ * @param btnClockStatus
+ * @param btnEnrtryCss
+ * @param btnrmvClass
+ * @param labelrmvClass
+ * @param btnStatusCss
+ * @param btnaddClass
+ * @param labeladdClass
+ */
+function colorChange(btnClock , btnClockStatus, btnEnrtryCss, btnrmvClass, labelrmvClass,
+                     btnStatusCss, btnaddClass, labeladdClass, btnMsg, labelMsg, outBtnoldBtnClassName){
+//        btnClock.button('reset');
+    btnClock.removeClass(btnEnrtryCss +' btn-block btn-sm '+ btnrmvClass);
+    btnClock.addClass(outBtnoldBtnClassName +' btn-block btn-sm '+ btnaddClass);
+    btnClock.html(btnMsg);
+
+    btnClockStatus.removeClass('label '+ labelrmvClass +' '+ btnStatusCss);
+    btnClockStatus.addClass('label '+ labeladdClass +' '+ btnStatusCss);
+    btnClockStatus.html(labelMsg);
+}
