@@ -9,6 +9,7 @@
 			<MENU role="member" icon="fa fa-user font-green-sharp fa-border" name="My Details">275</MENU>
 			<MENU role="member" icon="fa fa-cubes font-green-sharp fa-border" name="My Accounts">117</MENU>
 			<MENU role="member" icon="fa fa-credit-card font-green-sharp fa-border" name="My Loans">122</MENU>
+			<MENU role="manager" icon="fa fa-sign-out font-green-sharp fa-border" name="Member Exit">55</MENU>
 			<MENU role="manager" icon="icon-users font-green-sharp fa-border" name="Applicants">265</MENU>
 			<MENU role="manager" icon="icon-users font-green-sharp fa-border" name="Client Forms">22</MENU>
 			<MENU icon="fa fa-check-square-o font-green-sharp fa-border" name="Approvals">83</MENU>
@@ -28,17 +29,13 @@
 			<MENU icon="fa fa-cogs font-green-sharp fa-border" name="Products">110</MENU>
 			<MENU role="admin" icon="fa fa-sitemap font-green-sharp fa-border" name="Organisation">12</MENU>
 			<MENU role="master" icon="fa fa-arrows-h font-green-sharp fa-border" name="Subscriptions">260</MENU>
-			<MENU icon="fa fa-building font-green-sharp fa-border" name="Banks">25</MENU>
 			<MENU icon="fa fa-suitcase font-green-sharp fa-border" name="Items">30</MENU>
 			<MENU icon="fa fa-sort-amount-asc font-green-sharp fa-border" name="Chat of Accounts">5</MENU>
-			<MENU role="admin" icon="fa fa-globe font-green-sharp fa-border" name="Countrys">7</MENU>
 			<MENU role="admin" icon="fa fa-group font-green-sharp fa-border" name="Entitys">15</MENU>
-			<MENU role="admin" icon="fa fa-file-text-o font-green-sharp fa-border" name="Forms">21</MENU>
+			<MENU role="admin" icon="fa fa-file-text-o font-green-sharp fa-border" name="Forms and Files">21</MENU>
 			<MENU role="admin" icon="fa fa-columns font-green-sharp fa-border" name="Workflows">40</MENU>
 			<MENU role="admin" icon="fa fa-check-square-o font-green-sharp fa-border" name="All Approvals">50</MENU>
-			<MENU role="admin" icon="fa fa-arrow-right font-green-sharp fa-border" name="News">55</MENU>
-			<MENU role="admin" icon="fa fa-arrow-right font-green-sharp fa-border" name="EMails">60</MENU>
-			<MENU role="admin" icon="fa fa-arrow-right font-green-sharp fa-border" name="Files">65</MENU>
+			<MENU role="admin" icon="icon-bubbles font-green-sharp fa-border" name="News and EMails">60</MENU>
 			<MENU icon="fa fa-arrow-right font-green-sharp fa-border" name="Error Messages">75</MENU>
 		</MENU>
 		<MENU role="manager,operations" icon="fa fa-list font-green-sharp" name="Sacco Reports">
@@ -76,7 +73,7 @@
 				<TEXTFIELD w="75" icon="fa fa-th-list font-green-sharp" fnct="COALESCE(sum(balance), 0)" title="Total shares">total_member</TEXTFIELD>
 			</TILE>
 			<TILE role="admin" name="Total Deposits" where="(business_account != '0')" groupby="org_id" table="vw_account_activity">
-				<TEXTFIELD w="75" icon="fa fa-briefcase font-green-sharp" fnct="COALESCE(sum(account_debit), 0)" title="Total Deposits">total_deposit</TEXTFIELD>
+				<TEXTFIELD w="75" icon="fa fa-briefcase font-green-sharp" fnct="COALESCE(sum(account_debit), 0)" title="Total Deposits">total_deposits</TEXTFIELD>
 			</TILE>
 			<TILE role="member" name="Total Contribution" where="(business_account = '0') and (product_no = '2' )" groupby="org_id,entity_id,available_balance" user="entity_id" table="vw_entity_accounts">
 				<TEXTFIELD w="75" icon="fa fa-money font-green-sharp" title="Total Contribution">available_balance</TEXTFIELD>
@@ -96,18 +93,7 @@
 			</TILELIST>
 		</DASHBOARD>
 	</DESK>
-	<DESK w="700" h="500" name="Countrys" key="7">
-		<GRID noorg="true" keyfield="sys_continent_id" name="Continents" table="sys_continents">
-			<TEXTFIELD w="75" title="Continent ID">sys_continent_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Continent Name">sys_continent_name</TEXTFIELD>
-			<GRID noorg="true" keyfield="sys_country_id" name="Countrys" linkfield="sys_continent_id" table="vw_sys_countrys">
-				<TEXTFIELD w="75" title="Country ID">sys_country_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="Country Code">sys_country_code</TEXTFIELD>
-				<TEXTFIELD w="75" title="Country Number">sys_country_number</TEXTFIELD>
-				<TEXTFIELD w="75" title="Country Name">sys_country_name</TEXTFIELD>
-			</GRID>
-		</GRID>
-	</DESK>
+	<DESK w="700" h="500" name="Countrys" key="7"></DESK>
 	<DESK w="700" h="500" name="Organisation" key="12">
 		<GRID keyfield="org_id" name="Organisation" table="orgs">
 			<TEXTFIELD w="75" title="Sacco/Org ID">org_id</TEXTFIELD>
@@ -235,6 +221,57 @@
 			<FORM keyfield="location_id" name="Locations" table="locations">
 				<TEXTFIELD w="150" h="20" x="10" y="10" title="Location Name">location_name</TEXTFIELD>
 				<TEXTAREA w="430" h="70" x="10" y="30" title="Details">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID noorg="true" keyfield="sys_continent_id" name="Continents/Countrys" table="sys_continents">
+			<TEXTFIELD w="75" title="Continent ID">sys_continent_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Continent Name">sys_continent_name</TEXTFIELD>
+			<GRID noorg="true" keyfield="sys_country_id" name="Countrys" linkfield="sys_continent_id" table="vw_sys_countrys">
+				<TEXTFIELD w="75" title="Country ID">sys_country_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Country Code">sys_country_code</TEXTFIELD>
+				<TEXTFIELD w="75" title="Country Number">sys_country_number</TEXTFIELD>
+				<TEXTFIELD w="75" title="Country Name">sys_country_name</TEXTFIELD>
+			</GRID>
+		</GRID>
+		<GRID keyfield="bank_account_id" name="Bank Accounts" table="vw_bank_accounts">
+			<TEXTFIELD w="75" title="Bank">bank_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Branch">bank_branch_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Currency">currency_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Account ID">account_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Account">account_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Account Name">bank_account_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Account Number">bank_account_number</TEXTFIELD>
+			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+			<FORM keyfield="bank_account_id" name="Bank Accounts" table="bank_accounts">
+				<COMBOBOX cmb_fnct="(bank_name || ', ' || bank_branch_name)" w="430" h="20" lpfield="bank_branch" x="10" y="10" lptable="vw_bank_branch" title="Bank Branch">bank_branch_id</COMBOBOX>
+				<COMBOBOX default="70005" w="430" h="20" lpfield="account_description" x="10" y="30" lptable="vw_accounts" title="GL Account" lpkey="account_id">account_id</COMBOBOX>
+				<COMBOBOX w="430" h="20" lpfield="currency_name" x="10" y="50" lptable="currency" title="Currency">currency_id</COMBOBOX>
+				<TEXTFIELD w="150" h="20" x="10" y="70" title="Account Name">bank_account_name</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="70" title="Account Number">bank_account_number</TEXTFIELD>
+				<TEXTFIELD w="430" h="20" x="10" y="90" title="Narrative">narrative</TEXTFIELD>
+				<CHECKBOX w="150" h="20" x="10" y="110" title="Default">is_default</CHECKBOX>
+				<CHECKBOX w="150" h="20" x="290" y="110" title="Active">is_active</CHECKBOX>
+				<TEXTAREA w="430" h="70" x="10" y="130" title="Details">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID keyfield="bank_id" name="Banks" table="banks">
+			<TEXTFIELD w="75" title="Bank ID">bank_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Bank Name">bank_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+			<GRID keyfield="bank_branch_id" name="Bank Branch" linkfield="bank_id" table="bank_branch">
+				<TEXTFIELD w="75" title="Bank Branch ID">bank_branch_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Bank Branch Name">bank_branch_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Bank Branch Code">bank_branch_code</TEXTFIELD>
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+				<FORM keyfield="bank_branch_id" name="Bank Branch" linkfield="bank_id" table="bank_branch">
+					<TEXTFIELD w="150" h="20" x="10" y="10" title="Branch Name">bank_branch_name</TEXTFIELD>
+					<TEXTFIELD w="150" h="20" x="290" y="10" title="Branch Code">bank_branch_code</TEXTFIELD>
+					<TEXTFIELD w="430" h="20" x="10" y="30" title="Narrative">narrative</TEXTFIELD>
+				</FORM>
+			</GRID>
+			<FORM keyfield="bank_id" name="Banks" table="banks">
+				<TEXTFIELD w="430" h="20" x="10" y="10" title="Bank Name">bank_name</TEXTFIELD>
+				<TEXTFIELD w="430" h="20" x="10" y="30" title="Narrative">narrative</TEXTFIELD>
 			</FORM>
 		</GRID>
 	</DESK>
@@ -542,7 +579,7 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" h="500" name="Forms" key="21">
+	<DESK w="700" h="500" name="Forms and Files" key="21">
 		<GRID keyfield="form_id" name="Forms" orderby="form_number, form_id" table="forms">
 			<TEXTFIELD w="120" title="Form Number">form_number</TEXTFIELD>
 			<TEXTFIELD w="240" title="Form Name">form_name</TEXTFIELD>
@@ -667,6 +704,20 @@
 					<TEXTAREA w="430" h="70" x="10" y="50" title="Details">details</TEXTAREA>
 				</FORM>
 			</GRID>
+		</GRID>
+		<GRID keyfield="sys_file_id" name="Sys Files" table="sys_files">
+			<TEXTFIELD w="75" title="Sys File ID">sys_file_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Table ID">table_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Table Name">table_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="File Name">file_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
+			<FORM keyfield="sys_file_id" name="Sys Files" table="sys_files">
+				<TEXTFIELD w="150" h="20" x="10" y="10" title="Table ID">table_id</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="10" title="Table Name">table_name</TEXTFIELD>
+				<TEXTFIELD w="430" h="20" x="10" y="30" title="File Name">file_name</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="10" y="50" title="File Type">file_type</TEXTFIELD>
+				<TEXTAREA w="430" h="70" x="10" y="70" title="Details">details</TEXTAREA>
+			</FORM>
 		</GRID>
 	</DESK>
 	<DESK w="700" h="500" name="Client Forms" key="22">
@@ -913,7 +964,56 @@
 			</GRID>
 		</GRID>
 	</DESK>
-	<DESK w="700" h="500" name="News" key="55">
+	<DESK w="700" h="500" name="Member Exit" key="55">
+		<GRID keyfield="member_id" name="Membership Termination/Exit Applications" where="(business_account = 0) and (terminate_status = 'Pending')" table="members">
+			<TEXTFIELD w="55" title="member ID">member_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Title">person_title</TEXTFIELD>
+			<TEXTFIELD w="75" title="member Name">member_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="ID No.">identification_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="ID Type">identification_type</TEXTFIELD>
+			<TEXTFIELD w="80" title="Email">member_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Tel No.">telephone_number</TEXTFIELD>
+			<CHECKBOX w="45" title="Active">is_active</CHECKBOX>
+			<TEXTFIELD w="75" title="Exit Status">terminate_status</TEXTFIELD>
+			<TEXTTIMESTAMP w="75" title="Exit Application Date">terminate_application_date</TEXTTIMESTAMP>
+			<CHECKBOX w="50" title="Exited">terminated</CHECKBOX>
+			<TEXTTIMESTAMP w="75" title="Exit Date">terminate_date</TEXTTIMESTAMP>
+			<ACTIONS>
+				<ACTION approval="2" fnct="member_termination">Finalize Member Exit</ACTION>
+			</ACTIONS>
+			<JASPER reportfile="vw_member_details_p.jasper" name="Member Details"></JASPER>
+			<GRID keyfield="deposit_account_id" name="Accounts" where="(approve_status = 'Approved')" linkfield="member_id" table="vw_entity_accounts">
+				<TEXTLINK w="75" title="Account Number">account_number</TEXTLINK>
+				<TEXTFIELD w="75" title="member">member_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>
+				<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+				<TEXTDATE w="75" title="Last Closing Date">last_closing_date</TEXTDATE>
+				<TEXTDECIMAL w="75" title="Credit Limit">credit_limit</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Current Balance">current_balance</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Available Balance">available_balance</TEXTDECIMAL>
+				<ACTIONS>
+					<ACTION approval="1" fnct="archiving">Deactivate Account</ACTION>
+				</ACTIONS>
+				<JASPER reportfile="vw_account_activity.jasper" name="Report"></JASPER>
+			</GRID>
+			<GRID keyfield="loan_id" name="Loans" where="(approve_status = 'Approved')" linkfield="member_id" table="vw_entity_loans">
+				<TEXTLINK w="75" title="Loan Account">account_number</TEXTLINK>
+				<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Principal Amount">principal_amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Interest Rate">interest_rate</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="Repayment Period">repayment_period</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Repayment Amount">repayment_amount</TEXTDECIMAL>
+				<TEXTDATE w="75" title="Disbursed Date">disbursed_date</TEXTDATE>
+				<TEXTDECIMAL w="75" title="Committed Balance">committed_balance</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Actual Balance">actual_balance</TEXTDECIMAL>
+				<JASPER reportfile="vw_loans_a.jasper" name="loan Report"></JASPER>
+			</GRID>
+		</GRID>
+	</DESK>
+	<DESK w="700" h="500" name="News and EMails" key="60">
 		<GRID keyfield="sys_news_id" name="News" table="sys_news">
 			<TEXTFIELD w="75" title="News ID">sys_news_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="News Group">sys_news_group</TEXTFIELD>
@@ -926,8 +1026,6 @@
 				<EDITOR tab="News" w="530" h="170" x="10" y="2">details</EDITOR>
 			</FORM>
 		</GRID>
-	</DESK>
-	<DESK w="700" h="500" name="EMails" key="60">
 		<GRID keyfield="sys_email_id" name="EMails" table="sys_emails">
 			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Email Name">sys_email_name</TEXTFIELD>
@@ -949,22 +1047,7 @@
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 		</GRID>
 	</DESK>
-	<DESK w="800" h="500" name="Files" key="65">
-		<GRID keyfield="sys_file_id" name="Sys Files" table="sys_files">
-			<TEXTFIELD w="75" title="Sys File ID">sys_file_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Table ID">table_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Table Name">table_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="File Name">file_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
-			<FORM keyfield="sys_file_id" name="Sys Files" table="sys_files">
-				<TEXTFIELD w="150" h="20" x="10" y="10" title="Table ID">table_id</TEXTFIELD>
-				<TEXTFIELD w="150" h="20" x="290" y="10" title="Table Name">table_name</TEXTFIELD>
-				<TEXTFIELD w="430" h="20" x="10" y="30" title="File Name">file_name</TEXTFIELD>
-				<TEXTFIELD w="150" h="20" x="10" y="50" title="File Type">file_type</TEXTFIELD>
-				<TEXTAREA w="430" h="70" x="10" y="70" title="Details">details</TEXTAREA>
-			</FORM>
-		</GRID>
-	</DESK>
+	<DESK w="800" h="500" name="Files" key="65"></DESK>
 	<DESK w="800" h="500" name="Error Messages" key="75">
 		<GRID noorg="true" keyfield="sys_error_id" name="Error Messages" table="sys_errors">
 			<TEXTFIELD w="75" title="Error ID">sys_error_id</TEXTFIELD>
@@ -976,7 +1059,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Members" key="105">
-		<GRID keyfield="member_id" name="Active Members" where="(business_account = 0)" table="members">
+		<GRID keyfield="member_id" name="Active Members" where="(business_account = 0) and (terminate_status = 'N/A')" table="members">
 			<TEXTFIELD w="45" title="member ID">member_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Person Title">person_title</TEXTFIELD>
 			<TEXTFIELD w="75" title="member Name">member_name</TEXTFIELD>
@@ -988,6 +1071,7 @@
 			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 			<ACTIONS>
 				<ACTION approval="1" fnct="apply_approval">Approval Application</ACTION>
+				<ACTION approval="1" fnct="member_termination">Member Exit Application</ACTION>
 			</ACTIONS>
 			<JASPER reportfile="vw_member_details_p.jasper" name="Member Details"></JASPER>
 			<GRID keyfield="deposit_account_id" name="Deposit Accounts" linkfield="member_id" table="vw_deposit_accounts">
@@ -1189,6 +1273,21 @@
 				<TEXTAREA tab="Details" w="430" h="70" x="10" y="340">details</TEXTAREA>
 			</FORM>
 		</GRID>
+		<GRID keyfield="member_id" name="Archived Members" where="(business_account = 0)and (is_active = false)" table="members">
+			<TEXTFIELD w="45" title="member ID">member_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Person Title">person_title</TEXTFIELD>
+			<TEXTFIELD w="75" title="member Name">member_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Identification Number">identification_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Identification Type">identification_type</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email">member_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Telephone Number">telephone_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Gender">gender</TEXTFIELD>
+			<TEXTFIELD w="75" title="Active">is_active</TEXTFIELD>
+			<ACTIONS>
+				<ACTION approval="3" fnct="member_termination">Activate Member</ACTION>
+			</ACTIONS>
+			<JASPER reportfile="vw_member_details_p.jasper" name="Member Details"></JASPER>
+		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Applicants" key="265">
 		<GRID keyfield="applicant_id" name="Personal Applicants" where="(business_account = 0)" table="applicants">
@@ -1382,9 +1481,22 @@
 				</FORM>
 			</GRID>
 		</GRID>
+		<GRID keyfield="deposit_account_id" name="Archived Accounts" where="(approve_status = 'Approved') and (is_active = false)" table="vw_deposit_accounts">
+			<TEXTLINK w="75" title="Account Number">account_number</TEXTLINK>
+			<TEXTFIELD w="75" title="member">member_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+			<TEXTDATE w="75" title="Last Closing Date">last_closing_date</TEXTDATE>
+			<TEXTDECIMAL w="75" title="Credit Limit">credit_limit</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Current Balance">current_balance</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Available Balance">available_balance</TEXTDECIMAL>
+			<JASPER reportfile="vw_account_activity.jasper" name="Report"></JASPER>
+		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Transactions" key="115">
-		<GRID keyfield="deposit_account_id" name="Sacco Accounts" where="(approve_status = 'Approved') and (product_no = '0')" table="vw_deposit_accounts">
+		<GRID keyfield="deposit_account_id" name="Sacco Accounts" where="(approve_status = 'Approved') and (product_no = '0') and (is_active = true)" table="vw_deposit_accounts">
 			<TEXTLINK w="75" title="Account Number">account_number</TEXTLINK>
 			<TEXTFIELD w="75" title="member">member_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>
@@ -1469,7 +1581,7 @@
 			</GRID>
 			<JASPER reportfile="vw_account_activity.jasper" name="Report"></JASPER>
 		</GRID>
-		<GRID keyfield="deposit_account_id" name="Transaction Accounts" where="(approve_status = 'Approved') and (product_no = '1')" table="vw_deposit_accounts">
+		<GRID keyfield="deposit_account_id" name="Transaction Accounts" where="(approve_status = 'Approved') and (product_no = '1') and (is_active = true)" table="vw_deposit_accounts">
 			<TEXTLINK w="75" title="Account Number">account_number</TEXTLINK>
 			<TEXTFIELD w="75" title="member">member_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>
@@ -1580,7 +1692,7 @@
 			</GRID>
 			<JASPER reportfile="vw_account_activity.jasper" name="Report"></JASPER>
 		</GRID>
-		<GRID keyfield="deposit_account_id" name="Contribution Accounts" where="(approve_status = 'Approved') and (product_no = '2')" table="vw_deposit_accounts">
+		<GRID keyfield="deposit_account_id" name="Contribution Accounts" where="(approve_status = 'Approved') and (product_no = '2') and (is_active = true)" table="vw_deposit_accounts">
 			<TEXTLINK w="75" title="Account Number">account_number</TEXTLINK>
 			<TEXTFIELD w="75" title="member">member_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>
@@ -1640,7 +1752,7 @@
 			</GRID>
 			<JASPER reportfile="vw_account_activity.jasper" name="Report"></JASPER>
 		</GRID>
-		<GRID keyfield="deposit_account_id" name="Shares Accounts" where="(approve_status = 'Approved') and (product_no = '3')" table="vw_deposit_accounts">
+		<GRID keyfield="deposit_account_id" name="Shares Accounts" where="(approve_status = 'Approved') and (product_no = '3') and (is_active = true)" table="vw_deposit_accounts">
 			<TEXTLINK w="75" title="Account Number">account_number</TEXTLINK>
 			<TEXTFIELD w="75" title="member">member_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>
@@ -3190,49 +3302,7 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" h="500" name="Banks" key="25">
-		<GRID keyfield="bank_account_id" name="Bank Accounts" table="vw_bank_accounts">
-			<TEXTFIELD w="75" title="Bank">bank_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Branch">bank_branch_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Currency">currency_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Account ID">account_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Account">account_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Account Name">bank_account_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Account Number">bank_account_number</TEXTFIELD>
-			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
-			<FORM keyfield="bank_account_id" name="Bank Accounts" table="bank_accounts">
-				<COMBOBOX cmb_fnct="(bank_name || ', ' || bank_branch_name)" w="430" h="20" lpfield="bank_branch" x="10" y="10" lptable="vw_bank_branch" title="Bank Branch">bank_branch_id</COMBOBOX>
-				<COMBOBOX default="70005" w="430" h="20" lpfield="account_description" x="10" y="30" lptable="vw_accounts" title="GL Account" lpkey="account_id">account_id</COMBOBOX>
-				<COMBOBOX w="430" h="20" lpfield="currency_name" x="10" y="50" lptable="currency" title="Currency">currency_id</COMBOBOX>
-				<TEXTFIELD w="150" h="20" x="10" y="70" title="Account Name">bank_account_name</TEXTFIELD>
-				<TEXTFIELD w="150" h="20" x="290" y="70" title="Account Number">bank_account_number</TEXTFIELD>
-				<TEXTFIELD w="430" h="20" x="10" y="90" title="Narrative">narrative</TEXTFIELD>
-				<CHECKBOX w="150" h="20" x="10" y="110" title="Default">is_default</CHECKBOX>
-				<CHECKBOX w="150" h="20" x="290" y="110" title="Active">is_active</CHECKBOX>
-				<TEXTAREA w="430" h="70" x="10" y="130" title="Details">details</TEXTAREA>
-			</FORM>
-		</GRID>
-		<GRID keyfield="bank_id" name="Banks" table="banks">
-			<TEXTFIELD w="75" title="Bank ID">bank_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Bank Name">bank_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
-			<GRID keyfield="bank_branch_id" name="Bank Branch" linkfield="bank_id" table="bank_branch">
-				<TEXTFIELD w="75" title="Bank Branch ID">bank_branch_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="Bank Branch Name">bank_branch_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Bank Branch Code">bank_branch_code</TEXTFIELD>
-				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
-				<FORM keyfield="bank_branch_id" name="Bank Branch" linkfield="bank_id" table="bank_branch">
-					<TEXTFIELD w="150" h="20" x="10" y="10" title="Branch Name">bank_branch_name</TEXTFIELD>
-					<TEXTFIELD w="150" h="20" x="290" y="10" title="Branch Code">bank_branch_code</TEXTFIELD>
-					<TEXTFIELD w="430" h="20" x="10" y="30" title="Narrative">narrative</TEXTFIELD>
-				</FORM>
-			</GRID>
-			<FORM keyfield="bank_id" name="Banks" table="banks">
-				<TEXTFIELD w="430" h="20" x="10" y="10" title="Bank Name">bank_name</TEXTFIELD>
-				<TEXTFIELD w="430" h="20" x="10" y="30" title="Narrative">narrative</TEXTFIELD>
-			</FORM>
-		</GRID>
-	</DESK>
+	<DESK w="700" h="500" name="Banks" key="25"></DESK>
 	<DESK w="700" h="500" name="Items" key="30">
 		<GRID keyfield="item_id" name="Items" table="vw_items">
 			<TEXTFIELD w="75" title="Item ID">item_id</TEXTFIELD>

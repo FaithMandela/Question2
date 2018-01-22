@@ -32,6 +32,8 @@ CREATE INDEX loans_activity_frequency_id ON loans(activity_frequency_id);
 CREATE INDEX loans_entity_id ON loans(entity_id);
 CREATE INDEX loans_org_id ON loans(org_id);
 
+ALTER TABLE loans ADD  loan_status	varchar(100) default 'Draft' not null; ---Draft  --> Active ---> Cleared
+
 CREATE TABLE guarantees (
 	guarantee_id			serial primary key,
 	loan_id					integer references loans,
