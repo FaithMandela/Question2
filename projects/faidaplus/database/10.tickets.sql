@@ -75,8 +75,6 @@ CREATE TABLE Segments (
 );
 CREATE INDEX Segments_pcc ON Segments (pcc);
 
-CREATE TABLE 
-
 CREATE VIEW vwlogs AS
 	SELECT pccs.pcc, pccs.agencyname, logs.logid, logs.logdate, logs.currency, logs.processdate
 	FROM pccs INNER JOIN logs ON pccs.pcc = logs.pcc;
@@ -84,7 +82,7 @@ CREATE VIEW vwlogs AS
 CREATE VIEW vwtickets AS
 	SELECT ticketid, ticketdate, ticketpcc, bookpcc,  pcc, bpcc, son,
 		tvoid, topen, tused, texch, trfnd, tarpt, tckin, tlftd, tunvl, tprtd, tsusp,
-		segs, (topen + tused + tarpt + tckin + tlftd + tprtd + tunvl) as activesegs,
+		segs, (topen + tused + tarpt + tckin + tlftd + tprtd + tunvl + tsusp) as activesegs,
 		to_char(ticketdate, 'MMYYYY') as ticketperiod,
 		(CAST(date_part('year', ticketdate) - 2000 as varchar) || to_char(ticketdate, 'MM')) as segperiod,
 		to_char(ticketdate, 'Month') as ticketmonth,

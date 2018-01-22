@@ -718,7 +718,8 @@ public class BWeb {
 				if(el.getName().equals("ATTENDANCE")) {
 					dashboardItems.put("ATTENDANCE", "true");
 					
-					BQuery alRs = new BQuery(db, el.getElementByName("ACCESSLOG"), null, null);
+					String lWhere = "(log_time_out is null)";
+					BQuery alRs = new BQuery(db, el.getElementByName("ACCESSLOG"), lWhere, null);
 					dashboardItems.put("accessLog", alRs.getJSON());
 					alRs.close();
 				} else if(el.getName().equals("TASK")) {

@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.logging.Logger;
 import java.io.StringReader;
 import java.io.PrintWriter;
 import java.io.OutputStream;
@@ -38,6 +39,7 @@ import org.baraza.DB.BQuery;
 import org.baraza.xml.BElement;
 
 public class Bajax extends HttpServlet {
+	Logger log = Logger.getLogger(Bajax.class.getName());
 
 	BWeb web = null;
 	BDB db = null;
@@ -475,10 +477,15 @@ System.out.println("BASE 2030 : " + mySql);
 		if(myOutput == null) {
 			resp = "{\"success\": 0, \"message\": \"Attendnace not added\"}";
 		} else {
-			BQuery alRs = new BQuery(db, web.getView().getElementByName("ATTENDANCE").getElementByName("ACCESSLOG"), null, null);
+			String lWhere = "(log_time_out is null)";
+			if(!myOutput.equals("0")) lWhere = "(access_log_id = " + myOutput + ")";
+			
+			BQuery alRs = new BQuery(db, web.getView().getElementByName("ATTENDANCE").getElementByName("ACCESSLOG"), lWhere, null);
 			resp = alRs.getJSON();
 			alRs.close();
 		}
+		
+System.out.println("BASE 3120 : " + resp);
 		
 		return resp;
 	}

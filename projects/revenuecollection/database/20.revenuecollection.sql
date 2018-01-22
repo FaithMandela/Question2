@@ -7,6 +7,16 @@ CREATE TABLE locations (
 );
 CREATE INDEX locations_org_id ON locations(org_id);
 
+CREATE TABLE registrations (
+	registration_id			serial primary key,
+	org_id					integer references orgs,
+	full_name				varchar(120),
+	id_number				varchar(16),
+	phone_number			varchar(16),
+	pin_code				varchar(32)
+);
+CREATE INDEX registrations_org_id ON registrations(org_id);
+
 CREATE TABLE customers (
 	entity_id 				integer primary key references entitys,
 	org_id					integer references orgs,

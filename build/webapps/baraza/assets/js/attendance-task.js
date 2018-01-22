@@ -151,8 +151,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
 
                         //hide all in buttons when fully done for the day
                         btnClockIn.hide();
-                        btnLunch.hide();
-                        btnBreak.hide();
+
 
                         //disable all clockout buttons
                         btnClockOut.attr('disabled','disabled');
@@ -178,7 +177,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         btnClockIn.hide();
                         btnLunch.hide();
                         btnLunchOut.show();
-                        btnBreakOut.hide();//hide break button
+                        //btnBreakOut.hide();//hide break button
                     }
                     if(logInOut == 'LUNCHOUT'){
                         btnMsg = "LUNCH DONE";
@@ -212,7 +211,8 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         //hide break in,hide lunchin clock in show breakout
                         btnBreak.hide();
                         btnBreakOut.show();
-                        btnLunch.hide();
+                        //btnLunch.hide();
+                        //btnLunchOut.show();
                         btnClockIn.hide();
 
                     }
@@ -223,13 +223,14 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         msg = 'Break End :'+result[data].log_time;
 
                         //Enable Clock out and disable break
-                        btnClockOut.removeAttr('disabled','disabled');
+                        //btnClockOut.removeAttr('disabled','disabled');
                     //btnBreakOut.attr('disabled','disabled');
 
                             //hide break in,hide lunchin clock in show breakout
                         btnBreak.hide();
                         btnBreakOut.show();
-                        btnLunch.hide();
+                        //btnLunch.hide();
+                        //btnLunchOut.show();
                         btnClockIn.hide();
 
                     }
@@ -280,28 +281,7 @@ function changeBtnMsg(btnClass, btnMsg){
     btnClass.html(btnMsg);
     btnClass.attr('disabled','disabled');
 }
-/**
- * Javascript handle Color Transformations
- * @param btnClock
- * @param btnClockStatus
- * @param btnEnrtryCss
- * @param btnrmvClass
- * @param labelrmvClass
- * @param btnStatusCss
- * @param btnaddClass
- * @param labeladdClass
- */
-function colorChange(btnClock , btnClockStatus, btnEnrtryCss, btnrmvClass, labelrmvClass,
-                     btnStatusCss, btnaddClass, labeladdClass, btnMsg, labelMsg, outBtnoldBtnClassName){
-//        btnClock.button('reset');
-    btnClock.removeClass(btnEnrtryCss +' btn-block btn-sm '+ btnrmvClass);
-    btnClock.addClass(outBtnoldBtnClassName +' btn-block btn-sm '+ btnaddClass);
-    btnClock.html(btnMsg);
 
-    btnClockStatus.removeClass('label '+ labelrmvClass +' '+ btnStatusCss);
-    btnClockStatus.addClass('label '+ labeladdClass +' '+ btnStatusCss);
-    btnClockStatus.html(labelMsg);
-}
 
 $('.tasks-manage').select2({
     placeholder: "Select",
@@ -332,6 +312,8 @@ $('#start-task')
                     //If successfull hide the form display the display
                 $('.task-manage-form').hide();
                 $('#display-task').show();
+                //dispalys the value
+                $('#tsk_name').text(result.task_name);
             },
             error: function(xhr, resp, text) {
                 var btnMsg = "<i class='fa fa-warning text-center'></i> Save Failed";
@@ -370,6 +352,9 @@ $('#end_task')
                 var btnMsg = "<i class='fa fa-check  text-center'></i> Saved Successfully";
                 colorChange(btnId, '', btnId, btnrmvClass, '',
                     '', btnaddClass, '', btnMsg, '');
+                //If successfull hide the form display the display
+                $('.task-manage-form').show();
+                $('#display-task').hide();
             },
             error: function(xhr, resp, text) {
                 var btnMsg = "<i class='fa fa-warning  text-center'></i> Save Failed";
@@ -381,3 +366,25 @@ $('#end_task')
         });
 
     });
+/**
+ * Javascript handle Color Transformations
+ * @param btnClock
+ * @param btnClockStatus
+ * @param btnEnrtryCss
+ * @param btnrmvClass
+ * @param labelrmvClass
+ * @param btnStatusCss
+ * @param btnaddClass
+ * @param labeladdClass
+ */
+function colorChange(btnClock , btnClockStatus, btnEnrtryCss, btnrmvClass, labelrmvClass,
+                     btnStatusCss, btnaddClass, labeladdClass, btnMsg, labelMsg, outBtnoldBtnClassName){
+//        btnClock.button('reset');
+    btnClock.removeClass(btnEnrtryCss +' btn-block btn-sm '+ btnrmvClass);
+    btnClock.addClass(outBtnoldBtnClassName +' btn-block btn-sm '+ btnaddClass);
+    btnClock.html(btnMsg);
+
+    btnClockStatus.removeClass('label '+ labelrmvClass +' '+ btnStatusCss);
+    btnClockStatus.addClass('label '+ labeladdClass +' '+ btnStatusCss);
+    btnClockStatus.html(labelMsg);
+}
