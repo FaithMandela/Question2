@@ -58,6 +58,11 @@ CREATE INDEX members_org_id ON members(org_id);
 
 ALTER TABLE members ADD  is_active		boolean default true not null;
 
+ALTER TABLE members ADD  terminated		boolean default false not null;
+ALTER TABLE members ADD  terminate_date	timestamp;
+ALTER TABLE members ADD  terminate_status	varchar(100) default 'N/A' not null;
+ALTER TABLE members ADD  terminate_application_date 	timestamp;
+
 ALTER TABLE entitys ADD 	member_id		integer references members;
 CREATE INDEX entitys_member_id ON entitys(member_id);
 

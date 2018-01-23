@@ -16,7 +16,7 @@ public class BDataClient {
 
 	public static void main(String args[]) {
 
-		String myURL = "http://localhost:9090/hr/dataserver";
+		String myURL = "http://demo.dewcis.com/revenuecollection/dataserver";
 		
 		String data = "{name:\"Dennis\"}";
 		

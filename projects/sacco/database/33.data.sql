@@ -3,20 +3,22 @@
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES 
 (100, 'Members', 0),
 (101, 'Receipts', 4),
-(102, 'Payments', 4),
+(102, 'Payments', 4),----102
 (103, 'Opening Account', 4),
-(104, 'Transfer', 4),
+(104, 'Transfer', 4),--------------104
 (105, 'Loan Intrests', 4),
 (106, 'Loan Penalty', 4),
-(107, 'Loan Payment', 4),
+(107, 'Loan Payment', 4),------------107
 (108, 'Loan Disbursement', 4),
 (109, 'Account Intrests', 4),
 (110, 'Account Penalty', 4),
 (111, 'Contributions', 4),
 (112, 'Shares', 4),
+(113, 'Loan Processing Fee', 4),
 (201, 'Initial Charges', 4),
 (202, 'Transaction Charges', 4),
-(203, 'Termination Charges', 4);
+(203, 'Termination Charges', 4),
+(204, 'Loan Processing Fee', 4);
 
 INSERT INTO activity_frequency (activity_frequency_id, activity_frequency_name) 
 VALUES (1, 'Once'), (4, 'Monthly');
@@ -51,12 +53,15 @@ INSERT INTO activity_types (activity_type_id, cr_account_id, dr_account_id, use_
 (12, 34005, 34005, 104, 0, 'Account Transfer', true),
 (14, 70015, 34005, 109, 0, 'Account Intrests', true),
 (15, 70025, 34005, 110, 0, 'Account Penalty', true),
+
 (21, 70020, 34005, 201, 0, 'Account opening charges', true),
 (22, 70020, 34005, 202, 0, 'Transfer fees', true),
 (23, 70020, 34005, 203, 0, 'Member Termination Charges', true),
 (24, 34005, 34005, 111, 0, 'Contributions', true),
-(25, 34005, 34005, 112, 0, 'Shares', true);
-SELECT pg_catalog.setval('activity_types_activity_type_id_seq', 25, true);
+(25, 34005, 34005, 112, 0, 'Shares', true),
+(26, 70020, 34005, 204, 0, 'Loan Processing fees', true);
+
+SELECT pg_catalog.setval('activity_types_activity_type_id_seq', 26, true);
 UPDATE activity_types SET activity_type_no = activity_type_id;
 
 INSERT INTO interest_methods (interest_method_id, activity_type_id, org_id, interest_method_name, formural, account_number, reducing_balance, reducing_payments) VALUES 
