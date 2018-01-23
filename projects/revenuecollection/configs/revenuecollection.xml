@@ -3,6 +3,7 @@
 		<MENU name="Transactions">115</MENU>
 		<MENU name="Customers">105</MENU>
 		<MENU name="Processing">125</MENU>
+		<MENU name="Registrations">260</MENU>
 		<MENU name="Service">
 			<MENU name="Client Forms">22</MENU>
 			<MENU name="Approvals">83</MENU>
@@ -2754,5 +2755,23 @@
 		<JASPER reportfile="vw_activity_types.jasper" name="Activity Types"></JASPER>
 		<JASPER reportfile="vw_penalty_methods.jasper" name="Penalty Methods"></JASPER>
 		<JASPER reportfile="vw_products_d.jasper" name="Product Defination"></JASPER>
+	</DESK>
+	<DESK w="700" h="550" name="Registrations" key="260">
+		<FORM keyfield="registration_id" name="Registrations" table="registrations">
+			<TEXTFIELD w="430" h="20" x="10" y="10" title="Full Name">full_name</TEXTFIELD>
+			<TEXTFIELD w="150" h="20" x="10" y="30" title="ID Number">id_number</TEXTFIELD>
+			<TEXTFIELD w="150" h="20" x="290" y="30" title="Phone Number">phone_number</TEXTFIELD>
+		</FORM>
+		<GRID keyfield="registration_id" name="Registrations" table="registrations">
+			<TEXTFIELD w="75" title="Registration ID">registration_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Full Name">full_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="ID Number">id_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Phone Number">phone_number</TEXTFIELD>
+			<FORM keyfield="registration_id" name="Registrations" table="registrations">
+				<TEXTFIELD w="430" h="20" x="10" y="10" title="Full Name">full_name</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="10" y="30" title="ID Number">id_number</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="30" title="Phone Number">phone_number</TEXTFIELD>
+			</FORM>
+		</GRID>
 	</DESK>
 </APP>
