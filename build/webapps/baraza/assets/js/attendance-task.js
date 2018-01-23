@@ -177,7 +177,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         btnClockIn.hide();
                         btnLunch.hide();
                         btnLunchOut.show();
-                        //btnBreakOut.hide();//hide break button
+                        btnBreakOut.hide();//hide break button
                     }
                     if(logInOut == 'LUNCHOUT'){
                         btnMsg = "LUNCH DONE";
@@ -194,6 +194,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         btnClockIn.hide();
                         btnLunch.hide();
                         btnLunchOut.show();
+                        btnBreakOut.hide();//hide break button
                     }
                 }
 
@@ -207,12 +208,13 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         //Disable Clock out and lunch out
                         btnClockOut.attr('disabled','disabled');
                         btnLunchOut.attr('disabled','disabled');
+                        btnLunch.attr('disabled','disabled');
 
                         //hide break in,hide lunchin clock in show breakout
                         btnBreak.hide();
                         btnBreakOut.show();
                         //btnLunch.hide();
-                        //btnLunchOut.show();
+                        btnLunchOut.hide();
                         btnClockIn.hide();
 
                     }
@@ -223,14 +225,16 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         msg = 'Break End :'+result[data].log_time;
 
                         //Enable Clock out and disable break
-                        //btnClockOut.removeAttr('disabled','disabled');
-                    //btnBreakOut.attr('disabled','disabled');
+                        btnClockOut.removeAttr('disabled');
+                        btnLunchOut.removeAttr('disabled');
+                        btnLunch.removeAttr('disabled');
+                        //btnBreakOut.attr('disabled','disabled');
 
                             //hide break in,hide lunchin clock in show breakout
                         btnBreak.hide();
                         btnBreakOut.show();
                         //btnLunch.hide();
-                        //btnLunchOut.show();
+                        btnLunchOut.hide();
                         btnClockIn.hide();
 
                     }

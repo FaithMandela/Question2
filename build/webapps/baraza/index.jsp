@@ -599,8 +599,8 @@
 				btnBreak.removeAttr('disabled');//if clocked in activate break button
 				btnClockIn.hide();//hide clocin in button
 				btnClockOut.show();//show clock out button
-				<%--btnLunchOut.hide();//hide the lunchout button--%>
-				<%--btnBreakOut.hide();//hide the breakout button--%>
+				btnLunchOut.hide();//hide the lunchout button
+				btnBreakOut.hide();//hide the breakout button
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
 					btnClockStatus, btnaddClass, labeladdClass, "CLOCK OUT", "Clocked In :"+attendanceList[key].log_time);
 			}
@@ -635,7 +635,7 @@
                 btnClockIn.hide();
                 btnLunch.hide();
                 btnLunchOut.show();
-				<%--btnBreakOut.hide();//hide the breakout button--%>
+				btnBreakOut.hide();//hide the breakout button
 
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
 				btnClockStatus, btnaddClass, labeladdClass, "LUNCH OUT", "Lunch Start :"+ attendanceList[key].log_time);
@@ -651,7 +651,7 @@
                 <%--btnClockOut.hide();--%>
                 btnLunch.hide();
                 btnLunchOut.show();
-				<%--btnBreakOut.hide();//hide the breakout button--%>
+				btnBreakOut.hide();//hide the breakout button
 
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
 				btnClockStatus, btnaddClass, labeladdClass, "DONE LUNCH", "Lunch End "+ attendanceList[key].log_time_out);
@@ -662,16 +662,17 @@
 			 btnClock = $(".break-btn");
 			 btnClockStatus = $(".break-status-btn");
 
-			if(log_time_out == "" && log_time_out == ""){
+			if(log_time_out  != "" && log_time_out == ""){
 				//Disable Clock out and lunch out
 				btnClockOut.attr('disabled','disabled');
 				btnLunchOut.attr('disabled','disabled');
+				btnLunch.attr('disabled','disabled');
 
 				//hide break in,hide lunchin clock in show breakout
 				btnBreak.hide();
 				btnBreakOut.show();
 				<%--btnLunch.hide();--%>
-				<%--btnLunchOut.show();--%>
+				btnLunchOut.hide();
 				btnClockIn.hide();
 
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
