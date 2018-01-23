@@ -283,7 +283,7 @@ function buttonVisible(hidebtnClock, unhidebtnClock, btnClockStatus, labelrmvCla
  */
 function changeBtnMsg(btnClass, btnMsg){
     btnClass.html(btnMsg);
-    btnClass.attr('disabled','disabled');
+    //btnClass.attr('disabled','disabled');
 }
 
 
