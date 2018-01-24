@@ -83,7 +83,7 @@
 	</DESK>
 
 	<DESK w="700" name="Internships" key="15" h="550">
-		<GRID name="Internships Posts" keyfield="internship_id" table="vw_internships" noorg="true" where="(closing_date >= current_date)" secured="true" url="jsongeneral">
+		<GRID name="Internships Posts" keyfield="internship_id" table="vw_internships" noorg="true" where="(closing_date >= current_date)" secured="false" url="jsongeneral">
 			<TEXTLINK w="45" title="Internship ID">internship_id</TEXTLINK>
 			<TEXTFIELD w="75" title="Organization">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>

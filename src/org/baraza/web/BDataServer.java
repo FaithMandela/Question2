@@ -9,6 +9,8 @@
 package org.baraza.web;
 
 import java.util.logging.Logger;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Enumeration;
@@ -30,17 +32,30 @@ import javax.servlet.ServletException;
 import org.baraza.utils.BWebUtils;
 import org.baraza.DB.BDB;
 import org.baraza.DB.BQuery;
+import org.baraza.xml.BXML;
+import org.baraza.xml.BElement;
 
 public class BDataServer extends HttpServlet {
 	Logger log = Logger.getLogger(BDataServer.class.getName());
 
 	BDB db = null;
+	BElement root = null;
 	
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		
-		String dbconfig = "java:/comp/env/jdbc/database";
-		db = new BDB(dbconfig);
+		ServletContext context = config.getServletContext();
+		String xmlfile = config.getInitParameter("xmlfile");
+		String ps = System.getProperty("file.separator");
+		xmlfile = context.getRealPath("WEB-INF") + ps + "configs" + ps + xmlfile;
+		BXML xml = new BXML(xmlfile, false);
+		
+		if(xml.getDocument() != null) {
+			String dbconfig = "java:/comp/env/jdbc/database";
+			db = new BDB(dbconfig);
+			
+			root = xml.getRoot();
+		}
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)  {
@@ -56,6 +71,7 @@ public class BDataServer extends HttpServlet {
 		BWebUtils.showParameters(request);
 		String body = BWebUtils.requestBody(request);
 		
+		String remoteAddr = request.getRemoteAddr();
 		String action = request.getHeader("action");
 		if(action == null) return;
 System.out.println("BASE 2010 : " + action);
@@ -79,7 +95,7 @@ System.out.println("BASE 3010 : " + token);
 			jResp.put("access_token", token);
 			jResp.put("expires_in", "15");
 			resp = jResp.toString();
-		} if(action.equals("data")) {
+		} else if(action.equals("data")) {
 			String token = request.getHeader("authorization");
 			String userId = BWebUtils.decodeToken(token);
 		
@@ -91,6 +107,21 @@ System.out.println("BASE 3010 : " + token);
 			} else {
 				System.out.println("BASE Body : " + body);
 			}
+		} else if(action.equals("udata")) {
+			System.out.println("BASE 4040 : ");
+			
+			JSONObject jParams = new JSONObject(body);
+			System.out.println("BASE Body : " + body);
+			
+			String viewKey = request.getParameter("view");
+			BElement view = getView(viewKey);
+			
+			if(view.getAttribute("secured", "true").equals("false")) {
+				postData(view, remoteAddr, jParams);
+			}
+			
+			JSONObject jResp = new JSONObject();
+			jResp.put("okay", "okay");
 		}
 
 		// Send feedback
@@ -100,6 +131,40 @@ System.out.println("BASE 3010 : " + token);
 		out.println(resp);
 
 		log.info("End Data Server");
+	}
+	
+	public BElement getView(String viewKey) {
+		System.out.println("BASE 4040 : " + viewKey);
+		
+		List<BElement> views = new ArrayList<BElement>();
+		List<String> viewKeys = new ArrayList<String>();
+		String sv[] = viewKey.split(":");
+		for(String svs : sv) viewKeys.add(svs);
+		views.add(root.getElementByKey(sv[0]));
+		
+		for(int i = 1; i < sv.length; i++) {
+			int subno = Integer.valueOf(sv[i]);
+			views.add(views.get(i-1).getElement(subno));
+		}
+		BElement view = views.get(views.size() - 1);
+		
+		return view;
+	}
+	
+	public void postData(BElement view, String remoteAddr, JSONObject jParams) {
+		
+		String fWhere = view.getAttribute("keyfield") + " = null";
+		BQuery rs = new BQuery(db, view, fWhere, null);
+		
+		List<String> viewData = new ArrayList<String>();
+		Map<String, String[]> newParams = new HashMap<String, String[]>();
+		for(String paramName : jParams.keySet()) {
+			String[] pArray = new String[1];
+			pArray[0] = jParams.getString(paramName);
+			newParams.put(paramName, pArray);
+		}
+		
+		System.out.println("BASE 4070 : " + view.toString());
 	}
 	
 	public void destroy() {
