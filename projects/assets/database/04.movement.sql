@@ -286,6 +286,13 @@ CREATE VIEW vw_client_links AS
 		client_links.date_added, client_links.date_changed, client_links.details
 	FROM client_links INNER JOIN vw_client_requests ON client_links.client_request_id = vw_client_requests.client_request_id
 		INNER JOIN entitys ON client_links.entity_id = entitys.entity_id;
+		
+CREATE VIEW vw_vendor_links AS
+	SELECT vw_client_links.entity_id, vw_client_links.entity_name, 
+			count(vw_client_links.client_link_id) as link_count
+	FROM vw_client_links
+	WHERE (vw_client_links.is_issued = true) AND (vw_client_links.is_retrived = false)
+	GROUP BY vw_client_links.entity_id, vw_client_links.entity_name;
 
 CREATE VIEW vw_client_provisions AS
 	SELECT vw_client_requests.client_id, vw_client_requests.client_name, vw_client_requests.address, vw_client_requests.zipcode, 
