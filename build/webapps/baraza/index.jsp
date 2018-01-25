@@ -662,7 +662,7 @@
 			 btnClock = $(".break-btn");
 			 btnClockStatus = $(".break-status-btn");
 
-			if(log_time_out  != "" && log_time_out == ""){
+			if(log_time_in  != "" && log_time_out == ""){
 				//Disable Clock out and lunch out
 				btnClockOut.attr('disabled','disabled');
 				btnLunchOut.attr('disabled','disabled');
