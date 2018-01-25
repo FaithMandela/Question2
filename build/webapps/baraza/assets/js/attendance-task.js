@@ -214,8 +214,8 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         btnBreak.hide();
                         btnBreakOut.show();
                         //btnLunch.hide();
-                        btnLunchOut.hide();
-                        btnClockIn.hide();
+                        //btnLunchOut.hide();
+                        //btnClockIn.hide();
 
                     }
                     if(logInOut == 'BREAKOUT'){
@@ -234,7 +234,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         btnBreak.hide();
                         btnBreakOut.show();
                         //btnLunch.hide();
-                        btnLunchOut.hide();
+                        //btnLunchOut.hide();
                         btnClockIn.hide();
 
                     }

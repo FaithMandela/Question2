@@ -649,8 +649,8 @@
 
                 //hide the clock in and lunch in show lunch out
                 <%--btnClockOut.hide();--%>
-                btnLunch.hide();
-                btnLunchOut.show();
+               // btnLunch.hide();
+               // btnLunchOut.show();
 				btnBreakOut.hide();//hide the breakout button
 
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
