@@ -177,7 +177,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         btnClockIn.hide();
                         btnLunch.hide();
                         btnLunchOut.show();
-                        btnBreakOut.hide();//hide break button
+                        //btnBreakOut.hide();//hide break button
                     }
                     if(logInOut == 'LUNCHOUT'){
                         btnMsg = "LUNCH DONE";
@@ -283,7 +283,7 @@ function buttonVisible(hidebtnClock, unhidebtnClock, btnClockStatus, labelrmvCla
  */
 function changeBtnMsg(btnClass, btnMsg){
     btnClass.html(btnMsg);
-    //btnClass.attr('disabled','disabled');
+    /*btnClass.attr('disabled','disabled');*/
 }
 
 

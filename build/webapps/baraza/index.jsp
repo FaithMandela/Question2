@@ -635,7 +635,7 @@
                 btnClockIn.hide();
                 btnLunch.hide();
                 btnLunchOut.show();
-				btnBreakOut.hide();//hide the breakout button
+				//btnBreakOut.hide();//hide the breakout button
 
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
 				btnClockStatus, btnaddClass, labeladdClass, "LUNCH OUT", "Lunch Start :"+ attendanceList[key].log_time);
@@ -651,7 +651,7 @@
                 <%--btnClockOut.hide();--%>
                // btnLunch.hide();
                // btnLunchOut.show();
-				btnBreakOut.hide();//hide the breakout button
+				//btnBreakOut.hide();//hide the breakout button
 
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
 				btnClockStatus, btnaddClass, labeladdClass, "DONE LUNCH", "Lunch End "+ attendanceList[key].log_time_out);
