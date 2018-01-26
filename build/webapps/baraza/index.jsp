@@ -588,7 +588,7 @@
 		var log_time_out = attendanceList[key].log_time_out;
 		var log_time_in = attendanceList[key].log_time;
 
-
+		<%--CLOCK IN--%>
 		if(log_type == 1){
 			 btnClock = $(".clock-in-btn");
 			 btnClockStatus = $(".clock-in-status-btn");
@@ -620,7 +620,7 @@
 			}
 		}
 
-
+		<%--LUNCH--%>
 		if(log_type == 4){
 			 btnClock = $(".lunch-break-btn");
 			 btnClockStatus = $(".lunch-break-status-btn");
@@ -654,10 +654,11 @@
 				btnBreakOut.hide();//hide the breakout button
 
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
-				btnClockStatus, btnaddClass, labeladdClass, "DONE LUNCH", "Lunch End "+ attendanceList[key].log_time_out);
+				btnClockStatus, btnrmvClass, labeladdClass, "LUNCH BREAK", "Lunch End "+ attendanceList[key].log_time_out);
 			}
 		}
 
+		<%--BREAK--%>
 		if(log_type == 7){
 			 btnClock = $(".break-btn");
 			 btnClockStatus = $(".break-status-btn");
@@ -693,7 +694,7 @@
 				btnClockIn.hide();
 
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
-				btnClockStatus, btnaddClass, labeladdClass, "DONE BREAK", "Break End :"+attendanceList[key].log_time_out);
+				btnClockStatus, btnrmvClass, labeladdClass, "BREAK", "Break End :"+attendanceList[key].log_time_out);
 			}
 
 		}
