@@ -1113,6 +1113,31 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON employee_overtime
 
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON employee_per_diem
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
+    
+    
+CREATE OR REPLACE FUNCTION ytd_gross_salary(integer, integer, integer) RETURNS real AS $$
+	SELECT sum(gross_salary)::real
+	FROM vw_employee_month
+	WHERE (entity_id = $1) AND (fiscal_year_id = $2) AND (period_id <= $3);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION ytd_net_pay(integer, integer, integer) RETURNS real AS $$
+	SELECT sum(net_pay)::real
+	FROM vw_employee_month
+	WHERE (entity_id = $1) AND (fiscal_year_id = $2) AND (period_id <= $3);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_gross_salary(integer, date, date) RETURNS real AS $$
+	SELECT sum(gross_salary)::real
+	FROM vw_employee_month
+	WHERE (entity_id = $1) AND (start_date >= $2) AND (start_date <= $3);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_months_worked(integer, date, date) RETURNS integer AS $$
+	SELECT count(employee_month_id)::integer
+	FROM vw_employee_month
+	WHERE (entity_id = $1) AND (start_date >= $2) AND (start_date <= $3);
+$$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION ins_taxes() RETURNS trigger AS $$
 BEGIN
@@ -1162,13 +1187,15 @@ DECLARE
 	v_period_id					integer;
 	v_currency_id				integer;
 	v_org_id					integer;
+	v_start_date				date;
 	v_end_date					date;
+	v_start_year				date;
 	v_month_name				varchar(50);
 
 	msg 						varchar(120);
 BEGIN
-	SELECT period_id, org_id, to_char(start_date, 'Month YYYY'), end_date
-		INTO v_period_id, v_org_id, v_month_name, v_end_date
+	SELECT period_id, org_id, to_char(start_date, 'Month YYYY'), start_date, end_date
+		INTO v_period_id, v_org_id, v_month_name, v_start_date, v_end_date
 	FROM periods
 	WHERE (period_id = CAST($1 as integer));
 	
@@ -1221,7 +1248,7 @@ BEGIN
 		PERFORM upd_tax(employee_month_id, Period_id)
 		FROM employee_month
 		WHERE (period_id = v_period_id);
-		
+				
 		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, narrative, org_id)
 		SELECT 7, entity_id, 'periods', v_month_name, v_org_id
 		FROM entity_subscriptions
@@ -1498,14 +1525,17 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION process_payroll(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
-	rec 					RECORD;
-	msg 					varchar(120);
+	rec 						RECORD;
+	v_start_date				date;
+	v_end_date					date;
+	v_start_year				date;
+	msg 						varchar(120);
 BEGIN
 	IF ($3 = '1') THEN
 		UPDATE employee_adjustments SET tax_reduction_amount = 0 
 		FROM employee_month 
 		WHERE (employee_adjustments.employee_month_id = employee_month.employee_month_id) 
-			AND (employee_month.period_id = CAST($1 as int));
+			AND (employee_month.period_id = $1::int);
 			
 		--- compute autogenated overtime
 		msg := get_attendance_pay($1, $2, $3);
@@ -1515,22 +1545,28 @@ BEGIN
 	
 		PERFORM upd_tax(employee_month_id, period_id)
 		FROM employee_month
-		WHERE (period_id = CAST($1 as int));
+		WHERE (period_id = $1::int);
+		
+		--- Update the Average Day Rate
+		SELECT start_date - '1 year'::interval, start_date INTO v_start_year, v_start_date
+		FROM periods WHERE (period_id = $1::int);
+		UPDATE employees SET average_daily_rate = get_gross_salary(entity_id, v_start_year, v_start_date) / (24 * get_months_worked(entity_id, v_start_year, v_start_date))
+		WHERE (active = true) AND (get_months_worked(entity_id, v_start_year, v_start_date) > 0);
 
 		msg := 'Payroll Processed';
 	ELSIF ($3 = '2') THEN
-		UPDATE periods SET entity_id = CAST($2 as int), approve_status = 'Completed'
-		WHERE (period_id = CAST($1 as int));
+		UPDATE periods SET entity_id = $2::int, approve_status = 'Completed'
+		WHERE (period_id = $1::int);
 
 		msg := 'Application for approval';
 	ELSIF ($3 = '3') THEN
 		UPDATE periods SET closed = true
-		WHERE (period_id = CAST($1 as int));
+		WHERE (period_id = $1::int);
 
 		msg := 'Period closed';
 	ELSIF ($3 = '4') THEN
 		UPDATE periods SET closed = false
-		WHERE (period_id = CAST($1 as int));
+		WHERE (period_id = $1::int);
 
 		msg := 'Period opened';
 	END IF;
@@ -2095,15 +2131,5 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION ytd_gross_salary(integer, integer, integer) RETURNS real AS $$
-	SELECT sum(gross_salary)::real
-	FROM vw_employee_month
-	WHERE (entity_id = $1) AND (fiscal_year_id = $2) AND (period_id <= $3);
-$$ LANGUAGE SQL;
 
-CREATE OR REPLACE FUNCTION ytd_net_pay(integer, integer, integer) RETURNS real AS $$
-	SELECT sum(net_pay)::real
-	FROM vw_employee_month
-	WHERE (entity_id = $1) AND (fiscal_year_id = $2) AND (period_id <= $3);
-$$ LANGUAGE SQL;
 

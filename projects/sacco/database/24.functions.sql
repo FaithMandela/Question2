@@ -1,5 +1,5 @@
 ---Project Database Functions File
-
+---after member insert trigger to create login credentials
 CREATE OR REPLACE FUNCTION aft_members() RETURNS trigger AS $$
 DECLARE
 	v_entity_type_id		integer;
@@ -31,18 +31,19 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER aft_members AFTER INSERT OR UPDATE ON members
 	FOR EACH ROW EXECUTE PROCEDURE aft_members();
 	
-	
+---Function to get member id	
 CREATE OR REPLACE FUNCTION get_member_id(integer) RETURNS integer AS $$
 	SELECT member_id FROM entitys WHERE (entity_id = $1);
 $$ LANGUAGE SQL;
 
+----insert deposit accounts triggger
 CREATE OR REPLACE FUNCTION ins_deposit_accounts() RETURNS trigger AS $$
 DECLARE
 	v_fee_amount		real;
 	v_fee_ps			real;
 	myrec				RECORD;
 BEGIN
-
+	--- On new insert
 	IF(TG_OP = 'INSERT')THEN
 		SELECT interest_rate, activity_frequency_id, min_opening_balance, lockin_period_frequency,
 			minimum_balance, maximum_balance INTO myrec
@@ -52,7 +53,8 @@ BEGIN
 			SELECT member_id INTO NEW.member_id
 			FROM entitys WHERE (entity_id = NEW.entity_id);
 		END IF;
-	
+		
+		--- Creating account number for the member product
 		NEW.account_number := '4' || lpad(NEW.org_id::varchar, 2, '0')  || lpad(NEW.member_id::varchar, 4, '0') || lpad(NEW.deposit_account_id::varchar, 2, '0');
 		
 		IF(NEW.minimum_balance is null) THEN NEW.minimum_balance := myrec.minimum_balance; END IF;
@@ -63,6 +65,7 @@ BEGIN
 		NEW.lockin_period_frequency := myrec.lockin_period_frequency;
 	ELSE
 		IF(NEW.approve_status = 'Approved')THEN
+			--- when an account is approved it checks any associated charges effective to that account
 			INSERT INTO account_activity (deposit_account_id, activity_type_id, activity_frequency_id,
 				activity_status_id, currency_id, entity_id, org_id, transfer_account_no,
 				activity_date, value_date, account_debit)
@@ -115,6 +118,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER ins_transfer_beneficiary BEFORE INSERT OR UPDATE ON transfer_beneficiary
 	FOR EACH ROW EXECUTE PROCEDURE ins_transfer_beneficiary();
 
+--- Insert account activity trigger
 CREATE OR REPLACE FUNCTION ins_account_activity() RETURNS trigger AS $$
 DECLARE
 	v_deposit_account_id		integer;
@@ -133,7 +137,7 @@ BEGIN
 	ELSIF((NEW.account_credit > 0) AND (NEW.account_debit > 0))THEN
 		RAISE EXCEPTION 'Both debit and credit cannot not have an amount at the same time';
 	END IF;
-	
+	--- Getting opened and active periods 
 	SELECT periods.period_id INTO NEW.period_id
 	FROM periods
 	WHERE (opened = true) AND (activated = true) AND (closed = false)
@@ -217,9 +221,11 @@ BEGIN
 		ELSIF(v_loan_id is not null)THEN
 			NEW.transfer_loan_id := v_loan_id;
 		END IF;
+
 	ELSIF(NEW.transfer_account_id is not null)THEN
 		SELECT account_number INTO NEW.transfer_account_no
 		FROM deposit_accounts WHERE (deposit_account_id = NEW.transfer_account_id);
+
 	ELSIF(NEW.transfer_loan_id is not null)THEN
 		SELECT account_number INTO NEW.transfer_account_no
 		FROM loans WHERE (loan_id = NEW.transfer_loan_id);
@@ -458,6 +464,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+--- ========Loans trigger on insert..=====
 CREATE OR REPLACE FUNCTION ins_loans() RETURNS trigger AS $$
 DECLARE
 	myrec					RECORD;
@@ -490,6 +497,7 @@ BEGIN
 		NEW.interest_rate := myrec.interest_rate;
 		NEW.activity_frequency_id := myrec.activity_frequency_id;
 	ELSIF((NEW.approve_status = 'Approved') AND (OLD.approve_status <> 'Approved'))THEN
+		----- Loan disbursement
 		SELECT activity_type_id INTO v_activity_type_id
 		FROM vw_account_definations 
 		WHERE (use_key_id = 108) AND (is_active = true) AND (product_id = NEW.product_id);
@@ -497,6 +505,22 @@ BEGIN
 		SELECT currency_id INTO v_currency_id
 		FROM products
 		WHERE (product_id = NEW.product_id);
+
+		--- Charge the loan processing fee
+		INSERT INTO account_activity (loan_id, activity_type_id, activity_frequency_id,
+			activity_status_id, currency_id, entity_id, org_id, transfer_account_no,
+			activity_date, value_date, account_debit)
+		SELECT NEW.loan_id, account_definations.activity_type_id, account_definations.activity_frequency_id,
+			1, products.currency_id, NEW.entity_id, NEW.org_id, account_definations.account_number,
+			current_date, current_date, account_definations.fee_amount
+		FROM account_definations INNER JOIN activity_types ON account_definations.activity_type_id = activity_types.activity_type_id
+			INNER JOIN products ON account_definations.product_id = products.product_id
+		WHERE (account_definations.product_id = NEW.product_id) AND (account_definations.org_id = NEW.org_id)
+			AND (account_definations.activity_frequency_id = 1) AND (activity_types.use_key_id = 204) 
+			AND (account_definations.is_active = true);
+
+		--- Update the loan status
+		UPDATE loans SET loan_status = 'Active' WHERE loan_id = NEW.loan_id;
 		
 		IF(v_activity_type_id is not null)THEN
 			INSERT INTO account_activity (loan_id, transfer_account_no, org_id, activity_type_id, currency_id, 
@@ -507,6 +531,7 @@ BEGIN
 			NEW.disbursed_date := current_date;
 			NEW.expected_matured_date := current_date + (NEW.repayment_period || ' months')::interval;
 		END IF;
+
 	END IF;
 	
 	---- Calculate for repayment
@@ -766,7 +791,7 @@ DECLARE
 	v_end_date					date;
 	ans							real;
 BEGIN
-
+	
 	SELECT start_date, end_date INTO v_start_date, v_end_date
 	FROM periods WHERE (period_id = $3::integer);
 
@@ -877,5 +902,77 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+---- member termination process
+CREATE OR REPLACE FUNCTION member_termination(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg							varchar(120);
+	v_is_active 				boolean;
+	rec1 						RECORD;
+	
+BEGIN
+	--- Application for member Termination/exit 
+	IF($3 = '1')THEN
+		UPDATE members SET terminate_status = 'Pending', terminate_application_date = current_date
+		WHERE (member_id = $1::integer) AND (approve_status = 'Approved') AND (terminate_status = 'N/A');
+
+		UPDATE deposit_accounts SET is_active = false
+		WHERE (member_id = $1::integer) AND (approve_status = 'Approved') AND (is_active = true);
+
+		msg := 'Applied for member Exit';
+	
+	END IF;
+	--- completing the member exit/termination proccess and archiving the member
+	IF($3 = '2')THEN		
+		--- deactivating 
+		UPDATE members SET terminate_status = 'Completed', terminated = true, is_active = false, terminate_date = current_date,details = ('archived/deactivated member on'|| ' :- ' ||current_date)
+		WHERE (member_id = $1::integer) AND (approve_status = 'Approved') AND (terminate_status = 'Pending');
+		msg := 'Member(s) Exit completed and Deactivated...';
+
+	END IF;
+
+	IF($3 = '3')THEN
+		--Activating the member		
+		UPDATE members SET terminate_status = 'N/A', terminated = false, is_active = true, terminate_date = Null,details = ('activated member on'|| ' :- ' ||current_date)
+		WHERE (member_id = $1::integer) AND (approve_status = 'Approved') AND (terminate_status = 'Completed');
+		msg := 'Member(s) Activated...';
+		---Activating members account
+		UPDATE deposit_accounts SET is_active = true
+		WHERE (member_id = $1::integer) AND (approve_status = 'Approved') AND (is_active = false);
+
+	END IF;
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+----  archiving function
+CREATE OR REPLACE FUNCTION archiving(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg							varchar(120);
+	
+BEGIN
+	---- deactivating the account product
+	IF($3 = '1')THEN
+		UPDATE deposit_accounts SET is_active = false, details = ('archive/deactivated account product on'|| ' :- ' ||current_date)
+		WHERE (deposit_account_id = $1::integer) AND (approve_status = 'Approved') AND (is_active = true);
+
+		msg := 'Account Product deactivated';
+	
+	END IF;
+
+	--- Activating the account product
+	IF($3 = '2')THEN
+		UPDATE deposit_accounts SET is_active = true, details = ('Activated account product on'|| ' :- ' ||current_date)
+		WHERE (deposit_account_id = $1::integer) AND (approve_status = 'Approved') AND (is_active = false);
+
+		msg := 'Account Product Activated';
+	
+	END IF;
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;
 
 	
