@@ -258,3 +258,17 @@ VALUES (3, 3, 4, NULL, 1, 0, 0, 3, 1, 1, false, false, false, '', '<p>For your a
 --
 
 SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 3, true);
+
+INSERT INTO entitys( entity_id, entity_type_id, use_key_id, org_id, entity_name, user_name,
+            primary_email,function_role, is_active, first_password)
+    VALUES (2, 1, 0, 1, 'Joy Makena', 'joymakena@gmail.com','joymakena@gmail.com', 'admin', true, 'baraza');
+INSERT INTO entitys( entity_id, entity_type_id,use_key_id, org_id, entity_name, user_name,
+            primary_email,function_role, is_active, first_password)
+    VALUES (3, 1, 0, 1, 'Jacklyne Njeri', 'njeri@gmail.com','njeri@gmail.com', 'admin', true, 'baraza');
+INSERT INTO entitys( entity_id, entity_type_id, use_key_id,org_id, entity_name, user_name,
+            primary_email,function_role, is_active, first_password)
+    VALUES (4, 1  0,1, 'Christine Nyambura', 'nyambura@gmail.com','nyambura@gmail.com', 'admin', true, 'baraza');
+INSERT INTO entitys( entity_id, entity_type_id, use_key_id,org_id, entity_name, user_name,
+            primary_email,function_role, is_active, first_password)
+    VALUES (5, 1, 0, 1, 'Solomon Murug', 'solomon@gmail.com','solomon@gmail.com', 'admin', true, 'baraza');
+    SELECT pg_catalog.setval('entitys_entity_id_seq', 5, true);

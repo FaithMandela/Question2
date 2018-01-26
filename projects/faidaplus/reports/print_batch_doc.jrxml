@@ -115,8 +115,8 @@
 	<parameter name="order_id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
-	<parameter name="entity_id" class="java.lang.String">
-		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	<parameter name="entityid" class="java.lang.String">
+		<defaultValueExpression><![CDATA[-1]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_orders.order_id,  (vw_orders.batch_no||' - '||vw_orders.order_id)as order_no, encode(((vw_orders.order_id*141||md5('faida+2016'))::text)::bytea, 'base64') as v_order_id,  vw_orders.order_date::date,
@@ -126,7 +126,7 @@ vw_orders.order_status, ('Town : ' || vw_orders.town_name) as town_name,
 vw_orders.batch_no, vw_orders.shipping_cost, vw_orders.grand_total,   vw_entitys.entity_name,  vw_entitys.son, vw_entitys.entity_id, vw_entitys.pcc,vw_entitys.org_name,      vw_entitys.primary_email, vw_entitys.primary_telephone, vw_entitys.function_role,    vw_entitys.entity_role, vw_entitys.org_id
 FROM vw_orders
 JOIN vw_entitys ON vw_orders.entity_id = vw_entitys.entity_id
-WHERE  vw_orders.entity_id = '$P!{entity_id}' AND vw_orders.batch_no is not null
+WHERE  vw_orders.entity_id = '$P!{entityid}' AND vw_orders.batch_no is not null
 AND  vw_orders.order_status ='Awaiting Collection';]]>
 	</queryString>
 	<field name="order_id" class="java.lang.Integer"/>
