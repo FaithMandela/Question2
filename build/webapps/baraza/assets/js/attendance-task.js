@@ -64,7 +64,7 @@ btnLunchOut
         var btnClockStatus = $('.lunch-break-status-btn');
         var msg = 'Lunch End : 2:00pm ';
         btnClock.button('loading');
-        postAjax(btnClock, btnLunch, btnClockStatus, msg, '4', 'LUNCHOUT');
+        postAjax(btnClock, btnLunchOut, btnClockStatus, msg, '4', 'LUNCHOUT');
     });
 
 /**
@@ -88,7 +88,7 @@ btnBreakOut
         var btnClockStatus = $('.break-status-btn');
         var msg = 'Break End : 4:30pm ';
         btnClock.button('loading');
-        postAjax(btnClock, btnBreak, btnClockStatus, msg, '7', 'BREAKOUT');
+        postAjax(btnClock, btnBreakOut, btnClockStatus, msg, '7', 'BREAKOUT');
     });
 
 /**
@@ -173,7 +173,6 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         btnBreak.attr('disabled','disabled');
 
 
-
                         //hide the clock in and lunch in show lunch out
                         btnClockIn.hide();
                         btnLunch.hide();
@@ -181,8 +180,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         //btnBreakOut.hide();//hide break button
                     }
                     if(logInOut == 'LUNCHOUT'){
-                        //btnMsg = "LUNCH DONE";
-                        btnMsg = "LUNCH BREAK";
+                        btnMsg = "LUNCH DONE";
                         msg = 'Lunch End :'+result[data].log_time;
                         outBtnoldBtnClassName = 'lunch-break-out-btn';
                         oldBtnClass  = 'lunch-break-btn';
@@ -190,14 +188,13 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         //enable break in/out and enable clock out
                         btnClockOut.removeAttr('disabled');
                         btnBreak.removeAttr('disabled');
-                        btnLunch.removeAttr('disabled');
 
 
                         //hide the clock in and lunch in show lunch out
                         btnClockIn.hide();
-                        btnLunch.show();
-                        btnLunchOut.hide();
-                        //btnBreakOut.show();//hide break button
+                        btnLunch.hide();
+                        btnLunchOut.show();
+                        btnBreakOut.hide();//hide break button
                     }
                 }
 
@@ -231,12 +228,11 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         btnClockOut.removeAttr('disabled');
                         btnLunchOut.removeAttr('disabled');
                         btnLunch.removeAttr('disabled');
-                        btnBreak.removeAttr('disabled');
                         //btnBreakOut.attr('disabled','disabled');
 
                             //hide break in,hide lunchin clock in show breakout
-                        btnBreak.show();
-                        btnBreakOut.hide();
+                        btnBreak.hide();
+                        btnBreakOut.show();
                         //btnLunch.hide();
                         //btnLunchOut.hide();
                         btnClockIn.hide();
@@ -317,11 +313,12 @@ $('#start-task')
                 $(".start-task i").removeAttr('class').addClass("fa fa-refresh fa-spin fa-3x fa-fw  text-center").css({"color":"#fff",});
             },
             success : function(result) {
+			console.log("---->> " + result[0].task_name);
                     //If successfull hide the form display the display
                 $('.task-manage-form').hide();
                 $('#display-task').show();
                 //dispalys the value
-                $('#tsk_name').text(result.task_name);
+                $('#tsk_name').html(result[0].task_name);
             },
             error: function(xhr, resp, text) {
                 var btnMsg = "<i class='fa fa-warning text-center'></i> Save Failed";
@@ -353,8 +350,10 @@ $('#end_task')
             dataType : 'json', // data type
             data : {"fnct":"task","json":JSON.stringify(jsonData)}, // post data || get data
             beforeSend: function() {//calls the loader id tag
-                $('#start-task').hide();
+                //$('#start-task').hide();
                 $(".end-task i").removeAttr('class').addClass("fa fa-refresh fa-spin fa-3x fa-fw  text-center").css({"color":"#fff",});
+                $('.task-manage-form').show();
+                $('#display-task').hide();
             },
             success : function(result) {
                 var btnMsg = "<i class='fa fa-check  text-center'></i> Saved Successfully";
@@ -363,6 +362,8 @@ $('#end_task')
                 //If successfull hide the form display the display
                 $('.task-manage-form').show();
                 $('#display-task').hide();
+
+  		$(".start-task i").removeAttr('class').addClass("").css({"color":"#fff",});
             },
             error: function(xhr, resp, text) {
                 var btnMsg = "<i class='fa fa-warning  text-center'></i> Save Failed";
