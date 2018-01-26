@@ -193,9 +193,9 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
 
                         //hide the clock in and lunch in show lunch out
                         btnClockIn.hide();
-                        btnLunch.hide();
+                        btnLunch.show();
                         btnLunchOut.hide();
-                        btnBreakOut.show();//hide break button
+                        //btnBreakOut.show();//hide break button
                     }
                 }
 
