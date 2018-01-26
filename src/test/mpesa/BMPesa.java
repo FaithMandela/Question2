@@ -25,11 +25,11 @@ public class BMPesa {
 		if(args.length == 0) return;
 		
 		if(args[0].equals("reg")) {
-			String auth = mpesa.authenticate("r1renXMh8prPMjoooC2c3TAwQjG6z1va", "Hp6MN1RX8Bvc7vGI");
-			String resp = mpesa.registerURL(auth, "600617", validationURL, confirmationURL);
+			String auth = mpesa.authenticate("AlvIdAfCArA2uJwNhl8qW342lYPG01vd", "QkL36BCqW8FJN1ZR");
+			String resp = mpesa.registerURL(auth, "603080", validationURL, confirmationURL);
 		} if(args[0].equals("test")) {
-			String auth = mpesa.authenticate("r1renXMh8prPMjoooC2c3TAwQjG6z1va", "Hp6MN1RX8Bvc7vGI");
-			String resp = mpesa.testTransaction(auth, "600617", "CustomerPayBillOnline", "123", "254708374149", "ESL");
+			String auth = mpesa.authenticate("AlvIdAfCArA2uJwNhl8qW342lYPG01vd", "QkL36BCqW8FJN1ZR");
+			String resp = mpesa.testTransaction(auth, "603080", "CustomerPayBillOnline", "123", "254708374149", "ESL");
 		}
 	}
 

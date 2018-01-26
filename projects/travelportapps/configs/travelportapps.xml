@@ -1199,7 +1199,8 @@
 			<TEXTFIELD w="75" title="PIN Number">pin_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Country of Travel">destown</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Basic Premium">cover_amount</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Total Amount">totalamount_covered</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Total Amount(USD)">totalamount_covered</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Total Amount(KES)">kestotalamount</TEXTDECIMAL>
 			<JASPER reportfile="travelinsurance/certificate.jasper" name="Certificate"></JASPER>
 			<JASPER reportfile="travelinsurance/letterToEmbassy.jasper" name="Letter to Embassy"></JASPER>
 			<JASPER reportfile="travelinsurance/policy_document.jasper" name="Policy Document"></JASPER>
@@ -1223,6 +1224,7 @@
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTFIELD w="75" title="Pin No">pin_no</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Total Amount(KES)">kestotalamount</TEXTDECIMAL>
 			<ACTIONS>
 				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
 			</ACTIONS>
@@ -1241,6 +1243,7 @@
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTFIELD w="75" title="Pin No">pin_no</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Total Amount(KES)">kestotalamount</TEXTDECIMAL>
 			<ACTIONS>
 				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
 			</ACTIONS>
@@ -1259,6 +1262,7 @@
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTFIELD w="75" title="Pin No">pin_no</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Total Amount(KES)">kestotalamount</TEXTDECIMAL>
 			<JASPER reportfile="travelinsurance/certificate.jasper" name="Certificate"></JASPER>
 			<JASPER reportfile="travelinsurance/letterToEmbassy.jasper" name="Letter to Embassy"></JASPER>
 			<JASPER reportfile="travelinsurance/policy_document.jasper" name="Policy Document"></JASPER>
@@ -1289,6 +1293,7 @@
 			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Basic Premium">cover_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Total Amount">totalamount_covered</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Total Amount(KES)">kestotalamount</TEXTDECIMAL>
 			<ACTIONS>
 				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
 			</ACTIONS>
@@ -1305,6 +1310,7 @@
 			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Totalamount Covered">totalamount_covered</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Total Amount(KES)">kestotalamount</TEXTDECIMAL>
 			<ACTIONS>
 				<ACTION approval="2" fnct="upd_passenger">Revert</ACTION>
 			</ACTIONS>
@@ -1327,6 +1333,7 @@
 			<TEXTFIELD w="75" title="Country of Travel">destown</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Basic Premium">cover_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Total Amount">totalamount_covered</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Total Amount(KES)">kestotalamount</TEXTDECIMAL>
 			<JASPER reportfile="/travelinsurance/certificate.jasper" name="Certificate"></JASPER>
 			<JASPER reportfile="/travelinsurance/letterToEmbassy.jasper" name="Letter to Embassy"></JASPER>
 			<JASPER reportfile="travelinsurance/policy_document.jasper" name="Policy Document"></JASPER>

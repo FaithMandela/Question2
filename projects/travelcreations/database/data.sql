@@ -98,7 +98,7 @@ SELECT pg_catalog.setval('products_product_id_seq', 7, true);
 --
 -- Data for Name: sys_emails; Type: TABLE DATA; Schema: public; Owner: root
 --
-
+INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details, use_type) VALUES (12, NULL, 'Registration Notification', NULL, 'Registration Notification', NULL, 3);
 INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details, use_type) VALUES (10, NULL, 'Donation', NULL, 'Sambaza Update status', NULL, 3);
 INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details, use_type) VALUES (9, NULL, 'Points', NULL, 'Points Generated', '<p>Dear {{name}}</p>
 
@@ -248,7 +248,7 @@ INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, tit
 -- Name: sys_emails_sys_email_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
 --
 
-SELECT pg_catalog.setval('sys_emails_sys_email_id_seq', 10, true);
+SELECT pg_catalog.setval('sys_emails_sys_email_id_seq', 12, true);
 
 
 --

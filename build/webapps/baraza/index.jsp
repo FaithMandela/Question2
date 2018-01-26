@@ -635,7 +635,7 @@
                 btnClockIn.hide();
                 btnLunch.hide();
                 btnLunchOut.show();
-				btnBreakOut.hide();//hide the breakout button
+				//btnBreakOut.hide();//hide the breakout button
 
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
 				btnClockStatus, btnaddClass, labeladdClass, "LUNCH OUT", "Lunch Start :"+ attendanceList[key].log_time);
@@ -649,9 +649,9 @@
 
                 //hide the clock in and lunch in show lunch out
                 <%--btnClockOut.hide();--%>
-                btnLunch.hide();
-                btnLunchOut.show();
-				btnBreakOut.hide();//hide the breakout button
+               // btnLunch.hide();
+               // btnLunchOut.show();
+				//btnBreakOut.hide();//hide the breakout button
 
 				colorChange(btnClock, btnClockStatus, btnClock, btnrmvClass, labelrmvClass,
 				btnClockStatus, btnrmvClass, labeladdClass, "LUNCH BREAK", "Lunch End "+ attendanceList[key].log_time_out);
@@ -663,7 +663,7 @@
 			 btnClock = $(".break-btn");
 			 btnClockStatus = $(".break-status-btn");
 
-			if(log_time_out  != "" && log_time_out == ""){
+			if(log_time_in  != "" && log_time_out == ""){
 				//Disable Clock out and lunch out
 				btnClockOut.attr('disabled','disabled');
 				btnLunchOut.attr('disabled','disabled');

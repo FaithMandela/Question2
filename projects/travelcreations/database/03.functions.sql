@@ -20,6 +20,8 @@ BEGIN
 		END IF;
 		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
 		VALUES (1, NEW.entity_id, 'entitys', 3);
+		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
+		VALUES (12, 57, 'entitys', 3);
 
 	END IF;
 	RETURN NEW;

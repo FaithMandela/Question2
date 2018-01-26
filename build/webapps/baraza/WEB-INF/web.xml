@@ -152,6 +152,11 @@
 	<servlet>
 		<servlet-name>BarazaDataServer</servlet-name>
 		<servlet-class>org.baraza.web.BDataServer</servlet-class>
+
+		<init-param>
+			<param-name>xmlfile</param-name>
+			<param-value>hr.xml</param-value>
+		</init-param>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>BarazaDataServer</servlet-name>

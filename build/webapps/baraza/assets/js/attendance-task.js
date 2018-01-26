@@ -177,7 +177,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         btnClockIn.hide();
                         btnLunch.hide();
                         btnLunchOut.show();
-                        btnBreakOut.hide();//hide break button
+                        //btnBreakOut.hide();//hide break button
                     }
                     if(logInOut == 'LUNCHOUT'){
                         btnMsg = "LUNCH DONE";
@@ -214,8 +214,8 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         btnBreak.hide();
                         btnBreakOut.show();
                         //btnLunch.hide();
-                        btnLunchOut.hide();
-                        btnClockIn.hide();
+                        //btnLunchOut.hide();
+                        //btnClockIn.hide();
 
                     }
                     if(logInOut == 'BREAKOUT'){
@@ -234,7 +234,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         btnBreak.hide();
                         btnBreakOut.show();
                         //btnLunch.hide();
-                        btnLunchOut.hide();
+                        //btnLunchOut.hide();
                         btnClockIn.hide();
 
                     }
@@ -283,7 +283,7 @@ function buttonVisible(hidebtnClock, unhidebtnClock, btnClockStatus, labelrmvCla
  */
 function changeBtnMsg(btnClass, btnMsg){
     btnClass.html(btnMsg);
-    //btnClass.attr('disabled','disabled');
+    /*btnClass.attr('disabled','disabled');*/
 }
 
 
