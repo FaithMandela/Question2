@@ -180,7 +180,8 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         //btnBreakOut.hide();//hide break button
                     }
                     if(logInOut == 'LUNCHOUT'){
-                        btnMsg = "LUNCH DONE";
+                        //btnMsg = "LUNCH DONE";
+                        btnMsg = "LUNCH BREAK";
                         msg = 'Lunch End :'+result[data].log_time;
                         outBtnoldBtnClassName = 'lunch-break-out-btn';
                         oldBtnClass  = 'lunch-break-btn';

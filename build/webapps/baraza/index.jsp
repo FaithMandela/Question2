@@ -704,7 +704,7 @@
 	//Task
 	if(timeSheet.length > 0){
 		$('.task-manage-form').hide();
-		$("#tsk_name").text(timeSheet[0].task_name);
+		$("#tsk_name").html(timeSheet[0].task_name);
 		$("#end_task").val(timeSheet[0].timesheet_id);
 
 	}else{
