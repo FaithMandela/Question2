@@ -194,8 +194,8 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         //hide the clock in and lunch in show lunch out
                         btnClockIn.hide();
                         btnLunch.hide();
-                        btnLunchOut.show();
-                        btnBreakOut.hide();//hide break button
+                        btnLunchOut.hide();
+                        btnBreakOut.show();//hide break button
                     }
                 }
 
@@ -232,8 +232,8 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         //btnBreakOut.attr('disabled','disabled');
 
                             //hide break in,hide lunchin clock in show breakout
-                        btnBreak.hide();
-                        btnBreakOut.show();
+                        btnBreak.show();
+                        btnBreakOut.hide();
                         //btnLunch.hide();
                         //btnLunchOut.hide();
                         btnClockIn.hide();
