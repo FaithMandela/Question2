@@ -64,7 +64,7 @@ btnLunchOut
         var btnClockStatus = $('.lunch-break-status-btn');
         var msg = 'Lunch End : 2:00pm ';
         btnClock.button('loading');
-        postAjax(btnClock, btnLunchOut, btnClockStatus, msg, '4', 'LUNCHOUT');
+        postAjax(btnClock, btnLunch, btnClockStatus, msg, '4', 'LUNCHOUT');
     });
 
 /**
@@ -88,7 +88,7 @@ btnBreakOut
         var btnClockStatus = $('.break-status-btn');
         var msg = 'Break End : 4:30pm ';
         btnClock.button('loading');
-        postAjax(btnClock, btnBreakOut, btnClockStatus, msg, '7', 'BREAKOUT');
+        postAjax(btnClock, btnBreak, btnClockStatus, msg, '7', 'BREAKOUT');
     });
 
 /**
