@@ -307,4 +307,21 @@ FROM qstudentview
 WHERE (schoolid IN ('MBBS', 'BCSM')) AND (quarterid = '2017/2018.1')));
 
 
+--------------- Check students marks on grade checklist
+SELECT qstudentmajorview.studentid, qstudentmajorview.studentname,
+qgradeview.courseid, qgradeview.coursetitle, qgradeview.credit, 
+qgradeview.instructorid, qgradeview.instructorname,
+qcourses.lecturesubmit, qcourses.departmentsubmit, qcourses.facultysubmit,
+qgradeview.finalmarks,
+qgradeview.org_id
+
+FROM qstudentmajorview INNER JOIN (qgradeview INNER JOIN qcourses ON qgradeview.qcourseid = qcourses.qcourseid) ON qstudentmajorview.qstudentid = qgradeview.qstudentid
+
+WHERE (qstudentmajorview.quarterid = '2017/2018.1')
+AND (qstudentmajorview.majorid = 'PRMD')
+AND (qstudentmajorview.studylevel = '100')
+AND (qstudentmajorview.finalised = true)
+AND (qstudentmajorview.approved = true)
+AND (qgradeview.finalmarks is null)
+
 

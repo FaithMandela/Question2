@@ -8,7 +8,7 @@
 			<MENU name="Assets">80</MENU>
 			<MENU name="Outstanding Requests">84</MENU>
 		</MENU>
-		<MENU name="Preventative Maintenance">
+		<MENU name="PM">
 			<MENU name="Schedule">82</MENU>
 			<MENU name="Client Links">78</MENU>
 			<MENU name="Report">240</MENU>
@@ -58,11 +58,11 @@
 			<TILE noorg.query="true" role="staff" name="Links" where="(is_issued = true) AND (is_retrived = false)" table="vw_client_links">
 				<TEXTFIELD default="0" w="75" fnct="count(client_link_id)" title="Total Links">total_links</TEXTFIELD>
 			</TILE>
-			<TILE noorg.query="true" name="Computers" where="(is_issued = true) AND (retrived is null) AND (asset_type_id IN (1,2))" table="vw_client_assets">
-				<TEXTFIELD w="75" fnct="COALESCE(count(client_asset), 0)" title="Computers">total_computers</TEXTFIELD>
+			<TILE noorg.query="true" name="Computers" where="(is_issued = true) AND (retrived is null) AND (asset_type_id IN (1,3))" table="vw_client_assets">
+				<TEXTFIELD w="75" fnct="COALESCE(count(client_asset_id), 0)" title="Computers">total_computers</TEXTFIELD>
 			</TILE>
-			<TILE noorg.query="true" role="applicant" name="Available Internships" where="(closing_date > current_date)" table="vw_internships">
-				<TEXTFIELD w="75" fnct="COALESCE(count(internship_id), 0)" title="Jobs Available">jobs_available</TEXTFIELD>
+			<TILE noorg.query="true" name="Outstanding Requests" where="(request_completed = false)" table="vw_client_requests">
+				<TEXTFIELD w="75" fnct="COALESCE(count(client_request_id), 0)" title="Requests">outstanding_requests</TEXTFIELD>
 			</TILE>
 			<TILELIST keyfield="client_request_id" name="Outstanding Requests" where="(request_completed = false)" table="vw_client_requests">
 				<TEXTFIELD w="150" title="Client Name">client_name</TEXTFIELD>
@@ -70,7 +70,7 @@
 				<TEXTFIELD w="75" title="OTRS Ref">otrs_ref</TEXTFIELD>
 				<TEXTFIELD w="75" title="Request Type">request_type</TEXTFIELD>
 			</TILELIST>
-			<TILELIST keyfield="entity_id" name="Links" orderby="leave_from" table="vw_vendor_links">
+			<TILELIST keyfield="entity_id" name="Links" orderby="link_count desc" table="vw_vendor_links">
 				<TEXTFIELD w="75" title="Employee Name">entity_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Leave From">link_count</TEXTFIELD>
 			</TILELIST>
@@ -127,7 +127,7 @@
 				<TEXTFIELD w="75" title="IP Allocation">ip_allocation</TEXTFIELD>
 			</GRID>
 		</GRID>
-		<GRID keyfield="client_id" limit="100" name="Update Clients" orderby="client_name" where="(address_updated = false)" table="clients">
+		<GRID keyfield="client_id" name="Update Clients" orderby="client_name" where="(address_updated = false)" table="clients">
 			<TEXTFIELD w="150" title="Client Name">client_name</TEXTFIELD>
 			<TEXTFIELD w="150" title="Premises">premises</TEXTFIELD>
 			<TEXTFIELD w="150" title="Street">street</TEXTFIELD>
@@ -135,7 +135,6 @@
 			<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
 			<TEXTFIELD w="150" title="Tel No">telno</TEXTFIELD>
 			<TEXTFIELD w="50" title="PCC">pcc</TEXTFIELD>
-			<TEXTFIELD w="75" title="Account Manager">account_manager_name</TEXTFIELD>
 			<FORM keyfield="client_id" name="Clients" table="clients">
 				<COMBOBOX th="210" w="430" h="20" lpfield="account_manager_name" x="10" y="10" lptable="account_managers" title="Account Manager">account_manager_id</COMBOBOX>
 				<TEXTFIELD w="430" h="20" x="10" y="30" title="Client Name">client_name</TEXTFIELD>
@@ -178,7 +177,7 @@
 				<TEXTFIELD w="75" title="IP Allocation">ip_allocation</TEXTFIELD>
 			</GRID>
 		</GRID>
-		<GRID keyfield="client_id" limit="100" name="Updated Clients" orderby="client_name" where="(address_updated = true)" table="clients">
+		<GRID keyfield="client_id" name="Updated Clients" orderby="client_name" where="(address_updated = true)" table="clients">
 			<TEXTFIELD w="150" title="Client Name">client_name</TEXTFIELD>
 			<TEXTFIELD w="150" title="Premises">premises</TEXTFIELD>
 			<TEXTFIELD w="150" title="Street">street</TEXTFIELD>
@@ -186,7 +185,6 @@
 			<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
 			<TEXTFIELD w="150" title="Tel No">telno</TEXTFIELD>
 			<TEXTFIELD w="50" title="PCC">pcc</TEXTFIELD>
-			<TEXTFIELD w="75" title="Account Manager">account_manager_name</TEXTFIELD>
 			<FORM keyfield="client_id" name="Clients" table="clients">
 				<COMBOBOX th="210" w="430" h="20" lpfield="account_manager_name" x="10" y="10" lptable="account_managers" title="Account Manager">account_manager_id</COMBOBOX>
 				<TEXTFIELD w="430" h="20" x="10" y="30" title="Client Name">client_name</TEXTFIELD>
@@ -832,7 +830,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Preventative Maintenance" key="82">
-		<GRID keyfield="pm_quarter_id" name="Quarters" table="vw_pm_quarters">
+		<GRID keyfield="pm_quarter_id" name="Quarters" orderby="pm_quarter_id desc" table="vw_pm_quarters">
 			<TEXTFIELD w="75" title="Quarter ID">pm_quarter_id</TEXTFIELD>
 			<TEXTDATE w="75" title="Date">qstart_date</TEXTDATE>
 			<TEXTDATE w="75" title="Date">qstop_date</TEXTDATE>
@@ -941,14 +939,13 @@
 					<TEXTFIELD w="75" title="Compuser">compuser</TEXTFIELD>
 					<FORM keyfield="checklistid" name="Checklist" linkfield="pm_schedule_id" table="pm_checklist">
 						<USERFIELD>entity_id</USERFIELD>
-						<TEXTDATE default="now" tab="Configs" w="150" h="20" x="10" y="30" title="Date Done">datedone</TEXTDATE>
-						<TEXTFIELD tab="Configs" w="150" h="20" x="290" y="30" title="Os Type">os_type</TEXTFIELD>
-						<TEXTFIELD tab="Configs" w="150" h="20" x="290" y="70" title="Done By">gd</TEXTFIELD>
-						<TEXTFIELD tab="Galileo" w="150" h="20" x="10" y="490" title="Computer User">compuser</TEXTFIELD>
-						<TEXTFIELD tab="Galileo" w="150" h="20" x="290" y="470" title="SON">clientid</TEXTFIELD>
-						<TEXTFIELD tab="Galileo" w="150" h="20" x="10" y="470" title="Client GTID">clientgtid</TEXTFIELD>
-						<TEXTAREA tab="Comments" w="430" h="70" x="10" y="530" title="User Comments">usercomments</TEXTAREA>
-						<TEXTAREA tab="Comments" w="430" h="70" x="10" y="600" title="Engineer Comments">engineercomments</TEXTAREA>
+						<TEXTDATE default="now" tab="Configs" w="150" h="20" x="10" y="10" title="Date Done">datedone</TEXTDATE>
+						<TEXTFIELD w="150" h="20" x="290" y="30" title="Os Type">os_type</TEXTFIELD>
+						<TEXTFIELD w="150" h="20" x="290" y="50" title="Done By">gd</TEXTFIELD>
+						<TEXTFIELD w="150" h="20" x="10" y="70" title="Computer User">compuser</TEXTFIELD>
+						<TEXTFIELD w="150" h="20" x="290" y="90" title="SON">clientid</TEXTFIELD>
+						<TEXTFIELD w="150" h="20" x="10" y="110" title="Client GTID">clientgtid</TEXTFIELD>
+						<TEXTAREA w="430" h="70" x="10" y="130" rows="5" title="Engineer Comments">engineercomments</TEXTAREA>
 					</FORM>
 				</GRID>
 				<FORM keyfield="pm_schedule_id" name="Schedule" linkfield="pm_quarter_id" table="pm_schedule">
@@ -1076,14 +1073,13 @@
 					<TEXTFIELD w="75" title="Compuser">compuser</TEXTFIELD>
 					<FORM keyfield="checklistid" name="Checklist" linkfield="pm_schedule_id" table="pm_checklist">
 						<USERFIELD>entity_id</USERFIELD>
-						<TEXTDATE default="now" tab="Configs" w="150" h="20" x="10" y="30" title="Date Done">datedone</TEXTDATE>
-						<TEXTFIELD tab="Configs" w="150" h="20" x="290" y="30" title="Os Type">os_type</TEXTFIELD>
-						<TEXTFIELD tab="Configs" w="150" h="20" x="290" y="70" title="Done By">gd</TEXTFIELD>
-						<TEXTFIELD tab="Galileo" w="150" h="20" x="10" y="490" title="Computer User">compuser</TEXTFIELD>
-						<TEXTFIELD tab="Galileo" w="150" h="20" x="290" y="470" title="SON">clientid</TEXTFIELD>
-						<TEXTFIELD tab="Galileo" w="150" h="20" x="10" y="470" title="Client GTID">clientgtid</TEXTFIELD>
-						<TEXTAREA tab="Comments" w="430" h="70" x="10" y="530" title="User Comments">usercomments</TEXTAREA>
-						<TEXTAREA tab="Comments" w="430" h="70" x="10" y="600" title="Engineer Comments">engineercomments</TEXTAREA>
+						<TEXTDATE default="now" tab="Configs" w="150" h="20" x="10" y="10" title="Date Done">datedone</TEXTDATE>
+						<TEXTFIELD w="150" h="20" x="290" y="30" title="Os Type">os_type</TEXTFIELD>
+						<TEXTFIELD w="150" h="20" x="290" y="50" title="Done By">gd</TEXTFIELD>
+						<TEXTFIELD w="150" h="20" x="10" y="70" title="Computer User">compuser</TEXTFIELD>
+						<TEXTFIELD w="150" h="20" x="290" y="90" title="SON">clientid</TEXTFIELD>
+						<TEXTFIELD w="150" h="20" x="10" y="110" title="Client GTID">clientgtid</TEXTFIELD>
+						<TEXTAREA w="430" h="70" x="10" y="130" rows="5" title="Engineer Comments">engineercomments</TEXTAREA>
 					</FORM>
 				</GRID>
 				<FORM keyfield="pm_schedule_id" name="Schedule" linkfield="pm_quarter_id" table="pm_schedule">
@@ -1116,7 +1112,7 @@
 				<TEXTAREA w="430" h="70" x="10" y="50" title="Details">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID keyfield="pm_quarter_id" name="Analysis" table="vw_pm_quarters">
+		<GRID keyfield="pm_quarter_id" name="Analysis" orderby="pm_quarter_id desc" table="vw_pm_quarters">
 			<TEXTFIELD w="75" title="Quarter ID">pm_quarter_id</TEXTFIELD>
 			<TEXTDATE w="75" title="Date">qstart_date</TEXTDATE>
 			<TEXTDATE w="75" title="Date">qstop_date</TEXTDATE>

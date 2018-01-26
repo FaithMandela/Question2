@@ -77,6 +77,7 @@ public class BDataServer extends HttpServlet {
 System.out.println("BASE 2010 : " + action);
 
 		
+		JSONObject jResp = new JSONObject();
 		if(action.equals("authorization")) {
 			String authUser = request.getHeader("authUser");
 			String authPass = request.getHeader("authPass");
@@ -91,7 +92,6 @@ System.out.println("BASE 2010 : " + authUser + " : " + authPass + " : " + userId
 			String token = BWebUtils.createToken(userId);
 System.out.println("BASE 3010 : " + token);
 			
-			JSONObject jResp = new JSONObject();
 			jResp.put("access_token", token);
 			jResp.put("expires_in", "15");
 			resp = jResp.toString();
@@ -101,10 +101,23 @@ System.out.println("BASE 3010 : " + token);
 		
 			System.out.println("BASE 3030 : " + userId);
 			
-			JSONObject jResp = new JSONObject();
 			if(userId == null) {
+				jResp.put("ResultCode", 1);
 				jResp.put("access_error", "Wrong token");
 			} else {
+				String viewKey = request.getParameter("view");
+				BElement view = getView(viewKey);
+				
+				JSONObject jParams = new JSONObject(body);
+				String saveMsg = postData(view, remoteAddr, jParams);
+				if(saveMsg.equals("")) {
+					jResp.put("ResultCode", 0);
+					jResp.put("ResultDesc", "Okay");
+				} else {
+					jResp.put("ResultCode", 2);
+					jResp.put("ResultDesc", saveMsg);
+				}
+
 				System.out.println("BASE Body : " + body);
 			}
 		} else if(action.equals("udata")) {
@@ -117,14 +130,22 @@ System.out.println("BASE 3010 : " + token);
 			BElement view = getView(viewKey);
 			
 			if(view.getAttribute("secured", "true").equals("false")) {
-				postData(view, remoteAddr, jParams);
+				String saveMsg = postData(view, remoteAddr, jParams);
+				if(saveMsg.equals("")) {
+					jResp.put("ResultCode", 0);
+					jResp.put("ResultDesc", "Okay");
+				} else {
+					jResp.put("ResultCode", 2);
+					jResp.put("ResultDesc", saveMsg);
+				}
+			} else {
+				jResp.put("ResultCode", 1);
+				jResp.put("ResultDesc", "Security issue");
 			}
-			
-			JSONObject jResp = new JSONObject();
-			jResp.put("okay", "okay");
 		}
 
 		// Send feedback
+		resp = jResp.toString();
 		response.setContentType("application/json;charset=\"utf-8\"");
 		PrintWriter out = null;
 		try { out = response.getWriter(); } catch(IOException ex) {}
@@ -148,11 +169,12 @@ System.out.println("BASE 3010 : " + token);
 		}
 		BElement view = views.get(views.size() - 1);
 		
+System.out.println("BASE 4070 : " + view.toString());
+		
 		return view;
 	}
 	
-	public void postData(BElement view, String remoteAddr, JSONObject jParams) {
-		
+	public String postData(BElement view, String remoteAddr, JSONObject jParams) {
 		String fWhere = view.getAttribute("keyfield") + " = null";
 		BQuery rs = new BQuery(db, view, fWhere, null);
 		
@@ -164,7 +186,12 @@ System.out.println("BASE 3010 : " + token);
 			newParams.put(paramName, pArray);
 		}
 		
-		System.out.println("BASE 4070 : " + view.toString());
+		rs.recAdd();
+		String saveMsg = rs.updateFields(newParams, viewData, remoteAddr, null);
+		
+		
+System.out.println("BASE 4070 : " + saveMsg);
+		return saveMsg;
 	}
 	
 	public void destroy() {
