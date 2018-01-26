@@ -687,8 +687,8 @@
 				<%--btnBreakOut.attr('disabled','disabled');--%>
 
 				//hide break in,hide lunchin clock in show breakout
-				btnBreak.hide();
-				btnBreakOut.show();
+				btnBreak.show();
+				btnBreakOut.hide();
 				<%--btnLunch.hide();--%>
 				<%--btnLunchOut.show();--%>
 				btnClockIn.hide();
