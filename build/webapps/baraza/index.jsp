@@ -681,7 +681,7 @@
 
 			}
 
-			if(log_time_out != "" && log_time_out != ""){
+			if(log_time_in != "" && log_time_out != ""){
 				//Enable Clock out and disable break
 				btnClockOut.removeAttr('disabled','disabled');
 				<%--btnBreakOut.attr('disabled','disabled');--%>
