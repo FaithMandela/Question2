@@ -44,14 +44,14 @@ INSERT INTO suppliers (supplier_id, supplier_name, create_date, contact_name, em
 INSERT INTO suppliers (supplier_id, supplier_name, create_date, contact_name, email, website, address, details) VALUES (3, 'Tusky''s', 'now()', NULL, NULL, NULL, NULL, NULL);
 INSERT INTO suppliers (supplier_id, supplier_name, create_date, contact_name, email, website, address, details) VALUES (4, 'Nakumatt', 'now()', NULL, NULL, NULL, NULL, NULL);
 INSERT INTO suppliers (supplier_id, supplier_name, create_date, contact_name, email, website, address, details) VALUES (5, 'Airport', 'now()', NULL, NULL, NULL, NULL, NULL);
-
+INSERT INTO suppliers (supplier_id, supplier_name, create_date, contact_name, email, website, address, details) VALUES (6, 'Bata', 'now()', NULL, NULL, NULL, NULL, NULL);
 
 
 --
 -- Name: suppliers_supplier_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('suppliers_supplier_id_seq', 5, true);
+SELECT pg_catalog.setval('suppliers_supplier_id_seq', 6, true);
 
 INSERT INTO points_value (point_value_id, point_value, start_date, end_date, details) VALUES (1, 5, now(), now()+ interval '1 year', NULL);
 
@@ -65,13 +65,13 @@ SELECT pg_catalog.setval('points_value_point_value_id_seq', 1, true);
 INSERT INTO product_category (product_category_id, product_category_name, details, icon) VALUES (1, 'Super Markets', NULL, 'fa-cart-plus');
 INSERT INTO product_category (product_category_id, product_category_name, details, icon) VALUES (2, 'Airtime', NULL, 'fa-credit-card');
 INSERT INTO product_category (product_category_id, product_category_name, details, icon) VALUES (3, 'Airport transfers', NULL, NULL);
-
+INSERT INTO product_category (product_category_id, product_category_name, details, icon) VALUES (4, 'Bata Vouchers', NULL, NULL);
 
 --
 -- Name: product_category_product_category_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('product_category_product_category_id_seq', 3, true);
+SELECT pg_catalog.setval('product_category_product_category_id_seq', 4, true);
 
 
 INSERT INTO products (product_id, product_category_id, supplier_id, created_by, product_name, product_uprice, product_ucost, created, product_details, terms, weight, remarks, is_active, updated_by, updated, narrative, image, details) VALUES (1, 1, 3, NULL, 'Tusky''s Kshs 1,000 Voucher', 1000, NULL, now(), NULL, NULL, NULL, NULL, true, NULL, now(), NULL, '1pic.jpg', NULL);
@@ -85,13 +85,16 @@ INSERT INTO products (product_id, product_category_id, supplier_id, created_by, 
 
 INSERT INTO products (product_id, product_category_id, supplier_id, created_by, product_name, product_uprice, product_ucost, created, product_details, terms, weight, remarks, is_active, updated_by, updated, narrative, image, details) VALUES (8, 2, 1, NULL, 'SAfaricom Ksh 100 Airtime', 100, NULL, now(), NULL, NULL, NULL, NULL, true, NULL, now(), NULL, NULL, NULL);
 INSERT INTO products (product_id, product_category_id, supplier_id, created_by, product_name, product_uprice, product_ucost, created, product_details, terms, weight, remarks, is_active, updated_by, updated, narrative, image, details) VALUES (9, 2, 2, NULL, 'Airtel Ksh 100 Airtime', 100, NULL, now(), NULL, NULL, NULL, NULL, true, NULL, now(), NULL, NULL, NULL);
+INSERT INTO products (product_id, product_category_id, supplier_id, created_by, product_name, product_uprice, product_ucost, created, product_details, terms, weight, remarks, is_active, updated_by, updated, narrative, image, details) VALUES (10, 4, 6, NULL, '1000 Voucher', 1000, NULL, now(), NULL, NULL, NULL, NULL, true, NULL, now(), NULL, NULL, NULL);
+INSERT INTO products (product_id, product_category_id, supplier_id, created_by, product_name, product_uprice, product_ucost, created, product_details, terms, weight, remarks, is_active, updated_by, updated, narrative, image, details) VALUES (11, 4, 6, NULL, '1000 Voucher', 2000, NULL, now(), NULL, NULL, NULL, NULL, true, NULL, now(), NULL, NULL, NULL);
+
 
 
 --
 -- Name: products_product_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('products_product_id_seq', 9, true);
+SELECT pg_catalog.setval('products_product_id_seq', 11, true);
 
 
 
@@ -258,17 +261,19 @@ VALUES (3, 3, 4, NULL, 1, 0, 0, 3, 1, 1, false, false, false, '', '<p>For your a
 --
 
 SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 3, true);
+, , ,
+
 
 INSERT INTO entitys( entity_id, entity_type_id, use_key_id, org_id, entity_name, user_name,
             primary_email,function_role, is_active, first_password)
-    VALUES (2, 1, 0, 1, 'Joy Makena', 'joymakena@gmail.com','joymakena@gmail.com', 'admin', true, 'baraza');
+    VALUES (2, 1, 0, 1, 'Joy Makena', 'joy@incentivetravel.co.ke','joy@incentivetravel.co.ke', 'admin', true, 'baraza');
 INSERT INTO entitys( entity_id, entity_type_id,use_key_id, org_id, entity_name, user_name,
             primary_email,function_role, is_active, first_password)
-    VALUES (3, 1, 0, 1, 'Jacklyne Njeri', 'njeri@gmail.com','njeri@gmail.com', 'admin', true, 'baraza');
+    VALUES (3, 1, 0, 1, 'Jacklyne Njeri', 'jacklyne@incentivetravel.co.ke','jacklyne@incentivetravel.co.ke', 'admin', true, 'baraza');
 INSERT INTO entitys( entity_id, entity_type_id, use_key_id,org_id, entity_name, user_name,
             primary_email,function_role, is_active, first_password)
-    VALUES (4, 1  0,1, 'Christine Nyambura', 'nyambura@gmail.com','nyambura@gmail.com', 'admin', true, 'baraza');
+    VALUES (4, 1,  0,1, 'Christine Nyambura', 'christine@incentivetravel.co.ke','christine@incentivetravel.co.ke', 'admin', true, 'baraza');
 INSERT INTO entitys( entity_id, entity_type_id, use_key_id,org_id, entity_name, user_name,
             primary_email,function_role, is_active, first_password)
-    VALUES (5, 1, 0, 1, 'Solomon Murug', 'solomon@gmail.com','solomon@gmail.com', 'admin', true, 'baraza');
+    VALUES (5, 1, 0, 1, 'Solomon Murug', 'solomon@incentivetravel.co.ke','solomon@incentivetravel.co.ke', 'admin', true, 'baraza');
     SELECT pg_catalog.setval('entitys_entity_id_seq', 5, true);
