@@ -32,6 +32,7 @@ import javax.servlet.ServletException;
 import org.baraza.utils.BWebUtils;
 import org.baraza.DB.BDB;
 import org.baraza.DB.BQuery;
+import org.baraza.DB.BUser;
 import org.baraza.xml.BXML;
 import org.baraza.xml.BElement;
 
@@ -40,6 +41,7 @@ public class BDataServer extends HttpServlet {
 
 	BDB db = null;
 	BElement root = null;
+	Map<String, BUser> users;
 	
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
@@ -55,6 +57,8 @@ public class BDataServer extends HttpServlet {
 			db = new BDB(dbconfig);
 			
 			root = xml.getRoot();
+			
+			users = new HashMap<String, BUser>();
 		}
 	}
 	
@@ -89,42 +93,22 @@ System.out.println("BASE 2010 : " + action);
 			String userId = db.executeFunction("SELECT password_validate('" + authUser + "', '" + authPass + "')");
 System.out.println("BASE 2010 : " + authUser + " : " + authPass + " : " + userId);
 
-			String token = BWebUtils.createToken(userId);
-System.out.println("BASE 3010 : " + token);
-			
-			jResp.put("access_token", token);
-			jResp.put("expires_in", "15");
-			resp = jResp.toString();
-		} else if(action.equals("data")) {
-			String token = request.getHeader("authorization");
-			String userId = BWebUtils.decodeToken(token);
-		
-			System.out.println("BASE 3030 : " + userId);
-			
-			if(userId == null) {
+			if(userId.equals("-1")) {
 				jResp.put("ResultCode", 1);
-				jResp.put("access_error", "Wrong token");
+				jResp.put("ResultDesc", "Wrong username or password");
 			} else {
-				String viewKey = request.getParameter("view");
-				BElement view = getView(viewKey);
-				
-				JSONObject jParams = new JSONObject(body);
-				String saveMsg = postData(view, remoteAddr, jParams);
-				if(saveMsg.equals("")) {
-					jResp.put("ResultCode", 0);
-					jResp.put("ResultDesc", "Okay");
-				} else {
-					jResp.put("ResultCode", 2);
-					jResp.put("ResultDesc", saveMsg);
-				}
+				String token = BWebUtils.createToken(userId);
+System.out.println("BASE 3010 : " + token);
 
-				System.out.println("BASE Body : " + body);
+				users.put(userId, new BUser(db, remoteAddr, authUser, userId));
+				
+				jResp.put("ResultCode", 0);
+				jResp.put("access_token", token);
+				jResp.put("expires_in", "15");
 			}
 		} else if(action.equals("udata")) {
-			System.out.println("BASE 4040 : ");
-			
 			JSONObject jParams = new JSONObject(body);
-			System.out.println("BASE Body : " + body);
+System.out.println("BASE Body : " + body);
 			
 			String viewKey = request.getParameter("view");
 			BElement view = getView(viewKey);
@@ -142,7 +126,49 @@ System.out.println("BASE 3010 : " + token);
 				jResp.put("ResultCode", 1);
 				jResp.put("ResultDesc", "Security issue");
 			}
-		}
+		} else if(action.equals("data")) {
+			String token = request.getHeader("authorization");
+			String userId = BWebUtils.decodeToken(token);
+System.out.println("BASE 3030 : " + userId);
+			
+			if(userId == null) {
+				jResp.put("ResultCode", 1);
+				jResp.put("access_error", "Wrong token");
+			} else {
+				String viewKey = request.getParameter("view");
+				BElement view = getView(viewKey);
+				BUser user = users.get(userId);
+				
+				JSONObject jParams = new JSONObject(body);
+				String saveMsg = postData(view, remoteAddr, jParams);
+				if(saveMsg.equals("")) {
+					jResp.put("ResultCode", 0);
+					jResp.put("ResultDesc", "Okay");
+				} else {
+					jResp.put("ResultCode", 2);
+					jResp.put("ResultDesc", saveMsg);
+				}
+
+				System.out.println("BASE Body : " + body);
+			}
+		} else if(action.equals("read")) {
+			String token = request.getHeader("authorization");
+			String userId = BWebUtils.decodeToken(token);
+System.out.println("BASE 3030 : " + userId);
+			
+			if(userId == null) {
+				jResp.put("ResultCode", 1);
+				jResp.put("access_error", "Wrong token");
+			} else {
+				String viewKey = request.getParameter("view");
+				BElement view = getView(viewKey);
+				BUser user = users.get(userId);
+				
+				BQuery rs = new BQuery(db, view, null, null);
+				jResp = new JSONObject(rs.getJSON());
+				rs.close();
+			}
+		} 
 
 		// Send feedback
 		resp = jResp.toString();
@@ -188,7 +214,7 @@ System.out.println("BASE 4070 : " + view.toString());
 		
 		rs.recAdd();
 		String saveMsg = rs.updateFields(newParams, viewData, remoteAddr, null);
-		
+		rs.close();
 		
 System.out.println("BASE 4070 : " + saveMsg);
 		return saveMsg;
