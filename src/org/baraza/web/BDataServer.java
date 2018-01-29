@@ -90,7 +90,9 @@ System.out.println("BASE 2010 : " + action);
 			authUser = new String(Base64.getDecoder().decode(authUser));
 			authPass = new String(Base64.getDecoder().decode(authPass));
 			
-			String userId = db.executeFunction("SELECT password_validate('" + authUser + "', '" + authPass + "')");
+			String authFunction = root.getAttribute("authentication", "password_validate");
+			
+			String userId = db.executeFunction("SELECT " + authFunction + "('" + authUser + "', '" + authPass + "')");
 System.out.println("BASE 2010 : " + authUser + " : " + authPass + " : " + userId);
 
 			if(userId.equals("-1")) {

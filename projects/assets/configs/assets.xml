@@ -71,8 +71,8 @@
 				<TEXTFIELD w="75" title="Request Type">request_type</TEXTFIELD>
 			</TILELIST>
 			<TILELIST keyfield="entity_id" name="Links" orderby="link_count desc" table="vw_vendor_links">
-				<TEXTFIELD w="75" title="Employee Name">entity_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Leave From">link_count</TEXTFIELD>
+				<TEXTFIELD w="75" title="Provider">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="No. Of Links">link_count</TEXTFIELD>
 			</TILELIST>
 		</DASHBOARD>
 	</DESK>
