@@ -317,7 +317,7 @@ $('#start-task')
                 $('.task-manage-form').hide();
                 $('#display-task').show();
                 //dispalys the value
-                $('#tsk_name').text(result[0].task_name);
+                $('#tsk_name').html(result[0].task_name);
             },
             error: function(xhr, resp, text) {
                 var btnMsg = "<i class='fa fa-warning text-center'></i> Save Failed";
