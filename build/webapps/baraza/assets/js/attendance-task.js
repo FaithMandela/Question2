@@ -312,12 +312,12 @@ $('#start-task')
                 $(".start-task i").removeAttr('class').addClass("fa fa-refresh fa-spin fa-3x fa-fw  text-center").css({"color":"#fff",});
             },
             success : function(result) {
-			console.log("---->> " + result[0].task_name);
+			console.log("Task Name here " + result[0].task_name);
                     //If successfull hide the form display the display
                 $('.task-manage-form').hide();
                 $('#display-task').show();
                 //dispalys the value
-                $('#tsk_name').html(result[0].task_name);
+                $('#tsk_name').text(result[0].task_name);
             },
             error: function(xhr, resp, text) {
                 var btnMsg = "<i class='fa fa-warning text-center'></i> Save Failed";
