@@ -38,8 +38,20 @@ public class BUser {
 		entityName = "root";
 		entityType = "0";
 	}
+	
+	public BUser(BDB db, String userIP, String userName, String userId) {
+		makeUser(db, userIP, userName);
+		
+		String insSql = "INSERT INTO sys_logins (entity_id, login_ip) VALUES ('"
+		+ userId + "', '" + userIP + "')";
+		db.executeQuery(insSql);
+	}
 
 	public BUser(BDB db, String userIP, String userName) {
+		makeUser(db, userIP, userName);
+	}
+	
+	public void makeUser(BDB db, String userIP, String userName) {
 		this.userIP = userIP;
 		this.userName = userName;
 		groupRole = new ArrayList<String>();

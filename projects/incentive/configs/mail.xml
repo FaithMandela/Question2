@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <ESCALATION title="Incentive Mail" processdelay="2"
-	host="mail.openbaraza.org" mailuser="hcm.openbaraza" mailpassword="hcm_invent" mailfrom="info@openbaraza.org"
+	host="mail.incentivetravel.co.ke" mailuser="customerservice" mailpassword="Incent1ve2" mailfrom="customerservice@incentivetravel.co.ke"
     inbox="INBOX" sentbox="INBOX.Sent" smtppauth="true"
 	reportpath="/opt/baraza/projects/incentive/reports/">
 

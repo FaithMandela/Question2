@@ -12,6 +12,17 @@ DELETE FROM residences WHERE residenceid = 'NA';
 
 update entitys set entity_password = md5('baraza') where entity_type_id <> 20;
 
+---------------------- Clear admisions database
+DELETE FROM pin_data;
+DELETE FROM applications;
+DELETE FROM admisions;
+DELETE FROM sys_reset;
+DELETE FROM registrations;
+DELETE FROM entry_forms;
+DELETE FROM entity_subscriptions WHERE entity_type_id = 20;
+DELETE FROM entitys WHERE entity_type_id = 20;
+
+
 ---------------------- importing admisions
 select max(entity_id) from entitys;
 select max(studentdegreeid) from studentdegrees;

@@ -919,7 +919,9 @@ BEGIN
 	SELECT entity_id, entity_password INTO v_entity_id, v_entity_password
 	FROM entitys WHERE (user_name = $1);
 
-	IF (md5($2) != v_entity_password) THEN
+	IF(v_entity_id is null)THEN
+		v_entity_id = -1;
+	ELSIF(md5($2) != v_entity_password) THEN
 		v_entity_id = -1;
 	END IF;
 
