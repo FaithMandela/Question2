@@ -21,6 +21,7 @@ import java.io.PrintWriter;
 import java.io.IOException;
 
 import org.json.JSONObject;
+import org.json.JSONArray;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletConfig;
@@ -79,6 +80,7 @@ public class BDataServer extends HttpServlet {
 		String action = request.getHeader("action");
 		if(action == null) return;
 System.out.println("BASE 2010 : " + action);
+System.out.println("BASE 2020 Body : " + body);
 
 		
 		JSONObject jResp = new JSONObject();
@@ -110,7 +112,6 @@ System.out.println("BASE 3010 : " + token);
 			}
 		} else if(action.equals("udata")) {
 			JSONObject jParams = new JSONObject(body);
-System.out.println("BASE Body : " + body);
 			
 			String viewKey = request.getParameter("view");
 			BElement view = getView(viewKey);
@@ -150,8 +151,6 @@ System.out.println("BASE 3030 : " + userId);
 					jResp.put("ResultCode", 2);
 					jResp.put("ResultDesc", saveMsg);
 				}
-
-				System.out.println("BASE Body : " + body);
 			}
 		} else if(action.equals("read")) {
 			String token = request.getHeader("authorization");
@@ -166,8 +165,11 @@ System.out.println("BASE 3030 : " + userId);
 				BElement view = getView(viewKey);
 				BUser user = users.get(userId);
 				
-				BQuery rs = new BQuery(db, view, null, null);
-				jResp = new JSONObject(rs.getJSON());
+				BQuery rs = new BQuery(db, view, null, null, false);
+				if(rs.moveNext()) {
+					JSONArray jTable = new JSONArray(rs.getJSON());
+					jResp.put("data", jTable);
+				}
 				rs.close();
 			}
 		} 

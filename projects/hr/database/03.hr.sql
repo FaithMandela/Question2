@@ -587,7 +587,7 @@ CREATE TABLE applications (
 	previous_salary			real,
 	expected_salary			real,
 	exchange_rate			real default 1,
-	review_rating			integer,
+	review_rating			real,
 	
 	applicant_comments		text,
 	review					text
@@ -599,6 +599,32 @@ CREATE INDEX applications_entity_id ON applications(entity_id);
 CREATE INDEX applications_employee_id ON applications(employee_id);
 CREATE INDEX applications_currency_id ON applications(currency_id);
 CREATE INDEX applications_org_id ON applications(org_id);
+
+CREATE TABLE interview_types (
+	interview_type_id		serial primary key,
+	org_id					integer references orgs,
+	interview_type_name		varchar(120),
+	is_active				boolean default true not null,
+	details					text
+);
+CREATE INDEX interview_types_org_id ON interview_types(org_id);
+
+CREATE TABLE interviews (
+	interview_id			serial primary key,
+	application_id			integer references applications,
+	interview_type_id		integer references interview_types,
+	entity_id				integer references entitys,
+	org_id					integer references orgs,
+	interview_date			date not null,
+	interview_time			time,
+	done					boolean default true not null,
+	interview_rating		real,
+	details					text
+);
+CREATE INDEX interviews_application_id ON interviews(application_id);
+CREATE INDEX interviews_interview_type_id ON interviews(interview_type_id);
+CREATE INDEX interviews_entity_id ON interviews(entity_id);
+CREATE INDEX interviews_org_id ON interviews(org_id);
 
 CREATE TABLE internships (
 	internship_id			serial primary key,
@@ -1180,6 +1206,38 @@ CREATE VIEW vw_applications AS
 		LEFT JOIN vw_education_max ON entitys.entity_id = vw_education_max.entity_id
 		LEFT JOIN vw_employment_max ON entitys.entity_id = vw_employment_max.entity_id
 		LEFT JOIN currency ON applications.currency_id = currency.currency_id;
+		
+CREATE VIEW vw_interviews AS
+	SELECT vw_applications.department_id, vw_applications.department_name, vw_applications.department_description, vw_applications.department_duties,
+		vw_applications.department_role_id, vw_applications.department_role_name, vw_applications.parent_role_name,
+		vw_applications.job_description, vw_applications.job_requirements, vw_applications.duties, vw_applications.performance_measures, 
+		vw_applications.intake_id, vw_applications.opening_date, vw_applications.closing_date, vw_applications.positions, 
+		vw_applications.currency_id, vw_applications.currency_name, vw_applications.currency_symbol,
+		
+		vw_applications.application_id, vw_applications.employee_id, vw_applications.contract_date, vw_applications.contract_close, 
+		vw_applications.contract_start, vw_applications.contract_period, vw_applications.contract_terms, vw_applications.initial_salary, 
+		vw_applications.application_date, vw_applications.approve_status, vw_applications.workflow_table_id, vw_applications.action_date, 
+		vw_applications.applicant_comments, vw_applications.review, vw_applications.short_listed,
+		vw_applications.previous_salary, vw_applications.expected_salary, vw_applications.exchange_rate, vw_applications.review_rating,
+
+		vw_applications.education_class_name, vw_applications.date_from, vw_applications.date_to, 
+		vw_applications.name_of_school, vw_applications.examination_taken, 
+		vw_applications.grades_obtained, vw_applications.certificate_number,
+
+		vw_applications.employment_id, vw_applications.employers_name, vw_applications.position_held,
+		vw_applications.emp_date_from, vw_applications.emp_date_to, 
+		vw_applications.employment_duration, vw_applications.employment_experince,
+		vw_applications.emp_duration, vw_applications.emp_experince,
+	
+		entitys.entity_id, entitys.entity_name,
+		interview_types.interview_type_id, interview_types.interview_type_name,
+		interviews.org_id, interviews.interview_id,
+		interviews.interview_date, interviews.interview_time, interviews.done,
+		interviews.interview_rating, interviews.details	
+	
+	FROM vw_applications INNER JOIN interviews ON vw_applications.application_id = interviews.application_id
+		INNER JOIN interview_types ON interviews.interview_type_id = interview_types.interview_type_id
+		INNER JOIN entitys ON interviews.entity_id = entitys.entity_id;
 		
 CREATE VIEW vw_contracting AS
 	SELECT vw_intake.department_id, vw_intake.department_name, vw_intake.department_description, vw_intake.department_duties,
@@ -2468,14 +2526,18 @@ DECLARE
 	msg		 				varchar(120);
 BEGIN
 
-	IF ($3 = '1') THEN
+	IF ($3 = '0') THEN
+		UPDATE applications SET short_listed = 0
+		WHERE application_id = CAST($1 as int);
+		msg := 'Removed from short list';
+	ELSIF ($3 = '1') THEN
 		UPDATE applications SET short_listed = 1
 		WHERE application_id = CAST($1 as int);
 		msg := 'Added to short list';
 	ELSIF ($3 = '2') THEN
-		UPDATE applications SET short_listed = 0
+		UPDATE applications SET short_listed = 2
 		WHERE application_id = CAST($1 as int);
-		msg := 'Removed from short list';
+		msg := 'Added to review';
 	END IF;
 	
 	return msg;

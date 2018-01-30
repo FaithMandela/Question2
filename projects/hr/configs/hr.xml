@@ -2141,12 +2141,13 @@
 				<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
 				<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
 				<TEXTFIELD w="50" title="Experience">emp_experince</TEXTFIELD>
-				<TEXTFIELD w="75" title="Currency Symbol">currency_symbol</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="Expected Salary">expected_salary</TEXTDECIMAL>
+				<TEXTFIELD w="50" title="Currency">currency_symbol</TEXTFIELD>
+				<TEXTDECIMAL w="50" title="Exp. Salary">expected_salary</TEXTDECIMAL>
 				<JASPER reportfile="bio_applicant_intake.jasper" org.table="applications" name="BIO"></JASPER>
 				<JASPER reportfile="cv_applicant_intake.jasper" org.table="applications" name="CV"></JASPER>
 				<ACTIONS>
 					<ACTION approval="1" fnct="add_shortlist">Short List</ACTION>
+					<ACTION approval="2" fnct="add_shortlist">Review</ACTION>
 				</ACTIONS>
 				<FORM th="210" keyfield="application_id" name="Applications" linkfield="intake_id" table="applications">
 					<TEXTDATE w="150" h="20" x="10" y="30" title="Contract Date">contract_date</TEXTDATE>
@@ -2165,7 +2166,7 @@
 					<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 				</FILES>
 			</GRID>
-			<GRID keyfield="application_id" name="Short Listed" where="(short_listed = 1)" ssort="true" linkfield="intake_id" params="entity_id" table="vw_applications">
+			<GRID keyfield="application_id" name="Review" where="(short_listed = 2)" ssort="true" linkfield="intake_id" params="entity_id" table="vw_applications">
 				<TEXTFIELD w="75" title="Applicant Name">entity_name</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
 				<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
@@ -2176,15 +2177,45 @@
 				<JASPER reportfile="bio_applicant_intake.jasper" org.table="applications" name="BIO"></JASPER>
 				<JASPER reportfile="cv_applicant_intake.jasper" org.table="applications" name="CV"></JASPER>
 				<ACTIONS>
+					<ACTION approval="1" fnct="add_shortlist">Short List</ACTION>
+					<ACTION approval="0" fnct="add_shortlist">Un Short List</ACTION>
+				</ACTIONS>
+				<FORM th="210" keyfield="application_id" name="Applications" linkfield="intake_id" table="applications">
+					<TEXTAREA tab="Comments" w="530" h="170" x="10" y="1">applicant_comments</TEXTAREA>
+					<TEXTAREA tab="Review" w="530" h="170" x="10" y="1">review</TEXTAREA>
+				</FORM>
+				<FILES new="false" password="baraza" linkparams="entity_id=table_id" keyfield="sys_file_id" name="Documents" repository="/repository/webdav/files/" table="sys_files" username="repository">
+					<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
+					<TEXTFIELD w="50" title="Size">file_size</TEXTFIELD>
+					<TEXTFIELD w="150" title="Type">file_type</TEXTFIELD>
+					<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
+				</FILES>
+			</GRID>
+			<GRID keyfield="application_id" name="Short Listed" where="(short_listed = 1)" ssort="true" linkfield="intake_id" params="entity_id" table="vw_applications">
+				<TEXTFIELD w="75" title="Applicant Name">entity_name</TEXTFIELD>
+				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+				<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
+				<TEXTFIELD w="75" title="Education">education_class_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
+				<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
+				<TEXTFIELD w="50" title="Experience">emp_experince</TEXTFIELD>
+				<TEXTDECIMAL w="50" title="Rating">review_rating</TEXTDECIMAL>
+				<TEXTDECIMAL w="50" title="Exp. Salary">expected_salary</TEXTDECIMAL>
+				<JASPER reportfile="bio_applicant_intake.jasper" org.table="applications" name="BIO"></JASPER>
+				<JASPER reportfile="cv_applicant_intake.jasper" org.table="applications" name="CV"></JASPER>
+				<ACTIONS>
+					<ACTION approval="0" fnct="add_shortlist">Un Short List</ACTION>
 					<ACTION fnct="add_employee">Hire</ACTION>
-					<ACTION approval="2" fnct="add_shortlist">Un Short List</ACTION>
 				</ACTIONS>
 				<FORM th="210" keyfield="application_id" name="Applications" linkfield="intake_id" table="applications">
 					<TEXTDATE w="150" h="20" x="10" y="30" title="Contract Date">contract_date</TEXTDATE>
 					<TEXTDATE w="150" h="20" x="290" y="30" title="Contract Close">contract_close</TEXTDATE>
 					<TEXTDATE w="150" h="20" x="10" y="50" title="Contract Start">contract_start</TEXTDATE>
 					<TEXTFIELD w="150" h="20" x="290" y="50" title="Contract Period">contract_period</TEXTFIELD>
-					<TEXTDECIMAL w="150" h="20" x="10" y="70" title="Initial Salary">initial_salary</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" h="20" x="10" y="70" title="Previous Salary">previous_salary</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" h="20" x="290" y="70" title="Expected Salary">expected_salary</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" h="20" x="10" y="90" title="Review Rating">review_rating</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" h="20" x="290" y="90" title="Initial Salary">initial_salary</TEXTDECIMAL>
 					<TEXTAREA tab="Contract Terms" w="530" h="170" x="10" y="10">contract_terms</TEXTAREA>
 					<TEXTAREA tab="Comments" w="530" h="170" x="10" y="1">applicant_comments</TEXTAREA>
 					<TEXTAREA tab="Review" w="530" h="170" x="10" y="1">review</TEXTAREA>
