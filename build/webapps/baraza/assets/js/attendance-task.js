@@ -165,7 +165,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                     if(logInOut == 'LUNCHIN'){
                         btnMsg = "LUNCH OUT";
                         msg = 'Lunch Start :'+result[data].log_time;
-                        outBtnoldBtnClassName = 'lunch-break-out-btn' ;
+                        outBtnNewClassName = 'lunch-break-out-btn' ;
                         oldBtnClass  = 'lunch-break-btn';
 
                         //disable break in/out and disable clock out
@@ -184,7 +184,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         //btnMsg = "LUNCH DONE";
                         btnMsg = "LUNCH BREAK";
                         msg = 'Lunch End :'+result[data].log_time;
-                        outBtnoldBtnClassName = 'lunch-break-out-btn';
+                        outBtnNewClassName = 'lunch-break-out-btn';
                         oldBtnClass  = 'lunch-break-btn';
 
                         //enable break in/out and enable clock out
@@ -287,7 +287,6 @@ function buttonVisible(hidebtnClock, unhidebtnClock, btnClockStatus, labelrmvCla
  */
 function changeBtnMsg(btnClass, btnMsg){
     btnClass.html(btnMsg);
-    /*btnClass.attr('disabled','disabled');*/
 }
 
 
