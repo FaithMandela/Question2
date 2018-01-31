@@ -1846,6 +1846,30 @@
 					<TEXTFIELD w="150" title="Type">file_type</TEXTFIELD>
 					<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 				</FILES>
+				<GRID keyfield="interview_id" name="Interviews" linkfield="application_id" table="vw_interviews">
+					<TEXTFIELD w="75" title="Interview Type ID">interview_type_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="By">entity_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Type">interview_type_name</TEXTFIELD>
+					<TEXTDATE w="75" title="Interview Date">interview_date</TEXTDATE>
+					<SPINTIME w="75" title="Interview Time">interview_time</SPINTIME>
+					<CHECKBOX w="75" title="Done">done</CHECKBOX>
+					<TEXTDECIMAL w="75" title="Interview Rating">interview_rating</TEXTDECIMAL>
+					<ACCORDION keyfield="interview_id" name="Interview">
+						<FORM keyfield="interview_id" name="Interview" linkfield="application_id" cols="2" collapse="in" table="interviews">
+							<COMBOBOX w="150" h="20" lpfield="interview_type_name" x="10" y="10" lptable="interview_types" title="Interview Type" span="true">interview_type_id</COMBOBOX>
+							<COMBOBOX w="150" h="20" lpfield="employee_name" x="290" y="10" lptable="vw_employees" where="(active = true)" title="Staff" lpkey="entity_id">entity_id</COMBOBOX>
+							<TEXTDATE w="150" h="20" x="10" y="30" title="Interview Date" span="true">interview_date</TEXTDATE>
+							<SPINTIME w="150" h="20" x="290" y="30" title="Interview Time">interview_time</SPINTIME>
+							<CHECKBOX w="150" h="20" x="10" y="50" title="Done" span="true">done</CHECKBOX>
+							<TEXTDECIMAL w="150" h="20" x="290" y="50" title="Interview Rating">interview_rating</TEXTDECIMAL>
+							<TEXTAREA w="150" h="70" x="10" y="70" rows="5" title="Details">details</TEXTAREA>
+						</FORM>
+						<GRID new="false" keyfield="e_field_id" name="Interview Questions" orderby="et_field_id" del="false" where="(table_code = 121)" linkfield="table_id" collapse="in" table="e_fields">
+							<FUNCTION w="175" fnct="get_et_field_name(et_field_id)" title="Question">et_field_disp</FUNCTION>
+							<TEXTFIELD w="175" title="Answer">e_field_value</TEXTFIELD>
+						</GRID>
+					</ACCORDION>
+				</GRID>
 			</GRID>
 			<FORM keyfield="intake_id" name="Intake" table="intake">
 				<COMBOBOX w="430" h="20" lpfield="department_role_name" x="10" y="10" lptable="department_roles" title="Department Role">department_role_id</COMBOBOX>
@@ -1859,6 +1883,23 @@
 				<TEXTFIELD w="150" h="20" x="10" y="130" title="Contract Period">contract_period</TEXTFIELD>
 				<TEXTAREA w="430" h="70" x="10" y="150" title="Details">details</TEXTAREA>
 			</FORM>
+		</GRID>
+		<GRID keyfield="interview_type_id" name="Interview Types" table="interview_types">
+			<TEXTFIELD w="75" title="Interview Type ID">interview_type_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Interview Type">interview_type_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+			<ACCORDION keyfield="interview_type_id" name="Interview Types">
+				<FORM keyfield="interview_type_id" name="Interview Types" collapse="in" table="interview_types">
+					<TEXTFIELD w="430" h="20" x="10" y="10" title="Interview Type">interview_type_name</TEXTFIELD>
+					<CHECKBOX w="150" h="20" x="10" y="30" title="Active">is_active</CHECKBOX>
+					<TEXTAREA rows="5" w="430" h="70" x="10" y="50" title="Details">details</TEXTAREA>
+				</FORM>
+				<GRID keyfield="et_field_id" name="Interview Questions" linkfield="table_link" collapse="in" table="et_fields">
+					<DEFAULT default="121">table_code</DEFAULT>
+					<DEFAULT default="interview_types">table_name</DEFAULT>
+					<TEXTFIELD w="275" title="Questions">et_field_name</TEXTFIELD>
+				</GRID>
+			</ACCORDION>
 		</GRID>
 	</DESK>
 

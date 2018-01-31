@@ -22,7 +22,7 @@ public class BDataClient {
 		
 		BDataClient dataClient = new BDataClient();
 		String token = dataClient.authenticate(myURL, "root", "baraza");
-		String resp = dataClient.sendData(myURL, "260:1", token, data);
+		String resp = dataClient.sendData(myURL, "115:0", token, data);
 	}
 
 	public String authenticate(String myURL, String appKey, String appPass) {
