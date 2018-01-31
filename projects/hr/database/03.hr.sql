@@ -564,6 +564,7 @@ CREATE TABLE applications (
 	intake_id				integer references intake,
 	contract_type_id		integer references contract_types,
 	contract_status_id		integer references contract_status,
+	department_role_id		integer references department_roles,
 	entity_id				integer references entitys,
 	employee_id				integer references employees,
 	currency_id				integer references currency,
@@ -595,6 +596,7 @@ CREATE TABLE applications (
 CREATE INDEX applications_intake_id ON applications(intake_id);
 CREATE INDEX applications_contract_type_id ON applications(contract_type_id);
 CREATE INDEX applications_contract_status_id ON applications(contract_status_id);
+CREATE INDEX applications_department_role_id ON applications (department_role_id);
 CREATE INDEX applications_entity_id ON applications(entity_id);
 CREATE INDEX applications_employee_id ON applications(employee_id);
 CREATE INDEX applications_currency_id ON applications(currency_id);
@@ -1240,10 +1242,11 @@ CREATE VIEW vw_interviews AS
 		INNER JOIN entitys ON interviews.entity_id = entitys.entity_id;
 		
 CREATE VIEW vw_contracting AS
-	SELECT vw_intake.department_id, vw_intake.department_name, vw_intake.department_description, vw_intake.department_duties,
-		vw_intake.department_role_id, vw_intake.department_role_name, 
-		vw_intake.job_description, vw_intake.parent_role_name,
-		vw_intake.job_requirements, vw_intake.duties, vw_intake.performance_measures, 
+	SELECT vw_department_roles.department_id, vw_department_roles.department_name, 
+		vw_department_roles.department_description, vw_department_roles.department_duties,
+		vw_department_roles.department_role_id, vw_department_roles.department_role_name, 
+		vw_department_roles.job_description, vw_department_roles.parent_role_name,
+		vw_department_roles.job_requirements, vw_department_roles.duties, vw_department_roles.performance_measures,
 		vw_intake.intake_id, vw_intake.opening_date, vw_intake.closing_date, vw_intake.positions, 
 		entitys.entity_id, entitys.entity_name, orgs.org_id, orgs.org_name,
 		
@@ -1269,6 +1272,7 @@ CREATE VIEW vw_contracting AS
 
 	FROM applications INNER JOIN entitys ON applications.employee_id = entitys.entity_id
 		INNER JOIN orgs ON applications.org_id = orgs.org_id
+		LEFT JOIN vw_department_roles ON applications.department_role_id = vw_department_roles.department_role_id
 		LEFT JOIN vw_intake ON applications.intake_id = vw_intake.intake_id
 		LEFT JOIN contract_types ON applications.contract_type_id = contract_types.contract_type_id
 		LEFT JOIN contract_status ON applications.contract_status_id = contract_status.contract_status_id
@@ -2551,6 +2555,7 @@ DECLARE
 	v_entity_id				integer;
 	v_employee_id			integer;
 	v_intake_id				integer;
+	v_department_role_id	integer;
 	v_org_id				integer;
 	v_initial_salary		real;
 	msg		 				varchar(120);
@@ -2558,8 +2563,8 @@ BEGIN
 
 	v_application_id := $1::int;
 	SELECT employees.entity_id, applications.employee_id, applications.intake_id, applications.initial_salary, 
-			applications.entity_id, applications.org_id
-		INTO v_entity_id, v_employee_id, v_intake_id, v_initial_salary, v_applicant_id, v_org_id
+			applications.entity_id, applications.org_id, applications.department_role_id
+		INTO v_entity_id, v_employee_id, v_intake_id, v_initial_salary, v_applicant_id, v_org_id, v_department_role_id
 	FROM applications LEFT JOIN employees ON applications.entity_id = employees.entity_id
 	WHERE (application_id = v_application_id);
 
@@ -2588,7 +2593,8 @@ BEGIN
 		
 		v_entity_id := currval('entitys_entity_id_seq');
 		
-		UPDATE applications SET employee_id = v_entity_id, approve_status = 'Completed'
+		UPDATE applications SET employee_id = v_entity_id, approve_status = 'Completed',
+			department_role_id = v_department_role_id
 		WHERE (application_id = v_application_id);
 		
 		--- Copy address

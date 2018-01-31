@@ -229,43 +229,50 @@ HR Manager<br>');
 SELECT pg_catalog.setval('sys_emails_sys_email_id_seq', 12, true);
 UPDATE sys_emails SET use_type = sys_email_id;
 
+INSERT INTO contract_status (org_id, contract_status_name) VALUES 
+(0, 'Active'),
+(0, 'Resigned'),
+(0, 'Deceased'),
+(0, 'Terminated'),
+(0, 'Transferred');
 
-INSERT INTO contract_status (contract_status_name) VALUES ('Active');
-INSERT INTO contract_status (contract_status_name) VALUES ('Resigned');
-INSERT INTO contract_status (contract_status_name) VALUES ('Deceased');
-INSERT INTO contract_status (contract_status_name) VALUES ('Terminated');
-INSERT INTO contract_status (contract_status_name) VALUES ('Transferred');
-UPDATE contract_status SET org_id = 0;
+INSERT INTO contract_types (org_id, contract_type_name) VALUES 
+(0, 'Default');
 
-INSERT INTO skill_levels (org_id, skill_level_name) VALUES (0, 'Basic');
-INSERT INTO skill_levels (org_id, skill_level_name) VALUES (0, 'Intermediate');
-INSERT INTO skill_levels (org_id, skill_level_name) VALUES (0, 'Advanced');
+INSERT INTO skill_levels (org_id, skill_level_name) VALUES 
+(0, 'Basic'),
+(0, 'Intermediate'),
+(0, 'Advanced');
 
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Aerospace');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Agriculture');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Automotive');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Business and Consultancy Services');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'ICT - Reseller');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'ICT - Services and Consultancy');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'ICT - Manufacturer');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'ICT - Software Development');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Investments');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Education');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Electronics');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Finance, Banking, Insurance');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Government - National or Federal');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Government - State, Country or Local');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Healthcare');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Hotel and Leisure');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Legal');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Manufacturing');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Media, Marketing, Entertainment, Publishing, PR');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Real Estate');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Retail, Wholesale');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Telecoms');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Transportation and Distribution');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Travel and Tours');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Other');
+INSERT INTO interview_types (org_id, interview_type_name, is_active) VALUES 
+(0, 'Default', true);
+
+INSERT INTO industry (org_id, industry_name) VALUES 
+(0, 'Aerospace'),
+(0, 'Agriculture'),
+(0, 'Automotive'),
+(0, 'Business and Consultancy Services'),
+(0, 'ICT - Reseller'),
+(0, 'ICT - Services and Consultancy'),
+(0, 'ICT - Manufacturer'),
+(0, 'ICT - Software Development'),
+(0, 'Investments'),
+(0, 'Education'),
+(0, 'Electronics'),
+(0, 'Finance, Banking, Insurance'),
+(0, 'Government - National or Federal'),
+(0, 'Government - State, Country or Local'),
+(0, 'Healthcare'),
+(0, 'Hotel and Leisure'),
+(0, 'Legal'),
+(0, 'Manufacturing'),
+(0, 'Media, Marketing, Entertainment, Publishing, PR'),
+(0, 'Real Estate'),
+(0, 'Retail, Wholesale'),
+(0, 'Telecoms'),
+(0, 'Transportation and Distribution'),
+(0, 'Travel and Tours'),
+(0, 'Other');
 
 INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Accounting');
 INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Banking and Financial Services');
