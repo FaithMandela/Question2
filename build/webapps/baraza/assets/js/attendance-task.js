@@ -228,7 +228,8 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         //btnLunchOut.hide();
                         //btnClockIn.hide();
                         buttonVisible(btnClock,unHideBtn,  btnClockStatus, labelrmvClass, btnStatusCss, labeladdClass, msg);
-
+                        btnBreak.removeAttr('disabled');
+                        btnBreakOut.removeAttr('disabled');
                     }
                     if(logInOut == 'BREAKOUT'){
                         btnMsg = "BREAK";
