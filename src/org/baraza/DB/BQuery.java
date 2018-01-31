@@ -1291,6 +1291,8 @@ public class BQuery {
 
 		JsonArray jsTb = myja.build();
 		
+System.out.println("BASE JSON : " + jsTb.toString());
+		
 		return jsTb.toString();
 	}
 
