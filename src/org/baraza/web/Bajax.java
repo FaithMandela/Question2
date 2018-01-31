@@ -515,7 +515,7 @@ System.out.println("BASE 2130 : " + mySql);
 		if(myOutput == null) {
 			resp = "{\"success\": 0, \"message\": \"Task not added\"}";
 		} else {
-			BQuery alRs = new BQuery(db, web.getView().getElementByName("TASK").getElementByName("TASKLIST"), null, null);
+			BQuery alRs = new BQuery(db, web.getView().getElementByName("TASK").getElementByName("TIMESHEET"), null, null);
 			resp = alRs.getJSON();
 			alRs.close();
 		}
