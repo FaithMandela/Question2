@@ -54,3 +54,11 @@ ORDER BY aa.tax_type_id, bb.tax_range
 
 
 
+SELECT sys_emailed_id, vw_approvals_entitys.primary_email as emailaddress, 
+	vw_approvals_entitys.phase_narrative as emailsubject, vw_approvals_entitys.advice_email, 
+	vw_approvals_entitys.org_entity_name, vw_approvals_entitys.table_id, vw_approvals_entitys.notice_file 
+FROM sys_emailed, vw_approvals_entitys  
+WHERE (vw_approvals_entitys.approval_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)       
+AND (sys_emailed.email_type = 1) AND (vw_approvals_entitys.use_reporting = true)
+
+

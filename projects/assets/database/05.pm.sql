@@ -153,6 +153,7 @@ CREATE VIEW vw_pm_schedule AS
 CREATE VIEW vw_pm_checklist AS
 	SELECT vw_pm_schedule.client_id, vw_pm_schedule.client_name, vw_pm_schedule.premises, 
 		vw_pm_schedule.street, vw_pm_schedule.division, vw_pm_schedule.town, 
+		vw_pm_schedule.pcc, vw_pm_schedule.iatano, vw_pm_schedule.website, 
 		vw_pm_schedule.pm_quarter_id, vw_pm_schedule.qperiod_year,
 		vw_pm_schedule.qstart_date, vw_pm_schedule.qstop_date, vw_pm_schedule.qcompleted,
 		vw_pm_schedule.pm_schedule_id, vw_pm_schedule.start_date, vw_pm_schedule.end_date, 
@@ -171,7 +172,7 @@ CREATE VIEW vw_pm_checklist AS
 		pm_checklist.clientgtid, pm_checklist.clientid, pm_checklist.compuser, pm_checklist.pcmodel, pm_checklist.ups_SN,
 		pm_checklist.harddisk, pm_checklist.ram, pm_checklist.usercomments, pm_checklist.engineercomments
 	FROM pm_checklist INNER JOIN vw_pm_schedule ON pm_checklist.pm_schedule_id = vw_pm_schedule.pm_schedule_id
-	INNER JOIN entitys ON pm_checklist.entity_id = entitys.entity_id;
+		INNER JOIN entitys ON pm_checklist.entity_id = entitys.entity_id;
 
 CREATE VIEW vw_pm_links AS
 	SELECT vw_pm_schedule.client_id, vw_pm_schedule.client_name, vw_pm_schedule.premises, 
@@ -187,7 +188,7 @@ CREATE VIEW vw_pm_links AS
 		pm_links.link_number, pm_links.router_SN, pm_links.router_tag, pm_links.ups_SN, pm_links.ups_tag, pm_links.ping_test
 
 	FROM pm_links INNER JOIN vw_pm_schedule ON pm_links.pm_schedule_id = vw_pm_schedule.pm_schedule_id
-	INNER JOIN entitys ON pm_links.entity_id = entitys.entity_id;
+		INNER JOIN entitys ON pm_links.entity_id = entitys.entity_id;
 	
 CREATE OR REPLACE FUNCTION get_gtids(integer) RETURNS varchar(320) AS $$
 DECLARE

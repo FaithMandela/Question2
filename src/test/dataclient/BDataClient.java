@@ -22,7 +22,7 @@ public class BDataClient {
 		
 		BDataClient dataClient = new BDataClient();
 		String token = dataClient.authenticate(myURL, "root", "baraza");
-		String resp = dataClient.sendData(myURL, "20:10", token, data);
+		String resp = dataClient.sendData(myURL, "115:0", token, data);
 	}
 
 	public String authenticate(String myURL, String appKey, String appPass) {
@@ -67,7 +67,7 @@ System.out.println("BASE 2010 : " + data);
 			Request request = new Request.Builder()
 				.url(myURL + "?view=" + viewLink)
 				.post(body)
-				.addHeader("action", "data")
+				.addHeader("action", "read")
 				.addHeader("authorization", auth)
 				.addHeader("content-type", "application/json")
 				.build();

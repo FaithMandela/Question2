@@ -1948,10 +1948,10 @@
 				</FILES>
 			</GRID>
 			<FORM name="Intake" keyfield="intake_id" table="intake">
-				<COMBOBOX w="430" title="Department Role" lptable="department_roles" y="10" h="20" x="10" lpfield="department_role_name">department_role_id</COMBOBOX>
+				<COMBOBOX w="430" title="Designation" lptable="department_roles" y="10" h="20" x="10" lpfield="department_role_name">department_role_id</COMBOBOX>
 				<COMBOBOX w="430" title="Pay Scale" lptable="pay_scales" y="30" h="20" x="10" lpfield="pay_scale_name">pay_scale_id</COMBOBOX>
-				<COMBOBOX w="430" title="Pay Group ID" lptable="pay_groups" y="50" h="20" x="10" lpfield="pay_group_name">pay_group_id</COMBOBOX>
-				<COMBOBOX w="430" title="Location ID" lptable="locations" y="70" h="20" x="10" lpfield="location_name">location_id</COMBOBOX>
+				<COMBOBOX w="430" title="Pay Group" lptable="pay_groups" y="50" h="20" x="10" lpfield="pay_group_name">pay_group_id</COMBOBOX>
+				<COMBOBOX w="430" title="Location" lptable="locations" y="70" h="20" x="10" lpfield="location_name">location_id</COMBOBOX>
 				<TEXTDATE w="150" title="Opening Date" y="90" h="20" x="10">opening_date</TEXTDATE>
 				<TEXTDATE w="150" title="Closing Date" y="90" h="20" x="290">closing_date</TEXTDATE>
 				<TEXTFIELD w="150" title="Positions" y="110" h="20" x="10">positions</TEXTFIELD>
@@ -1982,12 +1982,12 @@
 				<FORM name="Contract Details" keyfield="application_id" linkfield="employee_id" table="applications" th="210">
 					<COMBOBOX w="430" title="Contract Type" lptable="contract_types" y="10" h="20" x="10" lpfield="contract_type_name">contract_type_id</COMBOBOX>
 					<COMBOBOX w="430" title="Contract Status" lptable="contract_status" y="30" h="20" x="10" lpfield="contract_status_name">contract_status_id</COMBOBOX>
-					<COMBOBOX w="430" title="Contract" lptable="vw_intake" y="50" h="20" x="10" lpfield="intake_disp">intake_id</COMBOBOX>
+					<COMBOBOX w="430" h="20" lpfield="department_role_name" x="10" y="50" lptable="department_roles" title="Designation">department_role_id</COMBOBOX>
 					<TEXTDATE w="150" title="Contract Date" y="70" h="20" x="10">contract_date</TEXTDATE>
 					<TEXTDATE w="150" title="Contract Start" y="70" h="20" x="290">contract_start</TEXTDATE>
 					<TEXTFIELD w="150" title="Contract Period" y="90" h="20" x="10">contract_period</TEXTFIELD>
 					<TEXTDATE w="150" title="Contract Close" y="90" h="20" x="290">contract_close</TEXTDATE>
-					<TEXTDECIMAL w="150" title="Initial Salary" y="110" h="20" x="10">initial_salary</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Salary" y="110" h="20" x="10">initial_salary</TEXTDECIMAL>
 					<TEXTAREA w="430" tab="Contract Terms" y="2" h="170" x="10">contract_terms</TEXTAREA>
 					<TEXTAREA w="430" tab="Applicant Comments" y="2" h="170" x="10">applicant_comments</TEXTAREA>
 					<TEXTAREA w="430" tab="Review" y="2" h="170" x="10">review</TEXTAREA>

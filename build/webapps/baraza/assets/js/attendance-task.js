@@ -64,7 +64,7 @@ btnLunchOut
         var btnClockStatus = $('.lunch-break-status-btn');
         var msg = 'Lunch End : 2:00pm ';
         btnClock.button('loading');
-        postAjax(btnClock, btnLunchOut, btnClockStatus, msg, '4', 'LUNCHOUT');
+        postAjax(btnClock, btnLunch, btnClockStatus, msg, '4', 'LUNCHOUT');
     });
 
 /**
@@ -88,7 +88,7 @@ btnBreakOut
         var btnClockStatus = $('.break-status-btn');
         var msg = 'Break End : 4:30pm ';
         btnClock.button('loading');
-        postAjax(btnClock, btnBreakOut, btnClockStatus, msg, '7', 'BREAKOUT');
+        postAjax(btnClock, btnBreak, btnClockStatus, msg, '7', 'BREAKOUT');
     });
 
 /**
@@ -120,7 +120,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
             for(var data in result){
                 var log_type = result[data].log_type;
                 var log_in_out = result[data].log_in_out;
-                 msg = '';
+                msg = '';
                 if(log_type == 1){
                     //btnMsg = "CLOCK OUT";
                     //outBtnNewClassName = 'clock-out-btn' ;
@@ -133,7 +133,7 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         outBtnNewClassName = 'clock-out-btn' ;
                         oldBtnClass  = 'clock-in-btn';
 
-                      
+
                         //btnClock.removeAttr("disabled");
                         btnLunch.removeAttr("disabled");//if clocked in activate lunch button
                         btnBreak.removeAttr("disabled");//if clocked in activate break button
@@ -142,6 +142,8 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         btnClockOut.show();//show clock out button
                         btnLunchOut.hide();//hide the lunchout button
                         btnBreakOut.hide();//hide the breakout button
+
+                        buttonVisible(btnClock,unHideBtn,  btnClockStatus, labelrmvClass, btnStatusCss, labeladdClass, msg);
                     }
                     if(logInOut == 'OUT'){
                         btnMsg = "CLOCKING DONE";
@@ -159,13 +161,15 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         btnLunchOut.attr('disabled','disabled');
                         btnBreakOut.attr('disabled','disabled');
 
+                        buttonVisible(btnClock,unHideBtn,  btnClockStatus, labelrmvClass, btnStatusCss, labeladdClass, msg);
+
                     }
                 }
                 if(log_type == 4){
                     if(logInOut == 'LUNCHIN'){
                         btnMsg = "LUNCH OUT";
                         msg = 'Lunch Start :'+result[data].log_time;
-                        outBtnoldBtnClassName = 'lunch-break-out-btn' ;
+                        outBtnNewClassName = 'lunch-break-out-btn' ;
                         oldBtnClass  = 'lunch-break-btn';
 
                         //disable break in/out and disable clock out
@@ -178,11 +182,13 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         btnLunch.hide();
                         btnLunchOut.show();
                         //btnBreakOut.hide();//hide break button
+
+                        buttonVisible(btnClock,unHideBtn,  btnClockStatus, labelrmvClass, btnStatusCss, labeladdClass, msg);
                     }
                     if(logInOut == 'LUNCHOUT'){
-                        btnMsg = "LUNCH DONE";
+                        btnMsg = "LUNCH BREAK";
                         msg = 'Lunch End :'+result[data].log_time;
-                        outBtnoldBtnClassName = 'lunch-break-out-btn';
+                        outBtnNewClassName = 'lunch-break-out-btn';
                         oldBtnClass  = 'lunch-break-btn';
 
                         //enable break in/out and enable clock out
@@ -190,11 +196,16 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         btnBreak.removeAttr('disabled');
 
 
+
                         //hide the clock in and lunch in show lunch out
                         btnClockIn.hide();
                         btnLunch.hide();
                         btnLunchOut.show();
                         btnBreakOut.hide();//hide break button
+
+                        buttonVisible(btnClock,unHideBtn,  btnClockStatus, labelrmvClass, btnStatusCss, labeladdClass, msg);
+                        btnLunch.removeAttr('disabled');
+                        btnLunchOut.removeAttr('disabled');
                     }
                 }
 
@@ -216,10 +227,12 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         //btnLunch.hide();
                         //btnLunchOut.hide();
                         //btnClockIn.hide();
-
+                        buttonVisible(btnClock,unHideBtn,  btnClockStatus, labelrmvClass, btnStatusCss, labeladdClass, msg);
+                        btnBreak.removeAttr('disabled');
+                        btnBreakOut.removeAttr('disabled');
                     }
                     if(logInOut == 'BREAKOUT'){
-                        btnMsg = "BREAK DONE";
+                        btnMsg = "BREAK";
                         outBtnNewClassName = 'break-out-btn';
                         oldBtnClass  = 'break-btn';
                         msg = 'Break End :'+result[data].log_time;
@@ -230,22 +243,23 @@ function postAjax(btnEnrtryCss, unHideBtn, btnStatusCss, msg, logType, logInOut)
                         btnLunch.removeAttr('disabled');
                         //btnBreakOut.attr('disabled','disabled');
 
-                            //hide break in,hide lunchin clock in show breakout
+                        //hide break in,hide lunchin clock in show breakout
                         btnBreak.hide();
                         btnBreakOut.show();
                         //btnLunch.hide();
                         //btnLunchOut.hide();
                         btnClockIn.hide();
 
+                        buttonVisible(btnClock,unHideBtn,  btnClockStatus, labelrmvClass, btnStatusCss, labeladdClass, msg);
+
                     }
                 }
 
             }
-            buttonVisible(btnClock,unHideBtn,  btnClockStatus, labelrmvClass, btnStatusCss, labeladdClass, msg);
             changeBtnMsg(btnClock, btnMsg);
 
-            //colorChange(btnClock, btnClockStatus, oldBtnClass, btnrmvClass, labelrmvClass,
-            //    btnStatusCss, btnaddClass, labeladdClass, btnMsg, msg, outBtnNewClassName);
+            colorChange(btnClock, btnClockStatus, oldBtnClass, btnrmvClass, labelrmvClass,
+                btnStatusCss, btnaddClass, labeladdClass, btnMsg, msg, outBtnNewClassName);
 
         },
         error: function(xhr, resp, text) {
@@ -283,7 +297,6 @@ function buttonVisible(hidebtnClock, unhidebtnClock, btnClockStatus, labelrmvCla
  */
 function changeBtnMsg(btnClass, btnMsg){
     btnClass.html(btnMsg);
-    /*btnClass.attr('disabled','disabled');*/
 }
 
 
@@ -313,8 +326,8 @@ $('#start-task')
                 $(".start-task i").removeAttr('class').addClass("fa fa-refresh fa-spin fa-3x fa-fw  text-center").css({"color":"#fff",});
             },
             success : function(result) {
-			console.log("---->> " + result[0].task_name);
-                    //If successfull hide the form display the display
+                console.log("Task Name here " + result[0].task_name);
+                //If successfull hide the form display the display
                 $('.task-manage-form').hide();
                 $('#display-task').show();
                 //dispalys the value
@@ -363,7 +376,7 @@ $('#end_task')
                 $('.task-manage-form').show();
                 $('#display-task').hide();
 
-  		$(".start-task i").removeAttr('class').addClass("").css({"color":"#fff",});
+                $(".start-task i").removeAttr('class').addClass("").css({"color":"#fff",});
             },
             error: function(xhr, resp, text) {
                 var btnMsg = "<i class='fa fa-warning  text-center'></i> Save Failed";

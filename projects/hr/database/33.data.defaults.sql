@@ -32,6 +32,16 @@ SELECT 1, contract_status_name
 FROM contract_status
 WHERE org_id = 0;
 
+INSERT INTO contract_types (org_id, contract_type_name)
+SELECT 1, contract_type_name
+FROM contract_types
+WHERE org_id = 0;
+
+INSERT INTO interview_types (org_id, interview_type_name, is_active)
+SELECT 1, interview_type_name, is_active
+FROM interview_types
+WHERE (org_id = 0);
+
 INSERT INTO kin_types (org_id, kin_type_name)
 SELECT 1, kin_type_name
 FROM kin_types

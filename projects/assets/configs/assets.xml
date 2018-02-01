@@ -71,8 +71,8 @@
 				<TEXTFIELD w="75" title="Request Type">request_type</TEXTFIELD>
 			</TILELIST>
 			<TILELIST keyfield="entity_id" name="Links" orderby="link_count desc" table="vw_vendor_links">
-				<TEXTFIELD w="75" title="Employee Name">entity_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Leave From">link_count</TEXTFIELD>
+				<TEXTFIELD w="75" title="Provider">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="No. Of Links">link_count</TEXTFIELD>
 			</TILELIST>
 		</DASHBOARD>
 	</DESK>
@@ -932,19 +932,20 @@
 					<TEXTDATE w="75" title="Date Done">datedone</TEXTDATE>
 					<TEXTFIELD w="75" title="OS Type">os_type</TEXTFIELD>
 					<TEXTFIELD w="75" title="Done By">gd</TEXTFIELD>
-					<CHECKBOX w="75" title="Need Repair">needrepair</CHECKBOX>
+					<TEXTFIELD w="75" title="GTID">clientgtid</TEXTFIELD>
 					<TEXTFIELD w="75" title="SON">clientid</TEXTFIELD>
 					<TEXTFIELD w="75" title="User">compuser</TEXTFIELD>
 					<TEXTFIELD w="75" title="Laptop SN">laptopsn</TEXTFIELD>
-					<TEXTFIELD w="75" title="Compuser">compuser</TEXTFIELD>
+					<CHECKBOX w="75" title="Compliant">repaired</CHECKBOX>
 					<FORM keyfield="checklistid" name="Checklist" linkfield="pm_schedule_id" table="pm_checklist">
 						<USERFIELD>entity_id</USERFIELD>
 						<TEXTDATE default="now" tab="Configs" w="150" h="20" x="10" y="10" title="Date Done">datedone</TEXTDATE>
 						<TEXTFIELD w="150" h="20" x="290" y="30" title="Os Type">os_type</TEXTFIELD>
 						<TEXTFIELD w="150" h="20" x="290" y="50" title="Done By">gd</TEXTFIELD>
-						<TEXTFIELD w="150" h="20" x="10" y="70" title="Computer User">compuser</TEXTFIELD>
+						<TEXTFIELD w="150" h="20" x="10" y="70" title="User">compuser</TEXTFIELD>
 						<TEXTFIELD w="150" h="20" x="290" y="90" title="SON">clientid</TEXTFIELD>
 						<TEXTFIELD w="150" h="20" x="10" y="110" title="Client GTID">clientgtid</TEXTFIELD>
+						<CHECKBOX default="true" w="150" h="20" x="290" y="300" title="Compliant">repaired</CHECKBOX>
 						<TEXTAREA w="430" h="70" x="10" y="130" rows="5" title="Engineer Comments">engineercomments</TEXTAREA>
 					</FORM>
 				</GRID>
@@ -1066,11 +1067,11 @@
 					<TEXTDATE w="75" title="Date Done">datedone</TEXTDATE>
 					<TEXTFIELD w="75" title="OS Type">os_type</TEXTFIELD>
 					<TEXTFIELD w="75" title="Done By">gd</TEXTFIELD>
-					<CHECKBOX w="75" title="Need Repair">needrepair</CHECKBOX>
+					<TEXTFIELD w="75" title="GTID">clientgtid</TEXTFIELD>
 					<TEXTFIELD w="75" title="SON">clientid</TEXTFIELD>
 					<TEXTFIELD w="75" title="User">compuser</TEXTFIELD>
 					<TEXTFIELD w="75" title="Laptop SN">laptopsn</TEXTFIELD>
-					<TEXTFIELD w="75" title="Compuser">compuser</TEXTFIELD>
+					<CHECKBOX w="75" title="Compliant">repaired</CHECKBOX>
 					<FORM keyfield="checklistid" name="Checklist" linkfield="pm_schedule_id" table="pm_checklist">
 						<USERFIELD>entity_id</USERFIELD>
 						<TEXTDATE default="now" tab="Configs" w="150" h="20" x="10" y="10" title="Date Done">datedone</TEXTDATE>
@@ -1079,6 +1080,7 @@
 						<TEXTFIELD w="150" h="20" x="10" y="70" title="Computer User">compuser</TEXTFIELD>
 						<TEXTFIELD w="150" h="20" x="290" y="90" title="SON">clientid</TEXTFIELD>
 						<TEXTFIELD w="150" h="20" x="10" y="110" title="Client GTID">clientgtid</TEXTFIELD>
+						<CHECKBOX default="true" w="150" h="20" x="290" y="300" title="Compliant">repaired</CHECKBOX>
 						<TEXTAREA w="430" h="70" x="10" y="130" rows="5" title="Engineer Comments">engineercomments</TEXTAREA>
 					</FORM>
 				</GRID>
@@ -1128,6 +1130,34 @@
 				<TEXTAREA w="75" title="Details">details</TEXTAREA>
 				<JASPER reportfile="pm_system.jasper" name="PM System"></JASPER>
 				<JASPER reportfile="system_pm.jasper" name="System PM"></JASPER>
+			</GRID>
+			<GRID keyfield="checklistid" name="Upgrade Compliant" orderby="datedone, client_name" where="(repaired = true)" linkfield="pm_quarter_id" table="vw_pm_checklist">
+				<TEXTFIELD w="75" title="Checklistid">checklistid</TEXTFIELD>
+				<TEXTFIELD w="45" title="PCC">pcc</TEXTFIELD>
+				<TEXTFIELD w="175" title="Client Name">client_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
+				<TEXTFIELD w="75" title="Division">division</TEXTFIELD>
+				<TEXTDATE w="75" title="Date Done">datedone</TEXTDATE>
+				<TEXTFIELD w="75" title="GTID">clientgtid</TEXTFIELD>
+				<TEXTFIELD w="75" title="SON">clientid</TEXTFIELD>
+				<TEXTFIELD w="75" title="User">compuser</TEXTFIELD>
+				<TEXTFIELD w="75" title="SN">laptopsn</TEXTFIELD>
+				<CHECKBOX w="75" title="Compliant">repaired</CHECKBOX>
+				<TEXTFIELD w="75" title="Done By">gd</TEXTFIELD>
+			</GRID>
+			<GRID keyfield="checklistid" name="Upgrade Non Compliant" orderby="datedone, client_name" where="(repaired = false)" linkfield="pm_quarter_id" table="vw_pm_checklist">
+				<TEXTFIELD w="75" title="Checklistid">checklistid</TEXTFIELD>
+				<TEXTFIELD w="45" title="PCC">pcc</TEXTFIELD>
+				<TEXTFIELD w="175" title="Client Name">client_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
+				<TEXTFIELD w="75" title="Division">division</TEXTFIELD>
+				<TEXTDATE w="75" title="Date Done">datedone</TEXTDATE>
+				<TEXTFIELD w="75" title="GTID">clientgtid</TEXTFIELD>
+				<TEXTFIELD w="75" title="SON">clientid</TEXTFIELD>
+				<TEXTFIELD w="75" title="User">compuser</TEXTFIELD>
+				<TEXTFIELD w="75" title="SN">laptopsn</TEXTFIELD>
+				<CHECKBOX w="75" title="Compliant">repaired</CHECKBOX>
+				<TEXTFIELD w="75" title="Done By">gd</TEXTFIELD>
 			</GRID>
 			<JASPER reportfile="pm_system_f.jasper" name="PM System"></JASPER>
 			<JASPER reportfile="system_pm_f.jasper" name="System PM"></JASPER>

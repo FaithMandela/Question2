@@ -333,7 +333,7 @@ CREATE INDEX sys_emailed_table_id ON sys_emailed (table_id);
 CREATE TABLE et_fields (
 	et_field_id				serial primary key,
 	org_id					integer references orgs,
-	et_field_name			varchar(120) not null,
+	et_field_name			varchar(320) not null,
 	table_name				varchar(64) not null,
 	table_code				integer not null,
 	table_link				integer
@@ -1095,7 +1095,7 @@ DECLARE
 BEGIN
 	app_id := CAST($1 as int);
 	SELECT approvals.org_id, approvals.approval_id, approvals.org_id, approvals.table_name, approvals.table_id, 
-		approvals.approval_level, approvals.review_advice,
+		approvals.approval_level, approvals.review_advice, approvals.org_entity_id,
 		workflow_phases.workflow_phase_id, workflow_phases.workflow_id, workflow_phases.return_level INTO reca
 	FROM approvals INNER JOIN workflow_phases ON approvals.workflow_phase_id = workflow_phases.workflow_phase_id
 	WHERE (approvals.approval_id = app_id);
@@ -1173,7 +1173,7 @@ BEGIN
 		|| ' WHERE workflow_table_id = ' || reca.table_id;
 		EXECUTE mysql;
 
-		msg := 'Forwarded for review';
+		msg := 'Forwarded to owner for review';
 	ELSIF ($3 = '4') AND (reca.return_level <> 0) THEN
 		UPDATE approvals SET approve_status = 'Review',  action_date = now(), app_entity_id = CAST($2 as int)
 		WHERE approval_id = app_id;
@@ -1182,11 +1182,12 @@ BEGIN
 		SELECT org_id, workflow_phase_id, reca.table_name, reca.table_id, CAST($2 as int), escalation_days, escalation_hours, approval_level, phase_narrative, reca.review_advice, 'Completed'
 		FROM vw_workflow_entitys
 		WHERE (workflow_id = reca.workflow_id) AND (approval_level = reca.return_level)
+			AND (entity_id = reca.org_entity_id)
 		ORDER BY workflow_phase_id;
 
 		UPDATE approvals SET approve_status = 'Draft' WHERE approval_id = app_id;
 
-		msg := 'Forwarded to owner for review';
+		msg := 'Forwarded for review';
 	END IF;
 
 	RETURN msg;

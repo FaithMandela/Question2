@@ -564,6 +564,7 @@ CREATE TABLE applications (
 	intake_id				integer references intake,
 	contract_type_id		integer references contract_types,
 	contract_status_id		integer references contract_status,
+	department_role_id		integer references department_roles,
 	entity_id				integer references entitys,
 	employee_id				integer references employees,
 	currency_id				integer references currency,
@@ -587,7 +588,7 @@ CREATE TABLE applications (
 	previous_salary			real,
 	expected_salary			real,
 	exchange_rate			real default 1,
-	review_rating			integer,
+	review_rating			real,
 	
 	applicant_comments		text,
 	review					text
@@ -595,10 +596,37 @@ CREATE TABLE applications (
 CREATE INDEX applications_intake_id ON applications(intake_id);
 CREATE INDEX applications_contract_type_id ON applications(contract_type_id);
 CREATE INDEX applications_contract_status_id ON applications(contract_status_id);
+CREATE INDEX applications_department_role_id ON applications (department_role_id);
 CREATE INDEX applications_entity_id ON applications(entity_id);
 CREATE INDEX applications_employee_id ON applications(employee_id);
 CREATE INDEX applications_currency_id ON applications(currency_id);
 CREATE INDEX applications_org_id ON applications(org_id);
+
+CREATE TABLE interview_types (
+	interview_type_id		serial primary key,
+	org_id					integer references orgs,
+	interview_type_name		varchar(120),
+	is_active				boolean default true not null,
+	details					text
+);
+CREATE INDEX interview_types_org_id ON interview_types(org_id);
+
+CREATE TABLE interviews (
+	interview_id			serial primary key,
+	application_id			integer references applications,
+	interview_type_id		integer references interview_types,
+	entity_id				integer references entitys,
+	org_id					integer references orgs,
+	interview_date			date not null,
+	interview_time			time,
+	done					boolean default true not null,
+	interview_rating		real,
+	details					text
+);
+CREATE INDEX interviews_application_id ON interviews(application_id);
+CREATE INDEX interviews_interview_type_id ON interviews(interview_type_id);
+CREATE INDEX interviews_entity_id ON interviews(entity_id);
+CREATE INDEX interviews_org_id ON interviews(org_id);
 
 CREATE TABLE internships (
 	internship_id			serial primary key,
@@ -1181,11 +1209,44 @@ CREATE VIEW vw_applications AS
 		LEFT JOIN vw_employment_max ON entitys.entity_id = vw_employment_max.entity_id
 		LEFT JOIN currency ON applications.currency_id = currency.currency_id;
 		
+CREATE VIEW vw_interviews AS
+	SELECT vw_applications.department_id, vw_applications.department_name, vw_applications.department_description, vw_applications.department_duties,
+		vw_applications.department_role_id, vw_applications.department_role_name, vw_applications.parent_role_name,
+		vw_applications.job_description, vw_applications.job_requirements, vw_applications.duties, vw_applications.performance_measures, 
+		vw_applications.intake_id, vw_applications.opening_date, vw_applications.closing_date, vw_applications.positions, 
+		vw_applications.currency_id, vw_applications.currency_name, vw_applications.currency_symbol,
+		
+		vw_applications.application_id, vw_applications.employee_id, vw_applications.contract_date, vw_applications.contract_close, 
+		vw_applications.contract_start, vw_applications.contract_period, vw_applications.contract_terms, vw_applications.initial_salary, 
+		vw_applications.application_date, vw_applications.approve_status, vw_applications.workflow_table_id, vw_applications.action_date, 
+		vw_applications.applicant_comments, vw_applications.review, vw_applications.short_listed,
+		vw_applications.previous_salary, vw_applications.expected_salary, vw_applications.exchange_rate, vw_applications.review_rating,
+
+		vw_applications.education_class_name, vw_applications.date_from, vw_applications.date_to, 
+		vw_applications.name_of_school, vw_applications.examination_taken, 
+		vw_applications.grades_obtained, vw_applications.certificate_number,
+
+		vw_applications.employment_id, vw_applications.employers_name, vw_applications.position_held,
+		vw_applications.emp_date_from, vw_applications.emp_date_to, 
+		vw_applications.employment_duration, vw_applications.employment_experince,
+		vw_applications.emp_duration, vw_applications.emp_experince,
+	
+		entitys.entity_id, entitys.entity_name,
+		interview_types.interview_type_id, interview_types.interview_type_name,
+		interviews.org_id, interviews.interview_id,
+		interviews.interview_date, interviews.interview_time, interviews.done,
+		interviews.interview_rating, interviews.details	
+	
+	FROM vw_applications INNER JOIN interviews ON vw_applications.application_id = interviews.application_id
+		INNER JOIN interview_types ON interviews.interview_type_id = interview_types.interview_type_id
+		INNER JOIN entitys ON interviews.entity_id = entitys.entity_id;
+		
 CREATE VIEW vw_contracting AS
-	SELECT vw_intake.department_id, vw_intake.department_name, vw_intake.department_description, vw_intake.department_duties,
-		vw_intake.department_role_id, vw_intake.department_role_name, 
-		vw_intake.job_description, vw_intake.parent_role_name,
-		vw_intake.job_requirements, vw_intake.duties, vw_intake.performance_measures, 
+	SELECT vw_department_roles.department_id, vw_department_roles.department_name, 
+		vw_department_roles.department_description, vw_department_roles.department_duties,
+		vw_department_roles.department_role_id, vw_department_roles.department_role_name, 
+		vw_department_roles.job_description, vw_department_roles.parent_role_name,
+		vw_department_roles.job_requirements, vw_department_roles.duties, vw_department_roles.performance_measures,
 		vw_intake.intake_id, vw_intake.opening_date, vw_intake.closing_date, vw_intake.positions, 
 		entitys.entity_id, entitys.entity_name, orgs.org_id, orgs.org_name,
 		
@@ -1211,6 +1272,7 @@ CREATE VIEW vw_contracting AS
 
 	FROM applications INNER JOIN entitys ON applications.employee_id = entitys.entity_id
 		INNER JOIN orgs ON applications.org_id = orgs.org_id
+		LEFT JOIN vw_department_roles ON applications.department_role_id = vw_department_roles.department_role_id
 		LEFT JOIN vw_intake ON applications.intake_id = vw_intake.intake_id
 		LEFT JOIN contract_types ON applications.contract_type_id = contract_types.contract_type_id
 		LEFT JOIN contract_status ON applications.contract_status_id = contract_status.contract_status_id
@@ -2468,14 +2530,18 @@ DECLARE
 	msg		 				varchar(120);
 BEGIN
 
-	IF ($3 = '1') THEN
+	IF ($3 = '0') THEN
+		UPDATE applications SET short_listed = 0
+		WHERE application_id = CAST($1 as int);
+		msg := 'Removed from short list';
+	ELSIF ($3 = '1') THEN
 		UPDATE applications SET short_listed = 1
 		WHERE application_id = CAST($1 as int);
 		msg := 'Added to short list';
 	ELSIF ($3 = '2') THEN
-		UPDATE applications SET short_listed = 0
+		UPDATE applications SET short_listed = 2
 		WHERE application_id = CAST($1 as int);
-		msg := 'Removed from short list';
+		msg := 'Added to review';
 	END IF;
 	
 	return msg;
@@ -2489,6 +2555,7 @@ DECLARE
 	v_entity_id				integer;
 	v_employee_id			integer;
 	v_intake_id				integer;
+	v_department_role_id	integer;
 	v_org_id				integer;
 	v_initial_salary		real;
 	msg		 				varchar(120);
@@ -2496,8 +2563,8 @@ BEGIN
 
 	v_application_id := $1::int;
 	SELECT employees.entity_id, applications.employee_id, applications.intake_id, applications.initial_salary, 
-			applications.entity_id, applications.org_id
-		INTO v_entity_id, v_employee_id, v_intake_id, v_initial_salary, v_applicant_id, v_org_id
+			applications.entity_id, applications.org_id, applications.department_role_id
+		INTO v_entity_id, v_employee_id, v_intake_id, v_initial_salary, v_applicant_id, v_org_id, v_department_role_id
 	FROM applications LEFT JOIN employees ON applications.entity_id = employees.entity_id
 	WHERE (application_id = v_application_id);
 
@@ -2526,7 +2593,8 @@ BEGIN
 		
 		v_entity_id := currval('entitys_entity_id_seq');
 		
-		UPDATE applications SET employee_id = v_entity_id, approve_status = 'Completed'
+		UPDATE applications SET employee_id = v_entity_id, approve_status = 'Completed',
+			department_role_id = v_department_role_id
 		WHERE (application_id = v_application_id);
 		
 		--- Copy address
@@ -2594,7 +2662,8 @@ BEGIN
 		FROM intake
 		WHERE (employees.entity_id = v_entity_id) AND (intake.intake_id = v_intake_id);
 		
-		UPDATE applications SET employee_id = v_entity_id, approve_status = 'Completed'
+		UPDATE applications SET employee_id = v_entity_id, approve_status = 'Completed',
+			department_role_id = v_department_role_id
 		WHERE (application_id = v_application_id);
 		
 		msg := 'Employee details updated';
@@ -2606,6 +2675,25 @@ BEGIN
 	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION aft_interviews() RETURNS trigger AS $$
+DECLARE
+	v_objective_ps				real;
+	sum_ods_ps					real;
+BEGIN
+	
+	INSERT INTO e_fields (et_field_id, org_id, table_code, table_id)
+	SELECT et_fields.et_field_id, et_fields.org_id, et_fields.table_code, NEW.interview_id
+	FROM et_fields
+	WHERE (et_fields.org_id = NEW.org_id) AND (et_fields.table_link = NEW.interview_type_id) 
+		AND (et_fields.table_code = 121);
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER aft_interviews AFTER INSERT ON interviews
+    FOR EACH ROW EXECUTE PROCEDURE aft_interviews();
 
 CREATE OR REPLACE FUNCTION get_approval_date(integer) RETURNS date AS $$
 DECLARE
@@ -2836,3 +2924,22 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+CREATE OR REPLACE FUNCTION aft_ef_employee() RETURNS trigger AS $$
+DECLARE
+	v_objective_ps				real;
+	sum_ods_ps					real;
+BEGIN
+	
+	INSERT INTO e_fields (et_field_id, org_id, table_code, table_id)
+	SELECT et_fields.et_field_id, et_fields.org_id, et_fields.table_code, NEW.employee_travel_id
+	FROM et_fields
+	WHERE (et_fields.org_id = NEW.org_id) AND (et_fields.table_code = 121);
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER aft_ef_employee AFTER INSERT ON interviews
+    FOR EACH ROW EXECUTE PROCEDURE aft_ef_employee();
+    
+    

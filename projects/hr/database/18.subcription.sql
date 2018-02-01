@@ -244,6 +244,16 @@ BEGIN
 		INSERT INTO contract_status (org_id, contract_status_name)
 		SELECT NEW.org_id, contract_status_name
 		FROM contract_status WHERE org_id = 1;
+		
+		INSERT INTO contract_types (org_id, contract_type_name)
+		SELECT NEW.org_id, contract_type_name
+		FROM contract_types
+		WHERE org_id = 1;
+		
+		INSERT INTO interview_types (org_id, interview_type_name, is_active)
+		SELECT NEW.org_id, interview_type_name, is_active
+		FROM interview_types
+		WHERE (org_id = 1);
 
 		INSERT INTO kin_types (org_id, kin_type_name)
 		SELECT NEW.org_id, kin_type_name
