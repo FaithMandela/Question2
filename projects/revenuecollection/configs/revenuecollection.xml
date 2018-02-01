@@ -1,5 +1,6 @@
 <APP password="change_password" material="true" org="org_id" name="Revenue Collection">
 	<MENU name="Revenue Collection">
+		<MENU role="client" name="My Accounts">117</MENU>
 		<MENU name="Transactions">115</MENU>
 		<MENU name="Customers">105</MENU>
 		<MENU name="Processing">125</MENU>
@@ -1237,6 +1238,21 @@
 				<ACTION approval="1" fnct="compute_loans">Loan Computations</ACTION>
 				<ACTION approval="1" fnct="compute_savings">Savings Computations</ACTION>
 			</ACTIONS>
+		</GRID>
+	</DESK>
+	<DESK w="700" h="550" name="My Accounts" key="117">
+		<GRID keyfield="deposit_account_id" name="Deposit Accounts" where="(approve_status = 'Approved')" user="entity_id" table="vw_deposit_accounts">
+			<TEXTLINK w="75" title="Account Number">account_number</TEXTLINK>
+			<TEXTFIELD w="75" title="Customer">customer_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Product">product_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+			<TEXTDATE w="75" title="Last Closing Date">last_closing_date</TEXTDATE>
+			<TEXTDECIMAL w="75" title="Credit Limit">credit_limit</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Current Balance">current_balance</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Available Balance">available_balance</TEXTDECIMAL>
+			<JASPER reportfile="vw_account_activity.jasper" name="Report"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK w="700" h="500" name="Client and Supplier" key="17">

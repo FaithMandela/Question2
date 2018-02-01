@@ -18,7 +18,7 @@
 		<MENU name="Internships" role="interns">
 			<MENU name="Internships">35</MENU>
 			<MENU name="Applicant">23</MENU>
-			<MENU name="Intake">30</MENU>
+			<MENU name="Recruitment">30</MENU>
 			<MENU name="Reports">111</MENU>
 		</MENU>
 		<MENU name="Administration" role="admin">
@@ -1745,8 +1745,8 @@
 		</GRID>
 	</DESK>
 
-	<DESK w="700" name="Intake" key="30" h="550">
-		<GRID keyfield="intake_id" name="Intake" orderby="opening_date desc" table="vw_intake">
+	<DESK w="700" name="Recruitment" key="30" h="550">
+		<GRID keyfield="intake_id" name="Recruitment" orderby="opening_date desc" table="vw_intake">
 			<TEXTFIELD w="75" title="Intake ID">intake_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Designation">department_role_name</TEXTFIELD>
@@ -1882,6 +1882,55 @@
 				<CHECKBOX w="150" h="20" x="290" y="110" title="Contract">contract</CHECKBOX>
 				<TEXTFIELD w="150" h="20" x="10" y="130" title="Contract Period">contract_period</TEXTFIELD>
 				<TEXTAREA w="430" h="70" x="10" y="150" title="Details">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID keyfield="interview_id" name="Pending Interviews" where="(done = false)" table="vw_interviews">
+			<TEXTFIELD w="75" title="Interview Type">interview_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Interview ID">interview_id</TEXTFIELD>
+			<TEXTDATE w="75" title="Interview Date">interview_date</TEXTDATE>
+			<SPINTIME w="75" title="Interview Time">interview_time</SPINTIME>
+			<TEXTFIELD w="75" title="By">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Designation">department_role_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Expected Salary">expected_salary</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Review Rating">review_rating</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Education">education_class_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Examination Taken">examination_taken</TEXTFIELD>
+			<TEXTFIELD w="75" title="Employment Experince">employment_experince</TEXTFIELD>
+			<ACCORDION keyfield="interview_id" name="Interview" collapse="in">
+				<FORM new="false" keyfield="interview_id" name="Interviews" table="interviews" collapse="in" cols="2">
+					<COMBOBOX w="150" h="20" lpfield="employee_name" x="10" y="10" lptable="vw_employees" where="(active = true)" title="By" lpkey="entity_id">entity_id</COMBOBOX>
+					<TEXTDATE w="150" h="20" x="10" y="30" title="Interview Date" span="true">interview_date</TEXTDATE>
+					<SPINTIME w="150" h="20" x="290" y="30" title="Interview Time">interview_time</SPINTIME>
+					<CHECKBOX w="150" h="20" x="10" y="50" title="Done" span="true">done</CHECKBOX>
+					<TEXTDECIMAL w="150" h="20" x="290" y="50" title="Interview Rating">interview_rating</TEXTDECIMAL>
+					<TEXTAREA w="150" h="70" x="10" y="70" rows="5" title="Details">details</TEXTAREA>
+				</FORM>
+				<GRID new="false" keyfield="e_field_id" name="Interview Questions" orderby="et_field_id" del="false" where="(table_code = 121)" linkfield="table_id" collapse="in" table="e_fields">
+					<FUNCTION w="175" fnct="get_et_field_name(et_field_id)" title="Question">et_field_disp</FUNCTION>
+					<TEXTFIELD w="175" title="Answer">e_field_value</TEXTFIELD>
+				</GRID>
+			</ACCORDION>
+			<JASPER reportfile="cv_applicant_interview.jasper" org.table="vw_interviews" name="CV"></JASPER>
+		</GRID>
+		<GRID keyfield="interview_id" limit="100" name="Interviews" table="vw_interviews" orderby="interview_id desc">
+			<TEXTFIELD w="75" title="Interview Type">interview_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Interview ID">interview_id</TEXTFIELD>
+			<TEXTDATE w="75" title="Interview Date">interview_date</TEXTDATE>
+			<SPINTIME w="75" title="Interview Time">interview_time</SPINTIME>
+			<TEXTFIELD w="75" title="By">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Designation">department_role_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Expected Salary">expected_salary</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Review Rating">review_rating</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Education">education_class_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Examination Taken">examination_taken</TEXTFIELD>
+			<TEXTFIELD w="75" title="Employment Experince">employment_experince</TEXTFIELD>
+			<CHECKBOX w="75" title="Done">done</CHECKBOX>
+			<JASPER reportfile="cv_applicant_interview.jasper" org.table="vw_interviews" name="CV"></JASPER>
+			<FORM new="false" keyfield="interview_id" name="Interviews" table="interviews">
+				<CHECKBOX w="150" h="20" x="10" y="50" title="Done">done</CHECKBOX>
+				<TEXTAREA w="430" h="70" x="10" y="70" title="Details">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID keyfield="interview_type_id" name="Interview Types" table="interview_types">
