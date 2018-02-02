@@ -283,8 +283,8 @@ INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, tab
 (11, 0, 1, 'Contract', 'applications', NULL, NULL, 'Contract approved', 'Contract rejected', NULL, NULL, NULL),
 (12, 0, 1, 'Employee Objectives', 'employee_objectives', NULL, NULL, 'Objectives approved', 'Objectives rejected', NULL, NULL, NULL),
 (13, 0, 1, 'Review Objectives', 'job_reviews', NULL, NULL, 'Review approved', 'Review rejected', NULL, NULL, NULL),
-(14, 0, 1, 'Registration', 'registrations', NULL, NULL, 'Review approved', 'Review rejected', NULL, NULL, NULL);
-SELECT pg_catalog.setval('workflows_workflow_id_seq', 13, true);
+(14, 0, 0, 'Registration', 'registrations', NULL, NULL, 'Review approved', 'Review rejected', NULL, NULL, NULL);
+SELECT pg_catalog.setval('workflows_workflow_id_seq', 14, true);
 
 
 INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES 
@@ -302,7 +302,7 @@ INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_en
 (12, 0, 12, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL),
 (13, 0, 13, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL),
 (14, 0, 14, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
-SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 13, true);
+SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 14, true);
 
 
 
