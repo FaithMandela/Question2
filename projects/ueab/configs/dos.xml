@@ -1,5 +1,5 @@
-<APP name="UEAB" org="org_id" password="change_password">
-	<MENU name="UEAB MIS" role="deans">
+<APP password="change_password" org="org_id" name="UEAB">
+	<MENU role="deans" name="UEAB MIS">
 		<MENU name="Students">
 			<MENU name="Students">1</MENU>
 			<MENU name="Sabath Classes">2</MENU>
@@ -17,72 +17,73 @@
 			<MENU name="Enrolment by Location">416</MENU>
 			<MENU name="Enrolment By Major">406</MENU>
 			<MENU name="Un Authorised Off Campus">155</MENU>
+			<MENU name="Unofficial transcript">219</MENU>
 		</MENU>
 	</MENU>
-	<DESK w="700" name="Sabath Classes" key="2" h="500">
-		<GRID name="Sabath Classes" keyfield="sabathclassid" table="sabathclasses">
+	<DESK w="700" h="500" name="Sabath Classes" key="2">
+		<GRID keyfield="sabathclassid" name="Sabath Classes" table="sabathclasses">
 			<TEXTFIELD w="40" title="Sabath Class">sabathclassid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Sabath Class Option">sabathclassoption</TEXTFIELD>
 			<TEXTFIELD w="40" title="Instructor">instructor</TEXTFIELD>
 			<TEXTFIELD w="40" title="Venue">venue</TEXTFIELD>
 			<TEXTFIELD w="40" title="Capacity">capacity</TEXTFIELD>
 			<TEXTFIELD w="40" title="Current">iscurrent</TEXTFIELD>
-			<FORM name="Sabath Classes" keyfield="sabathclassid" table="sabathclasses">
-				<TEXTFIELD w="150" title="Class Option" y="10" h="20" x="10">sabathclassoption</TEXTFIELD>
-				<TEXTFIELD w="150" title="Instructor" y="10" h="20" x="290">instructor</TEXTFIELD>
-				<TEXTFIELD w="150" title="Venue" y="30" h="20" x="10">venue</TEXTFIELD>
-				<TEXTFIELD w="150" title="Capacity" y="30" h="20" x="290">capacity</TEXTFIELD>
-				<CHECKBOX w="150" title="Current" y="50" h="20" x="10">iscurrent</CHECKBOX>
-				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+			<FORM keyfield="sabathclassid" name="Sabath Classes" table="sabathclasses">
+				<TEXTFIELD w="150" h="20" x="10" y="10" title="Class Option">sabathclassoption</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="10" title="Instructor">instructor</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="10" y="30" title="Venue">venue</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="30" title="Capacity">capacity</TEXTFIELD>
+				<CHECKBOX w="150" h="20" x="10" y="50" title="Current">iscurrent</CHECKBOX>
+				<TEXTAREA w="430" h="70" x="10" y="70" title="Details">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Students" key="1" h="560">
-		<GRID limit="100" name="Students" keyfield="studentid" updatetable="students" table="studentview" noorg="true">
+	<DESK w="700" h="560" name="Students" key="1">
+		<GRID noorg="true" updatetable="students" keyfield="studentid" limit="100" name="Students" table="studentview">
 			<TEXTFIELD w="50" title="Student ID">studentid</TEXTFIELD>
 			<TEXTFIELD w="120" title="Student Name">studentname</TEXTFIELD>
 			<TEXTFIELD w="50" title="Nationality">Nationalitycountry</TEXTFIELD>
 			<TEXTFIELD w="40" title="Residence">residencename</TEXTFIELD>
 			<TEXTFIELD w="40" title="Room Number">room_number</TEXTFIELD>
 			<TEXTFIELD w="40" title="Sex">sex</TEXTFIELD>
-			<TEXTFIELD w="40" title="Off campus" edit="true">offcampus</TEXTFIELD>
-			<TEXTFIELD w="40" title="On Probation" edit="true">onprobation</TEXTFIELD>
-			<TEXTFIELD w="140" title="Probation Details" edit="true">probation_details</TEXTFIELD>
-			<FORM name="Students" keyfield="studentid" table="students" th="110">
-				<COMBOBOX w="430" title="Residence" lptable="residences" noorg="true" y="10" h="20" x="10" lpfield="residencename">residenceid</COMBOBOX>
-				<TEXTFIELD w="150" title="Room Number" y="30" h="20" x="10">room_number</TEXTFIELD>
-				<TEXTFIELD w="150" title="Address" y="30" h="20" x="290">address</TEXTFIELD>
-				<TEXTFIELD w="150" title="Zipcode" y="50" h="20" x="10">zipcode</TEXTFIELD>
-				<TEXTFIELD w="150" title="Town" y="50" h="20" x="290">town</TEXTFIELD>
-				<COMBOBOX w="150" title="Country" lptable="countrys" noorg="true" lpkey="countryid" y="70" h="20" x="10" lpfield="countryname">countrycodeid</COMBOBOX>
-				<TEXTFIELD w="150" title="Tel No" y="70" h="20" x="290">telno</TEXTFIELD>
-				<TEXTFIELD w="150" title="Email" y="90" h="20" x="10">email</TEXTFIELD>
-				<TEXTDATE w="150" title="Birth Date" y="90" h="20" x="290">birthdate</TEXTDATE>
-				<TEXTFIELD w="150" title="Guardian Name" y="110" h="20" x="10">guardianname</TEXTFIELD>
-				<TEXTFIELD w="150" title="G. Address" y="110" h="20" x="290">gaddress</TEXTFIELD>
-				<TEXTFIELD w="150" title="G. Zip Code" y="130" h="20" x="10">gzipcode</TEXTFIELD>
-				<TEXTFIELD w="150" title="G. Town" y="130" h="20" x="290">gtown</TEXTFIELD>
-				<COMBOBOX w="150" title="G. Country" lptable="countrys" noorg="true" lpkey="countryid" y="150" h="20" x="10" lpfield="countryname">gcountrycodeid</COMBOBOX>
-				<TEXTFIELD w="150" title="G. Tel No" y="150" h="20" x="290">gtelno</TEXTFIELD>
-				<TEXTFIELD w="150" title="G. Email" y="170" h="20" x="10">gemail</TEXTFIELD>
-				<COMBOBOX w="150" title="Nationality" lptable="countrys" noorg="true" lpkey="countryid" y="170" h="20" x="290" lpfield="countryname">Nationality</COMBOBOX>
-				<COMBOLIST w="50" title="Sex" y="190" h="20" x="10">sex
+			<TEXTFIELD edit="true" w="40" title="Off campus">offcampus</TEXTFIELD>
+			<TEXTFIELD edit="true" w="40" title="On Probation">onprobation</TEXTFIELD>
+			<TEXTFIELD edit="true" w="140" title="Probation Details">probation_details</TEXTFIELD>
+			<FORM th="110" keyfield="studentid" name="Students" table="students">
+				<COMBOBOX noorg="true" w="430" h="20" lpfield="residencename" x="10" y="10" lptable="residences" title="Residence">residenceid</COMBOBOX>
+				<TEXTFIELD w="150" h="20" x="10" y="30" title="Room Number">room_number</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="30" title="Address">address</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="10" y="50" title="Zipcode">zipcode</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="50" title="Town">town</TEXTFIELD>
+				<COMBOBOX noorg="true" w="150" h="20" lpfield="countryname" x="10" y="70" lptable="countrys" title="Country" lpkey="countryid">countrycodeid</COMBOBOX>
+				<TEXTFIELD w="150" h="20" x="290" y="70" title="Tel No">telno</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="10" y="90" title="Email">email</TEXTFIELD>
+				<TEXTDATE w="150" h="20" x="290" y="90" title="Birth Date">birthdate</TEXTDATE>
+				<TEXTFIELD w="150" h="20" x="10" y="110" title="Guardian Name">guardianname</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="110" title="G. Address">gaddress</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="10" y="130" title="G. Zip Code">gzipcode</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="130" title="G. Town">gtown</TEXTFIELD>
+				<COMBOBOX noorg="true" w="150" h="20" lpfield="countryname" x="10" y="150" lptable="countrys" title="G. Country" lpkey="countryid">gcountrycodeid</COMBOBOX>
+				<TEXTFIELD w="150" h="20" x="290" y="150" title="G. Tel No">gtelno</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="10" y="170" title="G. Email">gemail</TEXTFIELD>
+				<COMBOBOX noorg="true" w="150" h="20" lpfield="countryname" x="290" y="170" lptable="countrys" title="Nationality" lpkey="countryid">Nationality</COMBOBOX>
+				<COMBOLIST w="50" h="20" x="10" y="190" title="Sex">sex
 					<DATA>M</DATA>
 					<DATA>F</DATA>
 				</COMBOLIST>
-				<COMBOLIST w="50" title="Marital Status" y="190" h="20" x="290">MaritalStatus
+				<COMBOLIST w="50" h="20" x="290" y="190" title="Marital Status">MaritalStatus
 					<DATA>S</DATA>
 					<DATA>M</DATA>
 				</COMBOLIST>
-				<TEXTAREA w="530" tab="Probation Details" y="2" h="90" x="10">probation_details</TEXTAREA>
-				<TEXTAREA w="530" tab="Details" y="2" h="90" x="10">details</TEXTAREA>
+				<TEXTAREA tab="Probation Details" w="530" h="90" x="10" y="2">probation_details</TEXTAREA>
+				<TEXTAREA tab="Details" w="530" h="90" x="10" y="2">details</TEXTAREA>
 			</FORM>
-			<GRID name="Student's Degree" keyfield="studentdegreeid" linkfield="studentid" table="studentdegreeview" noorg="true">
+			<GRID noorg="true" keyfield="studentdegreeid" name="Student's Degree" linkfield="studentid" table="studentdegreeview">
 				<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>
 				<TEXTFIELD w="140" title="Sub Level">sublevelname</TEXTFIELD>
 				<TEXTFIELD w="140" title="Student">studentname</TEXTFIELD>
 				<TEXTFIELD w="40" title="Completed">completed</TEXTFIELD>
-				<GRID name="Student's Major" keyfield="studentmajorid" linkfield="studentdegreeid" table="studentmajorview" noorg="true">
+				<GRID noorg="true" keyfield="studentmajorid" name="Student's Major" linkfield="studentdegreeid" table="studentmajorview">
 					<TEXTFIELD w="40" title="Major ID">majorid</TEXTFIELD>
 					<TEXTFIELD w="140" title="Major Name">majorname</TEXTFIELD>
 					<TEXTFIELD w="40" title="Core Major">major</TEXTFIELD>
@@ -91,51 +92,51 @@
 			</GRID>
 		</GRID>
 	</DESK>
-	<DESK w="730" name="Semesters Residence" type="vert" key="12" h="520">
-		<GRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
+	<DESK w="730" h="520" name="Semesters Residence" type="vert" key="12">
+		<GRID noorg="true" keyfield="quarterid" name="Semesters" orderby="quarterid desc" table="quarterview">
 			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
-			<GRID auditid="sys_audit_trail_id" name="S. Students" keyfield="qstudentid" updatetable="qstudents" orderby="studentid" linkfield="quarterid" table="qstudentdegreeview" where="(finaceapproval = true)">
+			<GRID auditid="sys_audit_trail_id" updatetable="qstudents" keyfield="qstudentid" name="S. Students" orderby="studentid" where="(finaceapproval = true)" linkfield="quarterid" table="qstudentdegreeview">
 				<TEXTFIELD w="10" title="Student ID">studentid</TEXTFIELD>
 				<TEXTFIELD w="140" title="Student">studentname</TEXTFIELD>
 				<TEXTFIELD w="20" title="Sex">sex</TEXTFIELD>
 				<TEXTFIELD w="20" title="Marital Status">MaritalStatus</TEXTFIELD>
 				<TEXTFIELD w="20" title="Residence Name">residencename</TEXTFIELD>
-				<TEXTFIELD w="20" title="Room Number" edit="true">roomnumber</TEXTFIELD>
-				<TEXTFIELD w="20" title="Approve" edit="true">studentdeanapproval</TEXTFIELD>
-				<TEXTFIELD w="140" title="Not Approved" edit="true">noapproval</TEXTFIELD>
-				<FORM new="false" name="S. Students" keyfield="qstudentid" linkfield="quarterid" table="qstudents">
-					<COMBOBOX w="430" title="Residence" lptable="qresidenceview" linkfield="quarterid" y="10" h="20" x="10" lpfield="residencename">qresidenceid</COMBOBOX>
-					<TEXTFIELD w="150" title="Room Number" y="30" h="20" x="10">roomnumber</TEXTFIELD>
-					<CHECKBOX w="50" title="Dean Approval" y="50" h="20" x="10">studentdeanapproval</CHECKBOX>
-					<TEXTAREA w="430" title="Not Approved" y="70" h="90" x="10">noapproval</TEXTAREA>
+				<TEXTFIELD edit="true" w="20" title="Room Number">roomnumber</TEXTFIELD>
+				<TEXTFIELD edit="true" w="20" title="Approve">studentdeanapproval</TEXTFIELD>
+				<TEXTFIELD edit="true" w="140" title="Not Approved">noapproval</TEXTFIELD>
+				<FORM new="false" keyfield="qstudentid" name="S. Students" linkfield="quarterid" table="qstudents">
+					<COMBOBOX w="430" h="20" lpfield="residencename" x="10" y="10" lptable="qresidenceview" linkfield="quarterid" title="Residence">qresidenceid</COMBOBOX>
+					<TEXTFIELD w="150" h="20" x="10" y="30" title="Room Number">roomnumber</TEXTFIELD>
+					<CHECKBOX w="50" h="20" x="10" y="50" title="Dean Approval">studentdeanapproval</CHECKBOX>
+					<TEXTAREA w="430" h="90" x="10" y="70" title="Not Approved">noapproval</TEXTAREA>
 				</FORM>
 			</GRID>
 		</GRID>
 	</DESK>
-	<DESK w="730" name="Semesters Sabbath Classes" type="vert" key="14" h="520">
-		<GRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
+	<DESK w="730" h="520" name="Semesters Sabbath Classes" type="vert" key="14">
+		<GRID noorg="true" keyfield="quarterid" name="Semesters" orderby="quarterid desc" table="quarterview">
 			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
-			<GRID name="Q. Students" keyfield="qstudentid" updatetable="qstudents" orderby="studentid" linkfield="quarterid" table="qstudentdegreeview">
+			<GRID updatetable="qstudents" keyfield="qstudentid" name="Q. Students" orderby="studentid" linkfield="quarterid" table="qstudentdegreeview">
 				<TEXTFIELD w="10" title="Student ID">studentid</TEXTFIELD>
 				<TEXTFIELD w="40" title="Student">studentname</TEXTFIELD>
-				<TEXTFIELD w="20" title="Sabath Class" edit="true">sabathclassid</TEXTFIELD>
+				<TEXTFIELD edit="true" w="20" title="Sabath Class">sabathclassid</TEXTFIELD>
 				<TEXTFIELD w="20" title="Sabath Class Option">sabathclassoption</TEXTFIELD>
-				<TEXTFIELD w="20" title="Instructor" edit="true">instructor</TEXTFIELD>
-				<TEXTFIELD w="20" title="Approve" edit="true">chaplainapproval</TEXTFIELD>
-				<TEXTFIELD w="140" title="Not Approved" edit="true">noapproval</TEXTFIELD>
+				<TEXTFIELD edit="true" w="20" title="Instructor">instructor</TEXTFIELD>
+				<TEXTFIELD edit="true" w="20" title="Approve">chaplainapproval</TEXTFIELD>
+				<TEXTFIELD edit="true" w="140" title="Not Approved">noapproval</TEXTFIELD>
 			</GRID>
 		</GRID>
 	</DESK>
-	<DESK w="730" name="Semesters Students" type="vert" key="15" h="520">
-		<GRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
+	<DESK w="730" h="520" name="Semesters Students" type="vert" key="15">
+		<GRID noorg="true" keyfield="quarterid" name="Semesters" orderby="quarterid desc" table="quarterview">
 			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
-			<GRID name="Q. Students" keyfield="qstudentid" updatetable="qstudents" orderby="studentid" linkfield="quarterid" table="studentquarterview">
+			<GRID updatetable="qstudents" keyfield="qstudentid" name="Q. Students" orderby="studentid" linkfield="quarterid" table="studentquarterview">
 				<TEXTFIELD w="10" title="Student ID">studentid</TEXTFIELD>
 				<TEXTFIELD w="40" title="Student">studentname</TEXTFIELD>
 				<TEXTFIELD w="20" title="Account Number">accountnumber</TEXTFIELD>
@@ -148,7 +149,7 @@
 				<TEXTFIELD w="20" title="Total Charges">totalfees</TEXTFIELD>
 				<TEXTFIELD w="20" title="Account Credit">currbalance</TEXTFIELD>
 				<TEXTFIELD w="20" title="Balance">finalbalance</TEXTFIELD>
-				<GRID name="Q. Grades" keyfield="qgradeid" linkfield="qstudentid" table="studentgradeview">
+				<GRID keyfield="qgradeid" name="Q. Grades" linkfield="qstudentid" table="studentgradeview">
 					<TEXTFIELD w="10" title="Student ID">studentid</TEXTFIELD>
 					<TEXTFIELD w="20" title="Student">studentname</TEXTFIELD>
 					<TEXTFIELD w="10" title="Course ID">courseid</TEXTFIELD>
@@ -162,70 +163,80 @@
 			</GRID>
 		</GRID>
 	</DESK>
-	<DESK w="800" name="Un Authorised Off Campus" type="horl" key="155" h="500">
-		<FILTER location="250" name="Un Authorised Off Campus" type="horl">
-			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+	<DESK w="800" h="500" name="Un Authorised Off Campus" type="horl" key="155">
+		<FILTER name="Un Authorised Off Campus" location="250" type="horl">
+			<DRILLDOWN noorg="true" keyfield="quarteryear" name="Year" orderby="quarteryear desc" listfield="quarteryear" table="yearview">
+				<DRILLDOWN noorg="true" wherefield="quarteryear" keyfield="quarterid" name="Semesters" listfield="quarter" table="quarterview"></DRILLDOWN>
 			</DRILLDOWN>
-			<JASPER name="Un Authorised Off Campus" reportfile="residenceunauth.jasper"></JASPER>
+			<JASPER reportfile="residenceunauth.jasper" name="Un Authorised Off Campus"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="700" name="Sabath Class" type="horl" key="101" h="500">
-		<FILTER location="250" name="sabath class" type="horl">
-			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" filtername="quarterid"></DRILLDOWN>
+	<DESK w="700" h="500" name="Sabath Class" type="horl" key="101">
+		<FILTER name="sabath class" location="250" type="horl">
+			<DRILLDOWN noorg="true" keyfield="quarteryear" name="Year" orderby="quarteryear desc" listfield="quarteryear" table="yearview">
+				<DRILLDOWN noorg="true" wherefield="quarteryear" keyfield="quarterid" name="Semesters" filtername="quarterid" listfield="quarter" table="quarterview"></DRILLDOWN>
 			</DRILLDOWN>
-			<DRILLDOWN name="Sabath Classes" keyfield="sabathclassid" table="sabathclasses" listfield="sabathclassoption" filtername="sabathclassid"></DRILLDOWN>
-			<JASPER filtered="true" name="Class List" reportfile="sabathclass.jasper"></JASPER>
+			<DRILLDOWN keyfield="sabathclassid" name="Sabath Classes" filtername="sabathclassid" listfield="sabathclassoption" table="sabathclasses"></DRILLDOWN>
+			<JASPER filtered="true" reportfile="sabathclass.jasper" name="Class List"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="700" name="Enrolment by Residence" type="horl" key="214" h="600">
-		<FILTER w="700" name="Enrolment by Residence" split="250" type="vert" h="750">
-			<FILTERGRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarters" noorg="true">
+	<DESK w="700" h="600" name="Enrolment by Residence" type="horl" key="214">
+		<FILTER split="250" w="700" h="750" name="Enrolment by Residence" type="vert">
+			<FILTERGRID noorg="true" keyfield="quarterid" name="Semesters" orderby="quarterid desc" table="quarters">
 				<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
 				<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
-				<FILTERGRID name="Q Residence" keyfield="qresidenceid" linkfield="quarterid" table="qresidenceview" noorg="true">
+				<FILTERGRID noorg="true" keyfield="qresidenceid" name="Q Residence" linkfield="quarterid" table="qresidenceview">
 					<TEXTFIELD w="40" title="Residence">residencename</TEXTFIELD>
 					<TEXTFIELD w="40" title="Off Campus">offcampus</TEXTFIELD>
 				</FILTERGRID>
 			</FILTERGRID>
-			<JASPER name="Students Order by Room" reportfile="qstudentviewrs.jasper"></JASPER>
-			<JASPER name="Students Order by Name " reportfile="qstudentviewrs2.jasper"></JASPER>
+			<JASPER reportfile="qstudentviewrs.jasper" name="Students Order by Room"></JASPER>
+			<JASPER reportfile="qstudentviewrs2.jasper" name="Students Order by Name "></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="700" name="Guardian adddress" type="horl" key="509" h="500">
-		<FILTER location="250" name="Guardian adddress" type="horl">
-			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+	<DESK w="700" h="500" name="Guardian adddress" type="horl" key="509">
+		<FILTER name="Guardian adddress" location="250" type="horl">
+			<DRILLDOWN noorg="true" keyfield="quarteryear" name="Year" orderby="quarteryear desc" listfield="quarteryear" table="yearview">
+				<DRILLDOWN noorg="true" wherefield="quarteryear" keyfield="quarterid" name="Semesters" listfield="quarter" table="quarterview"></DRILLDOWN>
 			</DRILLDOWN>
-			<JASPER filtered="true" name="label" reportfile="studentlabel.jasper"></JASPER>
+			<JASPER filtered="true" reportfile="studentlabel.jasper" name="label"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="700" name="Enrolment by Location" key="416" h="500">
-		<FILTER location="250" name="Enrolment by Sub Levels" type="horl">
-			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+	<DESK w="700" h="500" name="Enrolment by Location" key="416">
+		<FILTER name="Enrolment by Sub Levels" location="250" type="horl">
+			<DRILLDOWN noorg="true" keyfield="quarteryear" name="Year" orderby="quarteryear desc" listfield="quarteryear" table="yearview">
+				<DRILLDOWN noorg="true" wherefield="quarteryear" keyfield="quarterid" name="Semesters" listfield="quarter" table="quarterview"></DRILLDOWN>
 			</DRILLDOWN>
-			<DRILLDOWN name="Location" keyfield="levellocationid" table="levellocations" listfield="levellocationname" filter="levellocationid"></DRILLDOWN>
-			<JASPER filtered="true" name="Enrolment By Location" reportfile="qstudentviewk.jasper"></JASPER>
+			<DRILLDOWN filter="levellocationid" keyfield="levellocationid" name="Location" listfield="levellocationname" table="levellocations"></DRILLDOWN>
+			<JASPER filtered="true" reportfile="qstudentviewk.jasper" name="Enrolment By Location"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="700" name="Enrolment By Major" key="406" h="500">
-		<FILTER location="250" name="Enrolment By Major" type="horl">
-			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+	<DESK w="700" h="500" name="Enrolment By Major" key="406">
+		<FILTER name="Enrolment By Major" location="250" type="horl">
+			<DRILLDOWN noorg="true" keyfield="quarteryear" name="Year" orderby="quarteryear desc" listfield="quarteryear" table="yearview">
+				<DRILLDOWN noorg="true" wherefield="quarteryear" keyfield="quarterid" name="Semesters" listfield="quarter" table="quarterview"></DRILLDOWN>
 			</DRILLDOWN>
-			<DRILLDOWN name="Major" keyfield="majorid" table="majors" noorg="true" listfield="majorname" filter="majorid"></DRILLDOWN>
-			<JASPER filtered="true" name="Enrolment By Major" reportfile="qstudentmajorviewe.jasper"></JASPER>
+			<DRILLDOWN filter="majorid" noorg="true" keyfield="majorid" name="Major" listfield="majorname" table="majors"></DRILLDOWN>
+			<JASPER filtered="true" reportfile="qstudentmajorviewe.jasper" name="Enrolment By Major"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="700" name="Semester Residence" key="445" h="500">
-		<FILTER location="250" name="Semester Students Residence" type="horl">
-			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semester " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+	<DESK w="700" h="500" name="Semester Residence" key="445">
+		<FILTER name="Semester Students Residence" location="250" type="horl">
+			<DRILLDOWN noorg="true" keyfield="quarteryear" name="Year" orderby="quarteryear desc" listfield="quarteryear" table="yearview">
+				<DRILLDOWN noorg="true" wherefield="quarteryear" keyfield="quarterid" name="Semester " listfield="quarter" table="quarterview"></DRILLDOWN>
 			</DRILLDOWN>
-			<JASPER filtered="true" name="Semester Students Residence Summary" reportfile="qstudentresidenceviewa.jasper"></JASPER>
-			<JASPER filtered="true" name="Semester Students Residence" reportfile="qstudentresidenceview.jasper"></JASPER>
+			<JASPER filtered="true" reportfile="qstudentresidenceviewa.jasper" name="Semester Students Residence Summary"></JASPER>
+			<JASPER filtered="true" reportfile="qstudentresidenceview.jasper" name="Semester Students Residence"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="800" h="650" name="Unofficial transcript" type="horl" key="219">
+		<FILTER split="250" w="700" h="550" name="Unofficial transcript">
+			<FILTERGRID keyfield="studentdegreeid" name="Students" table="studentdegreeview">
+				<TEXTFIELD w="15" title="Student ID">studentid</TEXTFIELD>
+				<TEXTFIELD w="35" title="Student Name">studentname</TEXTFIELD>
+				<TEXTFIELD w="35" title="Degree">degreename</TEXTFIELD>
+			</FILTERGRID>
+			<JASPER reportfile="studentquarterview.jasper" name="Unofficial Record"></JASPER>
 		</FILTER>
 	</DESK>
 </APP>
