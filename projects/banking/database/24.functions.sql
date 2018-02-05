@@ -458,8 +458,10 @@ DECLARE
 	v_activity_type_id		integer;
 	v_repayments			integer;
 	v_currency_id			integer;
+	v_less_initial_fee		boolean;
 	v_reducing_balance		boolean;
 	v_reducing_payments		boolean;
+	v_loan_amount			real;
 	v_nir					real;
 BEGIN
 
@@ -488,15 +490,36 @@ BEGIN
 		FROM vw_account_definations 
 		WHERE (use_key_id = 108) AND (is_active = true) AND (product_id = NEW.product_id);
 		
-		SELECT currency_id INTO v_currency_id
+		SELECT currency_id, less_initial_fee INTO v_currency_id, v_less_initial_fee
 		FROM products
 		WHERE (product_id = NEW.product_id);
+		
+		INSERT INTO account_activity (loan_id, activity_type_id, activity_frequency_id,
+			activity_status_id, currency_id, entity_id, org_id, transfer_account_no,
+			activity_date, value_date, account_debit)
+		SELECT NEW.loan_id, account_definations.activity_type_id, account_definations.activity_frequency_id,
+			1, products.currency_id, NEW.entity_id, NEW.org_id, account_definations.account_number,
+			current_date, current_date, account_definations.fee_amount
+		FROM account_definations INNER JOIN activity_types ON account_definations.activity_type_id = activity_types.activity_type_id
+			INNER JOIN products ON account_definations.product_id = products.product_id
+		WHERE (account_definations.product_id = NEW.product_id) AND (account_definations.org_id = NEW.org_id)
+			AND (account_definations.activity_frequency_id = 1) AND (activity_types.use_key_id = 201) 
+			AND (account_definations.is_active = true)
+			AND (account_definations.start_date < current_date);
+		
+		v_loan_amount := NEW.principal_amount;
+		IF(v_less_initial_fee = true)THEN
+			SELECT sum(account_debit - account_credit) INTO v_loan_amount
+			FROM account_activity WHERE loan_id = NEW.loan_id;
+			IF(v_loan_amount is null)THEN v_loan_amount := 0; END IF;
+			v_loan_amount := NEW.principal_amount - v_loan_amount;
+		END IF;
 		
 		IF(v_activity_type_id is not null)THEN
 			INSERT INTO account_activity (loan_id, transfer_account_no, org_id, activity_type_id, currency_id, 
 				activity_frequency_id, activity_date, value_date, activity_status_id, account_credit, account_debit)
 			VALUES (NEW.loan_id, NEW.disburse_account, NEW.org_id, v_activity_type_id, v_currency_id, 
-				1, current_date, current_date, 1, 0, NEW.principal_amount);
+				1, current_date, current_date, 1, 0, v_loan_amount);
 		
 			NEW.disbursed_date := current_date;
 			NEW.expected_matured_date := current_date + (NEW.repayment_period || ' months')::interval;

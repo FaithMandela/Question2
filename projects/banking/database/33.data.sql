@@ -69,13 +69,13 @@ INSERT INTO penalty_methods (penalty_method_id, activity_type_id, org_id, penalt
 SELECT pg_catalog.setval('penalty_methods_penalty_method_id_seq', 2, true);
 UPDATE penalty_methods SET penalty_method_no = penalty_method_id;
 
-INSERT INTO products (product_id, activity_frequency_id, interest_method_id, penalty_method_id, currency_id, org_id, product_name, description, loan_account, is_active, interest_rate, min_opening_balance, lockin_period_frequency, minimum_balance, maximum_balance, minimum_day, maximum_day, minimum_trx, maximum_trx) VALUES
-(0, 4, 0, 0, 1, 0, 'Banking', 'Banking', false, false, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(1, 4, 0, 0, 1, 0, 'Transaction account', 'Account to handle transactions', false, true, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(2, 4, 1, 1, 1, 0, 'Basic loans', 'Basic loans', true, true, 12, 0, 0, 0, 0, 0, 0, 0, 0),
-(3, 4, 3, 0, 1, 0, 'Savings account', 'Account to handle savings', false, true, 3, 0, 0, 0, 0, 0, 0, 0, 0),
-(4, 4, 2, 1, 1, 0, 'Compound loans', 'Compound loans', true, true, 12, 0, 0, 0, 0, 0, 0, 0, 0),
-(5, 4, 4, 1, 1, 0, 'Reducing balance loans', 'Reducing balance loans', true, true, 12, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO products (product_id, activity_frequency_id, interest_method_id, penalty_method_id, currency_id, org_id, product_name, description, loan_account, is_active, interest_rate, min_opening_balance, lockin_period_frequency, minimum_balance, maximum_balance, minimum_day, maximum_day, minimum_trx, maximum_trx, less_initial_fee) VALUES
+(0, 4, 0, 0, 1, 0, 'Banking', 'Banking', false, false, 0, 0, 0, 0, 0, 0, 0, 0, 0, false),
+(1, 4, 0, 0, 1, 0, 'Transaction account', 'Account to handle transactions', false, true, 0, 0, 0, 0, 0, 0, 0, 0, 0, false),
+(2, 4, 1, 1, 1, 0, 'Basic loans', 'Basic loans', true, true, 12, 0, 0, 0, 0, 0, 0, 0, 0, false),
+(3, 4, 3, 0, 1, 0, 'Savings account', 'Account to handle savings', false, true, 3, 0, 0, 0, 0, 0, 0, 0, 0, false),
+(4, 4, 2, 1, 1, 0, 'Compound loans', 'Compound loans', true, true, 12, 0, 0, 0, 0, 0, 0, 0, 0, true),
+(5, 4, 4, 1, 1, 0, 'Reducing balance loans', 'Reducing balance loans', true, true, 12, 0, 0, 0, 0, 0, 0, 0, 0, true);
 SELECT pg_catalog.setval('products_product_id_seq', 5, true);
 UPDATE products SET product_no = product_id;
 
@@ -98,29 +98,29 @@ VALUES (12, 22, 1, 1, 0, 'Transfer', '2017-01-01', NULL, 1, '400000002', true, t
 INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, fee_amount, account_number, is_active, has_charge) 
 VALUES (21, 1, 1, 1, 0, 'Opening account', '2017-01-01', NULL, 1000, '400000002', true, true);
 
-INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, account_number, is_active) VALUES
-(11, 1, 1, 2, 0, 'Loan Disbursement', '2017-01-01', NULL, '400000001', true),
-(10, 1, 1, 2, 0, 'Loan Payment', '2017-01-01', NULL, '400000001', true);
+INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, account_number, is_active, has_charge, fee_amount) VALUES
+(21, 1, 1, 2, 0, 'Opening account', '2017-01-01', NULL, '400000002', true, true, 2000),
+(11, 1, 1, 2, 0, 'Loan Disbursement', '2017-01-01', NULL, '400000001', true, false, 0),
+(10, 1, 1, 2, 0, 'Loan Payment', '2017-01-01', NULL, '400000001', true, false, 0);
 
-INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, account_number, is_active) VALUES 
-(2, 1, 1, 3, 0, 'Cash Deposit', '2017-01-01', NULL, '400000001', true),
-(3, 1, 1, 3, 0, 'Cheque Deposit', '2017-01-01', NULL, '400000001', true),
-(4, 1, 1, 3, 0, 'MPESA Deposit', '2017-01-01', NULL, '400000001', true),
-(5, 1, 1, 3, 0, 'Cash Withdraw', '2017-01-01', NULL, '400000001', true),
-(6, 1, 1, 3, 0, 'Cheque Withdraw', '2017-01-01', NULL, '400000001', true),
-(7, 1, 1, 3, 0, 'MPESA Withdraw', '2017-01-01', NULL, '400000001', true);
-INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, fee_ps, account_number, is_active, has_charge) 
-VALUES (12, 22, 1, 3, 0, 'Transfer', '2017-01-01', NULL, 1, '400000002', true, true);
+INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, account_number, is_active, has_charge, fee_ps) VALUES 
+(2, 1, 1, 3, 0, 'Cash Deposit', '2017-01-01', NULL, '400000001', true, false, 0),
+(3, 1, 1, 3, 0, 'Cheque Deposit', '2017-01-01', NULL, '400000001', true, false, 0),
+(4, 1, 1, 3, 0, 'MPESA Deposit', '2017-01-01', NULL, '400000001', true, false, 0),
+(5, 1, 1, 3, 0, 'Cash Withdraw', '2017-01-01', NULL, '400000001', true, false, 0),
+(6, 1, 1, 3, 0, 'Cheque Withdraw', '2017-01-01', NULL, '400000001', true, false, 0),
+(7, 1, 1, 3, 0, 'MPESA Withdraw', '2017-01-01', NULL, '400000001', true, false, 0),
+(12, 22, 1, 3, 0, 'Transfer', '2017-01-01', NULL, '400000002', true, true, 1);
 
-INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, account_number, is_active) 
-VALUES (11, 1, 1, 4, 0, 'Loan Disbursement', '2017-01-01', NULL, '400000001', true);
-INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, account_number, is_active) 
-VALUES (10, 1, 1, 4, 0, 'Loan Payment', '2017-01-01', NULL, '400000001', true);
+INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, account_number, is_active, has_charge, fee_amount) VALUES 
+(21, 1, 1, 4, 0, 'Opening account', '2017-01-01', NULL, '400000002', true, true, 1500),
+(11, 1, 1, 4, 0, 'Loan Disbursement', '2017-01-01', NULL, '400000001', true, false, 0),
+(10, 1, 1, 4, 0, 'Loan Payment', '2017-01-01', NULL, '400000001', true, false, 0);
 
-INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, account_number, is_active) 
-VALUES (11, 1, 1, 5, 0, 'Loan Disbursement', '2017-01-01', NULL, '400000001', true);
-INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, account_number, is_active) 
-VALUES (10, 1, 1, 5, 0, 'Loan Payment', '2017-01-01', NULL, '400000001', true);
+INSERT INTO account_definations (activity_type_id, charge_activity_id, activity_frequency_id, product_id, org_id, account_defination_name, start_date, end_date, account_number, is_active, has_charge, fee_amount) VALUES 
+(21, 1, 1, 5, 0, 'Opening account', '2017-01-01', NULL, '400000002', true, true, 1500),
+(11, 1, 1, 5, 0, 'Loan Disbursement', '2017-01-01', NULL, '400000001', true, false, 0),
+(10, 1, 1, 5, 0, 'Loan Payment', '2017-01-01', NULL, '400000001', true, false, 0);
 
 
 --- Create Initial customer and customer account

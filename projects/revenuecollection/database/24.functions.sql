@@ -20,7 +20,8 @@ BEGIN
 			INSERT INTO deposit_accounts (entity_id, updated_by, product_id, org_id, account_number, is_active, approve_status)
 			VALUES (v_entity_id, v_entity_id, 1, 0, NEW.phone_number, true, 'Approved');
 			
-			UPDATE entitys SET entity_password = md5(NEW.pin_code) WHERE entity_id = v_entity_id;
+			UPDATE entitys SET entity_password = md5(NEW.pin_code), user_name = NEW.phone_number
+			WHERE entity_id = v_entity_id;
 		END IF;
 	END IF;
 

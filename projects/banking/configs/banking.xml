@@ -1333,25 +1333,26 @@
 			<TEXTFIELD w="75" title="Description">description</TEXTFIELD>
 			<CHECKBOX w="45" title="For Loan">loan_account</CHECKBOX>
 			<CHECKBOX w="45" title="Active">is_active</CHECKBOX>
-			<FORM keyfield="product_id" name="Products" table="products">
-				<COMBOBOX w="150" h="20" lpfield="interest_method_name" x="10" y="30" lptable="interest_methods" title="Interest Method">interest_method_id</COMBOBOX>
-				<COMBOBOX w="1500" h="20" lpfield="penalty_method_name" x="290" y="30" lptable="penalty_methods" title="Penalty Method">penalty_method_id</COMBOBOX>
-				<COMBOBOX noorg="true" w="150" h="20" lpfield="activity_frequency_name" x="10" orderby="activity_frequency_id" y="50" lptable="activity_frequency" title="Interest Frequency">activity_frequency_id</COMBOBOX>
-				<COMBOBOX w="430" h="20" lpfield="currency_name" x="290" y="50" lptable="currency" default_org_fnct="get_default_currency" title="Currency">currency_id</COMBOBOX>
-				<TEXTFIELD w="430" h="20" x="10" y="70" title="Product">product_name</TEXTFIELD>
-				<TEXTFIELD w="430" h="20" x="10" y="90" title="Description">description</TEXTFIELD>
-				<CHECKBOX w="150" h="20" x="10" y="110" title="Loan Account">loan_account</CHECKBOX>
+			<FORM keyfield="product_id" name="Products" cols="2" table="products">
+				<COMBOBOX w="150" h="20" lpfield="interest_method_name" x="10" y="30" lptable="interest_methods" title="Interest Method" span="true">interest_method_id</COMBOBOX>
+				<COMBOBOX w="150" h="20" lpfield="penalty_method_name" x="290" y="30" lptable="penalty_methods" title="Penalty Method">penalty_method_id</COMBOBOX>
+				<COMBOBOX noorg="true" w="150" h="20" lpfield="activity_frequency_name" x="10" orderby="activity_frequency_id" y="50" lptable="activity_frequency" title="Interest Frequency" span="true">activity_frequency_id</COMBOBOX>
+				<COMBOBOX w="150" h="20" lpfield="currency_name" x="290" y="50" lptable="currency" default_org_fnct="get_default_currency" title="Currency">currency_id</COMBOBOX>
+				<TEXTFIELD w="150" h="20" x="10" y="70" title="Product" span="true">product_name</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="10" y="90" title="Description">description</TEXTFIELD>
+				<CHECKBOX w="150" h="20" x="10" y="110" title="Loan Account" span="true">loan_account</CHECKBOX>
 				<CHECKBOX w="150" h="20" x="290" y="110" title="Active">is_active</CHECKBOX>
-				<TEXTDECIMAL w="150" h="20" x="10" y="130" title="Interest Rate">interest_rate</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" h="20" x="10" y="130" title="Interest Rate" span="true">interest_rate</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" h="20" x="290" y="150" title="Min Opening Balance">min_opening_balance</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" h="20" x="10" y="170" title="Lockin Period Frequency">lockin_period_frequency</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" h="20" x="10" y="170" title="Lockin Period Frequency" span="true">lockin_period_frequency</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" h="20" x="10" y="190" title="Minimum Balance">minimum_balance</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" h="20" x="290" y="190" title="Maximum Balance">maximum_balance</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" h="20" x="290" y="190" title="Maximum Balance" span="true">maximum_balance</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" h="20" x="10" y="210" title="Minimum Day">minimum_day</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" h="20" x="290" y="210" title="Maximum Day">maximum_day</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" h="20" x="290" y="210" title="Maximum Day" span="true">maximum_day</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" h="20" x="10" y="230" title="Minimum Trx">minimum_trx</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" h="20" x="290" y="230" title="Maximum Trx">maximum_trx</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" h="20" x="290" y="230" title="Maximum Trx" span="true">maximum_trx</TEXTDECIMAL>
 				<TEXTFIELD w="150" h="20" x="10" y="250" title="Maximum Repayments">maximum_repayments</TEXTFIELD>
+				<CHECKBOX w="150" h="20" x="10" y="270" title="Less Initial Fee">less_initial_fee</CHECKBOX>
 				<TEXTAREA tab="Details" w="430" h="70" x="10" y="2">details</TEXTAREA>
 			</FORM>
 			<GRID keyfield="account_defination_id" name="Account Definations" linkfield="product_id" table="vw_account_definations">
