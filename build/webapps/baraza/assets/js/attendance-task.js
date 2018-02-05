@@ -378,6 +378,7 @@ $('#end_task')
                 $('#display-task').hide();
 
                 $(".start-task i").removeAttr('class').addClass("").css({"color":"#fff",});
+                $(".end-task i").removeAttr('class').addClass("").css({"color":"#fff",});
             },
             error: function(xhr, resp, text) {
                 var btnMsg = "<i class='fa fa-warning  text-center'></i> Save Failed";
