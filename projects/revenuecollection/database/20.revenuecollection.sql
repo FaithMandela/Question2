@@ -9,13 +9,29 @@ CREATE INDEX locations_org_id ON locations(org_id);
 
 CREATE TABLE registrations (
 	registration_id			serial primary key,
-	org_id					integer references orgs,
+	entity_id 				integer default 0 references entitys,
+	org_id					integer default 0 references orgs,
 	full_name				varchar(120),
 	id_number				varchar(16),
 	phone_number			varchar(16),
-	pin_code				varchar(32)
+	pin_code				varchar(32),
+	
+	application_date		timestamp default now() not null,
+	approve_status			varchar(16) default 'Completed' not null,
+	workflow_table_id		integer,
+	action_date				timestamp
 );
+CREATE INDEX registrations_entity_id ON registrations(entity_id);
 CREATE INDEX registrations_org_id ON registrations(org_id);
+
+CREATE TABLE customer_vehicles (
+	customer_vehicle_id		serial primary key,
+	entity_id				integer references entitys,
+	org_id					integer references orgs,
+	reg_number				varchar(10)
+);
+CREATE INDEX customer_vehicles_entity_id ON customer_vehicles(entity_id);
+CREATE INDEX customer_vehicles_org_id ON customer_vehicles(org_id);
 
 CREATE TABLE customers (
 	entity_id 				integer primary key references entitys,
@@ -456,6 +472,9 @@ CREATE VIEW vw_account_activity AS
 
 
 ------------Hooks to approval trigger
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON registrations
+	FOR EACH ROW EXECUTE PROCEDURE upd_action();
+	
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON customers
 	FOR EACH ROW EXECUTE PROCEDURE upd_action();
     

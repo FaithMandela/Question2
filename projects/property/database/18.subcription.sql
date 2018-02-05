@@ -1,5 +1,14 @@
 ALTER TABLE orgs ADD expiry_date date;
 
+CREATE TABLE subscription_types(
+	subscription_type_id 	serial primary key,
+	subscription_type 		varchar(50) not null,
+	narrative 				varchar(120)
+);
+
+INSERT INTO subscription_types(subscription_type_id,subscription_type) VALUES
+			(1, 'Estate Manager'),(2, 'Landlord');
+
 CREATE TABLE subscriptions (
 	subscription_id			serial primary key,
 	entity_id				integer references entitys,
@@ -9,7 +18,7 @@ CREATE TABLE subscriptions (
 	business_name			varchar(50),
 	business_address		varchar(100),
 	city					varchar(30),
-	state					varchar(50),
+	subscription_type_id 	integer references subscription_types,
 	country_id				char(2) references sys_countrys,
 	number_of_employees		integer,
 	telephone				varchar(50),
@@ -33,6 +42,7 @@ CREATE TABLE subscriptions (
 );
 CREATE INDEX subscriptions_entity_id ON subscriptions(entity_id);
 CREATE INDEX subscriptions_account_manager_id ON subscriptions(account_manager_id);
+CREATE INDEX subscriptions_subscription_type_id ON subscriptions(subscription_type_id);
 CREATE INDEX subscriptions_country_id ON subscriptions(country_id);
 CREATE INDEX subscriptions_org_id ON subscriptions(org_id);
 
@@ -41,14 +51,17 @@ CREATE VIEW vw_subscriptions AS
 		account_manager.entity_id as account_manager_id, account_manager.entity_name as account_manager_name,
 		orgs.org_id, orgs.org_name, 
 		
+		subscription_types.subscription_type_id,subscription_types.subscription_type,subscription_types.narrative,
+
 		subscriptions.subscription_id, subscriptions.business_name, 
-		subscriptions.business_address, subscriptions.city, subscriptions.state, subscriptions.country_id, 
+		subscriptions.business_address, subscriptions.city, subscriptions.country_id, 
 		subscriptions.number_of_employees, subscriptions.telephone, subscriptions.website, 
 		subscriptions.primary_contact, subscriptions.job_title, subscriptions.primary_email, 
 		subscriptions.approve_status, subscriptions.workflow_table_id, subscriptions.application_date, subscriptions.action_date, 
 		subscriptions.system_key, subscriptions.subscribed, subscriptions.subscribed_date,
 		subscriptions.details
 	FROM subscriptions INNER JOIN sys_countrys ON subscriptions.country_id = sys_countrys.sys_country_id
+		INNER JOIN subscription_types ON subscription_types.subscription_type_id = subscriptions.subscription_type_id
 		LEFT JOIN entitys ON subscriptions.entity_id = entitys.entity_id
 		LEFT JOIN entitys as account_manager ON subscriptions.account_manager_id = account_manager.entity_id
 		LEFT JOIN orgs ON subscriptions.org_id = orgs.org_id;	
@@ -66,6 +79,7 @@ DECLARE
 	v_bank_id				integer;
 	v_tax_type_id			integer;
 	v_workflow_id			integer;
+	v_subscription_type_id	integer;
 	v_org_suffix			char(2);
 	myrec 					RECORD;
 BEGIN
@@ -119,12 +133,7 @@ BEGIN
 		INSERT INTO transaction_counters(transaction_type_id, org_id, document_number)
 		SELECT transaction_type_id, NEW.org_id, 1
 		FROM transaction_types;
-		
-		INSERT INTO sys_emails (org_id, use_type,  sys_email_name, title, details) 
-		SELECT NEW.org_id, use_type, sys_email_name, title, details
-		FROM sys_emails
-		WHERE org_id = 1;
-		
+				
 		INSERT INTO accounts_class (org_id, accounts_class_no, chat_type_id, chat_type_name, accounts_class_name)
 		SELECT NEW.org_id, accounts_class_no, chat_type_id, chat_type_name, accounts_class_name
 		FROM accounts_class
@@ -155,13 +164,21 @@ BEGIN
 		
 		SELECT entity_type_id INTO v_entity_type_id
 		FROM entity_types 
-		WHERE (org_id = NEW.org_id) AND (use_key_id = 0);
-				
-		UPDATE entitys SET org_id = NEW.org_id, entity_type_id = v_entity_type_id, function_role='subscription,admin,staff,finance'
-		WHERE entity_id = NEW.entity_id;
-		
+		WHERE (org_id = NEW.org_id) AND (use_key_id = 0);	
+
 		UPDATE entity_subscriptions SET entity_type_id = v_entity_type_id
 		WHERE entity_id = NEW.entity_id;
+
+		SELECT subscription_type_id INTO v_subscription_type_id
+		FROM subscriptions;	
+
+		IF (v_subscription_type_id = 1) THEN
+			UPDATE entitys SET org_id = NEW.org_id, entity_type_id = v_entity_type_id, function_role='subscription,admin,staff,finance'
+			WHERE entity_id = NEW.entity_id;
+		ELSIF (v_subscription_type_id = 2) THEN
+			UPDATE entitys SET org_id = NEW.org_id, entity_type_id = v_entity_type_id, function_role='subscription,landlord,staff,finance'
+			WHERE entity_id = NEW.entity_id;
+		END IF;
 		
 		INSERT INTO workflows (link_copy, org_id, source_entity_id, workflow_name, table_name, approve_email, reject_email) 
 		SELECT aa.workflow_id, cc.org_id, cc.entity_type_id, aa.workflow_name, aa.table_name, aa.approve_email, aa.reject_email

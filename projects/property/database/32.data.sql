@@ -102,6 +102,7 @@ INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('61010'
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('70005',700,'GOODS SALES');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('70010',700,'SERVICE SALES');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('70015',700,'SALES DISCOUNT');
+INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('70020',700,'COMMISSIONS');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('71000',710,'FAIR VALUE GAIN/LOSS IN INVESTMENTS');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('71005',710,'DONATION');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('71010',710,'EXCHANGE GAIN(LOSS)');
@@ -244,9 +245,9 @@ INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (56, 'Suplu
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (57, 'Retained Earnings', 3);
 
 
-INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (101, 'Payment', 3);
-INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (102, 'Receipts/Remmitance', 3);
-INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (103, 'Penalty Payments', 3);
+-- INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (101, 'Payment', 3);
+-- INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (102, 'Receipts/Remmitance', 3);
+-- INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (103, 'Penalty Payments', 3);
 
 INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 51, 30000);
 INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 52, 40000);
@@ -293,10 +294,3 @@ VALUES (4, 0, 4, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval',
 INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
 VALUES (5, 0, 5, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
 SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 13, true);
-
-
-
-
-
-
-

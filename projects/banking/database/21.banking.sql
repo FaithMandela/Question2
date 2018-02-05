@@ -130,7 +130,7 @@ CREATE TABLE products (
 	is_active				boolean default true not null,
 	
 	interest_rate			real not null,
-	min_opening_balance		real,
+	min_opening_balance		real default 0 not null,
 	lockin_period_frequency real,
 	minimum_balance			real,
 	maximum_balance			real,
@@ -139,6 +139,7 @@ CREATE TABLE products (
 	minimum_trx				real,
 	maximum_trx				real,
 	maximum_repayments		integer default 100 not null,
+	less_initial_fee		boolean default false not null,
 	product_no				integer,
 	
 	application_date		timestamp default now() not null,
@@ -162,7 +163,7 @@ CREATE TABLE account_definations (
 	charge_activity_id		integer not null references activity_types,
 	activity_frequency_id	integer not null references activity_frequency,
 	org_id					integer references orgs,
-	account_defination_name		varchar(50) not null,
+	account_defination_name	varchar(50) not null,
 	start_date				date not null,
 	end_date				date,
 	fee_amount				real default 0 not null,

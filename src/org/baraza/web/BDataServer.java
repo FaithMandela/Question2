@@ -54,10 +54,11 @@ public class BDataServer extends HttpServlet {
 		BXML xml = new BXML(xmlfile, false);
 		
 		if(xml.getDocument() != null) {
+			root = xml.getRoot();
+		
 			String dbconfig = "java:/comp/env/jdbc/database";
 			db = new BDB(dbconfig);
-			
-			root = xml.getRoot();
+			db.setOrgID(root.getAttribute("org"));
 			
 			users = new HashMap<String, BUser>();
 		}
@@ -165,7 +166,7 @@ System.out.println("BASE 3030 : " + userId);
 				BElement view = getView(viewKey);
 				BUser user = users.get(userId);
 				
-				BQuery rs = new BQuery(db, view, null, null, false);
+				BQuery rs = new BQuery(db, view, null, null, user, false);
 				if(rs.moveNext()) {
 					JSONArray jTable = new JSONArray(rs.getJSON());
 					jResp.put("data", jTable);

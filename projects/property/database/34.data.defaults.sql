@@ -7,16 +7,18 @@ SELECT pg_catalog.setval('currency_currency_id_seq', 5, true);
 
 INSERT INTO currency_rates (org_id, currency_id, exchange_rate) VALUES (1, 5, 1);
 
-INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id) VALUES (1, 'Users', 'user', 0);
-INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id) VALUES (1, 'Staff', 'staff', 1);
-INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id) VALUES (1, 'Client', 'client', 2);
-INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id) VALUES (1, 'Supplier', 'supplier', 3);
-INSERT INTO entity_types (org_id, entity_type_name, entity_role, start_view, use_key_id) VALUES (1, 'Applicant', 'applicant', '10:0', 4);
-INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id) VALUES (1, 'Tenants', 'tenants', 6);
+INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id) VALUES 
+	(1, 'Users', 'user', 0),
+	(1, 'Staff', 'staff', 1), 
+	(1, 'Client', 'client', 2),
+	(1, 'Supplier', 'supplier', 3),
+	(1, 'Tenants', 'tenants', 6);
+INSERT INTO entity_types (org_id, entity_type_name, entity_role, start_view, use_key_id) VALUES 
+	(1, 'Applicant', 'applicant', '10:0', 4);
 
-INSERT INTO subscription_levels (org_id, subscription_level_name) VALUES (1, 'Basic');
-INSERT INTO subscription_levels (org_id, subscription_level_name) VALUES (1, 'Manager');
-INSERT INTO subscription_levels (org_id, subscription_level_name) VALUES (1, 'Consumer');
+
+INSERT INTO subscription_levels (org_id, subscription_level_name) VALUES 
+(1, 'Basic'),(1, 'Manager'),(1, 'Consumer');
 
 INSERT INTO sys_emails (org_id, use_type,  sys_email_name, title, details) 
 SELECT 1, use_type, sys_email_name, title, details
@@ -49,9 +51,9 @@ WHERE (a.org_id = 0) AND (b.org_id = 1);
 INSERT INTO entitys (entity_id, org_id, entity_type_id, use_key_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password,function_role)
 VALUES (2, 0, 0, 0, 'admin', 'admin', 'admin@admin.com', true, false, false, 'baraza','admin');
 INSERT INTO entitys (entity_id, org_id, entity_type_id, use_key_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password,function_role)
-VALUES (3, 0, 0, 2, 'client', 'client', 'client@client.com', true, false, false, 'baraza','client');
+VALUES (3, 0, 0, 2, 'client', 'Dorcas Gicuku', 'Dori@gmail.com', true, false, false, 'baraza','client');
 INSERT INTO entitys (entity_id, org_id, entity_type_id, use_key_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password,function_role)
-VALUES (4, 0, 0, 6, 'tenant', 'tenant', 'tenant@tenant.com', true, false, false, 'baraza','tenants');
+VALUES (4, 0, 0, 6, 'tenant', 'Peter Mwangi', 'peter@peter.me.ke', true, false, false, 'baraza','tenants');
 SELECT pg_catalog.setval('entitys_entity_id_seq', 4, true); 
 
 
@@ -71,10 +73,7 @@ FROM workflow_phases aa INNER JOIN workflows bb ON aa.workflow_id = bb.link_copy
 	INNER JOIN entity_types cc ON aa.approval_entity_id = cc.use_key_id
 WHERE aa.org_id = 0 AND bb.org_id = 1 AND cc.org_id = 1;
 
-INSERT INTO sys_emails (org_id, use_type, sys_email_name, title, details)
-SELECT 1, use_type, sys_email_name, title, details
-FROM sys_emails
-WHERE org_id = 0;
+
 
 UPDATE transaction_counters SET document_number = '10001';
 

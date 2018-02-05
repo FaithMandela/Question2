@@ -38,6 +38,8 @@ public class BQuery {
 	int tableLimit = -1;
 	BElement view = null;
 	BDB db = null;
+	BUser user = null;
+	
 	Statement st = null;
 	ResultSet rs = null;
 	ResultSetMetaData rsmd = null;
@@ -69,7 +71,7 @@ public class BQuery {
 	
 	Integer rowStart = null;
 	Integer fertchSize = null;
-
+	
 	String orgID = null;
 	String userOrg = null;
 
@@ -81,9 +83,24 @@ public class BQuery {
 		init();
 		for(String mnName : titleArray) titles.add(mnName);
 	}
+	
+	public BQuery(BDB db, BElement view, String wheresql, String orderby) {
+		this.db = db;
+		this.user = db.getUser();
+		buildQuery(db, view, wheresql, orderby);
+	}
 
 	public BQuery(BDB db, BElement view, String wheresql, String orderby, boolean ff) {
-		firstFetch = ff;
+		this.firstFetch = ff;
+		this.db = db;
+		this.user = db.getUser();
+		buildQuery(db, view, wheresql, orderby);
+	}
+	
+	public BQuery(BDB db, BElement view, String wheresql, String orderby, BUser user, boolean ff) {
+		this.firstFetch = ff;
+		this.db = db;
+		this.user = user;
 		buildQuery(db, view, wheresql, orderby);
 	}
 	
@@ -91,11 +108,41 @@ public class BQuery {
 		this.firstFetch = ff;
 		this.rowStart = rowStart;
 		this.fertchSize = fertchSize;
+		this.db = db;
+		this.user = db.getUser();
 		buildQuery(db, view, wheresql, orderby);
 	}
+	
+	public BQuery(BDB db, String myfields, String tableName, int limit) {
+		init();
+		this.db = db;
+		this.user = db.getUser();
+		this.tableName = tableName;
+		tableLimit = limit;
+		
+		mysql = "SELECT " + myfields +  "\nFROM " + tableName;
+		makeQuery();
 
-	public BQuery(BDB db, BElement view, String wheresql, String orderby) {
-		buildQuery(db, view, wheresql, orderby);
+		if(tableLimit > 0) ForeignLinks = db.getForeignLinks(tableName);
+	}
+
+	public BQuery(BDB db, String mysql) {
+		init();
+		this.db = db;
+		this.user = db.getUser();
+		this.mysql = mysql;
+
+		makeQuery();
+	}
+
+	public BQuery(BDB db, String mysql, int limit) {
+		init();
+		this.db = db;
+		this.user = db.getUser();
+		this.mysql = mysql;
+		tableLimit = limit;
+
+		makeQuery();
 	}
 	
 	public void buildQuery(BDB db, BElement view, String wheresql, String orderby) {
@@ -172,8 +219,8 @@ public class BQuery {
 		}
 
 		orgID = db.getOrgID();
-		if((orgID != null) && (view.getAttribute("noorg") == null)) {
-			userOrg = db.getUserOrg();
+		if((orgID != null) && (view.getAttribute("noorg") == null) && (user != null)) {
+			userOrg = user.getUserOrg();
 			if(view.getAttribute("orgid") != null) orgID = view.getAttribute("orgid");
 			if(view.getAttribute("noorg.query") == null) colNames = addField(colNames, orgID);
 		}
@@ -207,35 +254,6 @@ public class BQuery {
 			fieldNames.add(colName);
 		}
 		return colNames;
-	}
-
-	public BQuery(BDB db, String myfields, String tableName, int limit) {
-		init();
-		this.db = db;
-		this.tableName = tableName;
-		tableLimit = limit;
-		
-		mysql = "SELECT " + myfields +  "\nFROM " + tableName;
-		makeQuery();
-
-		if(tableLimit > 0) ForeignLinks = db.getForeignLinks(tableName);
-	}
-
-	public BQuery(BDB db, String mysql) {
-		init();
-		this.db = db;
-		this.mysql = mysql;
-
-		makeQuery();
-	}
-
-	public BQuery(BDB db, String mysql, int limit) {
-		init();
-		this.db = db;
-		this.mysql = mysql;
-		tableLimit = limit;
-
-		makeQuery();
 	}
 
 	public void init() {
@@ -319,10 +337,8 @@ public class BQuery {
 				if(wheresql == null) wheresql = "\nWHERE " + groupFilter;
 				else wheresql += " AND " + groupFilter;
 			}
-			if((view.getAttribute("noorg") == null) && (db.getOrgID() != null) && (db.getUserOrg() != null)) {
-				String qorgID = db.getOrgID();
-				if(view.getAttribute("orgid") != null) qorgID = view.getAttribute("orgid");
-				String orgFilter = "(" + qorgID + " = '" + db.getUserOrg() + "')";
+			if((view.getAttribute("noorg") == null) && (orgID != null) && (userOrg != null)) {
+				String orgFilter = "(" + orgID + " = '" + userOrg + "')";
 				if(wheresql == null) wheresql = "\nWHERE " + orgFilter;
 				else wheresql += " AND " + orgFilter;
 			}
@@ -336,9 +352,7 @@ public class BQuery {
 			}
 		}
 		if(wheresql != null) mysql += wheresql;
-		// SQL view debug point
-		//System.out.println("SQL : " + wheresql);
-
+		
 		// Group by
 		if(view != null) {
 			if(view.getAttribute("groupby") != null)
@@ -362,7 +376,7 @@ public class BQuery {
 		}*/
 
 		// SQL view debug point
-		//System.out.println("SQL : " + mysql);
+System.out.println("SQL : " + mysql);
 	}
 
 	public void setSQL(String lsql) {

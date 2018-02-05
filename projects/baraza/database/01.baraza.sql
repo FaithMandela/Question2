@@ -333,7 +333,7 @@ CREATE INDEX sys_emailed_table_id ON sys_emailed (table_id);
 CREATE TABLE et_fields (
 	et_field_id				serial primary key,
 	org_id					integer references orgs,
-	et_field_name			varchar(120) not null,
+	et_field_name			varchar(320) not null,
 	table_name				varchar(64) not null,
 	table_code				integer not null,
 	table_link				integer

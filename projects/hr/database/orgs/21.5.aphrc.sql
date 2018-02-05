@@ -219,7 +219,8 @@ BEGIN
 		FROM intake
 		WHERE (employees.entity_id = v_entity_id) AND (intake.intake_id = v_intake_id);
 		
-		UPDATE applications SET employee_id = v_entity_id, approve_status = 'Completed'
+		UPDATE applications SET employee_id = v_entity_id, approve_status = 'Completed',
+			department_role_id = v_department_role_id
 		WHERE (application_id = v_application_id);
 		
 		msg := 'Employee details updated';
@@ -231,6 +232,7 @@ BEGIN
 	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
+
 
 ALTER TABLE applications ADD department_role_id	integer references department_roles;
 CREATE INDEX applications_department_role_id ON applications (department_role_id);

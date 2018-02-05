@@ -1,5 +1,37 @@
 ---Project Database Functions File
 
+CREATE OR REPLACE FUNCTION aft_registrations() RETURNS trigger AS $$
+DECLARE
+	v_entity_type_id		integer;
+	v_entity_id				integer;
+	v_user_name				varchar(32);
+BEGIN
+
+	IF((OLD.approve_status <> 'Approved') AND (NEW.approve_status = 'Approved'))THEN
+		SELECT entity_id INTO v_entity_id
+		FROM customers 
+		WHERE identification_number = NEW.phone_number;
+		
+		IF(v_entity_id is null)THEN
+			v_entity_id := nextval('entitys_entity_id_seq');
+			INSERT INTO customers (org_id, entity_id, customer_name, identification_number, telephone_number, approve_status)
+			VALUES (0, v_entity_id, NEW.full_name, NEW.phone_number, NEW.phone_number, 'Approved');
+			
+			INSERT INTO deposit_accounts (entity_id, updated_by, product_id, org_id, account_number, is_active, approve_status)
+			VALUES (v_entity_id, v_entity_id, 1, 0, NEW.phone_number, true, 'Approved');
+			
+			UPDATE entitys SET entity_password = md5(NEW.pin_code), user_name = NEW.phone_number
+			WHERE entity_id = v_entity_id;
+		END IF;
+	END IF;
+
+	RETURN null;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER aft_registrations AFTER UPDATE ON registrations
+	FOR EACH ROW EXECUTE PROCEDURE aft_registrations();
+
 CREATE OR REPLACE FUNCTION ins_customers() RETURNS trigger AS $$
 DECLARE
 	v_entity_type_id		integer;

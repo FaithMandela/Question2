@@ -493,9 +493,9 @@ System.out.println("BASE 3120 : " + resp);
 	public String tasks(HttpServletRequest request) {
 		String resp = "";
 		String myOutput = null;
-System.out.println("BASE 2120 : ");
 
 		String jsonField = request.getParameter("json");
+System.out.println("BASE 2120 : " + jsonField);
 		if(jsonField != null) {
 			JsonReader jsonReader = Json.createReader(new StringReader(jsonField));
 			JsonObject jObj = jsonReader.readObject();
@@ -515,10 +515,12 @@ System.out.println("BASE 2130 : " + mySql);
 		if(myOutput == null) {
 			resp = "{\"success\": 0, \"message\": \"Task not added\"}";
 		} else {
-			BQuery alRs = new BQuery(db, web.getView().getElementByName("TASK").getElementByName("TASKLIST"), null, null);
+			BQuery alRs = new BQuery(db, web.getView().getElementByName("TASK").getElementByName("TIMESHEET"), null, null);
 			resp = alRs.getJSON();
 			alRs.close();
 		}
+		
+System.out.println("BASE 2140 : " + resp);
 		
 		return resp;
 	}

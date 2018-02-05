@@ -2662,7 +2662,8 @@ BEGIN
 		FROM intake
 		WHERE (employees.entity_id = v_entity_id) AND (intake.intake_id = v_intake_id);
 		
-		UPDATE applications SET employee_id = v_entity_id, approve_status = 'Completed'
+		UPDATE applications SET employee_id = v_entity_id, approve_status = 'Completed',
+			department_role_id = v_department_role_id
 		WHERE (application_id = v_application_id);
 		
 		msg := 'Employee details updated';
@@ -2674,6 +2675,25 @@ BEGIN
 	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION aft_interviews() RETURNS trigger AS $$
+DECLARE
+	v_objective_ps				real;
+	sum_ods_ps					real;
+BEGIN
+	
+	INSERT INTO e_fields (et_field_id, org_id, table_code, table_id)
+	SELECT et_fields.et_field_id, et_fields.org_id, et_fields.table_code, NEW.interview_id
+	FROM et_fields
+	WHERE (et_fields.org_id = NEW.org_id) AND (et_fields.table_link = NEW.interview_type_id) 
+		AND (et_fields.table_code = 121);
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER aft_interviews AFTER INSERT ON interviews
+    FOR EACH ROW EXECUTE PROCEDURE aft_interviews();
 
 CREATE OR REPLACE FUNCTION get_approval_date(integer) RETURNS date AS $$
 DECLARE
@@ -2904,3 +2924,22 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+CREATE OR REPLACE FUNCTION aft_ef_employee() RETURNS trigger AS $$
+DECLARE
+	v_objective_ps				real;
+	sum_ods_ps					real;
+BEGIN
+	
+	INSERT INTO e_fields (et_field_id, org_id, table_code, table_id)
+	SELECT et_fields.et_field_id, et_fields.org_id, et_fields.table_code, NEW.employee_travel_id
+	FROM et_fields
+	WHERE (et_fields.org_id = NEW.org_id) AND (et_fields.table_code = 121);
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER aft_ef_employee AFTER INSERT ON interviews
+    FOR EACH ROW EXECUTE PROCEDURE aft_ef_employee();
+    
+    
